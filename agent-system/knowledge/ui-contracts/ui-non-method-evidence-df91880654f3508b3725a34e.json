@@ -1,0 +1,75 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-non-method-evidence-df91880654f3508b3725a34e",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "non_method_evidence"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": [
+        "maplib",
+        "src/main/java/com/nextgis/maplib/util/StakeoutGeometryTarget.java"
+      ]
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "repository": "maplib",
+        "path": "src/main/java/com/nextgis/maplib/util/StakeoutGeometryTarget.java",
+        "purpose": "Reviewed immutable class fields, supported-type gate, private-copy/CRS/index construction and complete sphere fallback constants. Constructor/method pins alone do not cover retained state or all helper branches. It retains geometry/index rather than a layer/FID/workspace subscription.",
+        "contract_ids": [
+          "UI-NAVIGATION-STAKEOUT-TARGET",
+          "UI-NAVIGATION-AZIMUTH-CURRENT",
+          "UI-NAVIGATION-AZIMUTH-TWO-POINTS"
+        ],
+        "sha256": "b2a90dd5a97cd1437ce37810c9de66409723b68e25a2805175aa552d4c69a6a0"
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "consumed_by",
+      "target": "lisa:mobile:contract:ui-contracts-ui-navigation-stakeout-target",
+      "status": "source_backed"
+    },
+    {
+      "type": "consumed_by",
+      "target": "lisa:mobile:contract:ui-contracts-ui-navigation-azimuth-current",
+      "status": "source_backed"
+    },
+    {
+      "type": "consumed_by",
+      "target": "lisa:mobile:contract:ui-contracts-ui-navigation-azimuth-two-points",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-non-method-evidence-df91880654f3508b3725a34e"
+    ]
+  }
+}

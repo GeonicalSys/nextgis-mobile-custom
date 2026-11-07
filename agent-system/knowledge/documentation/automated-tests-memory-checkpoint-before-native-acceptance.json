@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:automated-tests-memory-checkpoint-before-native-acceptance",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "На checkpoint до последних MLP/free-headroom правок были выполнены963JVMunits,",
+        "93Python harness checks и AndroidTest build29s; отдельно после MLP handoff",
+        "зафиксирован maplib651/651PASS. Это исторические source/build свидетельства,",
+        "не native GPU/эмулятор/2GiB/Full приёмка последнего содержимого. Native",
+        "RenderMemorySafetyTest/style/geometry acceptance остаётся pending до отдельной",
+        "квитанции. Факты и ограничения обновляются в",
+        "[разборе224](../reference/mobile-crash-224-2026-10-27.md).",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Historical JVM, harness and compile results do not accept native or the final rendering frame."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:automated-tests-memory-checkpoint-before-native-acceptance"
+    ]
+  }
+}

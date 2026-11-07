@@ -1,0 +1,67 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:mobile-roadmap-process-exit-224-glitchtip-20261029",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout",
+      "lisa:mobile:task:mobile-roadmap-process-exit-224"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the pinned checkpoint and keep its results within the stated source and runtime bounds."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## MOB-02 Инцидент завершений после обновления 224",
+        "",
+        "29 октября, адресное продолжение по поручению «разобрать ошибки в глитче»:",
+        "после первого520/516получен свежий mobile-only snapshot02:8групп,593записи/",
+        "589SDK ID,59новых ID относительно тех же восьми групп28октября.68/88 —",
+        "прежняя локальная политика штатных GPS ожиданий;45/64/69/90/96/117 — diagnostics.",
+        "Поздняя030/224native/OS пара не устанавливает новый crash последней сборки,",
+        "исходный exception или OOM. Для текущих224GPS пауз причина неизвестна:",
+        "добавлено редкое fail-open сравнение cached framework fix и app raw без",
+        "координат, новой подписки или изменения фильтров/thresholds/владельцев.",
+        "877JVM tests,docs50,три normal variants, instrumentation compile и versionmatrix",
+        "PASS; два emulator-only native GPS case не запускались, полевой cause остаётся",
+        "UNKNOWN. Частный обычный APK517c941d…0db8b01 собран, не установлен/не опубликован.",
+        "Source commits и guarded server comments/resolve/readback завершены:",
+        "8resolved,599записей/595SDK ID; причины неизвестных сбоев не объявлены исправленными. Full,",
+        "профилирование, новые native/device действия не выполнялись. Это уточнение",
+        "свидетельств MOB-02/MOB-03, не исправление приёма GPS и не возобновление других",
+        "этапов карты. Владельцы app/maplib, Draft84/62; карточка",
+        "android-20261029-glitchtip-gps-evidence.",
+        "[Решения и ограничения](../reference/glitchtip-triage-2026-10-29.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:mobile-roadmap-process-exit-224-glitchtip-20261029"
+    ]
+  }
+}

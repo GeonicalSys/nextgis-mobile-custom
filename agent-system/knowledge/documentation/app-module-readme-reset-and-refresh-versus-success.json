@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-reset-and-refresh-versus-success",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Reset defaults, district/base layer setup и существующее удаление слоёв отложены",
+        "до окончания перемещения в запрошенный каталог и успешного commit actual path.",
+        "Обычный отказ или отмена после retirement перепривязывает UI только при совпадении",
+        "actual path, cached prefs и exact owner; Reset defaults/delete при этом не запускаются.",
+        "RESULT_OK для request777 означает перезагрузку Activity/drawable, а не успех переноса.",
+        "MapFragment также имеет identity-based onResume fallback, но тот же retired object",
+        "не восстанавливается этим сравнением. Неожиданные worker Runtime/Error сохраняют",
+        "прежнее распространение с завершением собственного lease, без mutating post callback.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-reset-and-refresh-versus-success"
+    ]
+  }
+}

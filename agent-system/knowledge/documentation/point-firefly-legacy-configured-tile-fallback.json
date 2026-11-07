@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:point-firefly-legacy-configured-tile-fallback",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:point-firefly"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original measurement or checkpoint and its acceptance limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/point-firefly.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Поддерживаются обычные Point/MultiPoint, простые и категорийные стили. Возможности",
+        "configured local-vector-tiles не расширены: новый тип не входит в их набор",
+        "простых кругов. Если изменённый стиль уже загруженного tile-слоя больше не",
+        "поддерживается provider, MapDrawable просит штатную полную перезагрузку host.",
+        "Она согласованно заменяет source на GeoJSON и восстанавливает порядок слоёв.",
+        "Переход проверяется отдельным `FireflyTileFallbackTest`; общая матрица обычных",
+        "стилей по-прежнему исключает configured vector tiles.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:point-firefly-legacy-configured-tile-fallback"
+    ]
+  }
+}

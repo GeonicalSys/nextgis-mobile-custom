@@ -1,0 +1,76 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:metadata:ui-coverage-track-share-delivery-review",
+  "kind": "metadata",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "coverage"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "track_share_delivery_review"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "reviewed_at": "2026-10-31",
+        "source_result": "Actual acceptance is compositional: Binding8 andExporter10 all18PASS inearlierfirstgreen23 on637a; itsfourPaneloverlapfailures werekept. Diagnostic-only64ac changedfailuremessage/helper only, notfivepredicates/oracles/setup.31Octactualcohort10 hadCaption5PASS+Panel1PASS4FAIL andexit1, NOTwhole10PASS; observedRename/Visibilityrowoverflow3px. Oneproductionline disablesbaselinealignment onlyownedactionRows. FinalONLYsamePanel5/64ac on0069 PASS0fail/errors/skips, XML19.913s, Gradle0/BUILD1m17s,81.6374157sobserved,120unchangedinputs/all13ownedsettledabsent. Thus23distinctmethodsacceptedACROSS18+5batches; noonefinal23rerun, no18/Caption5rerun, noMIME2executionclaim. Финальная consumer source compile Belka: Gradle exit0, BUILD SUCCESSFUL in 1m 23s, 86.8108238s observed, 100 source-only tasks,120 inputs unchanged/all12 owned processes naturally stopped. Java/Kotlin source compilation; no APK/AAB/AAR/dex/NDK/install/publish or native Android/GPU/device acceptance. Receipt Q:\\Codex\\Scratch\\lisa-ecosystem-depth-audit-20261029\\evidence\\resume-20261031-source-checkpoint\\belka-resume-compile\\final-result-source-stop.json SHA256 be7f54baa369662c2cd44a509c745fbc099f357a0df91c9a30a7d69a12008d1c.; CPUfont/JVM isnotnativeAndroid/device/OEM/wholewindow/GPU/recipientacceptance.",
+        "history": "Baseline23=18assertFAIL5controls/0errors/skips:13missingShareID assertionsacrossBinding8/Panel5 arefeatureabsence, NOTproofoldstalelaunchbugs; Exporter5XML/pathcounterexamples+5controls independentlydemonstrateactualdefects. Firstgreen23=19PASS4PaneloverlapFAIL, XML11.393s,Gradle1; nofullPASS. DiagnosticV3 9ec/523f LFops/CRLFcandidate rejectedBEFOREC/runtime byRootguard; retainedinvalidhistory. CorrectedRAWV4 c093/64ac exactreplay/inverse78eff, Bridge73edf; onlymessage/helper changed. Diagnostic10 captured3pxbaselineoffset, one-line637a→0069 preservesIDs/callbacks/copy/widthlogic/all5oracles; finalPanel5accepted. Oldmessage89/selector37/cache29/caption5 resultsremain separatehistoricalcohorts, notrerun/resummed.",
+        "source_sha256": {
+          "maplibui/src/main/java/com/nextgis/maplibui/view/TrackSelectionPanel.java": "0069d2c66946d575428655f1a621a69fcdc9653571ba45f67875683b19fe8c06",
+          "maplibui/src/main/res/values/ids.xml": "56192a61e759f9602ef52cef72f38d4adb5bf58384dbdfac59492dabbc50e428",
+          "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt": "366e9421d789f26a5bc91f3209fb339e2a027892497e6c7819ba0c8a49ce8d20",
+          "maplibui/src/main/java/com/nextgis/maplibui/util/ExportGPXTask.java": "e9ab9fac5a9b66165619c96f9a506536bd90547b967c5b55c8f0052ec7e2b655"
+        },
+        "fixtures": [
+          {
+            "name": "SelectedTrackShareBindingTest.proposal.java",
+            "sha256": "4e5b9a7243c00fc54871de95e66d809a2b2339903a16f324e2dc2e6e40337794",
+            "methods": 8
+          },
+          {
+            "name": "TrackGpxNameExportTest.v2.proposal.java",
+            "sha256": "bd12f954372a9c0d012f2651cab913ad7f4db9cda4253173acd30f6334bf6b7a",
+            "methods": 10
+          },
+          {
+            "name": "TrackSelectionPanelTest.v4-raw-layout-diagnostics.proposal.java",
+            "sha256": "64ac03ed3f1ae56cd295c454b449b05cb0d85d34868fb759430c4927cd3a1b7c",
+            "methods": 5,
+            "qualification": "Onlydiagnostichelper/message differs from78eff; all5@Testbodies/predicates/setup exact. FinalRootCfixturematches64ac."
+          }
+        ],
+        "consumer_source_compile": "Финальная consumer source compile Belka: Gradle exit0, BUILD SUCCESSFUL in 1m 23s, 86.8108238s observed, 100 source-only tasks,120 inputs unchanged/all12 owned processes naturally stopped. Java/Kotlin source compilation; no APK/AAB/AAR/dex/NDK/install/publish or native Android/GPU/device acceptance. Receipt Q:\\Codex\\Scratch\\lisa-ecosystem-depth-audit-20261029\\evidence\\resume-20261031-source-checkpoint\\belka-resume-compile\\final-result-source-stop.json SHA256 be7f54baa369662c2cd44a509c745fbc099f357a0df91c9a30a7d69a12008d1c.",
+        "qualification": "23 distinct accepted methods across earlier18 and final5; not one final23 rerun/native/whole-window/recipient acceptance. Old source_context/F61/history unchanged."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:metadata:ui-coverage-track-share-delivery-review"
+    ]
+  }
+}

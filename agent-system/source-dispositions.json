@@ -1,0 +1,1089 @@
+{
+  "format": "lisa.agent-system.source-dispositions.v1",
+  "entries": [
+    {
+      "path": "agent-system/policy-migration.json",
+      "sha256": "dee9cda4abd97da24610640cd674b15063576bb1c07e83d56b671b7dbfb016d1",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "applies_to": [
+        "."
+      ],
+      "reason": "Individually authored complete six-source character/object/value replay; native values are editable truth, this exact map retains inverse provenance without execution or deletion authority."
+    },
+    {
+      "path": "agent-system/migration/instruction-review.json",
+      "sha256": "6370b1331820e5ed15e4b050486055cae0a3fab40776746ef153b2906c491aca",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "applies_to": [
+        "."
+      ],
+      "reason": "Individual exact-source witnesses for two instruction wording differences and distinct legacy task subjects, plus two complete same-fact reviews; all questions and original conditions remain visible."
+    },
+    {
+      "path": "agent-system/provenance/change-impact.json",
+      "sha256": "469b25b9ae32e16d5581764528052a3f6abc076450f1a9624121fafd8da8baf1",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "applies_to": [
+        "docs/registry/change-impact.yaml",
+        "docs/scripts/validate_docs.py",
+        "agent-system/knowledge/change-impact"
+      ],
+      "reason": "Pinned original Draft registry and contiguous source spans for every complete trigger."
+    },
+    {
+      "path": "agent-system/provenance/repository-topology.json",
+      "sha256": "7b31a8c220b49e3a0d49634f2564a059eff9503f83608737c9fbe229b1ca34e9",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "applies_to": [
+        "docs/registry/repositories.yaml",
+        "docs/registry/modules.yaml",
+        "agent-system/knowledge/repositories",
+        "agent-system/knowledge/modules"
+      ],
+      "reason": "Pinned original Draft blobs, contiguous source spans and complete ordered values for the two App topology registries."
+    },
+    {
+      "path": "agent-system/provenance/keyed-docs-registries.json",
+      "sha256": "19ab1241499dc790d3d759a492b82bcce80ef30944309c0ef0d714d4660260fa",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "applies_to": [
+        "docs/registry/invariants.yaml",
+        "docs/registry/upstream-overlaps.yaml",
+        "docs/registry/smoke-tests.yaml",
+        "agent-system/knowledge/invariants",
+        "agent-system/knowledge/upstream-overlaps",
+        "agent-system/knowledge/smoke-tests"
+      ],
+      "reason": "Pinned original Draft blobs and full ordered value and source-span evidence for three keyed App registries."
+    },
+    {
+      "path": "agent-system/provenance/sectioned-docs-registries.json",
+      "sha256": "1cae6c05e81c279fff124b0723959efe0ebac368e90baf7a5ab2d0bb3e2f0f35",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "applies_to": [
+        "docs/registry/config-keys.yaml",
+        "docs/registry/dependencies.yaml",
+        "docs/registry/ecosystem.yaml",
+        "agent-system/knowledge/config-keys",
+        "agent-system/knowledge/dependencies",
+        "agent-system/knowledge/ecosystem"
+      ],
+      "reason": "Pinned original Draft blobs, contiguous line spans, complete section and row values and original notes."
+    },
+    {
+      "path": "agent-system/provenance/ui-contracts.json",
+      "sha256": "466c091fc7477ee2e0949e1cb84defa7eaf2f4473aae773aab024d21e512dc7c",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "applies_to": [
+        "docs/registry/ui-contracts.json",
+        "agent-system/knowledge/ui-contracts"
+      ],
+      "reason": "Pinned original App UI catalogue, complete source byte spans, ordered definitions and explicit evidence links."
+    },
+    {
+      "path": "agent-system/provenance/documentation.json",
+      "sha256": "f6feacd0a6d4d5ef7532f8971f6ccc4aab12f23f7667cc52d777a3d1fa9d6cd2",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "applies_to": [
+        "docs/START-HERE.md",
+        "docs/guides/change-checklist.md",
+        "agent-system/knowledge/documentation",
+        "docs/README.md",
+        "docs/registry/README.md",
+        "docs/guides/documentation-maintenance.md",
+        "docs/guides/bug-reports-user-guide.md",
+        "docs/guides/cascading-form-lists-user-guide.md",
+        "docs/guides/form-behavior-user-guide.md",
+        "docs/guides/project-scripts-user-guide.md",
+        "docs/guides/project-synchronization-user-guide.md",
+        "docs/guides/safe-patterns.md",
+        "docs/glossary.md",
+        "docs/reference/build-matrix.md",
+        "docs/reference/compatibility-matrix.md",
+        "docs/reference/flavors-and-versioning.md",
+        "docs/reference/settings-and-config.md",
+        "docs/reference/official-differences.md",
+        "docs/architecture/ngw-sync-and-storage.md",
+        "docs/roadmap/mobile.md",
+        "docs/architecture/map-rendering.md",
+        "docs/architecture/map-performance.md",
+        "docs/architecture/classic-style-verification.md",
+        "docs/architecture/point-firefly.md",
+        "docs/architecture/polygon-style-controls.md",
+        "docs/architecture/visible-line-labels.md",
+        "docs/architecture/conditional-form-rules.md",
+        "docs/architecture/cascading-form-lists.md",
+        "docs/architecture/project-scripts.md",
+        "docs/architecture/feature-copy-transform.md",
+        "docs/architecture/feature-type-creation.md",
+        "docs/architecture/overview.md",
+        "docs/architecture/upstream-fork-model.md",
+        "docs/reference/fork-customizations.md",
+        "docs/runbooks/upstream-sync.md",
+        "docs/architecture/collector-projects.md",
+        "docs/runbooks/collector-project-setup.md",
+        "docs/roadmap/collector.md",
+        "docs/architecture/shared-tracks.md",
+        "docs/architecture/track-controls.md",
+        "docs/architecture/maintenance-reminders.md",
+        "docs/architecture/mobile-usage.md",
+        "docs/architecture/crash-recovery.md",
+        "docs/architecture/error-reporting.md",
+        "docs/runbooks/incident-and-rollback.md",
+        "docs/runbooks/glitchtip-triage.md",
+        "docs/runbooks/release-apk.md",
+        "docs/runbooks/workstation-and-build.md",
+        "docs/runbooks/automated-tests.md",
+        "docs/runbooks/device-smoke-tests.md",
+        "docs/runbooks/manual-resource-profiling.md",
+        "docs/architecture/shared-underlays.md",
+        "docs/architecture/ui-contracts.md",
+        "docs/architecture/ui-accessibility.md",
+        "docs/architecture/location-pipeline.md",
+        "docs/architecture/stakeout.md",
+        "docs/architecture/lisa-ecosystem.md",
+        "app/docs/README.md",
+        ".github/PULL_REQUEST_TEMPLATE.md",
+        "README.md",
+        "docs/templates/module-docs/AGENTS.md.tmpl",
+        "docs/templates/module-docs/README.md.tmpl",
+        "docs/templates/module-docs/manifest.yaml.tmpl",
+        "docs/changelog.md",
+        "docs/history/README.md",
+        "docs/history/upstream/README.md",
+        "WHATS_NEW.md",
+        "CONTEXT_INSTRUCTION.md",
+        "CUSTOMIZATIONS.md",
+        "agent-system/README.md"
+      ],
+      "reason": "Pinned exact App documentation and scaffold template source bytes at their published addresses."
+    },
+    {
+      "path": "agent-system/migration/prose-inventory.json",
+      "sha256": "024e9e29f3769b5da1d6902d659d95d64aef8042f1a4746c7c4dd451c9167933",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "applies_to": [
+        "docs/START-HERE.md",
+        "docs/guides/change-checklist.md",
+        "agent-system/knowledge/documentation"
+      ],
+      "reason": "Checkpoint inventory of App prose addresses, types and pilot consumers at the pinned App revision."
+    },
+    {
+      "path": "docs/reference/mobile-reliability-audit.md",
+      "sha256": "95bec873a51d1c6cbff8f08751177042f022c363fcf6ce78d14426ba0353331f",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Whole October PR45 audit witness with its source revisions, historical authorizations, results, remaining checks and retained lint failure.",
+      "applies_to": [
+        "docs/reference/mobile-reliability-audit.md",
+        "docs/architecture/crash-recovery.md",
+        "docs/architecture/location-pipeline.md",
+        "docs/architecture/ngw-sync-and-storage.md",
+        "docs/runbooks/device-smoke-tests.md",
+        "docs/runbooks/incident-and-rollback.md",
+        "docs/runbooks/workstation-and-build.md"
+      ]
+    },
+    {
+      "path": "docs/history/2026-10-14-background-gps.md",
+      "sha256": "9277a01f0b6fb8b3c4cd7a7a64e73f4922e2bccca9c47f4e43ea87497474350a",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 14 background GPS delivery frame, independent emulator and layout receipts, and limits for RF, OEM behavior and battery.",
+      "applies_to": [
+        "docs/history/2026-10-14-background-gps.md",
+        "docs/architecture/location-pipeline.md",
+        "docs/architecture/ui-accessibility.md",
+        "docs/architecture/error-reporting.md"
+      ]
+    },
+    {
+      "path": "docs/history/2026-10-14-layer-chooser-tests.md",
+      "sha256": "6f1c0a1bb937675a3a0884382937c29e7b56e6b1874449fddc21970da1e10af6",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 14 layer chooser defect and Full 177-case receipt, with separate phone, emulator, permission and verification-package scope.",
+      "applies_to": [
+        "docs/history/2026-10-14-layer-chooser-tests.md",
+        "docs/architecture/ui-accessibility.md",
+        "docs/runbooks/automated-tests.md",
+        "docs/runbooks/device-smoke-tests.md"
+      ]
+    },
+    {
+      "path": "docs/history/2026-10-14-local-delivery-stakeout.md",
+      "sha256": "f58c19baf60ce62c05a2bb1d0ddcb71d23adf16ae1222100c945707d76b23963",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 14 read-only phone observation, local outbox and project clock regressions, independent navigation panels and draft-only release frame.",
+      "applies_to": [
+        "docs/history/2026-10-14-local-delivery-stakeout.md",
+        "docs/architecture/ngw-sync-and-storage.md",
+        "docs/architecture/stakeout.md",
+        "docs/architecture/ui-accessibility.md"
+      ]
+    },
+    {
+      "path": "docs/history/error-reporting-verification-2026-10-08.md",
+      "sha256": "b3807b8c549780d419402e02da55637eefc06bf4495fe5630b5208fa7bcf93ae",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 8 diagnostic delivery evidence for five isolated phases and earlier redaction behavior. Native crash, ANR and physical-device limits remain part of the receipt.",
+      "applies_to": [
+        "docs/history/error-reporting-verification-2026-10-08.md",
+        "docs/architecture/error-reporting.md",
+        "docs/runbooks/automated-tests.md",
+        "docs/runbooks/device-smoke-tests.md"
+      ]
+    },
+    {
+      "path": "docs/history/mobile-diagnostics-verification-2026-10-10.md",
+      "sha256": "69cbeb169fe1415514f82e6463f8fedaa0635999665cf6e97a5faf2d22fdc3ac",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 10 HyperLog and HTTP noise diagnosis, canonical form hash investigation, original contract-2 reporting scope and separate GPS and CI results.",
+      "applies_to": [
+        "docs/history/mobile-diagnostics-verification-2026-10-10.md",
+        "docs/architecture/error-reporting.md",
+        "docs/architecture/location-pipeline.md",
+        "docs/architecture/ngw-sync-and-storage.md"
+      ]
+    },
+    {
+      "path": "docs/history/mobile-usage-verification-2026-10-17.md",
+      "sha256": "ca4917ff6008532c42404ef46540a8f4ae64436fbd5510246aeddc6949730bc6",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 17 usage verification with source and server ownership, bounded isolated cases, earlier failed attempt and separate release gate.",
+      "applies_to": [
+        "docs/history/mobile-usage-verification-2026-10-17.md",
+        "docs/architecture/mobile-usage.md",
+        "docs/runbooks/automated-tests.md",
+        "docs/runbooks/release-apk.md"
+      ]
+    },
+    {
+      "path": "agent-system/provenance/app-module-manifest.json",
+      "category": "retained_evidence",
+      "reason": "Pinned App module manifest Git object, complete contiguous spans and ordered member provenance.",
+      "applies_to": [
+        "app/docs/manifest.yaml",
+        "agent-system/knowledge/app-module-manifest",
+        "docs/scripts/module_manifest_knowledge.py"
+      ],
+      "sha256": "b272578296400a9bb749e4242f9c1b4502b9234a54e40089554a97279bc1cbdc",
+      "sha256_scope": "utf8_lf"
+    },
+    {
+      "path": "docs/history/project-sync-verification-2026-10-07.md",
+      "sha256": "bbff4863b8d74c128b581026c93b18ea1df1aa7a698247d93845883150bc5043",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 7 draft delivery matrix and isolated workspace, callback and NGFP checks. Real multi-account WebGIS, scheduler, process kill and phone rendering were outside the run.",
+      "applies_to": [
+        "docs/history/project-sync-verification-2026-10-07.md",
+        "docs/architecture/ngw-sync-and-storage.md",
+        "docs/guides/project-synchronization-user-guide.md",
+        "docs/architecture/cascading-form-lists.md",
+        "docs/runbooks/device-smoke-tests.md",
+        "docs/history/README.md"
+      ]
+    },
+    {
+      "path": "docs/history/sync-notifications-verification-2026-10-10.md",
+      "sha256": "cfe190f9b06004c592cb63a88c2fe8adbafcf9b99c5543189f06edaf58aba014",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 10 orphan-notification diagnosis and later isolated regression. The observed phone trace, native emulator result and old merge state are different evidence.",
+      "applies_to": [
+        "docs/history/sync-notifications-verification-2026-10-10.md",
+        "docs/architecture/ngw-sync-and-storage.md",
+        "docs/guides/project-synchronization-user-guide.md",
+        "docs/runbooks/automated-tests.md"
+      ]
+    },
+    {
+      "path": "docs/history/sync-offline-walk-verification-2026-10-10.md",
+      "sha256": "06b5ca8bec8da849e64b3ff8eb4b587aff670b0e7e069d4c9b643deb4f872f6e",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 10 offline queue, upload and walk continuation receipt with exact older #35/#55 delivery frames and native scope. Includes a later local release authorization and a corrected track fixture, confined to that dated task.",
+      "applies_to": [
+        "docs/history/sync-offline-walk-verification-2026-10-10.md",
+        "docs/architecture/ngw-sync-and-storage.md",
+        "docs/architecture/location-pipeline.md",
+        "docs/architecture/shared-tracks.md",
+        "docs/runbooks/automated-tests.md"
+      ]
+    },
+    {
+      "path": "docs/history/feature-type-delivery-2026-10-09.md",
+      "sha256": "dc0c1a3d864d69c90cb9d787060df49fc6503447366f1d8dab12841dc1c8dc12",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 9 App #53 merge-preparation matrix with fetched library provenance and isolated category/form/SQLite tests. Historical merge and no-bump APK directions belong to that delivery.",
+      "applies_to": [
+        "docs/history/feature-type-delivery-2026-10-09.md",
+        "docs/architecture/feature-type-creation.md",
+        "docs/architecture/conditional-form-rules.md",
+        "docs/runbooks/release-apk.md"
+      ]
+    },
+    {
+      "path": "docs/history/feature-type-empty-lists-2026-10-09.md",
+      "sha256": "708d09132dc9e225c8c93cc0657eeb1fe4ddc151395e3b69191976f4b9bcea97",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 9 empty-list incident, 40-category regression, and one expressly dated local-build exception on the #34/#54 Draft pins. The exception belongs to its original task.",
+      "applies_to": [
+        "docs/history/feature-type-empty-lists-2026-10-09.md",
+        "docs/architecture/feature-type-creation.md",
+        "docs/architecture/cascading-form-lists.md",
+        "docs/runbooks/release-apk.md"
+      ]
+    },
+    {
+      "path": "docs/history/feature-type-all-tools-2026-10-09.md",
+      "sha256": "b2835631dabc39525b545dff0839f7c7e86078511a9cd632ed049cdc6063519c",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 9 category-selection continuity for pencil, position and walk, including earlier harness failures, five final isolated native cases and distinct field GNSS/process-death gaps.",
+      "applies_to": [
+        "docs/history/feature-type-all-tools-2026-10-09.md",
+        "docs/architecture/feature-type-creation.md",
+        "docs/architecture/crash-recovery.md",
+        "docs/architecture/location-pipeline.md"
+      ]
+    },
+    {
+      "path": "docs/history/upstream/2026-03-sync.md",
+      "sha256": "31220557b3d2fe5de312391d48dc30b09ff4e02a95a6283540b4d2ba9cb0035f",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "March 3.0.2/173 merge and pins, the layer-fill guard and date format changes, plus historical manual regression gaps and the 173/174 discrepancy.",
+      "applies_to": [
+        "docs/history/upstream/2026-03-sync.md",
+        "docs/runbooks/upstream-sync.md",
+        "docs/architecture/ngw-sync-and-storage.md",
+        "docs/runbooks/workstation-and-build.md",
+        "docs/history/upstream/README.md"
+      ]
+    },
+    {
+      "path": "docs/history/upstream/2026-03-30-layer-fill-comparison.md",
+      "sha256": "4c4f2bd0c9a47b179b8623c178f5e0cec6ad57ef78aa44e54c81f282379e6578",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "March comparison separates removed old diff snapshots, SQLite batch tuning, network timeout and one manual 28k-feature fill observation.",
+      "applies_to": [
+        "docs/history/upstream/2026-03-30-layer-fill-comparison.md",
+        "docs/runbooks/upstream-sync.md",
+        "docs/architecture/ngw-sync-and-storage.md",
+        "docs/architecture/collector-projects.md",
+        "docs/history/upstream/README.md"
+      ]
+    },
+    {
+      "path": "docs/history/upstream/2026-05-15-sync.md",
+      "sha256": "200c1a57f0bcd72ff9ad6414ba95c42565d176e3676816cae5c1967898824385",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "May 3.0.3/178 integration records exact fork tips, hybrid walk and map hooks, preserved Collector and flavor choices, and two historical assembly passes.",
+      "applies_to": [
+        "docs/history/upstream/2026-05-15-sync.md",
+        "docs/runbooks/upstream-sync.md",
+        "docs/architecture/upstream-fork-model.md",
+        "docs/architecture/collector-projects.md",
+        "docs/history/upstream/README.md"
+      ]
+    },
+    {
+      "path": "docs/history/upstream/2026-07-19-sync-3.1.2.md",
+      "sha256": "c582f69127cef64cacc49e0d77d14c2ea9793b27d4ba2a679157c34bbdfd02c5",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "July 3.1.2 selective port records adopted, adapted and excluded changes plus build and phone dialog checks. Real NGW vector and raster import remained manual.",
+      "applies_to": [
+        "docs/history/upstream/2026-07-19-sync-3.1.2.md",
+        "docs/runbooks/upstream-sync.md",
+        "docs/architecture/upstream-fork-model.md",
+        "docs/architecture/collector-projects.md",
+        "docs/architecture/map-rendering.md",
+        "docs/history/upstream/README.md"
+      ]
+    },
+    {
+      "path": "docs/history/mobile-release-3.1.2.30-2026-10-23.md",
+      "sha256": "5a0e5b15547815aa5939a73a6d2d320831aced24297a273d41e541e77c8ad74b",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 23 delivery preparation binds fetched library merge pins and predecessor trees before the App squash. The earlier phone slice and local APK checks retain their own scope.",
+      "applies_to": [
+        "docs/history/mobile-release-3.1.2.30-2026-10-23.md",
+        "docs/runbooks/release-apk.md",
+        "docs/reference/flavors-and-versioning.md",
+        "docs/runbooks/automated-tests.md"
+      ]
+    },
+    {
+      "path": "docs/history/lisa-local-release-2026-10-25.md",
+      "sha256": "29f20ed87ec5971875d5e68071bbec19e09e451b00892203e9fd2e03213d667a",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "First local 224 candidate 77e1227 records unmerged source pins under one dated exception, production identity and signature, and separate earlier unit/native coverage.",
+      "applies_to": [
+        "docs/history/lisa-local-release-2026-10-25.md",
+        "docs/runbooks/release-apk.md",
+        "docs/reference/flavors-and-versioning.md",
+        "docs/runbooks/automated-tests.md"
+      ]
+    },
+    {
+      "path": "docs/history/lisa-local-release-tracks-labels-2026-10-25.md",
+      "sha256": "a63260d1ef78f54a3527983b196b331455caf899067ee4de663f06d412cefe4b",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Second signed local 224 candidate caed88b preserves the track and label fix closure and its own limited verification on exact source pins.",
+      "applies_to": [
+        "docs/history/lisa-local-release-tracks-labels-2026-10-25.md",
+        "docs/runbooks/release-apk.md",
+        "docs/architecture/shared-tracks.md",
+        "docs/architecture/track-controls.md",
+        "docs/architecture/visible-line-labels.md"
+      ]
+    },
+    {
+      "path": "docs/history/lisa-local-release-dark-core-2026-10-25.md",
+      "sha256": "18214930caef0108aab2edeb10a2d538573891748050b5236c7bd608c9579919",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Signed local 280b78b candidate preserves the selected 4.5 px glow, its old Draft pins, metadata and separate skipped unit/native/UI checks.",
+      "applies_to": [
+        "docs/history/lisa-local-release-dark-core-2026-10-25.md",
+        "docs/runbooks/release-apk.md",
+        "docs/architecture/shared-tracks.md",
+        "docs/architecture/track-controls.md"
+      ]
+    },
+    {
+      "path": "docs/history/lisa-local-release-track-glow-2026-10-25.md",
+      "sha256": "2274cc835d8685e41903b2552502795897b1dc3c15fea154354069e95226bbf4",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Signed local f06ccfb candidate preserves the 6.5 px refinement and release metadata alongside earlier candidates for comparison.",
+      "applies_to": [
+        "docs/history/lisa-local-release-track-glow-2026-10-25.md",
+        "docs/runbooks/release-apk.md",
+        "docs/architecture/shared-tracks.md",
+        "docs/architecture/track-controls.md"
+      ]
+    },
+    {
+      "path": "docs/reference/debug-3.1.2.23-delivery.md",
+      "sha256": "e754111fcc2b6e870ec5477ce48d4e79c3baad0695ea680e0290b1841ac97f75",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "The debug 3.1.2.23/218 receipt preserves its exact inventory and debug-only publication authorization, separate from the current variant and publishing gates.",
+      "applies_to": [
+        "docs/reference/debug-3.1.2.23-delivery.md",
+        "docs/runbooks/release-apk.md",
+        "docs/reference/flavors-and-versioning.md",
+        "docs/runbooks/workstation-and-build.md"
+      ]
+    },
+    {
+      "path": "docs/reference/mobile-release-3.1.2.31-2026-11-01.md",
+      "sha256": "38d2261c1e5ee4f2916c5e42db3fec3b93a1efbfc532ad9d3aa1568d78175d6b",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "The 225 release record preserves Full 256 PASS and 17 FAIL, narrower subsequent observations, exact pin matrices and the held signed baseline.",
+      "applies_to": [
+        "docs/reference/mobile-release-3.1.2.31-2026-11-01.md",
+        "docs/runbooks/release-apk.md",
+        "docs/runbooks/automated-tests.md",
+        "docs/runbooks/device-smoke-tests.md",
+        "docs/reference/flavors-and-versioning.md"
+      ]
+    },
+    {
+      "path": "docs/handoffs/2026-11-01-mobile-release-31231.md",
+      "sha256": "f09bf1e5dbccd3ec3bd2a98e39f4af11b00783c0e98db37a791ef7fb649a8617",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "The November 2 checkpoint preserves merged source status separately from the absent new APK, failed prior runs, paused device work and historical continuation instruction.",
+      "applies_to": [
+        "docs/handoffs/2026-11-01-mobile-release-31231.md",
+        "docs/runbooks/release-apk.md",
+        "docs/runbooks/automated-tests.md",
+        "docs/runbooks/device-smoke-tests.md"
+      ]
+    },
+    {
+      "path": "docs/reference/sync-hang-verification.md",
+      "sha256": "e458c48c71fa1f262527e73b1032d7510602b2d615a09655a7bdc6fcd79696d5",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Earlier snapshot and database-lock diagnosis with unit/build checks and a limited device observation. Forced sync, live import and the prescribed Android follow-up stayed outside that observation.",
+      "applies_to": [
+        "docs/reference/sync-hang-verification.md",
+        "docs/architecture/ngw-sync-and-storage.md",
+        "docs/architecture/collector-projects.md",
+        "docs/runbooks/device-smoke-tests.md"
+      ]
+    },
+    {
+      "path": "docs/history/handoff-sync-kill-resilience-2026-08-25.md",
+      "sha256": "6090273c813756a2cb2585b349c5370d66fdbab38ac14b094b997d40ef46b36b",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "August sync and Collector process-kill handoff retains the next-day correction, two original incidents, deferred schema analysis and the original work order.",
+      "applies_to": [
+        "docs/history/handoff-sync-kill-resilience-2026-08-25.md",
+        "docs/architecture/ngw-sync-and-storage.md",
+        "docs/architecture/collector-projects.md",
+        "docs/architecture/crash-recovery.md"
+      ]
+    },
+    {
+      "path": "docs/history/mobile-form-sync-delivery-2026-10-08.md",
+      "sha256": "6331790dec970dcd56d7dc8ff8a7a60a9c98fc43b9d68c420f9b966b0df55988",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 8 merge-preparation matrix for forms, common sync and diagnostics retains fetched dependency positions, one expected GPS skip and local-only release scope.",
+      "applies_to": [
+        "docs/history/mobile-form-sync-delivery-2026-10-08.md",
+        "docs/architecture/ngw-sync-and-storage.md",
+        "docs/architecture/conditional-form-rules.md",
+        "docs/runbooks/release-apk.md"
+      ]
+    },
+    {
+      "path": "docs/history/form-visibility-verification-2026-10-08.md",
+      "sha256": "ab0d9b768d2f5ed99b00c0d0877000e7e80f57e304964f898d22d07c90b48f85",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 8 conditional visibility and style receipt keeps the original category 803 fixture and native results. Real audit writes and multi-account network sync were outside the test.",
+      "applies_to": [
+        "docs/history/form-visibility-verification-2026-10-08.md",
+        "docs/architecture/conditional-form-rules.md",
+        "docs/architecture/cascading-form-lists.md",
+        "docs/runbooks/automated-tests.md"
+      ]
+    },
+    {
+      "path": "docs/reference/form-behavior-verification.md",
+      "sha256": "72ae78c6d2fc0c9188bd086743f7a66ee06ee778859b36c834e9d1400ad22e97",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 7 dependent NGFP controls, tabs and required fields with later UI follow-up, bounded test projects and separate field-device and real QGIS cloning gaps.",
+      "applies_to": [
+        "docs/reference/form-behavior-verification.md",
+        "docs/architecture/conditional-form-rules.md",
+        "docs/architecture/cascading-form-lists.md",
+        "docs/guides/form-behavior-user-guide.md"
+      ]
+    },
+    {
+      "path": "docs/reference/project-scripts-verification.md",
+      "sha256": "0a5dbde1161fb452a9c7d0459f27d2d984f57bfc585cc0f742d94a8b3fd13c42",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 7 script integration binds owner frames, App and desktop technical checks, historical initial failures and both QGIS dialog results. Live WebGIS acceptance remains separate.",
+      "applies_to": [
+        "docs/reference/project-scripts-verification.md",
+        "docs/architecture/project-scripts.md",
+        "docs/guides/project-scripts-user-guide.md",
+        "docs/architecture/collector-projects.md"
+      ]
+    },
+    {
+      "path": "docs/history/azimuth-crash-verification-2026-10-08.md",
+      "sha256": "aee7ecf9b96da416c5ef80fbf5998fe2cc57a3218da0edac81921e55cb0fbc57",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Azimuth foreground-service failure and six native regressions with a separate suite of existing cases, limited GPS/permission fixture and original release frame.",
+      "applies_to": [
+        "docs/history/azimuth-crash-verification-2026-10-08.md",
+        "docs/architecture/stakeout.md",
+        "docs/architecture/location-pipeline.md",
+        "docs/architecture/crash-recovery.md"
+      ]
+    },
+    {
+      "path": "docs/history/background-walk-controls-2026-10-09.md",
+      "sha256": "24214aadac97f4b1fa2e395de52048bb664032c8c0e3c1b19addd687cc45e739",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Walk finish/cancel, attribute form and panel placement receipt with ten native scenarios and the then-open App and library dependency chain.",
+      "applies_to": [
+        "docs/history/background-walk-controls-2026-10-09.md",
+        "docs/architecture/feature-type-creation.md",
+        "docs/architecture/ui-accessibility.md",
+        "docs/runbooks/automated-tests.md"
+      ]
+    },
+    {
+      "path": "docs/history/contrast-orbit-delivery-2026-10-11.md",
+      "sha256": "49d1df794ecf1c0fc6b8b5805a873f059f395f294f4cf068c806de8c8acbeda4",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Contrast marker and sector delivery preserves merged library trees, repeated stopped startup fixture, and the physical compass gap.",
+      "applies_to": [
+        "docs/history/contrast-orbit-delivery-2026-10-11.md",
+        "docs/architecture/location-pipeline.md",
+        "docs/architecture/map-rendering.md",
+        "docs/runbooks/device-smoke-tests.md"
+      ]
+    },
+    {
+      "path": "docs/history/measurement-menu-2026-10-09.md",
+      "sha256": "bdc4aedab86a52d2ea97f37f0a4410b10390d9709c1e52f6229d32d71ba07db0",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Shared measurement entry receipt preserves its layout test, then-current source inclusion and original release prerequisites.",
+      "applies_to": [
+        "docs/history/measurement-menu-2026-10-09.md",
+        "docs/architecture/ui-contracts.md",
+        "docs/architecture/ui-accessibility.md",
+        "docs/runbooks/automated-tests.md"
+      ]
+    },
+    {
+      "path": "docs/history/orbit-ring-delivery-2026-10-11.md",
+      "sha256": "12433b92db5bda547bcbc5b8b814b5bef1133890c88aa3c8dbd131d12165f6e9",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Orbit-ring production 3.1.2.28/222 prep preserves the consumer pin, marker reload/zoom tests and the pending phone checks.",
+      "applies_to": [
+        "docs/history/orbit-ring-delivery-2026-10-11.md",
+        "docs/architecture/location-pipeline.md",
+        "docs/architecture/map-rendering.md",
+        "docs/runbooks/release-apk.md"
+      ]
+    },
+    {
+      "path": "docs/history/track-delivery-2026-10-09.md",
+      "sha256": "c70da489fa6a00bd0575fd8a26a7329e67a4099077f3aa4b6df883db59e04453",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Track indication and automatic delivery receipt distinguishes background owner selection, corrected map fixture, failed startup and successful targeted retry.",
+      "applies_to": [
+        "docs/history/track-delivery-2026-10-09.md",
+        "docs/architecture/shared-tracks.md",
+        "docs/architecture/track-controls.md",
+        "docs/architecture/ngw-sync-and-storage.md"
+      ]
+    },
+    {
+      "path": "docs/history/walk-card-and-start-extent-2026-10-09.md",
+      "sha256": "56402e7560865b19ee3857fc0a0f8a860a4965ce304cfac4537e593bbfed8dcb",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Walk panel and GPS start extent receipt keeps the initial geometry/form checks and explicit process-death, camera/save, phone and large-screen gaps.",
+      "applies_to": [
+        "docs/history/walk-card-and-start-extent-2026-10-09.md",
+        "docs/architecture/feature-type-creation.md",
+        "docs/architecture/location-pipeline.md",
+        "docs/architecture/ui-accessibility.md"
+      ]
+    },
+    {
+      "path": "docs/reference/maplibre-13-7-1-verification-2026-10-24.md",
+      "sha256": "08dce63babc8a500e2cd744625a1be8e630d6e8b9f4ff418348ac3a07f5ef70e",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "MapLibre 13.7.1 OpenGL migration matrix records unit, APK and 27 phone native cases. Other OS and no-Vulkan devices stayed separate.",
+      "applies_to": [
+        "docs/reference/maplibre-13-7-1-verification-2026-10-24.md",
+        "docs/architecture/map-rendering.md",
+        "docs/runbooks/device-smoke-tests.md",
+        "docs/runbooks/release-apk.md"
+      ]
+    },
+    {
+      "path": "docs/reference/mobile-resource-profile-t40-2026-10-28.md",
+      "sha256": "6943aebfa6a2ab9525e8ff53c81da2a8b854881e1f0b7229751a283e1bc1d2d6",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "T40 map session preserves distinct queue, density, memory and observer-overhead measurements on the exact profile, with future checks scoped separately.",
+      "applies_to": [
+        "docs/reference/mobile-resource-profile-t40-2026-10-28.md",
+        "docs/architecture/map-performance.md",
+        "docs/runbooks/manual-resource-profiling.md",
+        "docs/architecture/map-rendering.md"
+      ]
+    },
+    {
+      "path": "docs/reference/point-firefly-verification-2026-10-24.md",
+      "sha256": "909f569570c4b5caf926d8476062f81c72da89678bf415313fff31ff76440a60",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Firefly style receipt preserves bitmap/JSON limits, the 18-case phone slice, the interrupted emulator setup and the unrun Full.",
+      "applies_to": [
+        "docs/reference/point-firefly-verification-2026-10-24.md",
+        "docs/architecture/classic-style-verification.md",
+        "docs/architecture/map-rendering.md",
+        "docs/runbooks/automated-tests.md"
+      ]
+    },
+    {
+      "path": "docs/reference/polygon-style-verification-2026-10-24.md",
+      "sha256": "45a399321a87b2c37c60871aa580741eb01517c448a792aaf987ab16e416479d",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Polygon style receipt distinguishes the first passing native slice, later tablet result, fixture-induced failure and targeted editor rerun.",
+      "applies_to": [
+        "docs/reference/polygon-style-verification-2026-10-24.md",
+        "docs/architecture/polygon-style-controls.md",
+        "docs/architecture/classic-style-verification.md",
+        "docs/runbooks/device-smoke-tests.md"
+      ]
+    },
+    {
+      "path": "docs/reference/track-controls-verification-2026-10-25.md",
+      "sha256": "d4d482cb09e4e7c02ab7b72417f2a6a46b918e4d35ef7133b6dd83d160d3a417",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Track controls and point priority receipt keeps the editor finding, 876 unit and 62 related native cases and separate release-compilation scope.",
+      "applies_to": [
+        "docs/reference/track-controls-verification-2026-10-25.md",
+        "docs/architecture/shared-tracks.md",
+        "docs/architecture/track-controls.md",
+        "docs/architecture/classic-style-verification.md"
+      ]
+    },
+    {
+      "path": "docs/reference/track-dark-core-2026-10-25.md",
+      "sha256": "759dbf1d00319aebd7c547f28ccd22a2ea93808919a734765982d31e6f6bd724",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Dated user selection of the two-layer dark-core style preserves sample parameters and prior verification from a different revision.",
+      "applies_to": [
+        "docs/reference/track-dark-core-2026-10-25.md",
+        "docs/architecture/shared-tracks.md",
+        "docs/architecture/track-controls.md",
+        "docs/architecture/map-rendering.md"
+      ]
+    },
+    {
+      "path": "docs/reference/track-followup-2026-10-25.md",
+      "sha256": "613beadf0258f0c9e7cd804ef48602592518e7c29b30b2cc3ba999757caeb30e",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Track and line-label follow-up preserves the failed expanded emulator batch, targeted regression, phone coordinate evidence and original source pins.",
+      "applies_to": [
+        "docs/reference/track-followup-2026-10-25.md",
+        "docs/architecture/shared-tracks.md",
+        "docs/architecture/track-controls.md",
+        "docs/architecture/visible-line-labels.md"
+      ]
+    },
+    {
+      "path": "docs/reference/glitchtip-layer-reorder-2026-10-10.md",
+      "sha256": "a8768d34afdb88278233aaa375225604e0486a4aecc65f91fa550766088c1d20",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Issue 52 exit on a list drag retains the diagnosed owner transition, focused gesture checks, original close authorization and remaining phone gaps.",
+      "applies_to": [
+        "docs/reference/glitchtip-layer-reorder-2026-10-10.md",
+        "docs/runbooks/glitchtip-triage.md",
+        "docs/architecture/map-rendering.md",
+        "docs/architecture/error-reporting.md"
+      ]
+    },
+    {
+      "path": "docs/reference/glitchtip-triage-2026-10-13.md",
+      "sha256": "eb70f7559f694800598384b5c01fba03f63a6a5f2d13e00e86c7d73fdbb282c0",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 13 triage retains group-level causes, targeted crash and gesture evidence and the distinction between handled permission refusal and process exit.",
+      "applies_to": [
+        "docs/reference/glitchtip-triage-2026-10-13.md",
+        "docs/runbooks/glitchtip-triage.md",
+        "docs/architecture/error-reporting.md",
+        "docs/architecture/crash-recovery.md"
+      ]
+    },
+    {
+      "path": "docs/reference/glitchtip-triage-2026-10-17.md",
+      "sha256": "a0d2fe3648d9b5b6c58e2d06fbaf72cf84a080faa226ceca4466eb5e264ee8ef",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 17 nine-group triage preserves the sync ownership and reporting observations, targeted verification and dated delivery and group disposition.",
+      "applies_to": [
+        "docs/reference/glitchtip-triage-2026-10-17.md",
+        "docs/runbooks/glitchtip-triage.md",
+        "docs/architecture/ngw-sync-and-storage.md",
+        "docs/architecture/error-reporting.md"
+      ]
+    },
+    {
+      "path": "docs/reference/glitchtip-triage-2026-10-23.md",
+      "sha256": "b18ec9c9d1f7b58ccfe9fd1b95dddd12f27c7587f8eb40dba43cac4fc5e7ec40",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 23 twelve-group triage preserves fatal compass evidence, narrowly identified local queue noise, old sync journal limitations and failed-then-passing fixture results.",
+      "applies_to": [
+        "docs/reference/glitchtip-triage-2026-10-23.md",
+        "docs/runbooks/glitchtip-triage.md",
+        "docs/architecture/error-reporting.md",
+        "docs/architecture/location-pipeline.md"
+      ]
+    },
+    {
+      "path": "docs/reference/glitchtip-triage-2026-10-29.md",
+      "sha256": "ec9834581f5561501e8d4a7cec94a9395a20649f9e2e0851316cd88372834f39",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 29 triage preserves individual group decisions, native/OS witnesses, diagnostic-only follow-up and the two unrun emulator cases.",
+      "applies_to": [
+        "docs/reference/glitchtip-triage-2026-10-29.md",
+        "docs/runbooks/glitchtip-triage.md",
+        "docs/architecture/location-pipeline.md",
+        "docs/architecture/error-reporting.md"
+      ]
+    },
+    {
+      "path": "docs/reference/mobile-crash-224-2026-10-27.md",
+      "sha256": "11b711ee15256592a7e4b0c1424db9f29beaddfc1e3a50d2700cf9e137f5903e",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 224 exit dossier keeps original process evidence, revoked assumptions, uncommitted private candidate, later JVM/build checks and remaining field attribution limits.",
+      "applies_to": [
+        "docs/reference/mobile-crash-224-2026-10-27.md",
+        "docs/architecture/crash-recovery.md",
+        "docs/architecture/error-reporting.md",
+        "docs/architecture/map-rendering.md"
+      ]
+    },
+    {
+      "path": "docs/reference/mobile-full-2026-10-25.md",
+      "sha256": "1cf772dd681b45a8c026ba7ae08a093c03fad0c5739bcd1db505adbcddb0ff54",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October Full chronology preserves complete failed passes, independent address-specific reruns, distinct device matrices and the actual publication gate.",
+      "applies_to": [
+        "docs/reference/mobile-full-2026-10-25.md",
+        "docs/runbooks/automated-tests.md",
+        "docs/runbooks/device-smoke-tests.md",
+        "docs/runbooks/release-apk.md"
+      ]
+    },
+    {
+      "path": "docs/reference/mobile-release-fixes-2026-10-26.md",
+      "sha256": "653192894457434df0176e6e0b7efb67ed1930a26ec71cf91a0e085339152a9d",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "October 26–27 release checkpoint separates historical phone Full, tablet setup failure, limited later related cases, and the current-at-the-time publication refusal and dry-run.",
+      "applies_to": [
+        "docs/reference/mobile-release-fixes-2026-10-26.md",
+        "docs/runbooks/release-apk.md",
+        "docs/runbooks/automated-tests.md",
+        "docs/runbooks/device-smoke-tests.md"
+      ]
+    },
+    {
+      "path": "agent-system/migration/instruction-reconciliation.json",
+      "sha256": "c4de4c1cf107994482c932f31405ed3d8b8e24e238eb79dcccd9bf35d4b8a4e3",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Pinned original App policy questions, exact source clauses and reviewed current decision records.",
+      "applies_to": [
+        ".cursor/rules/git-workflow.mdc",
+        ".githooks/pre-push",
+        "AGENTS.md",
+        "agent-system/knowledge/policy-decisions/guarded-report-hook-installation.json",
+        "agent-system/knowledge/policy-decisions/legacy-mob02-subject-resolution.json",
+        "agent-system/knowledge/policy-decisions/routine-git-delivery-admission.json",
+        "agent-system/knowledge/policy-questions/instruction-commit-push-wording.json",
+        "agent-system/knowledge/policy-questions/instruction-hook-config-wording.json",
+        "agent-system/knowledge/policy-questions/roadmap-mob02-distinct-subjects.json",
+        "docs/roadmap/mobile.md",
+        "tools/check_update_reports.py"
+      ]
+    },
+    {
+      "path": ".github/workflows/android-reliability.yml",
+      "sha256": "a4fe88b4d88c2ce8b86c53a9e65036966cda8a04d96009a7901a18168b443bf3",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Protected Android reliability workflow with a manual dispatch trigger. The App test runbook and local verification entry define the applicable checks.",
+      "applies_to": [
+        ".github/workflows/android-reliability.yml",
+        "docs/runbooks/automated-tests.md",
+        "tools/verify-mobile-tests.ps1"
+      ]
+    },
+    {
+      "path": ".github/workflows/docs-validate.yml",
+      "sha256": "eae7c0d0bba2dd7be41c1a13a665c3f1480ba1877fe69955feb8df74667a2bf2",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Protected documentation workflow with a manual dispatch trigger. It preserves the order of report, docs and impact checks for the App owner.",
+      "applies_to": [
+        ".github/workflows/docs-validate.yml",
+        "tools/docs-check.ps1",
+        "docs/scripts/validate_docs.py",
+        "docs/scripts/check_change_impact.py"
+      ]
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Keep the App repository's GPL version 3 license text at the published Git address.",
+      "applies_to": [
+        "LICENSE",
+        "README.md"
+      ]
+    },
+    {
+      "path": "app/src/androidTest/assets/direct-vector-configs/kvartal.json",
+      "sha256": "49d9c893b307a793592ee1bc84a7b54882857cc0d2cb17fb355bea380db831a8",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Retain the kvartal configuration used by the direct vector rendering regression. Its original fields and renderer settings belong to the test input.",
+      "applies_to": [
+        "app/src/androidTest/assets/direct-vector-configs/kvartal.json",
+        "app/src/androidTest/java/com/nextgis/mobile/rendering/DirectVectorTilesTest.java",
+        "app/src/androidTest/assets/direct-vector-configs/provenance.json"
+      ]
+    },
+    {
+      "path": "app/src/androidTest/assets/direct-vector-configs/provenance.json",
+      "sha256": "5c7dc3c8b2a41c49e98d9dd0044883cea251be117949cc67bfa0f8db6fa7e497",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Retain the historical origin and sanitization notes for all three direct vector regression configurations.",
+      "applies_to": [
+        "app/src/androidTest/assets/direct-vector-configs/provenance.json",
+        "app/src/androidTest/java/com/nextgis/mobile/rendering/DirectVectorTilesTest.java",
+        "app/src/androidTest/assets/direct-vector-configs"
+      ]
+    },
+    {
+      "path": "app/src/androidTest/assets/direct-vector-configs/vertexfeature_recent.json",
+      "sha256": "919188dd2c02eb77d3bb7d321c3803da502c2244e431f273cfe64c1c67ac50e3",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Retain the vertexfeature_recent point configuration used by the direct vector rendering regression and its recorded source fields.",
+      "applies_to": [
+        "app/src/androidTest/assets/direct-vector-configs/vertexfeature_recent.json",
+        "app/src/androidTest/java/com/nextgis/mobile/rendering/DirectVectorTilesTest.java",
+        "app/src/androidTest/assets/direct-vector-configs/provenance.json"
+      ]
+    },
+    {
+      "path": "app/src/androidTest/assets/direct-vector-configs/vydel.json",
+      "sha256": "71faaa722cc91a00cb0d0da1699017fb339d437f387644c0c4d05ea1d88388cf",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Retain the vydel configuration used by the direct vector rendering regression, including the original schema and renderer settings.",
+      "applies_to": [
+        "app/src/androidTest/assets/direct-vector-configs/vydel.json",
+        "app/src/androidTest/java/com/nextgis/mobile/rendering/DirectVectorTilesTest.java",
+        "app/src/androidTest/assets/direct-vector-configs/provenance.json"
+      ]
+    },
+    {
+      "path": "app/src/androidTest/assets/feature-types/README.md",
+      "sha256": "02d055b860f6e86c653f12e24a7101b8c1b383c663992c65ef360cc4716940bb",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Retain the dated provenance, source scope and privacy boundary of the three standard field type fixtures.",
+      "applies_to": [
+        "app/src/androidTest/assets/feature-types/README.md",
+        "app/src/androidTest/assets/feature-types/standard-field-types.json",
+        "app/src/androidTest/java/com/nextgis/mobile/reliability/StandardFeatureTypesTest.java",
+        "app/src/androidTest/java/com/nextgis/mobile/reliability/MapEditingToolsTest.java"
+      ]
+    },
+    {
+      "path": "app/src/androidTest/assets/feature-types/standard-field-types.json",
+      "sha256": "f1e8ee9c24988a631cccbc02c4c4136d66e54756a085b50eefdf9ea3d00ffed3",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Protected standard field type fixture read by StandardFeatureTypesTest and MapEditingToolsTest. Its field categories, expected labels and historical source hashes remain at the test asset address.",
+      "applies_to": [
+        "app/src/androidTest/assets/feature-types/standard-field-types.json",
+        "app/src/androidTest/java/com/nextgis/mobile/reliability/StandardFeatureTypesTest.java",
+        "app/src/androidTest/java/com/nextgis/mobile/reliability/MapEditingToolsTest.java",
+        "app/src/androidTest/assets/feature-types/README.md"
+      ]
+    },
+    {
+      "path": "app/src/debug/assets/ngwstyle-backup.json",
+      "sha256": "e54d1e52a299e29a63f2f980c590ec11e811299ee243988762fc2ff13db6629c",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Retain the historical style backup in the Debug asset source set. Current runtime consumption of this backup remains UNKNOWN.",
+      "applies_to": [
+        "app/src/debug/assets/ngwstyle-backup.json",
+        "app/src/debug/assets",
+        "app/src/main/assets/ngwstyle.json"
+      ]
+    },
+    {
+      "path": "app/src/main/assets/ngwstyle.json",
+      "sha256": "f90989b0500f513aab18141bf3078b1d6a580ea93d0ecdbfc7ef83f2b71befec",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Protected packaged base style read by both MapFragment style loading routes. The exact renderer input remains at the app asset address.",
+      "applies_to": [
+        "app/src/main/assets/ngwstyle.json",
+        "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+        "docs/reference/official-differences.md"
+      ]
+    },
+    {
+      "path": "examples/project-scripts/contractor-audit/manifest.json",
+      "sha256": "6c01b26580b116310ff76c824e6c1df2799a8ce55b567d7bf8c3f71347359e43",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Protected manifest for the contractor audit example package. It declares schema and API versions, capabilities, layer bindings and hooks used in the documented example.",
+      "applies_to": [
+        "examples/project-scripts/contractor-audit/manifest.json",
+        "examples/project-scripts/contractor-audit",
+        "docs/architecture/project-scripts.md",
+        "docs/guides/project-scripts-user-guide.md"
+      ]
+    },
+    {
+      "path": "tools/glitchtip.json",
+      "sha256": "edc138660734e8d32cc28b39400032b33841f4fa1b0af56c0aaf2919820e9b55",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Retain the versioned App CLI project routing and credential-file reference. The operator credential file stays in its private location.",
+      "applies_to": [
+        "tools/glitchtip.json",
+        "tools/glitchtip.py",
+        "docs/runbooks/glitchtip-triage.md"
+      ]
+    },
+    {
+      "path": "tools/mobile-test-plan.json",
+      "sha256": "cb5a0e1a486eef458c36625e90e2597e294f8022e4896530233f362028a4213a",
+      "sha256_scope": "utf8_lf",
+      "category": "retained_evidence",
+      "reason": "Protected native test roster read by run_mobile_tests. It records areas, device and emulator selections, isolated methods and diagnostics. Execution evidence has its own scope.",
+      "applies_to": [
+        "tools/mobile-test-plan.json",
+        "tools/run_mobile_tests.py",
+        "tools/verify-mobile-tests.ps1",
+        "tools/tests/test_mobile_test_support.py",
+        "docs/runbooks/automated-tests.md"
+      ]
+    }
+  ]
+}

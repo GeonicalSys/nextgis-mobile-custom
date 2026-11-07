@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:device-smoke-tests-cursor-bearing-accuracy-and-style-refresh",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:device-smoke-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/device-smoke-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### Курсор без сектора точности компаса",
+        "",
+        "`SMOKE-LOCATION-CURSOR-TOP`: с валидным компасом проверить стрелку на месте и",
+        "в движении; без компаса — курс движения, затем круг без стрелки на остановке.",
+        "Чекбокс «Настройки → Местоположение → Показывать сектор точности компаса»",
+        "по умолчанию выключен. Включить и выключить его, возвращаясь на карту:",
+        "заливка и оба контура должны переключаться вместе и сохранять выбор после",
+        "hot-add, lite reload и смены zoom. Проверить полную русскую подпись при",
+        "крупном интерфейсе в обеих темах. Круг точности GPS и белая кайма центра",
+        "остаются видимыми.",
+        "Автоматическая проверка: Related `-Area cursor` на изолированном эмуляторе.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:device-smoke-tests-cursor-bearing-accuracy-and-style-refresh"
+    ]
+  }
+}

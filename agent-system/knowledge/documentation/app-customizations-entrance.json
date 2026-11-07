@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-customizations-entrance",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "CUSTOMIZATIONS.md",
+          "docs/reference/fork-customizations.md",
+          "agent-system/knowledge/documentation"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the established App documentation address and original Git range."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "CUSTOMIZATIONS.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "# Каталог кастомизаций перемещён",
+        "",
+        "Актуальная карта отличий форка находится в",
+        "[`docs/reference/fork-customizations.md`](docs/reference/fork-customizations.md).",
+        "",
+        "Подробные контракты поддерживаются в `docs/architecture`, `docs/reference`, `docs/runbooks` и",
+        "`docs/registry`. Пользовательская история версий находится в [`WHATS_NEW.md`](WHATS_NEW.md),",
+        "история upstream merge — в [`docs/history/upstream/`](docs/history/upstream/README.md).",
+        "",
+        "Этот файл оставлен как совместимый указатель для старых ссылок. Полная прежняя версия доступна в",
+        "истории git и не должна использоваться как актуальный источник истины.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-customizations-entrance"
+    ]
+  }
+}

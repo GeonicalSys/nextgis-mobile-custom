@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:device-smoke-tests-feature-type-create-and-cancel",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:device-smoke-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/device-smoke-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### Выбор типа объекта",
+        "",
+        "`SMOKE-FEATURE-TYPE-CREATION`: на тестовом проекте повторить создание карандашом,",
+        "по местоположению и обходом. Выбрать слой и категорию с её символом; после рисования,",
+        "GPS-точки или Finish обхода открыть форму. Проверить typeobj/classobj, смену класса,",
+        "Cancel, поворот выбора категории, холодное восстановление обхода до формы, один",
+        "и несколько слоёв, простой стиль и длинные подписи. Во время фонового обхода",
+        "отменить выбор категории точки и затем завершить обход: point lock освобождён,",
+        "сам обход и его категория сохранены. Native tests используют отдельный",
+        "эмулятор; ручной smoke с рабочим проектом на телефоне ещё не выполнен.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:device-smoke-tests-feature-type-create-and-cancel"
+    ]
+  }
+}

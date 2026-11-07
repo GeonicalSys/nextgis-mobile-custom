@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:crash-recovery-post-commit-outbox-and-project-clock",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:crash-recovery"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/crash-recovery.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Повтор доставки после сохранения",
+        "",
+        "After-commit scheduling LocalChangesWorker не публикуется при rollback. Durable",
+        "SQLite outbox и network-constrained WorkManager сохраняют принятые локальные",
+        "правки при process death/offline/HTTP failure; startup плюс periodic recovery",
+        "подбирают пропущенные события. TEMP/NOT_SYNC отдельными строками блокируют все",
+        "изменения соответствующего feature/attachment до Save. Новый full-project clock",
+        "не восстанавливается из старого global timestamp: только завершённая полная",
+        "owning-project очередь даёт подтверждённое время.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:crash-recovery-post-commit-outbox-and-project-clock"
+    ]
+  }
+}

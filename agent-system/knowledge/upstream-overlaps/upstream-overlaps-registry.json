@@ -1,0 +1,116 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:metadata:upstream-overlaps-registry",
+  "kind": "metadata",
+  "owner": "android_projects/android_gisapp",
+  "topic": "upstream-overlaps",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-schema": {
+      "role": "incumbent_registry_schema",
+      "value": 1
+    },
+    "registry-order": {
+      "role": "complete_reviewed_mapping_order",
+      "value": [
+        "POLYGON-STYLE-CONTROLS",
+        "POINT-FIREFLY",
+        "GPS-PIPELINE",
+        "MAP-DRAWABLE",
+        "RASTER-ANCHOR",
+        "LAYER-FILL",
+        "MAP-HOST",
+        "MAPLIBRE-BACKEND",
+        "GEOMETRY-EDIT-HISTORY",
+        "COLLECTOR-RESOURCE",
+        "APP-FLAVORS",
+        "RASTER-MBTILES"
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:upstream-overlaps-polygon-style-controls",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:upstream-overlaps-point-firefly",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:upstream-overlaps-gps-pipeline",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:upstream-overlaps-map-drawable",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:upstream-overlaps-raster-anchor",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:upstream-overlaps-layer-fill",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:upstream-overlaps-map-host",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:upstream-overlaps-maplibre-backend",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:upstream-overlaps-geometry-edit-history",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:upstream-overlaps-collector-resource",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:upstream-overlaps-app-flavors",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:upstream-overlaps-raster-mbtiles",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:metadata:upstream-overlaps-registry"
+    ]
+  }
+}

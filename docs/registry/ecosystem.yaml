@@ -1,3 +1,5 @@
+# Generated from agent-system/knowledge/ecosystem.
+# Edit the owner records, then run python -B docs/scripts/keyed_registry_knowledge.py --write.
 schema_version: 1
 systems:
   mobile-usage-server:
@@ -7,7 +9,8 @@ systems:
     origin: https://github.com/GeonicalSys/lisa.git
     docs_entry: README.md
     docs_url: https://github.com/GeonicalSys/lisa/blob/main/server/mobile_usage/README.md
-    source_of_truth: Versioned HTTPS mobile usage protocol, durable analytics database and private reports; no foreground duration.
+    source_of_truth: Versioned HTTPS mobile usage protocol, durable analytics database and private reports; no foreground
+      duration.
   mobile-app:
     title: GeonicalSystem NextGIS Mobile
     kind: workspace
@@ -16,7 +19,9 @@ systems:
     origin: https://github.com/GeonicalSys/nextgis-mobile-custom.git
     docs_entry: docs/START-HERE.md
     docs_url: https://github.com/GeonicalSys/nextgis-mobile-custom/blob/my-maplibre/docs/START-HERE.md
-    source_of_truth: Android source, phone/emulator verification and isolated mobile script lifecycle, Gradle variants, local GIS storage, NGW/Collector consumer behavior, APK release and updater identity enforcement across supported Android PackageManager versions.
+    source_of_truth: Android source, phone/emulator verification and isolated mobile script lifecycle, Gradle variants, local
+      GIS storage, NGW/Collector consumer behavior, APK release and updater identity enforcement across supported Android
+      PackageManager versions.
   desktop-profiles:
     title: LISA/BELKA QGIS profiles and launcher
     kind: external_workspace
@@ -36,188 +41,252 @@ systems:
     docs_url: https://github.com/GeonicalSys/lisa/blob/main/plugins/geonical-docs/START-HERE.md
     source_of_truth: QGIS plugin sources, desktop workflows, GIS resource publishing and central plugin documentation.
 contracts:
-  - id: ECO-SHARED-SOURCE-CONTRACTS
-    from: qgis-plugins
-    to: mobile-app
-    type: developer_source_contract
-    transport: Shared owner source/constraint metadata; not an APK input or runtime filesystem exchange.
-    statement: LISA change-impact review spans launcher and roles, templates and tenant overlays, PostgreSQL/QLR relations and triggers, NGW/Collector fields and portable form rules, diagnostic and usage queues, app/library variants, APK publication identity and saved updater/draft state. Read exact source evidence and conditions from the shared scenario/resource registries and layer-resource-audit; preserve protected consumers and unknown provider/runtime branches. These records describe separate conditional contracts rather than a single runtime pipeline. Static mapping and docs validation do not certify installed state, native acceptance, delivery or publication, and do not authorize edits of another owner's dirty source tree.
-    owners: [app, maplib, maplibui]
-    local_docs: [docs/architecture/lisa-ecosystem.md]
-    external_docs:
-      - system: qgis-plugins
-        path: geonical-docs/registry/scenario-contracts.yaml
-      - system: qgis-plugins
-        path: geonical-docs/registry/dependencies.yaml
-      - system: qgis-plugins
-        path: geonical-docs/registry/layer-resource-audit.json
-      - system: qgis-plugins
-        path: geonical-docs/architecture/mobile-client.md
-    verify: [AUTO-DOCS-VALIDATE]
-  - id: ECO-DEPENDENCY-DISCOVERY
-    from: qgis-plugins
-    to: mobile-app
-    type: developer_source_contract
-    transport: Read-only static source analysis in the available LISA source contour; no APK runtime import.
-    statement: Before every behavioral/API/data/resource/configuration change the agent discovers dependencies autonomously across the whole available desktop/mobile contour, using existing registries and user examples only as starting points; all newly confirmed links are persisted in the same task in the single shared generated index or curated semantic owner contracts, while ambiguous candidates and dynamic references retain source evidence, UNKNOWN and next steps. Actual owner roots/revisions and source-index freshness are checked before source commits; missing or different worktrees remain UNKNOWN, not covered by another clone's index. Independent expectations are never regenerated to fit faulty production. The shared --write command automatically retains source-backed historical provisional observations in dependency-observations.json; --check validates their structure without certifying current foreign working-tree freshness. This entry links the shared procedure and does not implement scanner execution or native acceptance in the Android validator.
-    owners: [app]
-    local_docs: [AGENTS.md, app/AGENTS.md, docs/architecture/lisa-ecosystem.md, docs/architecture/ngw-sync-and-storage.md, docs/guides/change-checklist.md, docs/roadmap/mobile.md]
-    external_docs:
-      - system: qgis-plugins
-        path: geonical-docs/guides/scenario-dependencies.md
-      - system: qgis-plugins
-        path: geonical-docs/registry/scenario-contracts.yaml
-      - system: qgis-plugins
-        path: geonical-docs/registry/discovered-dependencies.json
-      - system: qgis-plugins
-        path: geonical-docs/registry/dependency-observations.json
-      - system: qgis-plugins
-        path: geonical-docs/registry/dependency-audit-todo.yaml
-    verify: [AUTO-DOCS-VALIDATE]
-  - id: ECO-CONDITIONAL-FORM-RULES
-    from: qgis-plugins
-    to: mobile-app
-    type: server_resource_contract
-    transport: Legacy NGFP ZIP meta.json.lisa_form_rules
-    statement: Native v1/v2 conditions strengthen visible static required; v2 visible targets field containers or portable lisa_id elements without clearing values. UI visibility, markers and Save share pinned rules; drafts keep verified SHA-256 snapshots and desktop clone preserves namespace literals/field names without resource-ID remap. Tab navigation and independent selector rendering preserve the same field identities; no PostGIS schema/data write is needed.
-    owners: [maplib, maplibui, app]
-    local_docs: [docs/architecture/conditional-form-rules.md, docs/guides/form-behavior-user-guide.md]
-    external_docs:
-      - system: qgis-plugins
-        path: geonical-docs/architecture/mobile-client.md
-    verify: [SMOKE-CONDITIONAL-REQUIRED, SMOKE-REQUIRED-FIELDS]
-  - id: ECO-CASCADING-FORM-LISTS
-    from: qgis-plugins
-    to: mobile-app
-    type: server_resource_contract
-    transport: Legacy NGFP ZIP meta.json.lisa_form_dependencies
-    statement: Access synchronizer supplies shared stable-key dictionaries and declarative parent filters; desktop cloning preserves the complete namespace without resource-ID substitution. Native Android filters offline, clears descendants and validates Save while retaining pinned drafts and unchanged historical attributes. Managed legacy pairs render as separate labelled combobox fields without rewriting server forms; ordinary two-level controls and audit questions remain compatible.
-    owners: [maplib, maplibui, app]
-    local_docs: [docs/architecture/cascading-form-lists.md, docs/guides/cascading-form-lists-user-guide.md]
-    external_docs:
-      - system: qgis-plugins
-        path: geonical-docs/architecture/mobile-client.md
-    verify: [SMOKE-CASCADING-FORM-LISTS, SMOKE-REQUIRED-FIELDS]
-  - id: ECO-PROJECT-SCRIPTS
-    from: qgis-plugins
-    to: mobile-app
-    type: server_resource_contract
-    transport: Source-only ZIP attachment on a native vector_layer plus collector_project.mobile_json_config.lisa_project_scripts
-    statement: stand_project verifies deterministic ZIP and aliases before publication/readback; maplib validates hash/API and caches per project, isolated QuickJS uses APK-hosted bounded capabilities, maplibui pins complete references to forms and drafts. Spatial, table and write APIs are future capabilities, not arbitrary external JS implementations.
-    owners: [maplib, maplibui, app]
-    local_docs: [docs/architecture/project-scripts.md, docs/guides/project-scripts-user-guide.md]
-    external_docs:
-      - system: qgis-plugins
-        path: geonical-docs/guides/mobile-project-scripts.md
-    verify: [SMOKE-PROJECT-SCRIPTS, SMOKE-COLLECTOR-IMPORT]
-  - id: ECO-NGW-RESOURCE-EXCHANGE
-    from: qgis-plugins
-    to: mobile-app
-    type: server_resource_contract
-    transport: NextGIS Web API and Collector resources
-    statement: QGIS publishers and the Android consumer preserve resource identity, type, schema, permissions, style/form
-      composition and sync semantics; the Web GIS field-project catalog is the resource_group with keyname lisa for
-      both Lisa and Belka apps; Collector resmeta.items.district is a single Latin district key that must match a
-      token in the comma-separated feature district field (not exact string equality); SYNC_NONE layers compare the
-      filtered server feature count and reload a full snapshot when it differs unless the server reports zero; export-only
-      idqgs in a vector_only feature schema is included in mobile fields as LONG so the local schema matches NGW,
-      but it does not make the layer Android-editable; Android verifies authoritative NGW class/geometry/fields against
-      serialized config and physical SQLite, repairs serialized field or vector/PostGIS class drift without refill,
-      and uses backup-gated atomic replacement only for physical/geometry mismatch; transient NGW or external-database
-      availability never mutates resource identity or local data, and Android retries only failed pull layers without
-      repeating successful ones. Published kvartal/vydel/vertexfeature_recent mobile configs may still carry local_vector_tiles;
-      the current mobile preserves it as inert origin metadata, selects direct SQLite tiles for supported ordinary
-      renderers and excludes hidden vectors from map identify. Schema, authoritative geometry/FID, editability and
-      sync policy remain separately authoritative. The producer configs are unchanged; exact clean-source bytes/hashes
-      are regression inputs, not business data. Canonical LISA scenario/resource references to the removed LocalVectorTileProvider
-      require owner follow-up before end-to-end closure.
-    owners:
-    - app
-    - maplib
-    - maplibui
-    local_docs:
-    - docs/architecture/lisa-ecosystem.md
-    - docs/architecture/ngw-sync-and-storage.md
-    - docs/architecture/collector-projects.md
-    external_docs:
-    - system: qgis-plugins
-      path: geonical-docs/architecture/mobile-client.md
-    - system: qgis-plugins
-      path: geonical-docs/runbooks/06-ngw-webgis-deploy.md
-    - system: qgis-plugins
-      path: stand_project/ngw_standard/Общий для всех/mobile_configs/kvartal.json
-    - system: qgis-plugins
-      path: stand_project/ngw_standard/Общий для всех/mobile_configs/vydel.json
-    - system: qgis-plugins
-      path: stand_project/ngw_standard/Общий для всех/mobile_configs/vertexfeature_recent.json
-    verify:
-    - SMOKE-NGW-URL-IMPORT
-    - SMOKE-COLLECTOR-IMPORT
-    - SMOKE-MULTI-ACCOUNT-SYNC
-  - id: ECO-DESKTOP-MOBILE-OPERATIONS
-    from: desktop-profiles
-    to: mobile-app
-    type: indirect_operational_context
-    transport: Desktop QGIS plugins publish to NextGIS Web; Android consumes the server resources.
-    statement: The desktop profile does not deploy or configure the APK directly; end-to-end changes cross the plugin and NGW boundary explicitly.
-    owners: [app]
-    local_docs:
-      - docs/architecture/lisa-ecosystem.md
-    external_docs:
-      - system: desktop-profiles
-        path: docs/START-HERE.md
-      - system: desktop-profiles
-        path: docs/architecture/overview.md
-      - system: desktop-profiles
-        path: docs/architecture/mobile-boundary.md
-      - system: qgis-plugins
-        path: geonical-docs/architecture/mobile-client.md
-    verify: [SMOKE-NGW-URL-IMPORT, SMOKE-COLLECTOR-IMPORT]
-  - id: ECO-OFFLINE-BASEMAP-HANDOFF
-    from: qgis-plugins
-    to: mobile-app
-    type: portable_artifact_contract
-    transport: Explicit user or release import of a supported offline basemap package.
-    statement: qtiles_geonical produces completed raster MBTiles/ZIP but does not publish it automatically; confirmed
-      MBTiles replacement happens only after successful export and preserves the prior file on cancel/failure, temporary
-      .qtiles files are not import artifacts; the Android consumer accepts the unchanged tiles/metadata raster MBTiles
-      contract with Web Mercator tile matrix, supported image format, zoom range and bounds, without sharing a desktop
-      workspace path; vector MBTiles are out of scope. Legacy Debug-to-Geonical raster transfer remains a distinct
-      signed read-only ContentProvider/URI stream, unrelated to the removed vector HTTP server. Client phase/elapsed/cancel
-      changes do not alter desktop basemap formats or Debug originals; actual large-transfer acceptance is pending.
-    owners:
-    - app
-    - maplib
-    - maplibui
-    local_docs:
-    - docs/architecture/lisa-ecosystem.md
-    - docs/architecture/map-rendering.md
-    - docs/architecture/collector-projects.md
-    external_docs:
-    - system: qgis-plugins
-      path: qtiles_geonical/docs/README.md
-    - system: qgis-plugins
-      path: geonical-docs/architecture/mobile-client.md
-    - system: qgis-plugins
-      path: geonical-docs/runbooks/06-ngw-webgis-deploy.md
-    verify:
-    - SMOKE-NGRC-PRESERVE
-    - SMOKE-UPDATE-DATA-PRESERVE
+- id: ECO-SHARED-SOURCE-CONTRACTS
+  from: qgis-plugins
+  to: mobile-app
+  type: developer_source_contract
+  transport: Shared owner source/constraint metadata; not an APK input or runtime filesystem exchange.
+  statement: LISA change-impact review spans launcher and roles, templates and tenant overlays, PostgreSQL/QLR relations and
+    triggers, NGW/Collector fields and portable form rules, diagnostic and usage queues, app/library variants, APK publication
+    identity and saved updater/draft state. Read exact source evidence and conditions from the shared scenario/resource registries
+    and layer-resource-audit; preserve protected consumers and unknown provider/runtime branches. These records describe separate
+    conditional contracts rather than a single runtime pipeline. Static mapping and docs validation do not certify installed
+    state, native acceptance, delivery or publication, and do not authorize edits of another owner's dirty source tree.
+  owners:
+  - app
+  - maplib
+  - maplibui
+  local_docs:
+  - docs/architecture/lisa-ecosystem.md
+  external_docs:
+  - system: qgis-plugins
+    path: geonical-docs/guides/scenario-dependencies.md
+  - system: qgis-plugins
+    path: geonical-docs/registry/layer-resource-audit.json
+  - system: qgis-plugins
+    path: geonical-docs/architecture/mobile-client.md
+  verify:
+  - AUTO-DOCS-VALIDATE
+- id: ECO-DEPENDENCY-DISCOVERY
+  from: qgis-plugins
+  to: mobile-app
+  type: developer_source_contract
+  transport: Read-only static source analysis in the available LISA source contour; no APK runtime import.
+  statement: Before every behavioral/API/data/resource/configuration change the agent discovers dependencies autonomously
+    across the whole available desktop/mobile contour, using existing registries and user examples only as starting points;
+    newly confirmed source links are reflected in the locally rebuilt graph and semantic links are recorded in curated owner
+    contracts in the same task. Ambiguous candidates and dynamic references retain source evidence, UNKNOWN and next steps.
+    Actual owner roots/revisions and source-index freshness are checked before source commits; missing or different worktrees
+    remain UNKNOWN, not covered by another clone's index. Independent expectations are never regenerated to fit faulty production.
+    The shared --write command automatically retains source-backed historical provisional observations in dependency-observations.json;
+    --check validates their structure without certifying current foreign working-tree freshness. This entry links the shared
+    procedure and does not implement scanner execution or native acceptance in the Android validator.
+  owners:
+  - app
+  local_docs:
+  - AGENTS.md
+  - agent-system/knowledge/policy/application.required-entry.json
+  - docs/architecture/lisa-ecosystem.md
+  - docs/architecture/ngw-sync-and-storage.md
+  - docs/guides/change-checklist.md
+  - docs/roadmap/mobile.md
+  external_docs:
+  - system: qgis-plugins
+    path: geonical-docs/guides/scenario-dependencies.md
+  - system: qgis-plugins
+    path: geonical-docs/registry/dependency-observations.json
+  verify:
+  - AUTO-DOCS-VALIDATE
+- id: ECO-CONDITIONAL-FORM-RULES
+  from: qgis-plugins
+  to: mobile-app
+  type: server_resource_contract
+  transport: Legacy NGFP ZIP meta.json.lisa_form_rules
+  statement: Native v1/v2 conditions strengthen visible static required; v2 visible targets field containers or portable lisa_id
+    elements without clearing values. UI visibility, markers and Save share pinned rules; drafts keep verified SHA-256 snapshots
+    and desktop clone preserves namespace literals/field names without resource-ID remap. Tab navigation and independent selector
+    rendering preserve the same field identities; no PostGIS schema/data write is needed.
+  owners:
+  - maplib
+  - maplibui
+  - app
+  local_docs:
+  - docs/architecture/conditional-form-rules.md
+  - docs/guides/form-behavior-user-guide.md
+  external_docs:
+  - system: qgis-plugins
+    path: geonical-docs/architecture/mobile-client.md
+  verify:
+  - SMOKE-CONDITIONAL-REQUIRED
+  - SMOKE-REQUIRED-FIELDS
+- id: ECO-CASCADING-FORM-LISTS
+  from: qgis-plugins
+  to: mobile-app
+  type: server_resource_contract
+  transport: Legacy NGFP ZIP meta.json.lisa_form_dependencies
+  statement: Access synchronizer supplies shared stable-key dictionaries and declarative parent filters; desktop cloning preserves
+    the complete namespace without resource-ID substitution. Native Android filters offline, clears descendants and validates
+    Save while retaining pinned drafts and unchanged historical attributes. Managed legacy pairs render as separate labelled
+    combobox fields without rewriting server forms; ordinary two-level controls and audit questions remain compatible.
+  owners:
+  - maplib
+  - maplibui
+  - app
+  local_docs:
+  - docs/architecture/cascading-form-lists.md
+  - docs/guides/cascading-form-lists-user-guide.md
+  external_docs:
+  - system: qgis-plugins
+    path: geonical-docs/architecture/mobile-client.md
+  verify:
+  - SMOKE-CASCADING-FORM-LISTS
+  - SMOKE-REQUIRED-FIELDS
+- id: ECO-PROJECT-SCRIPTS
+  from: qgis-plugins
+  to: mobile-app
+  type: server_resource_contract
+  transport: Source-only ZIP attachment on a native vector_layer plus collector_project.mobile_json_config.lisa_project_scripts
+  statement: stand_project verifies deterministic ZIP and aliases before publication/readback; maplib validates hash/API and
+    caches per project, isolated QuickJS uses APK-hosted bounded capabilities, maplibui pins complete references to forms
+    and drafts. Spatial, table and write APIs are future capabilities, not arbitrary external JS implementations.
+  owners:
+  - maplib
+  - maplibui
+  - app
+  local_docs:
+  - docs/architecture/project-scripts.md
+  - docs/guides/project-scripts-user-guide.md
+  external_docs:
+  - system: qgis-plugins
+    path: geonical-docs/guides/mobile-project-scripts.md
+  verify:
+  - SMOKE-PROJECT-SCRIPTS
+  - SMOKE-COLLECTOR-IMPORT
+- id: ECO-NGW-RESOURCE-EXCHANGE
+  from: qgis-plugins
+  to: mobile-app
+  type: server_resource_contract
+  transport: NextGIS Web API and Collector resources
+  statement: QGIS publishers and the Android consumer preserve resource identity, type, schema, permissions, style/form composition
+    and sync semantics; the Web GIS field-project catalog is the resource_group with keyname lisa for both Lisa and Belka
+    apps; Collector resmeta.items.district is a single Latin district key that must match a token in the comma-separated feature
+    district field (not exact string equality); SYNC_NONE layers compare the filtered server feature count and reload a full
+    snapshot when it differs unless the server reports zero; export-only idqgs in a vector_only feature schema is included
+    in mobile fields as LONG so the local schema matches NGW, but it does not make the layer Android-editable; Android verifies
+    authoritative NGW class/geometry/fields against serialized config and physical SQLite, repairs serialized field or vector/PostGIS
+    class drift without refill, and uses backup-gated atomic replacement only for physical/geometry mismatch; transient NGW
+    or external-database availability never mutates resource identity or local data, and Android retries only failed pull
+    layers without repeating successful ones. Published kvartal/vydel/vertexfeature_recent mobile configs may still carry
+    local_vector_tiles; the current mobile preserves it as inert origin metadata, selects direct SQLite tiles for supported
+    ordinary renderers and excludes hidden vectors from map identify. Schema, authoritative geometry/FID, editability and
+    sync policy remain separately authoritative. The producer configs are unchanged; exact clean-source bytes/hashes are regression
+    inputs, not business data. Canonical LISA scenario/resource references to the removed LocalVectorTileProvider require
+    owner follow-up before end-to-end closure.
+  owners:
+  - app
+  - maplib
+  - maplibui
+  local_docs:
+  - docs/architecture/lisa-ecosystem.md
+  - docs/architecture/ngw-sync-and-storage.md
+  - docs/architecture/collector-projects.md
+  external_docs:
+  - system: qgis-plugins
+    path: geonical-docs/architecture/mobile-client.md
+  - system: qgis-plugins
+    path: geonical-docs/runbooks/06-ngw-webgis-deploy.md
+  - system: qgis-plugins
+    path: stand_project/ngw_standard/Общий для всех/mobile_configs/kvartal.json
+  - system: qgis-plugins
+    path: stand_project/ngw_standard/Общий для всех/mobile_configs/vydel.json
+  - system: qgis-plugins
+    path: stand_project/ngw_standard/Общий для всех/mobile_configs/vertexfeature_recent.json
+  verify:
+  - SMOKE-NGW-URL-IMPORT
+  - SMOKE-COLLECTOR-IMPORT
+  - SMOKE-MULTI-ACCOUNT-SYNC
+- id: ECO-DESKTOP-MOBILE-OPERATIONS
+  from: desktop-profiles
+  to: mobile-app
+  type: indirect_operational_context
+  transport: Desktop QGIS plugins publish to NextGIS Web; Android consumes the server resources.
+  statement: The desktop profile does not deploy or configure the APK directly; end-to-end changes cross the plugin and NGW
+    boundary explicitly.
+  owners:
+  - app
+  local_docs:
+  - docs/architecture/lisa-ecosystem.md
+  external_docs:
+  - system: desktop-profiles
+    path: docs/START-HERE.md
+  - system: desktop-profiles
+    path: docs/architecture/overview.md
+  - system: desktop-profiles
+    path: docs/architecture/mobile-boundary.md
+  - system: qgis-plugins
+    path: geonical-docs/architecture/mobile-client.md
+  verify:
+  - SMOKE-NGW-URL-IMPORT
+  - SMOKE-COLLECTOR-IMPORT
+- id: ECO-OFFLINE-BASEMAP-HANDOFF
+  from: qgis-plugins
+  to: mobile-app
+  type: portable_artifact_contract
+  transport: Explicit user or release import of a supported offline basemap package.
+  statement: qtiles_geonical produces completed raster MBTiles/ZIP but does not publish it automatically; confirmed MBTiles
+    replacement happens only after successful export and preserves the prior file on cancel/failure, temporary .qtiles files
+    are not import artifacts; the Android consumer accepts the unchanged tiles/metadata raster MBTiles contract with Web Mercator
+    tile matrix, supported image format, zoom range and bounds, without sharing a desktop workspace path; vector MBTiles are
+    out of scope. Legacy Debug-to-Geonical raster transfer remains a distinct signed read-only ContentProvider/URI stream,
+    unrelated to the removed vector HTTP server. Client phase/elapsed/cancel changes do not alter desktop basemap formats
+    or Debug originals; actual large-transfer acceptance is pending.
+  owners:
+  - app
+  - maplib
+  - maplibui
+  local_docs:
+  - docs/architecture/lisa-ecosystem.md
+  - docs/architecture/map-rendering.md
+  - docs/architecture/collector-projects.md
+  external_docs:
+  - system: qgis-plugins
+    path: qtiles_geonical/docs/README.md
+  - system: qgis-plugins
+    path: geonical-docs/architecture/mobile-client.md
+  - system: qgis-plugins
+    path: geonical-docs/runbooks/06-ngw-webgis-deploy.md
+  verify:
+  - SMOKE-NGRC-PRESERVE
+  - SMOKE-UPDATE-DATA-PRESERVE
 boundaries:
-  - id: ECO-NO-DIRECT-FILESYSTEM
-    systems: [desktop-profiles, qgis-plugins, mobile-app]
-    statement: Android runtime never reads QGIS profiles, plugin mirrors, variables.py or other desktop workspace files; shared data crosses through an explicit server/API contract or an explicit import of a supported portable artifact.
-    owners: [app, maplib, maplibui]
-    local_docs:
-      - docs/architecture/lisa-ecosystem.md
-    verify: [AUTO-DOCS-VALIDATE]
-  - id: ECO-SOURCE-OWNERSHIP
-    systems: [desktop-profiles, qgis-plugins, mobile-app]
-    statement: Every change is implemented and tested in its canonical source workspace; deployment mirrors and another project's generated artifacts are not source code.
-    owners: [app]
-    local_docs:
-      - docs/architecture/lisa-ecosystem.md
-    verify: [AUTO-DOCS-VALIDATE]
+- id: ECO-NO-DIRECT-FILESYSTEM
+  systems:
+  - desktop-profiles
+  - qgis-plugins
+  - mobile-app
+  statement: Android runtime never reads QGIS profiles, plugin mirrors, variables.py or other desktop workspace files; shared
+    data crosses through an explicit server/API contract or an explicit import of a supported portable artifact.
+  owners:
+  - app
+  - maplib
+  - maplibui
+  local_docs:
+  - docs/architecture/lisa-ecosystem.md
+  verify:
+  - AUTO-DOCS-VALIDATE
+- id: ECO-SOURCE-OWNERSHIP
+  systems:
+  - desktop-profiles
+  - qgis-plugins
+  - mobile-app
+  statement: Every change is implemented and tested in its canonical source workspace; deployment mirrors and another project's
+    generated artifacts are not source code.
+  owners:
+  - app
+  local_docs:
+  - docs/architecture/lisa-ecosystem.md
+  verify:
+  - AUTO-DOCS-VALIDATE
 
 # Consumer-only: split legacy cascade captions prefer NGFP fields[].display_name over layer alias.
 # Consumer-only: category creation reads existing local styles and NGFP dictionaries; publisher formats and field schemas are unchanged.

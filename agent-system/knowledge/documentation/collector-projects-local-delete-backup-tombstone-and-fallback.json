@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:collector-projects-local-delete-backup-tombstone-and-fallback",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:collector-projects"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the App mobile project topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/collector-projects.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Пользователь может создать пустой `LOCAL` workspace, переименовать локальное",
+        "отображаемое имя любого проекта и удалить активную локальную копию. Удаление не",
+        "вызывает NGW API и не удаляет Android account или серверный ресурс. Перед ним",
+        "все NGW-слои с несинхронизированными изменениями проходят обязательный full",
+        "backup gate. Workspace сначала атомарно переименовывается в tombstone, registry",
+        "и active preferences переключаются на последний открытый оставшийся проект,",
+        "и только затем tombstone удаляется. Если удалён последний проект, заранее",
+        "создаётся пустой локальный fallback с обычными OSM и «Мои треки».",
+        "Фоновая операция не открывает fallback-карту после удаления: экран проекта",
+        "возвращает пользователя в `MainActivity`, который открывает новую активную карту",
+        "на главном потоке. Поэтому уже успешное удаление не превращается в ложный",
+        "`STORAGE_FAILED` из-за Android `Looper`.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:collector-projects-local-delete-backup-tombstone-and-fallback"
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:error-reporting-explicit-zip-os-history-scope",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:error-reporting"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/error-reporting.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Системная история в отправляемом ZIP — 2026-10-27",
+        "",
+        "При явной команде отправки журнала MainActivity добавляет process-exits.json",
+        "непосредственно в ZIP. На Android 11+ читаются максимум восемь записей OS history,",
+        "затем выбирается основной package process. У каждой записи только timestamp,",
+        "PID, reason, status/signal, importance, PSS/RSS в KiB. Нормальные причины тоже",
+        "сохраняются как системные факты, а не объявляются crash. Сам явный ZIP export",
+        "не создаёт автоматических событий; restart fallback описан отдельно ниже.",
+        "Описания, trace streams, accounts,",
+        "карта, файлы объектов и фотографии здесь не читаются.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:error-reporting-explicit-zip-os-history-scope"
+    ]
+  }
+}

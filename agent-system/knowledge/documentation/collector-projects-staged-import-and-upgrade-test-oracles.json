@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:collector-projects-staged-import-and-upgrade-test-oracles",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:collector-projects"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the App mobile project topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/collector-projects.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "- сброс настроек и импорт проекта минимум с 13 слоями: все каталоги уникальны;",
+        "  точечный слой с начальным `visible=false` после локального включения виден",
+        "  сразу, а identify и карта согласованы без server config update, sync и restart;",
+        "- убийство процесса в середине партии и автоматическая докачка после запуска;",
+        "- отказ от импорта неполного snapshot и сохранение существующего workspace;",
+        "- ошибка/прерывание обновления формы с восстановлением прежней пары файлов;",
+        "- обновление APK поверх проекта с сохранением SQLite, форм и `.ngrc`-тайлов.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:collector-projects-staged-import-and-upgrade-test-oracles"
+    ]
+  }
+}

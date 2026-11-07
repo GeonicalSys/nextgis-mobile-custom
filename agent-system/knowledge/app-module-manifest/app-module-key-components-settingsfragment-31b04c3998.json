@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:app-module-key-components-settingsfragment-31b04c3998",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "app-module-manifest",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [
+      "lisa:mobile:metadata:app-module-manifest"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed module definition and its pinned source provenance."
+  },
+  "facets": {
+    "manifest-field": {
+      "role": "module_manifest_section",
+      "value": "key_components"
+    },
+    "definition": {
+      "role": "module_manifest_ordered_value",
+      "value": {
+        "path": "app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java",
+        "responsibility": "Admit storage move and confirmed Reset only under an exclusive project lease before default-directory/prefs/task effects; defer proposed-path and Reset publication through actual-path worker commit and owned UI completion; distinguish Activity drawable refresh from move ACK and preserve ordinary failure/cancel rebind, unexpected worker error propagation and exact terminal cleanup."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/app-module-manifest.json",
+    "scopes": [
+      "lisa:mobile:contract:app-module-key-components-settingsfragment-31b04c3998"
+    ]
+  }
+}

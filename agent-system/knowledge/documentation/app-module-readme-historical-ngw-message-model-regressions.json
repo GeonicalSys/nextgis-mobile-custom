@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:app-module-readme-historical-ngw-message-model-regressions",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "SyncFailurePresentationTest13 и ProjectSyncLateFailureTest7 проверяют реальные",
+        "builder/Intent factory и late outcome helper без карты/SQLite/сервера. App также",
+        "владеет library regressions FormLegacyListMessagesTest4, ResourceChildrenMessagesTest9",
+        "и LayerFillErrorMessageTest10. Actual shared89 source/model checks PASS; эти случаи не являются native",
+        "диалогами/всеми формами/полным sync. Belka source compile0/59с проверен отдельно.",
+        "",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:app-module-readme-historical-ngw-message-model-regressions"
+    ]
+  }
+}

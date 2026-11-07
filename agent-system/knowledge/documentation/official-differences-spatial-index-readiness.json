@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-spatial-index-readiness",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "28 октября2026, MOB-04: поверх текущего fork SQLite/native path общий индекс",
+        "производного PBF cache убирает повторный scan/regex/sort/stat каталога на каждом",
+        "новом тайле; атомарные bytes/identity и прежние budgets сохранены. Shared",
+        "cancellable admission2 до IO не даёт каждому отменённому SDK ожиданию создавать",
+        "blocking payload, не отбрасывая ещё нужные parent/fade tiles. Это fork-only",
+        "обслуживание существующего cache/queue, не новый долговременный кэш, не изменение",
+        "SQLite/NGW/Collector schema и не upstream merge. Измерение смартфона/Full не",
+        "выполнялось; готовится обычный APK с private profiling выключенным.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-spatial-index-readiness"
+    ]
+  }
+}

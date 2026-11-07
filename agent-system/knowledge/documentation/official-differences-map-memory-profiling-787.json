@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:official-differences-map-memory-profiling-787",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the dated comparison or verification at its original source span."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Квалифицированная выборка787 отнесла673MiB/74,2% из907MiB retained allocations",
+        "к GeoJSONVT index, включая≥564MiB property maps; около128MiB — растровые данные.",
+        "Эти числа не разлагают весь RSS. Плато само по себе не доказывает утечку,",
+        "точный триггер223→224 неизвестен. Unit/build и текущая native приёмка различаются;",
+        "нового Full PASS или выпуска здесь нет.28 октября адресно fetched official",
+        "master: app `6113485be698606240b9bc7f0740a18ecc084aaa`, maplib",
+        "`014247eea4a424e828c24d9e52e45fefed362f8d`, maplibui",
+        "`ed4dac77d51746509a2b59f3cc6b99151b841967`. В прочитанных tracked main-source",
+        "деревьях этих revisions нет CustomVectorSource entry point. Это адресная",
+        "source-сверка нового пути, не доказательство отсутствия всех аналогичных",
+        "оптимизаций official и не upstream merge. [Контракт](../architecture/map-performance.md), карточки",
+        "[cache economy](../../maplib/update-reports/entries/maplib-20261027-render-memory-budget.md),",
+        "[payload](../../maplib/update-reports/entries/maplib-20261028-native-geojson-payload.md),",
+        "[мотивы](../../maplib/update-reports/entries/maplib-20261027-pattern-exact-motif.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:official-differences-map-memory-profiling-787"
+    ]
+  }
+}

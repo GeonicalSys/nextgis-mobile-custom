@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:conditional-form-rules-form-values-and-common-save-gate",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:conditional-form-rules"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the NGFP or project-rule subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/conditional-form-rules.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "maplibui читает текущие scalar controls, включая неактивные вкладки и оба поля",
+        "double_combobox. Отсутствующее в форме поле существующего объекта читается один",
+        "раз из owning SQLite; для нового объекта оно отсутствует. Pre-draw observer",
+        "сравнивает только значения ссылочных полей и обновляет видимость/маркеры при изменении,",
+        "не заменяя listeners каскадов/скриптов и не читая SQLite на каждом кадре.",
+        "Save повторно вычисляет требования по снимку записываемых значений в общем пути",
+        "required-проверки, после durable checkpoint и до записи объекта/вложений.",
+        "Переход к пропущенному полю открывает нужную вкладку. Back Save проходит тот же gate.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:conditional-form-rules-form-values-and-common-save-gate"
+    ]
+  }
+}

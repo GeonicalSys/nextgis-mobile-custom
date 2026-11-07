@@ -1,0 +1,51 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:collector-projects-debug-transfer-observability-20261102",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:collector-projects"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated verification or delivery checkpoint and its limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/collector-projects.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Перенос растров из прежнего Debug остаётся явным действием в хранилище",
+        "подложек и не импортирует иной мобильный клиент/проект.2ноября исправлены",
+        "phase/elapsed UI и queued cancellation принимающей стороны; owner lease,",
+        "project identity, source retention и wire grants прежние. См.",
+        "[этапы и незавершённую приёмку](shared-underlays.md#наблюдаемость-переноса-debug-2ноября2026).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:collector-projects-debug-transfer-observability-20261102"
+    ]
+  }
+}

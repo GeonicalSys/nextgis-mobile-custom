@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:mobile-roadmap-map-memory-direct-sqlite-contract",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the published Markdown address and pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Второй этап в той жеMOB-04 реализован в текущем source tip: полная GeoJSON-копия",
+        "поддерживаемого ordinary слоя, включая startup, заменена SQLite bbox/RTree→полные",
+        "MVT→CustomVectorSource13.7.1 без HTTP. API есть в установленном SDK;",
+        "собственная сборка MapLibre пока не потребовалась. Это ещё не опубликованный",
+        "APK и не завершённая приёмка. Сохраняются original DB picking/copy/edit,",
+        "rule/template/scale/labels/patterns, source owner/cancellation/content/style epochs.",
+        "Необходима полная style parity: существующий прежний HTTP MVT polygon path допускает",
+        "rule renderer, но кодирует не все его свойства. Нельзя просто включить его для",
+        "всех слоёв или оставить глобальную GeoJSON-копию подписей. Низкомасштабный плотный",
+        "тайл сам может быть большим; это отдельный peak-memory gate. JSON настроек,",
+        "Collector/NGW interchange и сохранённые проекты сохраняют формат.",
+        "Проверять cold start/hot add/restyle/recreate, MVT и classic, редактирование,",
+        "направление/GPS во время жестов, освобождение источников и повтор после разгрузки.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:mobile-roadmap-map-memory-direct-sqlite-contract"
+    ]
+  }
+}

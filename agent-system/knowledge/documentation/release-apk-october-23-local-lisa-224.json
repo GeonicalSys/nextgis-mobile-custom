@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:release-apk-october-23-local-lisa-224",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:release-apk"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/release-apk.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Запрос 2026-10-23: повысить production до 3.1.2.30/224, собрать подписанный",
+        "локальный APK только ЛИСА, без публикации. Belka APK пользователь отложил.",
+        "После закрытия library/app PR выполнить version matrix с `-LisaOnly`;",
+        "проверить Lisa Debug/Release, diagnostic versions maplib, release identity,",
+        "подпись и SHA-256. Этот выбор не меняет default matrix для будущего Full.",
+        "Full на смартфоне/эмуляторе и Check-Publication обязательны перед публикацией;",
+        "локальная release-сборка сама по себе их не требует. Publisher, включая",
+        "dry-run, в этот запрос не входит. [Матрица закрытия](../history/mobile-release-3.1.2.30-2026-10-23.md).",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Local Lisa-only scope, -LisaOnly and publication gates are retained with the dated request."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:release-apk-october-23-local-lisa-224"
+    ]
+  }
+}

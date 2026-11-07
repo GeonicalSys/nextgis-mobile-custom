@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:automated-tests-render-stress-separate-process-and-native-camera",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Related -Area render-stress сохраняет seed PID и требует другой workload PID:",
+        "два actual direct SQLite CustomVectorSource,6480 технических полигонов по65",
+        "вершин и подписи, не менее90s взаимодействия после source admission и два",
+        "recreate. Каждый цикл проверяет effective native ID, current provider и пустой",
+        "совместимый global Java feature list обоих слоёв. Schema2 evidence отвергает",
+        "прежний logical-path/VectorSource counter и warm-process запуск. Финальная",
+        "длительность записывается после последней паузы, startup/total отделены.",
+        "Сохраняются native кадры, UI responsiveness,",
+        "данные, actual GPU и peak PSS/Java/native memory. Независимое чтение native",
+        "camera подтверждает минимум50 реально изменивших центр pan и15 изменивших",
+        "zoom pinch: отправленные MotionEvent сами по себе не считаются нагрузкой."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:automated-tests-render-stress-separate-process-and-native-camera"
+    ]
+  }
+}

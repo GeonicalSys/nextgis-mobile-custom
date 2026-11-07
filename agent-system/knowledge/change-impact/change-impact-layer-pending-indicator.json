@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:change-impact-layer-pending-indicator",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "change-impact",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "definition": {
+      "role": "complete_change_impact_definition",
+      "value": {
+        "id": "LAYER-PENDING-INDICATOR",
+        "paths": [
+          "maplibui/src/main/java/com/nextgis/maplibui/fragment/LayersListAdapter.java",
+          "maplibui/src/main/res/layout/row_layer.xml",
+          "app/src/androidTest/java/com/nextgis/mobile/reliability/LayerPendingChangesTest.java"
+        ],
+        "owners": [
+          "app",
+          "maplibui"
+        ],
+        "read": [
+          "docs/architecture/ngw-sync-and-storage.md"
+        ],
+        "invariants": [
+          "INV-SYNC-ACCOUNT-ISOLATION"
+        ],
+        "must_update_docs": [
+          "docs/architecture/ngw-sync-and-storage.md",
+          "maplibui/docs/README.md",
+          "app/docs/README.md"
+        ],
+        "verify": [
+          "AUTO-MAPLIBUI-ASSEMBLE",
+          "SMOKE-LAYER-PENDING-INDICATOR"
+        ],
+        "strict_docs": true
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/change-impact.json",
+    "scopes": [
+      "lisa:mobile:contract:change-impact-layer-pending-indicator"
+    ]
+  }
+}

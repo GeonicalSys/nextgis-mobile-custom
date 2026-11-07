@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ngw-sync-and-storage-storage-move-source-verification",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original source frame, dated result and acceptance limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Source-проверка:21 actual-body Robolectric/JVM cases PASS на frozen app bytes,",
+        "LisaDebug source compilation и BelkaRelease Java/Kotlin compilation выполнены",
+        "отдельно. Это не native move/DB/renderer/Reset acceptance. Retirement отменяет",
+        "публикацию новых render generations и кооперативную работу, но не ждёт active",
+        "blocking reads. Renderer drain, physical partial rollback, process restart,",
+        "registry/project.json и независимые path-key journals/drafts остаются UNKNOWN",
+        "в `AUDIT-TODO-WORKSPACE-MOVE-LEASE-DRAIN` и `AUDIT-TODO-WORKSPACE-KEY-MIGRATION`.",
+        "Адресный `SMOKE-WORKSPACE-STORAGE-MUTATION` — будущий NOT_RUN, не разрешение на запуск.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:ngw-sync-and-storage-storage-move-source-verification"
+    ]
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:crash-recovery-sync-journal-process-and-restart-boundary",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:crash-recovery"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/crash-recovery.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Recovery journal и граница процесса — 2026-10-30",
+        "",
+        "SyncRecoveryJournal защищает принятый состав project/account очереди внутри",
+        "процесса после rejected write. Семь известных queue/legacy ключей имеют одного",
+        "точного preferences owner; очередной successful write не должен подтвердить",
+        "предыдущее failed removal. Это отдельный контракт от form/geometry drafts.",
+        "Новый процесс читает фактически сохранённые preferences: исходная raw provenance,",
+        "false с новым disk state и crash после pair ACK требуют независимого readback.",
+        "Process view не является restart rollback или full-project completion.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:crash-recovery-sync-journal-process-and-restart-boundary"
+    ]
+  }
+}

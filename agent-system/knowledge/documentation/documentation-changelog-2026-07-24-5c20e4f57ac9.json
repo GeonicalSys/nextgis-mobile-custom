@@ -1,0 +1,79 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-07-24-5c20e4f57ac9",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-07-24",
+        "",
+        "- Исправлена регрессия zoom-выражений: `interpolate`/`step` по zoom снова",
+        "  верхний уровень (scale в stop outputs; label zoom gate через `step(0..24)`),",
+        "  иначе MapLibre отвергал property и ломал масштаб/opacity.",
+        "- Rule-based: слойные дефолты MapLibre (stops, scale, opacity, SymbolLayer",
+        "  clamp) берутся из «прочих»; merge наследует scale flags и opacity; zoom-scale",
+        "  expression — outer switchCase; явный reset min/max подписей.",
+        "- Lisa Debug поднят до `versionCode` 196 / `versionName` 3.1.2.5 (maplib debug",
+        "  VERSION_NAME синхронизирован); Lisa/Belka Release остаются на `195` /",
+        "  `3.1.2.4`.",
+        "- Rule-based стили: зум видимости подписей работает per-category через feature",
+        "  props; незаданные опциональные поля наследуются из «Стиль для прочих",
+        "  (по умолчанию)»; zoom-stops слоя в rule-режиме берутся из прочих.",
+        "- Версия форка унифицирована до `versionCode` 195 / `versionName` 3.1.2.4 для",
+        "  Lisa Release, Belka Release и Lisa Debug; maplib VERSION_NAME сопряжён для",
+        "  debug и release.",
+        "- Collector project теперь импортирует уже штатно распознаваемые",
+        "  `qgis_vector_style` и `qgis_raster_style` как authenticated read-only raster",
+        "  tile layers, сохраняет их общий порядок с vectors и синхронизирует",
+        "  добавление, свойства, порядок и удаление.",
+        "- Зафиксирована граница поддержки: `Connection.java` не расширяется",
+        "  дополнительными современными style classes без отдельного продуктового",
+        "  решения; Activity/Dialog используют единый import helper.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-07-24",
+        "heading": "2026-07-24",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-07-24-5c20e4f57ac9"
+    ]
+  }
+}

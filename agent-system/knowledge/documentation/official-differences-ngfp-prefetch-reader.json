@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-ngfp-prefetch-reader",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Отдельный prefetch reader NGFP — 2026-10-30",
+        "",
+        "Current own fork добавляет ForPrefetch для двух внутренних callers; прежний public",
+        "reader и destructive consumers E66 целиком сохранены. Typed nested/orientation walk",
+        "и normalized dedup не меняют defaults/metadata/delete policy. Это адресная fork-доработка",
+        "MOB-02, не новый upstream comparison/merge/выпуск. Actual12GREEN2.149с/Gradle49с и",
+        "Belka Java/Kotlin0/41с относятся к own-live UI. Failed classifier/prelaunch sequence",
+        "NOT_PASS; post-readback exact100/Java JAR и exit7 repair не retroactive gate PASS.",
+        "Старые suites не запускались. App committed UI E66/F61 и UI39/142/19 не перепривязаны;",
+        "library Merge Commit до App pointer, отдельная runtime/device приёмка. Recipe/scope:",
+        "android-20261030-ngfp-lookup-prefetch-regression.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-ngfp-prefetch-reader"
+    ]
+  }
+}

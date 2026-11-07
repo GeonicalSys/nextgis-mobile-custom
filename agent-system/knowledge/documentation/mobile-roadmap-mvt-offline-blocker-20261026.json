@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:mobile-roadmap-mvt-offline-blocker-20261026",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout",
+      "lisa:mobile:task:mobile-roadmap-mvt-correctness-and-freshness"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the pinned checkpoint and keep its results within the stated source and runtime bounds."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## MVT-01 Корректность и актуальность",
+        "",
+        "Приоритет P1. Состояние: Исследуется. Основание: риск в исходниках.",
+        "",
+        "26 октября на source67f0125 отдельно подтверждён выпускной блокер: исходный",
+        "native MVT fallback case проходит при наличии active network и не загружает",
+        "локальный VectorSource при wifi/data off. SDK откладывает HTTP loopback вместе",
+        "с внешней сетью. Причастность обновления SDK не установлена; исправление ещё",
+        "не внесено, переделка загрузки не начиналась. Это дополнение к MOB-01/REL-03,",
+        "а не подтверждение следующего риска инвалидации. [Доказательства и состояние",
+        "приёмки](../reference/mobile-full-2026-10-25.md#подтверждённый-дефект-локальные-mvt-без-внешней-сети).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:mobile-roadmap-mvt-offline-blocker-20261026"
+    ]
+  }
+}

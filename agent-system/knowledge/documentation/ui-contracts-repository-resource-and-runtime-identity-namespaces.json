@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ui-contracts-repository-resource-and-runtime-identity-namespaces",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:ui-contracts"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ui-contracts.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Repository IDs совпадают с существующим `registry/repositories.yaml`:",
+        "`root` означает корень Android checkout (модуль app находится в `app/`),",
+        "`maplib` и `maplibui` — отдельные закреплённые репозитории библиотек.",
+        "UI ID, module ID, repository ID, project/layer/FID и resource ID не взаимозаменяемы.",
+        "Связанные правила: `INV-UI-VALUE-PROVENANCE` в",
+        "[invariants.yaml](../registry/invariants.yaml), `AUTO-UI-SOURCE-CONTRACTS` и",
+        "`SMOKE-UI-VALUE-PROVENANCE` в реестре проверок. Этап — `MOB-UI-01`",
+        "[мобильной дорожной карты](../roadmap/mobile.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ui-contracts-repository-resource-and-runtime-identity-namespaces"
+    ]
+  }
+}

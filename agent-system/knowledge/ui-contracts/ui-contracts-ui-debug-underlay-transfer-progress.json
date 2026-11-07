@@ -1,0 +1,144 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-debug-underlay-transfer-progress",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-DEBUG-UNDERLAY-TRANSFER-PROGRESS"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-DEBUG-UNDERLAY-TRANSFER-PROGRESS",
+        "group": "offline",
+        "title": "Перенос подложек из прежнего Debug",
+        "surface": "Хранилище подложек: этап, время и отмена",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [
+          "underlay_transfer_status",
+          "underlay_transfer_scroll",
+          "underlay_transfer_cancel"
+        ],
+        "meaning": "Phase/time describe the current source attempt; bytes/tiles received do not mean the whole migration is finished.",
+        "value_origin": "Pinned Debug URI -> TransferSession phase/bytes/tiles/monotonic elapsed -> current uncanceled control -> localized LegacyUnderlayProgressText -> bounded status ScrollView; Cancel has its own fixed row.",
+        "units": "Received bytes, received tile count, source ordinal/count and floor(monotonic elapsed milliseconds/1000) seconds for this attempt.",
+        "updates": [
+          "Opening is visible before the worker/first byte. Receiving starts on read; final record enters Finalizing; validated published asset enters Attaching.",
+          "Watchdog pulses progress/lease through local finalization; a remote inactivity deadline applies only before stream completion/attach. One existing retry remains.",
+          "Only the same active uncanceled control can update text; phase changes scroll to the start."
+        ],
+        "actions": [
+          "Cancel closes/interrupts owned IO; queued cancel immediately restores UI/releases its lease.",
+          "Back requires the existing exit confirmation while a transfer is active."
+        ],
+        "conditions": [
+          "Selected project and UNDERLAY_MIGRATION ownership remain stable until actual IO exits.",
+          "List/another import are hidden while transferring; Cancel remains outside scrollable content."
+        ],
+        "saved_state": "In-process progress is not a durable completion ACK; validated catalog/provenance and atomic asset publication retain the existing restart/deduplication contract. Source Debug originals and IPC trust/schema stay unchanged.",
+        "source_ids": [
+          "underlay-transfer-start",
+          "underlay-transfer-layout",
+          "underlay-transfer-progress",
+          "underlay-transfer-cancel",
+          "underlay-transfer-stream-finished",
+          "underlay-transfer-pulse",
+          "underlay-transfer-descriptor",
+          "underlay-transfer-close",
+          "underlay-transfer-text"
+        ],
+        "expectations": [
+          "Oracle: slow open shows Opening and elapsed pulses; completed stream with local work shows Finalizing even when bytes no longer change.",
+          "Cancel before worker start releases the exact owned lease; late/canceled control cannot replace the current status.",
+          "Complete Russian status can scroll at280/320dp and font1/1.3/2 in both orientations/themes; Cancel remains fully visible and actionable."
+        ],
+        "unknowns": [
+          "Reported ten-minute delay cause and real old-Debug throughput remain UNKNOWN; new session/native tests are compile-only.",
+          "Uncooperative old Binder provider may outlive cancellation; late PFD is rejected, but this change does not promise a killable cross-package Binder call.",
+          "Real whole-window/OEM/nonlinear-font/touch and large-transfer/attach performance require tomorrow’s authorized live run."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-underlay-transfer-start",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-underlay-transfer-layout",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-underlay-transfer-progress",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-underlay-transfer-cancel",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-underlay-transfer-stream-finished",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-underlay-transfer-pulse",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-underlay-transfer-descriptor",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-underlay-transfer-close",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-underlay-transfer-text",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-debug-underlay-transfer-progress"
+    ]
+  }
+}

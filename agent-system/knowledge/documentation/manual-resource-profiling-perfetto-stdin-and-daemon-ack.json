@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:manual-resource-profiling-perfetto-stdin-and-daemon-ack",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:manual-resource-profiling"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/manual-resource-profiling.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Perfetto получает точные проверенные config bytes через host stdin subprocess,",
+        "`perfetto --background --txt -c -` сам возвращает actual daemon PID. Не используются",
+        "native shell pipeline, setsid или nohup: эта комбинация на T40 дала пустой log",
+        "и уже завершившийся PID. Фиксируется `NATIVE_BACKGROUND_PID_ACK_NOT_DATASOURCE_READY`.",
+        "Exact owned `/data/local/tmp/lisa-render-<session16>/lisa-heap-<window16>.pbtxt`",
+        "сохраняется для hash/provenance, но perfetto не открывает его. Output — existing writable",
+        "`/data/misc/perfetto-traces/lisa-heap-<window16>.pftrace`. Перед этим config",
+        "проверяется по hash, сохраняются layout/read-only directory probes."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:manual-resource-profiling-perfetto-stdin-and-daemon-ack"
+    ]
+  }
+}

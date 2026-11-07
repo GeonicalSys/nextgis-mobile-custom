@@ -1,0 +1,62 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-brand-and-variant-identities",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### Два независимых бренда",
+        "",
+        "Из одного проекта выпускаются «ЛИСА» и «Белка». У них разные названия, иконки,",
+        "цветовые ресурсы и идентификатор канала обновления. Manifest, intro и about",
+        "разрешают общую ссылку `app_launcher_icon` через flavor: Lisa использует",
+        "`ic_launcher_lisa`, Belka — отдельный `ic_launcher_belka`, подготовленный для",
+        "всех пяти Android density buckets. Artwork Belka не разделяется с Lisa и не",
+        "берётся из `app/src/main`. Release-пакеты имеют",
+        "GeonicalSystem application ID, поэтому могут устанавливаться отдельно от",
+        "официального NextGIS Mobile. Debug-сборка также отделена от production и может",
+        "использоваться на том же устройстве для проверки изменений.",
+        "",
+        "Production и debug используют отдельные Android account/provider identities.",
+        "Внутри каждого variant runtime, authenticator и sync adapter обязаны публиковать",
+        "один account type, поэтому установленный рядом официальный пакет не перехватывает",
+        "аккаунты Веб ГИС форка.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-brand-and-variant-identities"
+    ]
+  }
+}

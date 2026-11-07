@@ -1,0 +1,157 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:mobile-roadmap-map-memory",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "implemented",
+    "source_verification": "UNKNOWN",
+    "merge": "merged",
+    "runtime_verification": "UNKNOWN",
+    "release": "unknown",
+    "retention": "Keep sampled native ownership, failed and partial measurements, and independent ordinary-vector versus track scopes."
+  },
+  "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The guard and SQLite rendering changes are delivered in source. The physical 2 GiB, duration, warning and heavy-map gates remain open.",
+        "implementation": "The App 82/84 chain delivers memory policy, direct reads and queue work. App 89 adopts loopback retirement and the warning layout follow-up.",
+        "source_verification": "The named allocation, D101, dense-scene, cache recovery and later compile receipts use different builds. The speed or memory results apply to their own scenes and inputs.",
+        "merge": "App 82 and 84 adopted earlier library pins. App 89 adopts maplib 66 and maplibui 48 for the direct route.",
+        "runtime_verification": "T40 and A56 diagnostics and the software run provide bounded measurements. SM-X115, the complete 2 GiB workload and final warning/release matrix still need evidence.",
+        "release": "The private builds and 225 release preparation have separate acceptance and publication states.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/architecture/map-performance.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/reference/mobile-crash-224-2026-10-27.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "f05ded46154ee3a0028b664c2f16baf62b7df776",
+            "path": "docs/roadmap/mobile.md"
+          }
+        ]
+      }
+    },
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Приёмка: независимые unit границ1/2/4/8GiB и нескольких слоёв, actual software",
+        "AVD с2GiB, настоящий длительный pan/pinch+heading workload, видимое предупреждение",
+        "в обеих темах/ориентациях и при крупном интерфейсе; native memory/RSS/PSS evidence.",
+        "Обязательная Full и физическая SM-X115 приёмка сохраняются; наличие политики",
+        "и unit PASS не заменяют проверку реальных устройств и не разрешают выпуск.",
+        ""
+      ]
+    },
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "MOB-04"
+    },
+    "priority": {
+      "role": "priority_at_pinned_roadmap_basis",
+      "value": "P1"
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "Full task includes physical 2 GiB and heavy-map coverage. Implementation and per-build results are tracked by the linked slices."
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:task:mobile-roadmap-heavy-map-diagnostics",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-map-memory-queue-trim-20261028",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-map-memory-t40-resource-profile-20261028",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-map-memory-draft-and-dependencies-20261027",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-map-memory-private-d101-comparison",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-map-memory-dense-full-scene-video",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-map-memory-native-allocations",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-map-memory-experimental-ec71-comparison",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-map-memory-ordinary-build-and-actual-device-20261028",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-map-memory-cache-lifecycle-20261030",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:mobile-roadmap-map-memory-guard-and-cache-policy",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:mobile-roadmap-map-memory-direct-sqlite-contract",
+      "status": "source_backed"
+    },
+    {
+      "type": "related_unknown",
+      "target": "lisa:mobile:question:roadmap-mob02-distinct-subjects",
+      "status": "unknown"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-map-memory"
+    ]
+  }
+}

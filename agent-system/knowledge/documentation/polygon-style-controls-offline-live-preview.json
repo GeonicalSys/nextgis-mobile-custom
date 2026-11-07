@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:polygon-style-controls-offline-live-preview",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:polygon-style-controls"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the style or label subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/polygon-style-controls.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Живой образец",
+        "",
+        "StylePreviewView — небольшой offline MapLibre MapView над прокруткой настроек.",
+        "Он отображает геометрический символ точки, линии или полигона через те же",
+        "Point/Line/PolygonLayerFactory, общий генератор узоров и FireflyLayerFactory.",
+        "Подписи объектов в этом образце не показываются. Изменения определяются по JSON",
+        "перед отрисовкой окна, без таймера или доступа к рабочей карте/сети. MapView и",
+        "его изображения освобождаются при закрытии; исходный стиль и слой не меняются.",
+        "Чекбоксы имеют явный native widget style, чтобы overlay-тема сохраняла индикатор состояния и первое касание. Save/Cancel сохраняют обычные callbacks редактора. Клавиатура работает штатно.",
+        "Миниатюры категорий используют тот же procedural bitmap и настройки контура;",
+        "точный живой образец с масштабом/смещением — отдельный native MapView редактора.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:polygon-style-controls-offline-live-preview"
+    ]
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:error-reporting-sqlite-scope-bounds-and-saturation",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:error-reporting"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/error-reporting.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Контракт ограничен16 активными scopes,32 layer summaries и одним observer.",
+        "Локальная запись производится не чаще10s/слой; финальный suppressed outcome",
+        "получает отложенный flush. Saturation явно учитывает потерянные наблюдения,",
+        "завершённые summaries переиспользуются после throttle interval. Clock failure",
+        "обозначает недоступное timing, а не0ms. Сбой clock/writer/watch не меняет",
+        "rendering/cancellation и не удерживает завершённый scope.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:error-reporting-sqlite-scope-bounds-and-saturation"
+    ]
+  }
+}

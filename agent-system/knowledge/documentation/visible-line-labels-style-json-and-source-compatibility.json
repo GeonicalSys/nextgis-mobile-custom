@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:visible-line-labels-style-json-and-source-compatibility",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:visible-line-labels"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the style or label subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/visible-line-labels.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Сохраняются field/template, fonts, halo, цвет/alpha, category rules, layer order,",
+        "zoom limits и стандартные collision/optional settings. Native collision может",
+        "скрыть пересекающиеся подписи, как и прежде; изгиб/длина прямого участка больше",
+        "не являются причиной их отсутствия. Старые repeat/spacing/max-angle остаются",
+        "в переносимом JSON для совместимости, но новый runtime явно показывает одну",
+        "прямую подпись на видимый объект. Запечённые в серверном raster подписи клиент",
+        "переориентировать не может. Потоковое размещение не меняет PBF/source binding",
+        "нового SQLite route; общая архитектура описана в map-rendering.md.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:visible-line-labels-style-json-and-source-compatibility"
+    ]
+  }
+}

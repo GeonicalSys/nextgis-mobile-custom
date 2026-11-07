@@ -1,0 +1,95 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-08-21-a914b436b741",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-08-21",
+        "",
+        "- История скетча расширена с 10 до 100 отмен; снимки с одинаковым координатным WKT",
+        "  от выбора узла и MapLibre callbacks, отличающиеся только CRS, больше не занимают",
+        "  шаги. Undo/Redo меняет одну реальную правку за одно нажатие без пустого шага на",
+        "  границе или переполнении.",
+        "- Одноточечный скетч MultiPolygon теперь распознаётся до topology repair и при",
+        "  сохранении показывает «Недостаточно точек» вместо ошибки исправления геометрии.",
+        "- Восстановление Polygon из WKT теперь разделяет кольца по уровню скобок и не",
+        "  дублирует внешний контур как дырку: после сбоя скетч сохраняет одну заливку и",
+        "  исходные узлы. Невалидный обычный Polygon остаётся открыт для исправления, а",
+        "  самопересечение сообщается отдельно вместо ложного «Недостаточно точек».",
+        "- Отмена нового скетча крестиком теперь требует подтверждения; преобразование",
+        "  экранных вершин линий и полигонов переведено с устаревающего legacy display на",
+        "  актуальную MapLibre-проекцию, чтобы первая вершина следовала текущему центру.",
+        "- Первая вершина нового линейного/полигонального скетча теперь берётся из",
+        "  экранной проекции центра камеры; отмена нового объекта сразу возвращает карту,",
+        "  дублирующая нижняя кнопка `+` удалена, площадь линейки выводится в гектарах.",
+        "- `INV-GEOMETRY-SKETCH-WORKFLOW` переведён со стартовых примитивов на один",
+        "  центральный узел и tap/midpoint-вставку для линий, полигонов и линейки;",
+        "  промежуточная кнопка `+`, touch-append и overflow убраны. Обход теперь доступен",
+        "  с первого узла, хранит part/ring/insertion target и вставляет GPS после",
+        "  выбранной вершины с актуальным live-хвостом.",
+        "- Ручное восстановление Polygon/MultiPolygon замыкает GeoJSON-кольца до",
+        "  извлечения вершин, поэтому заливка и порядок узлов не расходятся после crash.",
+        "  `INV-MAP-CAMERA-CONTROLS` дополнен параллельным pinch/rotate и порогом `0.5°`",
+        "  для немедленного двухпальцевого поворота.",
+        "- Production-версия Lisa/Belka поднята до `3.1.2.10` / `versionCode 204` после",
+        "  публикационного dry-run, подтвердившего, что `202` уже занят; debug остаётся",
+        "  `3.1.2.9` / `203`, release `maplib.VERSION_NAME` обновлён синхронно.",
+        "- `INV-PROJECT-OPERATION-EXCLUSION` и `SMOKE-PROJECT-MANAGEMENT` дополнены",
+        "  атомарным отказом импорта Collector во время sync/fill с модальным сообщением,",
+        "  а также успешным удалением workspace без повторного открытия карты из worker.",
+        "- Добавлены `INV-HIDDEN-VECTOR-TILE-IDENTIFY` и",
+        "  `SMOKE-HIDDEN-VECTOR-TILE-IDENTIFY`: выключенный `local_vector_tiles` остаётся",
+        "  доступным для локального просмотра атрибутов, не включая отрисовку; выключенный",
+        "  classic layer по-прежнему исключён.",
+        "- Актуальный official `nextgis_mobile_android/master` повторно проверен",
+        "  21 августа 2026 года: его identify всё ещё безусловно пропускает",
+        "  `visible=false`, а проектного registry и `local_vector_tiles` в official нет.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-08-21",
+        "heading": "2026-08-21",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-08-21-a914b436b741"
+    ]
+  }
+}

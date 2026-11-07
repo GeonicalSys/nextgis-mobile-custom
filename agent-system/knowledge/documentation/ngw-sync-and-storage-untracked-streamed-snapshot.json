@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-untracked-streamed-snapshot",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Полный untracked snapshot не материализуется целиком в Java heap. HTTP body",
+        "пишется во временный app-owned JSON рядом со слоем, первым потоковым проходом",
+        "собираются только remote IDs и план backup/delete, вторым — по одному feature",
+        "применяется одна SQLite-транзакция. После commit выполняются одна cache rebuild",
+        "и один отложенный MapLibre reload. Объект с отсутствующей или невалидной",
+        "геометрией не прерывает слой: его remote ID остаётся в snapshot identity, чтобы",
+        "не удалить прежнюю локальную копию, сам объект не применяется, а остальные",
+        "features продолжают транзакцию. HyperLog записывает ограниченное число ID и",
+        "индексов таких объектов без координат и атрибутов. При parse/IO/SQLite/OOM транзакция",
+        "откатывается, marker синхронизации остаётся для повтора, а временный файл",
+        "удаляется. Выключенный слой не строит полный GeoJSON snapshot до включения.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-untracked-streamed-snapshot"
+    ]
+  }
+}

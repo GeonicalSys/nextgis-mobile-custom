@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:mobile-usage-upload-worker-packet-ack-and-retry",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-usage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/mobile-usage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "`UsageUploadWorker`: immediate connected job + уникальная periodic работа",
+        "15 минут, exponential backoff. `UsageDelivery` посылает до 50 записей/пачку,",
+        "не следует redirects и удаляет только явно подтверждённые ID той же пачки.",
+        "Offline, 503, auth/conflict и неверные ACK сохраняют исходные записи. Force-stop",
+        "и Doze могут отложить доставку до разрешённого Android запуска/открытия UI.",
+        "Никакого GPS/foreground service ради аналитики нет. Ошибка аналитики не",
+        "должна блокировать приложение, синхронизацию или очередь crash reports.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:mobile-usage-upload-worker-packet-ack-and-retry"
+    ]
+  }
+}

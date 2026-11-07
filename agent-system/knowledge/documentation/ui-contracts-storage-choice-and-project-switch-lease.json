@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ui-contracts-storage-choice-and-project-switch-lease",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:ui-contracts"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ui-contracts.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Chooser строит `chosenRoot/map` из `getExternalFilesDirs`. Тот же storage index",
+        "закрывает диалог без move; другой выбор требует доступного storage либо current",
+        "path вне перечисленных roots. Listener всегда возвращает false, в том числе",
+        "после admission: requested path/card/summary не становятся сохранённым результатом.",
+        "Оба входа сначала получают публичный `PROJECT_SWITCH` lease. Busy refusal",
+        "показывает wait message, сохраняя whole prefs, карту, result и чужого owner;",
+        "default destination для Reset тоже разрешается только под lease.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ui-contracts-storage-choice-and-project-switch-lease"
+    ]
+  }
+}

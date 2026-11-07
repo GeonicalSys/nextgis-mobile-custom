@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:map-performance-memory-pressure-policy",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-performance",
+      "lisa:mobile:resource:map-rendering-free-memory-policy-and-notice"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the performance subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-performance.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Экономия ресурсов и сообщение пользователю",
+        "",
+        "`RenderMemoryGuard` принимает решения по текущему свободному остатку системной",
+        "памяти, её порогу/OS low-memory state и Java headroom. Занятое другими",
+        "приложениями устройство8GiB может перейти к экономии, а устройство2GiB с",
+        "достаточным остатком не замедляется только из-за номинального класса.",
+        "Installed RAM/Android low-RAM class задают лишь обычный disk cache и резерв",
+        "свободной памяти32/64MiB. Used/native/RSS — только диагностика; фиксированного",
+        "порога занятой памяти или доли установленной RAM для предупреждения нет.",
+        "Малый свободный остаток позволяет отключить межмасштабный cache и вызвать",
+        "SDK `onLowMemory`. Перегрузка очереди — отдельный факт задержки, который сам",
+        "по себе не устанавливает нехватку RAM.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:map-performance-memory-pressure-policy"
+    ]
+  }
+}

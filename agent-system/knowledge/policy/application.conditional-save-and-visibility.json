@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:application.conditional-save-and-visibility",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "policy-application",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain editable logical subject and pinned provenance; product implementation/acceptance are separate records."
+  },
+  "facets": {
+    "body": {
+      "role": "standing_contract",
+      "value": "Проверять публичный запуск формы со связанным meta, вкладки, Save/Back Save,\npin черновика и отсутствие SQLite-записи при нарушении условий.\nFormAppearanceTest проверяет обе темы, перенос выбранного имени и нижний Save.\nV2 visibility: hide/show/rotation/durable recovery не стирают текст; hidden static\nrequired не блокирует Save, а видимый required остаётся обязательным.\n"
+    },
+    "classification": {
+      "role": "reviewed_knowledge_class",
+      "value": "standing_contract"
+    },
+    "review": {
+      "role": "classification_reason",
+      "value": "Public form/meta/Save/pin/no-write tests and hidden-value retention with visible required semantics remain complete."
+    },
+    "source_section": {
+      "role": "source_document_context",
+      "value": [
+        "# app — инструкции для ИИ-агентов",
+        "## Project scripts"
+      ]
+    },
+    "authority_limit": {
+      "role": "authority_and_acceptance_boundary",
+      "value": "Path applicability is reviewed separately from the rule's textual triggers. Every source condition and heading remains attached; no automatic predicate or lifecycle inference. Stored commands and dates do not grant current execution, freshness or product acceptance. Existing instruction clients/checkers remain effective until measured cutover."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/policy-migration.json",
+    "scopes": [
+      "lisa:mobile:contract:application.conditional-save-and-visibility"
+    ]
+  }
+}

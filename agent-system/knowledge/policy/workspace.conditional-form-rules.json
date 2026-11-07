@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:workspace.conditional-form-rules",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "policy-workspace",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "."
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain editable logical subject and pinned provenance; product implementation/acceptance are separate records."
+  },
+  "facets": {
+    "body": {
+      "role": "standing_contract",
+      "value": "Для зависимой обязательности читать `docs/architecture/conditional-form-rules.md`\nи `docs/guides/form-behavior-user-guide.md`. Декларативный `lisa_form_rules`\nв v1 усиливает required; v2 добавляет visible для field/element (lisa_id).\nСкрытое поле не блокирует UI Save, но значение, слой и draft не очищать.\nВидимость и required вычислять по одному pinned снимку и текущим значениям,\nвключая скрытые/неактивные вкладки; ошибка bind/version/pin блокирует Save.\nОформление FormFieldLayout общее для NGFP/обычных форм, подпись выше рамки;\nне возвращать технические key вместо alias и не заменять listeners каскада. Общий\nSave gate обязателен для toolbar и Back Save; условия вычисляются по текущим\nтипизированным значениям, включая неактивные вкладки. Сохранять проверенный\n`lisa_required_pin` в owning layer/form_rules и durable draft; ошибка pin\nблокирует запись. В clone запрещён remap всего namespace. Внешние Tabs закреплены\nнад полями; свайпы не должны перехватывать ввод, подпись и собственные жесты.\nПроверять повторные переходы над включёнными списками, checkbox, коротким\nкомментарием и пустой областью, а также vertical scroll и выделение текста.\n"
+    },
+    "classification": {
+      "role": "reviewed_knowledge_class",
+      "value": "standing_contract"
+    },
+    "review": {
+      "role": "classification_reason",
+      "value": "Complete v1/v2 required/visible, typed current values, immutable pin/draft, bind-failure Save gate, alias/listener and Tabs/touch conditions."
+    },
+    "source_section": {
+      "role": "source_document_context",
+      "value": [
+        "# GeonicalSystem NextGIS Mobile fork — инструкции для ИИ-агентов",
+        "## Пакеты правил проекта"
+      ]
+    },
+    "authority_limit": {
+      "role": "authority_and_acceptance_boundary",
+      "value": "Path applicability is reviewed separately from the rule's textual triggers. Every source condition and heading remains attached; no automatic predicate or lifecycle inference. Stored commands and dates do not grant current execution, freshness or product acceptance. Existing instruction clients/checkers remain effective until measured cutover."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/policy-migration.json",
+    "scopes": [
+      "lisa:mobile:contract:workspace.conditional-form-rules"
+    ]
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-wf-ngw-row-reflow-clipping",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "WF-NGW-ROW-REFLOW-CLIPPING"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "WF-NGW-ROW-REFLOW-CLIPPING",
+        "repository": "maplibui",
+        "path": "src/main/java/com/nextgis/maplibui/view/NgwResourceRowLayout.java",
+        "marker": "private static boolean clipsText(TextView text)",
+        "requires": [
+          "text.getLayout()",
+          "layout.getLineEnd(last)",
+          "layout.getEllipsisCount(line)",
+          "layout.getLineRight(line) > width + 1f"
+        ],
+        "forbids": [
+          "requestLayout(",
+          "removeView(",
+          "setTextSize(",
+          "setEllipsize("
+        ],
+        "sha256": "a6d3fa9ebecf38a572c3f46d8bb7d7b55fbfd0fc095dc39e4771e2fe06131997"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-wf-ngw-row-reflow-clipping"
+    ]
+  }
+}

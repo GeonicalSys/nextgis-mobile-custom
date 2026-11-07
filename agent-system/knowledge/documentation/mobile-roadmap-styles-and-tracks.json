@@ -1,0 +1,135 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:mobile-roadmap-styles-and-tracks",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "implemented",
+    "source_verification": "PASS",
+    "merge": "merged",
+    "runtime_verification": "UNKNOWN",
+    "release": "unknown",
+    "retention": "Keep Full attempts, 224 public readback and withdrawal, and the T40 scope and independent expected order."
+  },
+  "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The original styles and tracks package and later layer-order correction are distinct deliveries. Full and real-map coverage for the later route remain open.",
+        "implementation": "App 78 delivered styles, track actions and chooser changes with maplib 60/maplibui 44. App 84 adopted the later canonical relative-order correction.",
+        "source_verification": "The source builds and version checks apply to their named pins. The order correction has separate planner and native case evidence after the initial failure.",
+        "merge": "App 78–80 and library 60/44 merged for the original package. App 84 merged at 69edfe78 with maplib 62 for the later source.",
+        "runtime_verification": "Phone Full11 passed on its fingerprint. Tablet failures and interrupted runs remain distinct. The T40 focused cases and smoke leave nested/recreation and real-project completeness open.",
+        "release": "224 was published by exception and later withdrawn. The later source delivery has its own unpublished candidate and acceptance.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/reference/mobile-release-fixes-2026-10-26.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "69edfe78e1ac41c8c1418ea44cbb86f3e0e6657e",
+            "path": "docs/roadmap/mobile.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/reference/mobile-crash-224-2026-10-27.md"
+          }
+        ]
+      }
+    },
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Пакет включает принятые в текущем PR настройки стилей и управление треками, согласование MapLibre, а также связанные доработки Stop и прежней истории. Детальный объём и фактические проверки принадлежат PR и его квитанциям. Новые исправления в этом пакете сверяются также с REL-01/REL-03, GEO-01 или UX-03, если затрагивают соответствующий путь.",
+        "",
+        "Приёмка: закрытые зависимости библиотек и правильные pins, адресные проверки текущего объёма, явные непроверенные сценарии. Merge, проверка на устройстве и выпуск учитываются отдельно. Изменение приоритетов или объёма этого пакета требует обычной сверки с картой.",
+        ""
+      ]
+    },
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "MOB-01"
+    },
+    "priority": {
+      "role": "priority_at_pinned_roadmap_basis",
+      "value": "P1"
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "Original 224 package and later follow-ups have separate Git, Full, device and release outcomes."
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-styles-tracks-layer-order-20261029",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-styles-tracks-release-224-20261027",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-styles-tracks-chooser-20261025",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-styles-tracks-stable-window-20261026",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-styles-tracks-full-09-and-02",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-styles-tracks-publication-follow-up-20261026",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-styles-tracks-library-merge-20261026",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-styles-tracks-local-ci-checkpoint",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-styles-tracks-phone-tablet-and-release-checkpoint",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-styles-and-tracks"
+    ]
+  }
+}

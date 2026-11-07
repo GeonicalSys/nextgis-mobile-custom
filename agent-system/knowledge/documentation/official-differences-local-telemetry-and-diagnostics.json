@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-local-telemetry-and-diagnostics",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### Ограниченная телеметрия и локальная диагностика",
+        "",
+        "Google Analytics и автоматическая отправка событий удалены. Подробный HyperLog",
+        "хранится на устройстве и отправляется только явным действием пользователя.",
+        "Форк отправляет диагностические ошибки в собственный GlitchTip. Отчёт включает",
+        "stack trace, версию/бренд, устройство и фиксированные стадии работы. Private SDK",
+        "envelopes переживают offline/process restart; транспорт сохраняет 5xx/429 вместо",
+        "удаления, connected WorkManager повторяет отправку без Activity и GIS sync.",
+        "Screenshots, иерархия экранов и performance payloads отключены; полный HyperLog",
+        "и файлы проекта/фото не прикладываются. Контракт 2 сохраняет уже предоставленные",
+        "URL/query/HTTP headers/cookies/response, extras/custom contexts и frame paths,",
+        "включая пароли и значения, без маскирования, с ограничением размера. HTTP streams",
+        "и business storage для этого не читаются. Новая реализация не меняет fatal",
+        "delegation или восстановление черновиков. В проверенном official app master",
+        "`f11d38f7` такой transport/cache retry policy и фонового задания нет.",
+        "[Контракт](../architecture/error-reporting.md),",
+        "[разбор отчётов](../guides/bug-reports-user-guide.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-local-telemetry-and-diagnostics"
+    ]
+  }
+}

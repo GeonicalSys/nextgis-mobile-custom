@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-wf-date-ngfp-state",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "WF-DATE-NGFP-STATE"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "WF-DATE-NGFP-STATE",
+        "repository": "maplibui",
+        "path": "src/main/java/com/nextgis/maplibui/formcontrol/DateTime.java",
+        "marker": "public void saveState(Bundle outState)",
+        "requires": [
+          "ControlHelper.getSavedStateKey(mFieldName)",
+          "outState.putLong",
+          "datePickerDialog.dismiss()"
+        ],
+        "forbids": [],
+        "sha256": "cb8864d3b118804f30f5b7e91efef339eb626b791968108ed9dadc875b6e535e"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-wf-date-ngfp-state"
+    ]
+  }
+}

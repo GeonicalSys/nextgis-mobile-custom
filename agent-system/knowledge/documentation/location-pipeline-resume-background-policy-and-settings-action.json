@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:location-pipeline-resume-background-policy-and-settings-action",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:location-pipeline"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/location-pipeline.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "С 10 октября проверка выполняется также при открытии карты и Resume без трека",
+        "или обхода. `BackgroundLocationWarning` различает GPS-политику Battery Saver,",
+        "`ActivityManager.isBackgroundRestricted()` на API 28+ и отсутствие Doze exemption.",
+        "Последнее показывает возможный риск прерывания, а не доказывает текущий отказ GPS.",
+        "Предупреждение в Snackbar не блокирует карту; «Настроить» предлагает нужные",
+        "переходы: Battery Saver, настройки приложения для разрешения фоновой работы,",
+        "запрос исключения из оптимизации батареи. Return/rotation не запускают запись.",
+        "Если действие одно, «Настроить» сразу открывает системный запрос или страницу,",
+        "без промежуточного диалога приложения. Список сохраняется при нескольких",
+        "одновременно действующих ограничениях.",
+        "Одна неизменная ситуация показывается один раз за запуск, включая rotation;",
+        "новое ограничение предупреждает снова, устранение закрывает предупреждение.",
+        "Старое «не спрашивать» не скрывает проверку при открытии.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:location-pipeline-resume-background-policy-and-settings-action"
+    ]
+  }
+}

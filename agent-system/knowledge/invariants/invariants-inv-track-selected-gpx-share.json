@@ -1,0 +1,72 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:invariants-inv-track-selected-gpx-share",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "invariants",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "INV-TRACK-SELECTED-GPX-SHARE"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "title": "Selected shared-track Share retains identity, persisted GPX and current binding",
+        "owners": [
+          "app",
+          "maplibui"
+        ],
+        "statement": "Map panel shares exactly the captured shared TrackInfo.id via existing LayerUtil GPX exporter. Exact current Activity/view/selection/normal-mode guards reject stale launch. List multiselect, recorder state, shared DB/sent IDs, point order/segments, FileProvider roots/MIME/read grants stay owned by existing producers. XML-valid metadata round-trips exactly; path separators do not escape export cache. Unscaled action columns adapt by available/48dp; header/outer short-window fitting/native recipient acceptance are separate.",
+        "related_code": [
+          "maplibui/src/main/java/com/nextgis/maplibui/view/TrackSelectionPanel.java",
+          "maplibui/src/main/res/values/ids.xml",
+          "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+          "maplibui/src/main/java/com/nextgis/maplibui/util/ExportGPXTask.java",
+          "app/src/test/java/com/nextgis/mobile/fragment/SelectedTrackShareBindingTest.java",
+          "app/src/test/java/com/nextgis/maplibui/util/TrackGpxNameExportTest.java",
+          "app/src/test/java/com/nextgis/maplibui/view/TrackSelectionPanelTest.java"
+        ],
+        "verify_smoke": [
+          "AUTO-TRACK-SELECTED-GPX-SHARE",
+          "AUTO-UI-SOURCE-CONTRACTS"
+        ],
+        "must_update_docs": [
+          "docs/architecture/track-controls.md",
+          "docs/architecture/shared-tracks.md",
+          "docs/architecture/ui-contracts.md",
+          "docs/architecture/ui-accessibility.md",
+          "app/docs/README.md",
+          "app/docs/manifest.yaml",
+          "maplibui/docs/README.md",
+          "maplibui/docs/manifest.yaml"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:invariants-inv-track-selected-gpx-share"
+    ]
+  }
+}

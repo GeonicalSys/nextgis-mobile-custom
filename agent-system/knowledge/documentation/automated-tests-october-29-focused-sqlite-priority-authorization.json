@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:automated-tests-october-29-focused-sqlite-priority-authorization",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Адресная SQLite priority регрессия29 октября",
+        "",
+        "После сообщения владельца о полевых линиях/точках под треками разрешена отдельная",
+        "focused проверка `sqlite-priority` на явно выбранном стационарном устройстве.",
+        "Это новый этап после build-only поручения28 октября ниже; Full, profiler и",
+        "публикация остаются отложенными. Команда из Android root:",
+        "",
+        "```powershell",
+        "tools\\verify-mobile-tests.ps1 -Scope Related -Area sqlite-priority -PhoneOnly -PhoneSerial <явный-serial> -OutputPath <новый-owned-каталог-на-Q>",
+        "```",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "The exact command and stationary device scope belong to the October 29 user order."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:automated-tests-october-29-focused-sqlite-priority-authorization"
+    ]
+  }
+}

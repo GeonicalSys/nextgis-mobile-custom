@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-wf-sync-clock-format",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "WF-SYNC-CLOCK-FORMAT"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "WF-SYNC-CLOCK-FORMAT",
+        "repository": "maplibui",
+        "path": "src/main/java/com/nextgis/maplibui/util/ControlHelper.java",
+        "marker": "public static String getSyncTime(\n            Context context,\n            long timeStamp)",
+        "requires": [
+          "new SimpleDateFormat(\"dd MMM\", Locale.getDefault())",
+          "new SimpleDateFormat(\"HH:mm\", Locale.getDefault())",
+          "context.getString(R.string.last_sync_time)"
+        ],
+        "forbids": [],
+        "sha256": "1102f67516a4133145959194aede976f06b6fe0e58f6b51214d6d25640a3b6d7"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-wf-sync-clock-format"
+    ]
+  }
+}

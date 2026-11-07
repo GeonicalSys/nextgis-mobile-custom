@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:error-reporting-sqlite-phase-local-scope",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:error-reporting"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/error-reporting.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Локальные фазы SQLite rendering — 2026-10-28",
+        "",
+        "`MapRuntimeDiagnostics.SqliteScope` даёт обычной приватной сборке локальный",
+        "logcat tag `LISA-SqlitePhase` через существующий bounded writer. Отдельные",
+        "интервалы охватывают IO queue, layer lock, cache read/write, gate, RTree query,",
+        "attributes/BLOB read, full geometry decode, style, clip, polygon/line label,",
+        "PBF encode/finish и IO→Main dispatch. У активной операции виден текущий этап;",
+        "provider return, SDK return, cancellation и failure считаются отдельно."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:error-reporting-sqlite-phase-local-scope"
+    ]
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-server-schema-change-backup",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### Защита локальных данных при изменениях на сервере",
+        "",
+        "**Что это.** Дополнительный защитный этап перед операциями, которые могут",
+        "пересоздать локальную таблицу или удалить управляемый слой. Синхронизация",
+        "проверяет не только новые поля, но и поля, удалённые или изменённые на сервере.",
+        "",
+        "**Для чего.** Обычное автоматическое пересоздание слоя при изменении схемы может",
+        "уничтожить ещё не отправленные полевые данные. В форке такая операция не должна",
+        "произойти незаметно и без возможности восстановления.",
+        "",
+        "**Как работает.** Перед изменением локального слоя приложение сначала пытается",
+        "отправить допустимые локальные правки, затем создаёт полную резервную копию слоя",
+        "и только после этого применяет новую схему или серверное удаление. Новая версия",
+        "слоя сначала полностью загружается в отдельное локальное хранилище; рабочая",
+        "старая версия удаляется лишь после успешной подготовки замены. Если отправка",
+        "или обязательный backup не удались, локальный слой остаётся без разрушительных",
+        "изменений. Сохранённые копии можно выгрузить из приложения для восстановления,",
+        "анализа или передачи разработчику, а после проверки — удалить через интерфейс.",
+        "Обычное получение серверных метаданных вложений не считается разрушением и не",
+        "создаёт ZIP: сами файлы могут оставаться только в NGW, а их online metadata",
+        "сохраняется в SQLite. Любой backup копирует эту metadata-таблицу, но добавляет в ZIP",
+        "только файлы, физически имеющиеся на мобильном устройстве. Он никогда не докачивает",
+        "server-only вложения. Полное удаление feature и реальные изменения его геометрии/атрибутов",
+        "по-прежнему проходят fail-closed backup gate.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-server-schema-change-backup"
+    ]
+  }
+}

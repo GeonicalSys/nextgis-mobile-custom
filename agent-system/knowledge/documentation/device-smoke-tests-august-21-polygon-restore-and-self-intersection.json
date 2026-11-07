@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:device-smoke-tests-august-21-polygon-restore-and-self-intersection",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:device-smoke-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/device-smoke-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "11. **Восстановление полигона.** Начать Polygon и MultiPolygon тапами, не",
+        "    сохранять и выгрузить/аварийно остановить приложение. После запуска выбрать",
+        "    Continue: должны сразу быть видны исходное число узлов и одна правильная",
+        "    заливка без ложной дырки. По очереди передвинуть несколько разных",
+        "    восстановленных узлов — контур не ломается и не меняет порядок вершин. Затем",
+        "    создать обычный Polygon с самопересечением и нажать «Сохранить»: редактор",
+        "    остаётся открыт и сообщает «Обнаружено самопересечение», а не «Недостаточно",
+        "    точек». После исправления пересечения объект сохраняется штатно."
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Dated package recipe for recovery and invalid polygon handling."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:device-smoke-tests-august-21-polygon-restore-and-self-intersection"
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:change-impact-map-control-layout",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "change-impact",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "definition": {
+      "role": "complete_change_impact_definition",
+      "value": {
+        "id": "MAP-CONTROL-LAYOUT",
+        "paths": [
+          "app/src/main/java/com/nextgis/mobile/view/MapControl*.java",
+          "app/src/main/res/layout/layout_map_content.xml",
+          "app/src/main/res/layout/fragment_map*.xml",
+          "app/src/main/res/layout-land/fragment_map.xml"
+        ],
+        "owners": [
+          "app"
+        ],
+        "read": [
+          "docs/architecture/map-rendering.md",
+          "docs/architecture/crash-recovery.md"
+        ],
+        "invariants": [
+          "INV-MAP-CAMERA-CONTROLS"
+        ],
+        "must_update_docs": [
+          "app/docs/README.md",
+          "app/docs/manifest.yaml",
+          "docs/architecture/map-rendering.md",
+          "docs/reference/official-differences.md",
+          "docs/runbooks/device-smoke-tests.md"
+        ],
+        "verify": [
+          "AUTO-APP-RELEASES",
+          "SMOKE-MAP-CAMERA-CONTROLS",
+          "SMOKE-WALK"
+        ],
+        "strict_docs": true
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/change-impact.json",
+    "scopes": [
+      "lisa:mobile:contract:change-impact-map-control-layout"
+    ]
+  }
+}

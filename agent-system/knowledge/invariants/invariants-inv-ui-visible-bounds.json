@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:invariants-inv-ui-visible-bounds",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "invariants",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "INV-UI-VISIBLE-BOUNDS"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "title": "Enlarged system text and display sizes retain full labels and reachable actions",
+        "owners": [
+          "app",
+          "maplibui"
+        ],
+        "statement": "Adapt in order through wrapping and flexible layout, clear shorter wording, then local fitting only for remaining overflow. Respect system font/display settings; never silently reset them. Critical actions stay within usable screen bounds after insets and rotation with the keyboard closed. Simultaneous visibility of the entire UI and keyboard is not required; normal IME behavior remains unchanged. Native tests must verify complete text layout, no hidden lines or ellipsis, transformed action bounds and actual touch delivery. Map panels fit without introducing scrolling and restore natural sizes when space returns.\n",
+        "related_code": [
+          "maplibui/src/main/java/com/nextgis/maplibui/view/FittedPanelLayout.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/view/WrappingRow.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/util/ToolbarTextFit.java",
+          "app/src/androidTest/java/com/nextgis/mobile/reliability/LargeTextLayoutTest.java"
+        ],
+        "verify_smoke": [
+          "SMOKE-LARGE-TEXT-UI",
+          "AUTO-MAPLIBUI-ASSEMBLE",
+          "AUTO-APP-DEBUG"
+        ],
+        "must_update_docs": [
+          "docs/architecture/ui-accessibility.md",
+          "app/docs/README.md",
+          "maplibui/docs/README.md"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:invariants-inv-ui-visible-bounds"
+    ]
+  }
+}

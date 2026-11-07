@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:project-scripts-package-root-priority-and-clone-boundaries",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:project-scripts"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the NGFP or project-rule subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/project-scripts.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Пакет ищется целиком: `Индивидуальные настройки/project_scripts/<package>` →",
+        "`ngw_standard/<profile>/project_scripts/<package>`. Файлы разных источников не",
+        "смешиваются. Collect требует постоянные `keyname` слоёв и сохраняет пакет с",
+        "эталоном; publish wizard позволяет выбрать слои по названию и ID, в том числе",
+        "без keyname. Полное клонирование переносит ZIP, remap привязок и новый carrier.",
+        "Клон между серверами без нужного слоя отклоняется; клон на том же сервере может",
+        "сохранить внешние ссылки, если они остаются в составе Collector.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:project-scripts-package-root-priority-and-clone-boundaries"
+    ]
+  }
+}

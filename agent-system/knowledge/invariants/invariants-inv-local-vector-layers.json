@@ -1,0 +1,71 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:invariants-inv-local-vector-layers",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "invariants",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "INV-LOCAL-VECTOR-LAYERS"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "title": "Local vector layers remain editable and accept standard WGS84 coordinate files",
+        "owners": [
+          "maplib",
+          "maplibui",
+          "app"
+        ],
+        "statement": "A vector layer created in the application or imported from a local GeoJSON file is editable by default. GeoJSON without an explicit CRS is WGS84; CRS84 and common EPSG:4326 URN or OGC URL forms are accepted as WGS84, while EPSG:3857 aliases are converted through the existing Web Mercator path and other coordinate systems remain unsupported. A local KML or GPX file is treated as WGS84 and every valid coordinate, in source order, becomes a separate point in one editable layer; source geometry, styling and route/track topology are deliberately not retained. SQLite bulk-write PRAGMAs are configured before the import transaction and are never changed from inside an active transaction. An editable local layer remains in the object-creation picker while hidden; choosing it enables and saves visibility before editing starts.\n",
+        "related_code": [
+          "maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java",
+          "maplib/src/main/java/com/nextgis/maplib/util/GeoJSONUtil.java",
+          "maplib/src/main/java/com/nextgis/maplib/util/DatabaseContext.java",
+          "maplib/src/main/java/com/nextgis/maplib/util/CoordinatePointParser.java",
+          "maplib/src/main/java/com/nextgis/maplib/util/CoordinatePointLayerImporter.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/mapui/LayerFactoryUI.java",
+          "app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt",
+          "app/src/main/java/com/nextgis/mobile/MainApplication.java",
+          "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt"
+        ],
+        "verify_smoke": [
+          "SMOKE-LOCAL-VECTOR-LAYERS"
+        ],
+        "must_update_docs": [
+          "maplib/docs/README.md",
+          "maplibui/docs/README.md",
+          "app/docs/README.md",
+          "docs/reference/official-differences.md"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:invariants-inv-local-vector-layers"
+    ]
+  }
+}

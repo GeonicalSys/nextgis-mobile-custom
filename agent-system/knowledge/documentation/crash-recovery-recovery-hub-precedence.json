@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:crash-recovery-recovery-hub-precedence",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:crash-recovery"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/crash-recovery.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Recovery hub (`MainActivity.maybeOfferCrashRecovery`)",
+        "",
+        "Order after map resume:",
+        "",
+        "1. Track auto-start if its durable recording flag is enabled.",
+        "2. An owned point/final-walk form checkpoint takes precedence over a duplicate geometry handoff checkpoint.",
+        "3. Reconcile the durable walk owner: silently remove an unacknowledged empty start,",
+        "   finalize an interrupted FINISHING transition, offer Continue/Discard for a real",
+        "   stopped draft, or offer emergency reset when its map is not active.",
+        "4. Legacy interrupted walk reconstruction, then manual geometry/form recovery as applicable.",
+        "5. A point owner without a recoverable geometry/form offers explicit Continue/Discard; chooser recreation does not silently release the lock.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:crash-recovery-recovery-hub-precedence"
+    ]
+  }
+}

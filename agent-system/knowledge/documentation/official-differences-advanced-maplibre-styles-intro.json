@@ -1,0 +1,67 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-advanced-maplibre-styles-intro",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### Расширенная стилизация MapLibre",
+        "",
+        "**Что это.** Расширенный редактор оформления точек, линий, полигонов, правил и",
+        "подписей. Он опирается на paint/layout-свойства MapLibre (`CircleLayer`,",
+        "`LineLayer`, `FillLayer`, `SymbolLayer`) и сериализует их в JSON конфигурации",
+        "слоя. В официальном NextGIS Mobile 3.1.2 базовый редактор уже умеет простой",
+        "рендерер (цвет, толщина, несколько форм маркера, сплошная/штриховая линия,",
+        "контур) и rule-based стили по значению поля, но не выводит в UI большую часть",
+        "параметров MapLibre. Форк добавляет эти параметры в `StyleFragment` и применяет",
+        "их через `MPLFeaturesUtils` / `*LayerFactory` с горячей перезагрузкой style.",
+        "",
+        "**Для чего.** Полевую карту можно приблизить к принятой в организации",
+        "картографии: различать категории объектов не только цветом, делать подписи",
+        "читаемыми на сложной подложке и управлять плотностью отображения на разных",
+        "масштабах — без экспорта стиля в QGIS и без отдельного APK.",
+        "",
+        "**Базовый уровень (есть и в official).** Простой рендерер: цвет заливки и",
+        "обводки, толщина, прозрачность слоя, min/max zoom слоя. Точки — круг, ромб,",
+        "крест, треугольник, квадрат. Линии — сплошная, штриховая, с контуром. Подписи",
+        "— одно поле атрибута или фиксированный текст, цвет и размер. Rule-based",
+        "рендерер — стиль на каждое значение выбранного поля.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-advanced-maplibre-styles-intro"
+    ]
+  }
+}

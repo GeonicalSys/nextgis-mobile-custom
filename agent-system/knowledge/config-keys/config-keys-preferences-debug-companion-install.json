@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:config-keys-preferences-debug-companion-install",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "config-keys",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_registry_section",
+      "value": "preferences"
+    },
+    "registry-key": {
+      "role": "incumbent_mapping_or_list_key",
+      "value": "debug_companion_install"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "owner": "app",
+        "type": "app_private_shared_preferences",
+        "user_configurable": false,
+        "source": "app/src/main/java/com/nextgis/mobile/util/DebugCompanionInstaller.java",
+        "purpose": "Verified companion manifest, permission/install phase and originating project UID; separate from self-update state, resumed after the external Activity result or process recreation rather than intermediate dialog focus; completed companion install returns to Underlay storage for the same project"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/sectioned-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:config-keys-preferences-debug-companion-install"
+    ]
+  }
+}

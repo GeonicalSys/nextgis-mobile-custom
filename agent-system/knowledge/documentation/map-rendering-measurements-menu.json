@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:map-rendering-measurements-menu",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-rendering"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the rendering subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-rendering.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Линейка и азимут используют один `action_measurements` в общем map content.",
+        "Кнопка со значком линейки и подписью/tooltip «Измерения» открывает native PopupMenu",
+        "с тремя прямыми действиями: линейка, азимут от текущего местоположения и A→B.",
+        "Выбор не проходит через второй dialog. Меню не изменяет режим до нажатия;",
+        "callback проверяет живой Fragment, normal mode и отсутствие активной линейки.",
+        "Линейка/азимут скрывают общий вход до завершения; восстановленная линейка",
+        "также не показывает вторую кнопку. Старое show_ruler_measuring управляет",
+        "видимостью пункта линейки, оба режима азимута остаются доступны при false.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:map-rendering-measurements-menu"
+    ]
+  }
+}

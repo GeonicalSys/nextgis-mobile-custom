@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import runpy
 import sys
 from datetime import date
 from pathlib import Path
@@ -46,8 +47,16 @@ def portable_pack_root(workspace: Path, raw: object) -> Path:
     return candidate
 
 
-def render(template_path: Path, values: dict[str, str]) -> str:
-    return Template(template_path.read_text(encoding="utf-8")).substitute(values)
+def load_templates(docs_root: Path, names: set[str]) -> dict[str, str]:
+    prose = runpy.run_path(str(Path(__file__).with_name("prose_knowledge.py")))
+    paths = {name: path for name, path in prose["APP_SCAFFOLD_TEMPLATES"].items() if name in names}
+    owner = docs_root.parent
+    markers = (owner / prose["MANIFEST"], owner / prose["DIRECTORY"], owner / "agent-system/README.md")
+    if docs_root.name == "docs" and any(path.exists() or path.is_symlink() for path in markers):
+        projected = prose["project_documents"](owner, only=set(paths.values()))
+        return {name: projected[path] for name, path in paths.items()}
+    return {name: (docs_root / path.relative_to("docs")).read_text(encoding="utf-8")
+            for name, path in paths.items()}
 
 
 def write_exclusive(path: Path, content: str) -> None:
@@ -74,12 +83,15 @@ def main() -> int:
 
     workspace = args.workspace_root.resolve()
     docs_root = args.docs_root.resolve()
+    projector = runpy.run_path(str(Path(__file__).with_name("keyed_registry_knowledge.py")))
     try:
-        module_registry = load_mapping(docs_root / "registry" / "modules.yaml")
-        repository_registry = load_mapping(
-            docs_root / "registry" / "repositories.yaml"
-        )
-    except ValueError as exc:
+        module_registry = projector["project_for_docs"](docs_root, "modules")
+        if module_registry is None:
+            module_registry = load_mapping(docs_root / "registry" / "modules.yaml")
+        repository_registry = projector["project_for_docs"](docs_root, "repositories")
+        if repository_registry is None:
+            repository_registry = load_mapping(docs_root / "registry" / "repositories.yaml")
+    except (OSError, ValueError, KeyError, TypeError) as exc:
         return fail(str(exc))
     modules = module_registry.get("modules")
     repositories = repository_registry.get("repositories")
@@ -94,7 +106,8 @@ def main() -> int:
             "change it to 'required' before scaffolding"
         )
     repository_id = module.get("repository")
-    if repository_id not in repositories:
+    repository = repositories.get(repository_id)
+    if not isinstance(repository, dict):
         return fail(f"unknown repository {repository_id!r}")
     try:
         pack_root = portable_pack_root(workspace, module.get("pack_root"))
@@ -102,13 +115,16 @@ def main() -> int:
         return fail(str(exc))
 
     targets = {
-        "AGENTS.md": pack_root / "AGENTS.md",
         "README.md": pack_root / "docs" / "README.md",
         "manifest.yaml": pack_root / "docs" / "manifest.yaml",
     }
+    if pack_root.relative_to(workspace).as_posix() == repository.get("path"):
+        targets = {"AGENTS.md": pack_root / "AGENTS.md", **targets}
     missing = {name: path for name, path in targets.items() if not path.exists()}
     if not missing:
         return fail(f"documentation pack already exists for {args.module_id}")
+    if "AGENTS.md" in missing and (pack_root / "agent-system" / "policy-migration.json").exists():
+        return fail("restore the generated owner entrance through the shared policy reader")
 
     entrypoints = module.get("entrypoints")
     if not isinstance(entrypoints, list) or not entrypoints:
@@ -140,12 +156,11 @@ def main() -> int:
         "entrypoints_yaml": entries_yaml,
         "first_entrypoint": entrypoints[0],
     }
-    template_root = docs_root / "templates" / "module-docs"
-    rendered = {
-        "AGENTS.md": render(template_root / "AGENTS.md.tmpl", values),
-        "README.md": render(template_root / "README.md.tmpl", values),
-        "manifest.yaml": render(template_root / "manifest.yaml.tmpl", values),
-    }
+    try:
+        rendered = {name: Template(text).substitute(values)
+                    for name, text in load_templates(docs_root, set(missing)).items()}
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        return fail(f"cannot render scaffold templates: {exc}")
 
     print(f"Module: {args.module_id}")
     print(f"Pack root: {pack_root}")

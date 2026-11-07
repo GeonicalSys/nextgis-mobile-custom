@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-wf-sync-clock",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "WF-SYNC-CLOCK"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "WF-SYNC-CLOCK",
+        "repository": "root",
+        "path": "app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java",
+        "marker": "protected void updateInfo()",
+        "requires": [
+          "MapBase.getActiveInstance()",
+          "ProjectSyncState.lastComplete(getContext(),",
+          "R.string.project_sync_never_completed"
+        ],
+        "forbids": [],
+        "sha256": "69f2216a3f52a7ae5ad85898e376d8e8b35a0f6aeb8408b4c4e13c66514bd3a7"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-wf-sync-clock"
+    ]
+  }
+}

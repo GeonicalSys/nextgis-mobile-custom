@@ -1,0 +1,61 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ngw-sync-and-storage-full-clock-pr86-delivery-and-f61-supersession",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original source frame, dated result and acceptance limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Поставка исходников полного project clock — 2026-10-31",
+        "",
+        "Core PR63 принят Merge Commit `baa94f361101051b09f762d7eda1f36466436d5c`; consuming App gitlink",
+        "`maplib` указывает ровно на `baa94f361101051b09f762d7eda1f36466436d5c`. Контрольная точка до коммита App86: PR открыт, точные gitlinks подготовлены в этой ветке; доставка App требует последующего Squash Merge. Этот абзац фиксирует pre-merge snapshot. Итоговый статус и App merge SHA находятся в PR86 и общей LISA delivery receipt.",
+        "Это подтверждение доставки исходников с reviewed semantic UI pins, без публикации",
+        "или установки нового APK. Отдельный итог обычных UI/docs checks:",
+        "UI source check exit0:44 contracts/191 methods/49 files/11 groups; полный docs validator exit0;57 tests PASS за49.269s. Native/OEM/phone acceptance NOT_RUN.",
+        "",
+        "Этот current-delivery раздел адресно заменяет прежние текущие предупреждения",
+        "«до Merge Commit → app gitlink → semantic UI pin review» в разделе",
+        "«Неуспешный commit: память отдельно от диска» и абзаце перед checkpoint27 октября.",
+        "Их исходные F61 source/narrative и датированные checkpoints сохранены как история;",
+        "физические failed-write/restart вопросы из них этим исправлением не закрыты.",
+        "Whole исходный `WF-SYNC-CLOCK-STORE` и `UI-SYNC-COMPLETION-CLOCK` сохранены в",
+        "`coverage.project_sync_clock_delivery_review.history`, а не молча перепривязаны.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:ngw-sync-and-storage-full-clock-pr86-delivery-and-f61-supersession"
+    ]
+  }
+}

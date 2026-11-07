@@ -1,0 +1,148 @@
+{
+  "format": "lisa.agent-system.app-instruction-reconciliation.v1",
+  "owner": "android_projects/android_gisapp",
+  "pre_cutover_frame": {
+    "app": "1a87a46faa017e34b9f8f2ffda8f249123caf5c2",
+    "original_review_path": "agent-system/migration/instruction-review.json",
+    "original_review_blob": "4e9a358e4983d13716c1625a008172b8a87ff580",
+    "existing_client_entrances_effective": true
+  },
+  "decisions": [
+    {
+      "question": "lisa:mobile:question:instruction-commit-push-wording",
+      "original_question_path": "agent-system/knowledge/policy-questions/instruction-commit-push-wording.json",
+      "original_question_blob": "bf337be94bb779b4e2f6e175908ef55c43a1a027",
+      "original_question_digest": "aa0988208519f72d237ceb75b4f8577bcb6759c10b09a87d3b20c2c6d1652e12",
+      "accepted_question_digest": "5ee892ded0b5071e7fe6b44f3080748d030eaf4ed390452dc1965527b50e0df6",
+      "decision": "lisa:mobile:decision:routine-git-delivery-admission",
+      "accepted_decision_digest": "362528161d034ab4624dfe0ea4b39b330fbebf6057bac8f67c6423231446988c",
+      "original_source_witnesses": [
+        {
+          "path": ".cursor/rules/git-workflow.mdc",
+          "revision": "68bef7d199c4b83ac0ea4b0a9df263ca622d1bc4",
+          "blob": "7b4e5b4d876d6175c5bad3aae59afffd0adec834",
+          "spans": [
+            [
+              94,
+              146
+            ]
+          ],
+          "fragment_sha256": [
+            "56bbca39c5859747edb53a591a19573309a57cfc986da035f6a805e82e1560b3"
+          ],
+          "id": "lisa:mobile:instruction:cursor-git-workflow.explicit-commit-push-source"
+        },
+        {
+          "path": "AGENTS.md",
+          "revision": "68bef7d199c4b83ac0ea4b0a9df263ca622d1bc4",
+          "blob": "b958d839ec2f6da77ff9959feae5efd312aac9a4",
+          "spans": [
+            [
+              9736,
+              10055
+            ]
+          ],
+          "fragment_sha256": [
+            "8227a8e248806eeead7caa1ae65dc5885e459cb4c15977315c5a47c0c80b2ba7"
+          ],
+          "id": "lisa:mobile:instruction:workspace.routine-git-delivery"
+        }
+      ],
+      "current_related_ids": [
+        "lisa:mobile:instruction:cursor-git-workflow.explicit-commit-push-source",
+        "lisa:mobile:instruction:workspace.routine-git-delivery"
+      ]
+    },
+    {
+      "question": "lisa:mobile:question:instruction-hook-config-wording",
+      "original_question_path": "agent-system/knowledge/policy-questions/instruction-hook-config-wording.json",
+      "original_question_blob": "9b2f1e629285a325ed60fbb15771c79ffe986182",
+      "original_question_digest": "68921ea732f135b8f90d494ca81c34bfb5f4174c6bdbd8e8a9646cc6c7068e25",
+      "accepted_question_digest": "fcc944ffbfb88329ec53b1a289f3b98a5922f4b7828868797328a818317d5022",
+      "decision": "lisa:mobile:decision:guarded-report-hook-installation",
+      "accepted_decision_digest": "ca77c68a48a28073ff7173c5015810ca5272e49390c8e52225ac1d614d000708",
+      "original_source_witnesses": [
+        {
+          "path": ".cursor/rules/git-workflow.mdc",
+          "revision": "68bef7d199c4b83ac0ea4b0a9df263ca622d1bc4",
+          "blob": "7b4e5b4d876d6175c5bad3aae59afffd0adec834",
+          "spans": [
+            [
+              146,
+              170
+            ]
+          ],
+          "fragment_sha256": [
+            "77cdeb70f7635199e234c719d90c13c87381e3752cbb32f6114b2a8b262e6aa5"
+          ],
+          "id": "lisa:mobile:instruction:cursor-git-workflow.no-config-change-source"
+        },
+        {
+          "path": "AGENTS.md",
+          "revision": "68bef7d199c4b83ac0ea4b0a9df263ca622d1bc4",
+          "blob": "b958d839ec2f6da77ff9959feae5efd312aac9a4",
+          "spans": [
+            [
+              27132,
+              27748
+            ]
+          ],
+          "fragment_sha256": [
+            "20bfdd9e7b265766d07f2448181fc850d14d3a607b30add403c3c4bcc6f2de3b"
+          ],
+          "id": "lisa:mobile:instruction:workspace.report-hook-admission"
+        }
+      ],
+      "current_related_ids": [
+        "lisa:mobile:instruction:cursor-git-workflow.no-config-change-source",
+        "lisa:mobile:instruction:workspace.report-hook-admission"
+      ]
+    },
+    {
+      "question": "lisa:mobile:question:roadmap-mob02-distinct-subjects",
+      "original_question_path": "agent-system/knowledge/policy-questions/roadmap-mob02-distinct-subjects.json",
+      "original_question_blob": "426b76b5d1f6e84f53477ac8cd30c920d62327fb",
+      "original_question_digest": "f325ca29b365d2e5a51f28017754c63c18872ae212fea3f2a944ff4fe8fade57",
+      "accepted_question_digest": "31cbb77426103bfc32c78b3375b7f049c81c5366ef1695c77581a5c6c2397ffc",
+      "decision": "lisa:mobile:decision:legacy-mob02-subject-resolution",
+      "accepted_decision_digest": "09f6631619f3589b4d5bf056da93c2740980722ad857e52513941e286193bd2c",
+      "original_source_witnesses": [
+        {
+          "path": "docs/roadmap/mobile.md",
+          "revision": "68bef7d199c4b83ac0ea4b0a9df263ca622d1bc4",
+          "blob": "54a0565ff9331419e4aef2368c2d7ac8cd77290e",
+          "spans": [
+            [
+              12690,
+              15907
+            ]
+          ],
+          "fragment_sha256": [
+            "2192df0cbc05838d63f6925f5afc64ca0fee788184c3a70cd5d3ab7e2ef2e8b5"
+          ],
+          "subject": "224-process-exit-incident"
+        },
+        {
+          "path": "docs/roadmap/mobile.md",
+          "revision": "68bef7d199c4b83ac0ea4b0a9df263ca622d1bc4",
+          "blob": "54a0565ff9331419e4aef2368c2d7ac8cd77290e",
+          "spans": [
+            [
+              21168,
+              25896
+            ]
+          ],
+          "fragment_sha256": [
+            "05e1bd7f0d7436053890b2402087b6cdba22da84482ea0474b1fa21ed2f8f7f2"
+          ],
+          "subject": "source-dependency-discovery-and-map"
+        }
+      ],
+      "current_related_ids": [
+        "lisa:mobile:task:mobile-roadmap-process-exit-224",
+        "lisa:mobile:task:mobile-roadmap-dependency-discovery"
+      ]
+    }
+  ],
+  "execution_permission": false
+}

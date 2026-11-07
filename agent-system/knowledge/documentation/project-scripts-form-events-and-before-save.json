@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:project-scripts-form-events-and-before-save",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:project-scripts",
+      "lisa:mobile:resource:conditional-form-rules-form-values-and-common-save-gate"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the NGFP or project-rule subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/project-scripts.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "`on_open` выполняется после создания controls. `on_field_change` сейчас",
+        "поддерживает Spinner и текстовые controls, включая части DoubleCombobox,",
+        "с сохранением существующих listeners. Debounce 350 мс, устаревшие результаты",
+        "отбрасываются; остальные типы controls проверяются на `before_save`.",
+        "`before_save` работает на существующем Save worker до required validation и",
+        "до любой транзакции/записи. Фото, outbox и журнал идемпотентного Save остаются",
+        "в штатном конвейере. Повтор после частично успешного Save восстанавливает ID из",
+        "журнала: уже созданный объект не считается новым аудитом.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:project-scripts-form-events-and-before-save"
+    ]
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-storage-terminal-refresh-and-reset-effects",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Terminal callback удерживает lease до завершения UI effects. Direct-field",
+        "predicate и atomic rebind проверяют exact map плюс raw cached path=actual path,",
+        "не вызывая factory `getMap` на отказе. `RESULT_OK` для `RELOAD_ACTIVITY_DATA`",
+        "просит MainActivity/MapFragment перепривязать drawable; он допустим после",
+        "failed/cancelled retired move и **не подтверждает успешный перенос**. Такие",
+        "ветви не выполняют Reset defaults/district/init/delete. Только нормальный",
+        "Reset target/path completion запускает прежние preference removals/default XML,",
+        "resetMap и существующий district/init/delete/init порядок с исключением OSM/tracks.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-storage-terminal-refresh-and-reset-effects"
+    ]
+  }
+}

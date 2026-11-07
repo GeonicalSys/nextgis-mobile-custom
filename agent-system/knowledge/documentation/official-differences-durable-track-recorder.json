@@ -1,0 +1,72 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-durable-track-recorder",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "**Что это.** Запись трека дополнена фильтрацией GPS-измерений, восстановлением",
+        "незавершённой записи и защитой от повторного выполнения команд start, stop и",
+        "split.",
+        "",
+        "**Для чего.** Случайный повтор команды, временная потеря процесса или плохой",
+        "GPS-fix не должны создавать несколько активных треков, оставлять незакрытую",
+        "запись или добавлять очевидно ошибочную точку. Отдельный процесс recorder также",
+        "не должен отложить Start до момента, когда пользователь уже нажал Stop: в таком",
+        "сценарии курсор карты движется, но сервис не получает ни одной координаты.",
+        "",
+        "**Как используется.** Кнопка трека раскрывает «Пешеход» и «Пешеход + машина».",
+        "Первый режим пропускает движение быстрее 30 км/ч и после замедления автоматически",
+        "начинает новый сегмент, без прямой линии через поездку. Второй сохраняет обычную",
+        "запись ходьбы и автомобиля. Во время записи повторное нажатие сразу завершает её;",
+        "активный значок — оранжевый человек с увеличенной красной точкой. Выбор режима",
+        "сохраняется при перезапуске, старые сеансы остаются смешанными. В official",
+        "TrackerService на указанной голове такого выбора и track-only порога нет.",
+        "Во время записи карта показывает текущую позицию отдельно от линии;",
+        "геометрия содержит только проверенные и сохранённые GNSS-точки.",
+        "Если процесс был остановлен системой, приложение проверяет сохранённый track ID",
+        "и либо продолжает действующую запись, либо безопасно очищает устаревшее",
+        "состояние. Отдельные start/end flag layers намеренно не создаются, чтобы не",
+        "загромождать карту. В форке `TrackerService` выполняется в основном процессе",
+        "приложения: Android lifecycle команд Start/Stop упорядочен с панелью карты,",
+        "durable-флаг не зависит от deprecated multi-process preferences, а запоздалый",
+        "Start после уже сохранённого Stop отбрасывается без создания пустого трека.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-durable-track-recorder"
+    ]
+  }
+}

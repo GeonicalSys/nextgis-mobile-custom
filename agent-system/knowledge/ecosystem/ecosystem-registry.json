@@ -1,0 +1,155 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:metadata:ecosystem-registry",
+  "kind": "metadata",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ecosystem",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-schema": {
+      "role": "incumbent_registry_schema",
+      "value": 1
+    },
+    "registry-layout": {
+      "role": "complete_reviewed_section_and_row_order",
+      "value": [
+        {
+          "section": "systems",
+          "shape": "mapping",
+          "keys": [
+            "mobile-usage-server",
+            "mobile-app",
+            "desktop-profiles",
+            "qgis-plugins"
+          ]
+        },
+        {
+          "section": "contracts",
+          "shape": "list",
+          "keys": [
+            "ECO-SHARED-SOURCE-CONTRACTS",
+            "ECO-DEPENDENCY-DISCOVERY",
+            "ECO-CONDITIONAL-FORM-RULES",
+            "ECO-CASCADING-FORM-LISTS",
+            "ECO-PROJECT-SCRIPTS",
+            "ECO-NGW-RESOURCE-EXCHANGE",
+            "ECO-DESKTOP-MOBILE-OPERATIONS",
+            "ECO-OFFLINE-BASEMAP-HANDOFF"
+          ]
+        },
+        {
+          "section": "boundaries",
+          "shape": "list",
+          "keys": [
+            "ECO-NO-DIRECT-FILESYSTEM",
+            "ECO-SOURCE-OWNERSHIP"
+          ]
+        }
+      ]
+    },
+    "registry-notes": {
+      "role": "incumbent_trailing_yaml_comments",
+      "value": [
+        "# Consumer-only: split legacy cascade captions prefer NGFP fields[].display_name over layer alias.",
+        "# Consumer-only: category creation reads existing local styles and NGFP dictionaries; publisher formats and field schemas are unchanged.",
+        "# Multi-project sync changes local execution/storage ownership; NGW/desktop package formats are unchanged.",
+        "# Background APK preparation belongs to app, reuses the existing release manifest/artifact contract and never mutates NGW, business data or desktop profiles."
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:ecosystem-systems-mobile-usage-server",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:ecosystem-systems-mobile-app",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:ecosystem-systems-desktop-profiles",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:ecosystem-systems-qgis-plugins",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:ecosystem-contracts-eco-shared-source-contracts",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:ecosystem-contracts-eco-dependency-discovery",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:ecosystem-contracts-eco-conditional-form-rules",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:ecosystem-contracts-eco-cascading-form-lists",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:ecosystem-contracts-eco-project-scripts",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:ecosystem-contracts-eco-ngw-resource-exchange",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:ecosystem-contracts-eco-desktop-mobile-operations",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:ecosystem-contracts-eco-offline-basemap-handoff",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:ecosystem-boundaries-eco-no-direct-filesystem",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:ecosystem-boundaries-eco-source-ownership",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/sectioned-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:metadata:ecosystem-registry"
+    ]
+  }
+}

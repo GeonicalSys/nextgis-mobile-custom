@@ -1,0 +1,64 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:metadata:ui-coverage-ngfp-text-line-review",
+  "kind": "metadata",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "coverage"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "ngfp_text_line_review"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "reviewed_at": "2026-10-30",
+        "basis": "Additive manually reviewed UI source only;39th contract. All existing38 contracts/128 methods/14 file rows/widget evidence and historical source_context preserved. No runtime or new product behavior acceptance.",
+        "methods_reviewed": [
+          "WF-FORM-TEXT-CONTROL-FACTORY",
+          "WF-FORM-TEXT-CONTROL-BINDING",
+          "WF-FORM-TEXT-LINE-INITIALIZATION",
+          "WF-FORM-TEXT-FIELD-IDENTITY",
+          "WF-FORM-TEXT-VALUE",
+          "WF-FORM-TEXT-STATE"
+        ],
+        "widget_selector": "type=text_edit factory layout class + normalized attributes.field and mFields; no per-field android:id.",
+        "variants_source_sha256": {
+          "app/build.gradle": "4ce85ceb77bf2bf6e54401ca1c1d49e8848115d47b5a58c67454e845abe91f50",
+          "maplibui/src/main/AndroidManifest.xml": "b71a3b80ae7e1b22e1b54c356bc82595cc57f71c97f5a52d6858cc40eb980bfd",
+          "maplibui/build.gradle": "8fa085918e46887053462ca725cdc81999447580075178b6da5aa59ec9b2f5bc"
+        },
+        "clock_delivery": "Whole original WF-SYNC-CLOCK-STORE F61 row unchanged. Own live library clock source mismatch remains expected NOT_PASS until separate merge/pointer/semantic pin delivery. No alternate source basis or fingerprint regeneration."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:metadata:ui-coverage-ngfp-text-line-review"
+    ]
+  }
+}

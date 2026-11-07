@@ -1,0 +1,75 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-12-a82ae8e23695",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-12 — Крупный шрифт и видимые действия",
+        "",
+        "- Зафиксирован общий порядок адаптации: перенос, понятное сокращение,",
+        "  локальное уменьшение при оставшемся переполнении. Правила внесены в AGENTS",
+        "  приложения и UI-библиотеки; добавлены invariant, impact и native smoke.",
+        "- Общие строки, настройки, кнопки и заголовки больше не полагаются на одну",
+        "  фиксированную строку/высоту. Азимут, GPS-статус, обход и вход используют",
+        "  перенос и ограниченные панели с корректным преобразованием touch.",
+        "- Native LargeTextLayoutTest воспроизводит старое обрезание инструкции азимута",
+        "  и ellipsis названия слоя, проверяет обе темы и крупные font/display scales",
+        "  вместе, реальную геометрию текста и преобразованные области действий.",
+        "- Русская локаль и ориентация подтверждаются в настоящем окне. Native/AppCompat",
+        "  диалоги вписываются с закрытой клавиатурой; реальный touch проверяет нижнюю кнопку.",
+        "  Инструкции переносятся целыми словами, боковое меню ограничено окном,",
+        "  GNSS/телеметрия не перекрывают действия, таблица использует локальный autosize.",
+        "  Проверяются реальные разделы настроек и окна аккаунтов/входа/проекта/подложек;",
+        "  отложенное обновление настроек не обращается к уничтоженному окну после поворота.",
+        "- Порядок доставки: maplibui Merge Commit → pin удалённого merged SHA в app",
+        "  → app Squash Merge → обе release-сборки. Debug integration используется",
+        "  для проверки; выпуск до закрытия зависимости запрещён.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-12",
+        "heading": "2026-10-12 — Крупный шрифт и видимые действия",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-12-a82ae8e23695"
+    ]
+  }
+}

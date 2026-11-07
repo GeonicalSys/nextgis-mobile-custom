@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:track-controls-color-assignment-and-preserved-values",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:track-controls"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/track-controls.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Цвет и отрисовка",
+        "",
+        "TrackLayer.insert назначает цвет, если при создании он не задан. Палитра из",
+        "12 насыщенных оттенков имеет HSV saturation не ниже 80% и контраст к белому",
+        "не ниже 2:1; случайный выбор избегает непосредственного повтора последнего",
+        "цвета. Цвет сохраняется один раз, а не генерируется при открытии карты.",
+        "SharedTrackStore schema 2 однократно раскрашивает прежние SQL NULL цвета.",
+        "Используется перемешанный полный цикл 12 оттенков; значения сохраняются в одной",
+        "транзакции с версией базы. Поздний импорт старого проекта раскрашивается в",
+        "транзакции импорта. Ошибка откатывает всю операцию для повтора. Явно заданные",
+        "цвета, включая #5f789c, автоматически не меняются."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:track-controls-color-assignment-and-preserved-values"
+    ]
+  }
+}

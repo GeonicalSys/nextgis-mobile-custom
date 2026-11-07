@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:manual-resource-profiling-window-schedule-resume-and-gap-readback",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:manual-resource-profiling"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/manual-resource-profiling.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "`spread` распределяет до5окон по всему сроку. `continuous` начинает следующее",
+        "после предыдущего. Supervisor должен оставаться запущенным и иметь связь с ADB;",
+        "при потере связи он сохраняет gap и прекращает планирование. Уже начатые device",
+        "collectors всё равно имеют собственные duration/size bounds. Его можно запустить",
+        "заново по той же квитанции: проверяются записанные owners, дубликат активного окна",
+        "не создаётся. Все app-side события записываются независимо, включая промежутки",
+        "между тяжёлыми окнами. Это не непрерывный CPU flamegraph всего30мин-сеанса.",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:manual-resource-profiling-start-new-owned-session",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:manual-resource-profiling-window-schedule-resume-and-gap-readback"
+    ]
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:crash-recovery-required-and-visibility-rule-pin",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:crash-recovery"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/crash-recovery.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Декларативные обязательность и видимость NGFP закреплены одним `lisa_required_pin`",
+        "в owning layer/form_rules. Видимость после восстановления вычисляется заново по",
+        "сохранённым значениям; скрытие не удаляет текст, вложения или состояние каскада.",
+        "Обновление meta не меняет восстановленный черновик;",
+        "повреждение снимка блокирует запись и сохраняет pin и значения. Пустой pin",
+        "закрепляет отсутствие условий. [Контракт](conditional-form-rules.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:crash-recovery-required-and-visibility-rule-pin"
+    ]
+  }
+}

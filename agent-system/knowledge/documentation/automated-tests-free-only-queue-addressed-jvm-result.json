@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:automated-tests-free-only-queue-addressed-jvm-result",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "После последней free-only/queue правки отдельно прошли23focused JVM/Robolectric",
+        "tests: Guard2,Policy8,MapRuntime13,0failures/errors/skips,11s; квитанция",
+        "free-memory-notice-units01.json. Это не повтор полного651-набора и не native",
+        "приёмка. При4GiB свободной RAM queue_full не даёт ложное memory warning;",
+        "новые free counters переживают restart, старые process-budget/private keys",
+        "в диагностическую allowlist не проходят.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "The 23 focused checks and exact limits remain distinct from the prior 651 tests."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:automated-tests-free-only-queue-addressed-jvm-result"
+    ]
+  }
+}

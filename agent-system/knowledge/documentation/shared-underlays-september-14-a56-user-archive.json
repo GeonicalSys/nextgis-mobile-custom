@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:shared-underlays-september-14-a56-user-archive",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:shared-underlays"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/shared-underlays.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Дополнительно 2026-09-14 на Samsung Galaxy A56 SM-A566B / Android 16 (API 36)",
+        "проверен оригинальный архив пользователя: `Mapnik.json`, 129 JPEG-тайлов,",
+        "побайтовое совпадение всех SQLite blobs, XYZ/TMS row conversion, повторный",
+        "импорт без дубликата. Ошибка отсутствующей конфигурации при живом native style",
+        "прошла через worker `Table.delete`; слой и source удалены на UI без падения.",
+        "Данные теста находились в отдельном cache, пользовательский проект не менялся.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Separate A56 archive and cleanup scope, including the 129 JPEG payload comparisons."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:shared-underlays-september-14-a56-user-archive"
+    ]
+  }
+}

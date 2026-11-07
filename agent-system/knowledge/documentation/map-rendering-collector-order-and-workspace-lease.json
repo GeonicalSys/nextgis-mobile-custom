@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:map-rendering-collector-order-and-workspace-lease",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-rendering"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the rendering subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-rendering.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "10. Collector vector и поддерживаемые QGIS style resources используют один",
+        "    `collector_order`. Style materializes как authenticated `NGWRasterLayer`,",
+        "    поэтому `computeCollectorOrderedInsertIndex()` учитывает и vector, и raster",
+        "    NGW layers; remote id стиля отвечает за tile identity, parent resource id —",
+        "    только за extent.",
+        "    Перед фактической подготовкой workspace import повторно проверяет active",
+        "    sync; layer/raster hot-add не начинается, пока отменённый worker и его",
+        "    database lease не завершили commit либо rollback."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:map-rendering-collector-order-and-workspace-lease"
+    ]
+  }
+}

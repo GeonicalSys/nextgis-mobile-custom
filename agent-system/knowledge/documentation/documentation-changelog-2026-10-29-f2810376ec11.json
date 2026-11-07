@@ -1,0 +1,70 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-29-f2810376ec11",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-29 — Новый разбор мобильных событий GlitchTip",
+        "",
+        "После первого среза520/516 выполнен свежий полный export:8открытых мобильных",
+        "групп,593записи/589SDK ID,59новых ID относительно тех же восьми групп28октября.",
+        "Подготовлены68/88 already-fixed по прежней политике штатных GPS ожиданий и",
+        "45/64/69/90/96/117 diagnostics. Source commits отправлены; guarded close и",
+        "независимый readback подтвердили8resolved,599записей/595SDK ID без удаления.",
+        "Первый96close отказал до комментария при новых событиях; delta прочитана. Поздняя030/224SDK/OS пара не названа новым падением57a;",
+        "worker rethrow/terminate signature не устанавливает исходный exception или OOM.",
+        "Для неизвестной причины GPS добавлено редкое сравнение cached framework fix",
+        "и app raw без подачи cache в pipeline или изменения фильтра/подписки/retry.",
+        "877JVM tests,docs50,три normal variants, instrumentation compile и version",
+        "matrix PASS. Частный APK517c941d…0db8b01 собран, не установлен/не опубликован;",
+        "emulator/native/Full и новых действий с устройствами не было. Итог и ограничения:",
+        "[разбор 29 октября](reference/glitchtip-triage-2026-10-29.md).",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-29",
+        "heading": "2026-10-29 — Новый разбор мобильных событий GlitchTip",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-29-f2810376ec11"
+    ]
+  }
+}

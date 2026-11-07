@@ -1,0 +1,81 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-sync-and-rebuild-regression-scope",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Проверить отдельно:",
+        "",
+        "- pull, push и конфликты;",
+        "- sync-enabled и `SYNC_NONE`;",
+        "- повторный запуск после process death/account drift;",
+        "- корректность last-sync UI только после успешного результата;",
+        "- остановку sync spinner после normal, cancel и exception finish, включая",
+        "  уход/возврат в layer drawer во время синхронизации;",
+        "- кольцо прогресса вокруг иконки: рост на push мелкого слоя, удержание на",
+        "  большом snapshot без Content-Length, пауза deferred retry, скрытие после",
+        "  cancel/finish;",
+        "- post-push refresh и сохранение локальных данных;",
+        "- foreground-service требования Android 14+ и повтор account-pass после",
+        "  принудительного убийства процесса;",
+        "- отказ от project switch во время всей ручной sync и layer fill;",
+        "- staged schema rebuild, лимит неизменного fingerprint и ручной reset guard;",
+        "- массовый incremental pull с одной итоговой R-tree rebuild, без построчных",
+        "  notify и без `LinkedTreeMap` style errors;",
+        "- null-intent/system-timeout `LayerFillService` без",
+        "  `ForegroundServiceDidNotStopInTimeException`, с сохранённым import journal.",
+        "- полный fill малого числа очень больших MultiPolygon без квадратичного зависания;",
+        "- process death и открытие другого проекта без таблиц в чужом `layers.db`, с",
+        "  очисткой только помеченных unpublished stages после возврата к target UID.",
+        "- три копии одной managed layer без локальных изменений: pre-sync repair",
+        "  оставляет одну; с локальным change/attachment repair блокируется без удаления;",
+        "- расхождение description/config/SQLite по `idqgs` и ошибочный PostGIS class:",
+        "  metadata-only случай не скачивает слой, физическое/class расхождение делает",
+        "  одну атомарную staged replacement без сохранённой пары old+new;",
+        "- полный untracked snapshot под ограничением heap, включая interruption/OOM до",
+        "  commit, пропуск отдельных невалидных геометрий с сохранением прежних локальных",
+        "  копий и один итоговый reload после успешного повтора.",
+        "",
+        "Связанные tests: `NgwPullDecisionTest`, `NGWUtilFeaturesUrlTest`,",
+        "`NgwResmetaUtilTest`, `LayerConfigUtilTest`, `NgwSyncRetryPolicyTest`,",
+        "`NetworkUtilTransientNgwTest`.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-sync-and-rebuild-regression-scope"
+    ]
+  }
+}

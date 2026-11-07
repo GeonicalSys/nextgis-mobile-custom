@@ -1,0 +1,93 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:decision:routine-git-delivery-admission",
+  "kind": "decision",
+  "owner": "android_projects/android_gisapp",
+  "topic": "instruction-policy-review",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "."
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "complete",
+    "implementation": "not_applicable",
+    "source_verification": "PASS",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original question and conflicting instruction spans as source evidence."
+  },
+  "facets": {
+    "title": {
+      "role": "decision",
+      "value": "Explicit change request admits the routine App Draft delivery sequence"
+    },
+    "resolution": {
+      "role": "reviewed_source_resolution",
+      "value": {
+        "request_for_repository_change": [
+          "fetched_preflight",
+          "owned_task_branch",
+          "scoped_checks",
+          "scoped_commit",
+          "push_owned_branch",
+          "owned_draft_pr"
+        ],
+        "read_only_request": [],
+        "excluded_from_routine_sequence": [
+          "foreign_owner_or_pr",
+          "direct_base_branch_push",
+          "force_push_or_published_history_rewrite",
+          "merge",
+          "tag_or_release",
+          "deployment_or_publication"
+        ],
+        "current_user_limits_apply": true
+      }
+    },
+    "reason": {
+      "role": "source_backed_rationale",
+      "value": "The owner App AGENTS and the longer rule in the same Cursor source both give a requested change its routine own-Draft delivery. The short explicit-command sentence is read with that specific sequence. It supplies no additional authority for a read-only request or an excluded operation."
+    },
+    "authority": {
+      "role": "current_execution_authority_external",
+      "value": "Existing clients retain their current entry sources. The authored resolution provides the rule for the reviewed generated adapters."
+    }
+  },
+  "relations": [
+    {
+      "type": "supersedes",
+      "target": "lisa:mobile:question:instruction-commit-push-wording",
+      "status": "source_backed"
+    },
+    {
+      "type": "view_of",
+      "target": "lisa:mobile:instruction:cursor-git-workflow.explicit-commit-push-source",
+      "status": "source_backed"
+    },
+    {
+      "type": "view_of",
+      "target": "lisa:mobile:instruction:workspace.routine-git-delivery",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/migration/instruction-reconciliation.json",
+    "scopes": [
+      "instruction-commit-push-wording"
+    ]
+  }
+}

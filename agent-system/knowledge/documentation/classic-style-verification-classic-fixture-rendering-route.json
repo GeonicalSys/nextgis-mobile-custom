@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:classic-style-verification-classic-fixture-rendering-route",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:classic-style-verification",
+      "lisa:mobile:resource:map-rendering-classic-style-verification-scope"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the style or label subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/classic-style-verification.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Общая матрица",
+        "",
+        "Матрица использует собственные synthetic VectorLayerUI в verification APK.",
+        "Матрица явно вызывает classic factory и проверяет GeoJsonSource без current",
+        "SQLite provider. Это отдельный converter/preview path; обычная карта использует",
+        "direct SQLite. Старое mobile_render_mode не выбирает ни один из этих путей.",
+        "",
+        "Путь проверки: SQL attributes/geometries -> сохранённый renderer JSON ->",
+        "FieldStyleRule -> feature properties -> production MPLFeaturesUtils -> native",
+        "MapLibre -> snapshot pixels. Шрифты и marker/pattern images берутся из bundled",
+        "assets; реальные NGW accounts/данные/сервер не требуются.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:classic-style-verification-classic-fixture-rendering-route"
+    ]
+  }
+}

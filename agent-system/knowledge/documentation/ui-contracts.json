@@ -1,0 +1,440 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ui-contracts",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/architecture/ui-contracts.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ui-contracts.md"
+    },
+    "frontmatter": {
+      "role": "markdown_frontmatter_lines",
+      "value": [
+        "title: Контракты значений и действий мобильного интерфейса",
+        "type: architecture",
+        "last_verified: 2026-11-04",
+        "related_code:",
+        "  - app/src/test/java/com/nextgis/mobile/fragment/SettingsWorkspaceMoveTest.java",
+        "  - app/src/main/java/com/nextgis/mobile/util/SelectMapPathPreference.java",
+        "  - app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java",
+        "  - app/src/main/java/com/nextgis/mobile/MainApplication.java",
+        "  - app/src/main/java/com/nextgis/mobile/activity/ProjectChooserDialog.kt",
+        "  - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt",
+        "  - app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java",
+        "  - app/src/main/java/com/nextgis/mobile/fragment/AttributesFragment.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/activity/ModifyAttributesActivity.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/util/TrackActions.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/LayerEditingPolicy.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/NgwSyncProgress.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/util/ControlHelper.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/util/LoadLisaCollectorProject.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/LisaCatalogLookup.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/LisaCatalog.java",
+        "  - app/src/main/res/values/strings.xml",
+        "  - app/src/main/res/values-ru/strings.xml",
+        "  - maplibui/src/main/res/values/strings.xml",
+        "  - maplibui/src/main/res/values-ru/strings.xml"
+      ]
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "",
+        "# Что означает мобильный интерфейс",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ui-contracts-release-225-gradle-witness-review",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-value-and-action-origin-before-ui-interpretation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-canonical-catalogue-projection-and-standalone-route",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-repository-resource-and-runtime-identity-namespaces",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-map-status-device-camera-and-control-matrix",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-currentcenter-device-coordinate-and-camera-producers",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-screen-contract-matrix-and-counterexamples",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-subsystem-contract-links-and-evidence-limit",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-sync-layer-bindings-and-variant-review",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-sync-clock-ring-busy-and-pending-value-matrix",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-full-project-ack-and-active-map-clock",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-sync-clock-process-visible-owner-and-key",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ui-contracts-f61-api28-clock-fault-model",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-storage-move-and-reset-separate-preference-keys",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-storage-choice-and-project-switch-lease",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-storage-worker-exact-map-and-refresh-result",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-reset-after-target-commit-and-failure-guard",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-move-map-files-versus-registry-and-journal-migration",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-effective-layer-edit-policy-and-recheck",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-forest-layer-readonly-and-desktop-area-origin",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-ordinary-ui-source-checker-and-evidence-boundary",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-whole-file-tripwires-for-widget-and-unit-semantics",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ui-contracts-ui-catalogue-ngfp-stakeout-and-settings-checkpoints",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ui-contracts-former-f61-drift-and-unrun-ui-checkpoint",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-semantic-review-before-fingerprint-update",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-programmatic-controls-and-flavor-scope",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-independent-native-pilot-expectations-not-run",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-widget-to-producer-trace-and-conditions",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-saved-work-and-cross-owner-resource-trace",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-independent-oracle-and-explicit-unknown",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-ngfp-text-display-line-cap-and-save-boundary",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-ngfp-resource-binding-namespace-and-remap-exclusions",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-failure-message-producer-and-oracle-matrix",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-programmatic-message-and-local-only-payload",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ui-contracts-technical-message-regression-and-unrun-native",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-resource-checkbox-mode-and-view-recycling",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-resource-checkbox-aggregate-state-and-owner-mutation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-resource-local-and-remote-id-and-json-restore",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-resource-parcel-fallback-and-open-refresh-policy",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ui-contracts-resource-checkbox-api28-checkpoint",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-resource-row-caption-layout-and-measure-cache",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-resource-row-source-reference-and-semantic-oracles",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ui-contracts-resource-caption-layout-final-results-and-limits",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ui-contracts-resource-caption-combined-failed-attempts",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-resource-row-layout-independent-native-gap",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-selected-track-gpx-share-and-stale-owner-guard",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ui-contracts-selected-track-compositional-regression",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-standard-and-ngfp-date-widget-bindings",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-date-time-storage-versus-display-and-cursor-unknown",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-ngfp-date-seed-null-and-save-gates",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-date-device-locale-and-native-coverage",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-ngfp-checkbox-versus-standard-integer-control",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-ngfp-checkbox-value-boundary-matrix",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-ngfp-checkbox-init-and-raw-copy-equality",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-checkbox-schema-and-optional-last-cache",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ui-contracts-checkbox-source-slice-and-installed-unknown",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-attachment-progress-versus-preview-and-complete-cache",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-attachment-end-and-offline-picker-state",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-attachment-request-owned-staging-and-atomic-publish",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ui-contracts-former-easypicker-pin-adoption-gap",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-attachment-integrity-and-same-final-unknown",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-legacy-positive-size-attachment-readback",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-optional-metadata-overload-fingerprint-scope",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-mobile-project-load-action-and-server-format",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-webgis-account-catalog-and-explicit-resource-selection",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-mobile-project-workspace-and-batch-ack-boundaries",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-mobile-project-load-source-versus-device-acceptance",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-maintenance-warning-clock-and-process-cooldown",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-map-memory-warning-and-scrollable-action-priority",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-debug-underlay-progress-and-owner-boundary",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-contracts-identify-visible-vectors-and-activate-source-guards",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ui-contracts"
+    ]
+  }
+}

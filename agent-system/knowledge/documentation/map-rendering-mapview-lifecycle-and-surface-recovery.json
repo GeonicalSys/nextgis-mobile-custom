@@ -1,0 +1,80 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:map-rendering-mapview-lifecycle-and-surface-recovery",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-rendering"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the rendering subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-rendering.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "26. `MapFragment` владеет MapLibre `MapView` в пределах своего view lifecycle:",
+        "    после `onCreate` ему передаются `onStart/onResume/onPause/onStop`, сохранение",
+        "    состояния и low-memory callback, а `onDestroyView` уничтожает native renderer",
+        "    и очищает только ещё актуальные ссылки `MapDrawable`. После resume",
+        "    запрашивается repaint и HyperLog фиксирует первый полученный кадр. После",
+        "    фактического применения project style host запускает короткий continuous-",
+        "    render burst, invalidates Android presentation и один раз проводит камеру",
+        "    через native camera transaction без смещения. Успех фиксируется только для",
+        "    полного кадра при уже отсутствующем foreground: счётчик callback-ов host не",
+        "    подменяет внутренний `InitialRenderCallback` MapLibre. Если style/sources уже",
+        "    применены, но opaque loading foreground остался, host снимает только этот",
+        "    foreground и продолжает burst до ограниченного финала. Recovery отменяется",
+        "    при pause/destroy и не запускает бесконечный цикл. Нельзя",
+        "    заменять этот контракт безусловным full style reload: он не восстанавливает",
+        "    потерянный render surface и создаёт лишнюю нагрузку на большие проекты.",
+        "    Отложенное событие касания после `onDestroyView` отбрасывается в",
+        "    `MapDrawable`, если `MapLibreMap`, `MapView` или host context уже очищены;",
+        "    уничтоженный native renderer не участвует в identify или edit-жесте.",
+        "    Layout на всех API использует `SurfaceView`: его render thread обрабатывает",
+        "    `EGL_CONTEXT_LOST` внутренним пересозданием EGL context/surface. В MapLibre",
+        "    OpenGL 13.0.2 `TextureView` после ошибки swap обнуляет известный",
+        "    `SurfaceTexture` и ждёт нового `onSurfaceTextureAvailable`, которого у",
+        "    оставшегося attached view может не быть; поэтому callback `fully=true` до",
+        "    swap не является доказательством показанного кадра. На API 26–28 prefetch",
+        "    дополнительных tiles выключен. Искусственный потолок FPS и постоянный",
+        "    `CONTINUOUS` на Android 8–9 не используются: в покое renderer остаётся в",
+        "    `WHEN_DIRTY`, recovery на всех API — короткий `CONTINUOUS` burst, затем",
+        "    прежний dirty-режим. Полный style reload заранее освобождает предыдущий",
+        "    Java GeoJSON snapshot, а после `setStyle` — detached source/layer wrappers,",
+        "    чтобы большой Collector-проект не удваивал пиковую память. Тип renderer,",
+        "    SDK и prefetch policy фиксируются в HyperLog при создании view.",
+        "    Во время account sync тяжёлые reload откладываются и схлопываются в один",
+        "    финальный проход. Data-change выключенного vector layer очищает его прежний",
+        "    GeoJSON source, но не читает всю SQLite-таблицу; включение запускает обычный",
+        "    on-demand reload."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:map-rendering-mapview-lifecycle-and-surface-recovery"
+    ]
+  }
+}

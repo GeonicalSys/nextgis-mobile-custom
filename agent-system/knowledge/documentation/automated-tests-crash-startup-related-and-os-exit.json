@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:automated-tests-crash-startup-related-and-os-exit",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Адресная проверка инцидента 224",
+        "",
+        "Related -Area crash-startup выполняет новый empty-handles native case,",
+        "существующий сценарий линейки и MapRuntimeDiagnosticsNativeTest, включая",
+        "явный OS exit export. Оба новых метода входят в Full через прежние классы",
+        "каталога; новый каталог содержит262 методов. Это технические fixtures отдельного",
+        "verification APK, не пользовательский проект и не воспроизведение вылета224.",
+        "[Разбор и фактические исходы](../reference/mobile-crash-224-2026-10-27.md).",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "The 262-method count belongs to the stated catalogue; the isolation and fixtures keep their described scope."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:automated-tests-crash-startup-related-and-os-exit"
+    ]
+  }
+}

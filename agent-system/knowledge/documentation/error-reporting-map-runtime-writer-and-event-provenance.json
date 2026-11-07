@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:error-reporting-map-runtime-writer-and-event-provenance",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:error-reporting"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/error-reporting.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Watchdog не обращается к MapLibre или бизнес-хранилищу. Он снимает только",
+        "заранее записанное состояние и ограниченный Java stack вызывающего потока.",
+        "Его scheduler отделён от записи HyperLog/файла; writer имеет 16 queued tasks",
+        "и фиксирует количество dropped diagnostic tasks. Снимок до 16 KiB атомарно",
+        "сохраняется в private map-runtime-diagnostics.json. BeforeSend прикладывает",
+        "его как map_runtime, включая прежние session/pid/version/source_revision,",
+        "только если время события относится к записанной операции (grace 15 s).",
+        "Таким образом AppExitInfo после перезапуска не получает случайные сведения",
+        "нового процесса. Это небольшое диагностическое хранилище, не raw HyperLog DB.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:error-reporting-map-runtime-writer-and-event-provenance"
+    ]
+  }
+}

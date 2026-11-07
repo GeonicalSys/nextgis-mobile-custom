@@ -1,0 +1,126 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:mobile-roadmap-release-225",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "implemented",
+    "source_verification": "UNKNOWN",
+    "merge": "merged",
+    "runtime_verification": "NOT_RUN",
+    "release": "unpublished",
+    "retention": "Retain the signed b165046d artifacts, distinct fingerprints and failure evidence before any retest."
+  },
+  "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "Release 3.1.2.31/225 awaits final candidate acceptance and a separate publication order.",
+        "implementation": "The version bump and signed b165046d candidate preceded direct SQLite routing, Debug underlay progress and warning layout changes.",
+        "source_verification": "The first version matrix and signed artifacts belong to b165046d. The later candidate has compile and static evidence. The final APK matrix and new regression execution remain open.",
+        "merge": "App 88 merged at b165046d. App 89 merged at f05ded46 with maplib 66 and maplibui 48 pins. App 90 updates the line-ending chain.",
+        "runtime_verification": "The b165046d Full recorded 256 passes and 17 failures. The later source has no fresh Full or device acceptance. SM-X115 was explicitly excluded from the earlier run.",
+        "release": "225 remains unpublished. Publisher dry-run and Check-Publication are separate admission steps.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/reference/mobile-release-3.1.2.31-2026-11-01.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/handoffs/2026-11-01-mobile-release-31231.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "f05ded46154ee3a0028b664c2f16baf62b7df776",
+            "path": "docs/roadmap/mobile.md"
+          }
+        ]
+      }
+    },
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Приоритет P1, прямое поручение владельца1 ноября2026: повысить версию и",
+        "подготовить приложение к публикации с подключённым смартфоном. Владелец",
+        "отдельно разрешил программный эмулятор локально; GitHub Actions запрещены.",
+        "Это подготовка выпуска поверх уже слитых MOB-02/04, MOB-UI-01 и MOB-SYNC-01,",
+        "без изменения очереди продуктовых доработок.",
+        "",
+        "Владельцы: maplib (release diagnostic version) → app (production metadata,",
+        "независимая APK matrix, release notes и проверки) → upload_mobile (dry-run",
+        "после приёмки). Data/schema/sync API/фоновая политика и батарея bump-ом не",
+        "меняются; пользовательское состояние должно сохраняться при обычном обновлении.",
+        "",
+        "Приёмка: закрытая матрица исходников и merged pins, обе release flavors и",
+        "Lisa Debug с согласованной maplib version, ожидаемая release подпись,",
+        "локальные Full и Check-Publication, затем publisher tests/dry-run.",
+        "Full не отменяет physical phone/tablet/SM-X115 render-stress gate.",
+        "Реальная публикация и установка поверх рабочего приложения не запрошены.",
+        "Состояние и доказательства:",
+        "[подготовка выпуска](../reference/mobile-release-3.1.2.31-2026-11-01.md).",
+        "Карточки: android-20261101-release-31231, maplib-20261101-release-31231.",
+        ""
+      ]
+    },
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "MOB-REL-01"
+    },
+    "priority": {
+      "role": "priority_at_pinned_roadmap_basis",
+      "value": "P1"
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "The roadmap records source deliveries and a Full failure on its named checkpoint. Current physical, final APK and publication gates remain separate."
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-release-225-git-delivery-20261102",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-release-225-renderer-and-debug-import-20261102",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-release-225-full-first-checkpoint",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-release-225-library-git-delivery-20261029",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-release-225"
+    ]
+  }
+}

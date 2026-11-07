@@ -1,0 +1,75 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-config-only-sync",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "**Конфигурация и данные — разные потоки.** Это ключевое отличие форка. Слой",
+        "может быть настроен как «только для просмотра»: синхронизация объектов отключена",
+        "(`SYNC_NONE`) или у пользователя нет права `data.write` на сервере. В таком",
+        "слое приложение **не** начнёт самовольно загружать или отправлять геометрии, но",
+        "**продолжит** получать обновления оформления, полей и формы из Description.",
+        "Так можно держать на устройстве справочный или фоновый слой с актуальным",
+        "стилем, не рискуя перезаписать локальные данные.",
+        "",
+        "**Как это работает по шагам.**",
+        "",
+        "1. **Первый импорт.** Пользователь добавляет NGW-слой или Collector-проект.",
+        "   Приложение скачивает объекты, читает Description, применяет стиль и правила,",
+        "   подключает форму и запоминает контрольную сумму (MD5) применённого текста.",
+        "2. **Обычная синхронизация.** При очередной сверке с сервером приложение снова",
+        "   читает Description. Если текст не изменился — ничего не делает. Если изменился —",
+        "   сравнивает старую и новую версии.",
+        "3. **«Мягкое» обновление.** Если поменялись только «косметические» вещи — стиль,",
+        "   название слоя, видимость, zoom-диапазон, прозрачность, добавились новые поля",
+        "   или псевдонимы, флаги редактирования и синхронизации — обновление применяется",
+        "   на месте, без повторной загрузки всех объектов. Карта перерисовывается, форма",
+        "   подстраивается под новую схему.",
+        "4. **«Жёсткое» обновление.** Если изменился тип геометрии или тип существующего",
+        "   поля, локальную таблицу нельзя безопасно подправить «на лету». Приложение",
+        "   сначала создаёт полную резервную копию слоя; если backup не удался — слой",
+        "   остаётся нетронутым. При успешном backup слой пересоздаётся и заново",
+        "   загружается с сервера уже с новой схемой.",
+        "5. **Обновление формы.** Скачанный пакет формы проверяется по контрольной сумме",
+        "   до и после распаковки. Установка идёт как атомарная замена файлов: при сбое",
+        "   в середине процесса восстанавливается прежняя рабочая форма.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-config-only-sync"
+    ]
+  }
+}

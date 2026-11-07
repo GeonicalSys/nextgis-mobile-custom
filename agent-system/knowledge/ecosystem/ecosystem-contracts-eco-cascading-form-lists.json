@@ -1,0 +1,72 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ecosystem-contracts-eco-cascading-form-lists",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ecosystem",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_registry_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_mapping_or_list_key",
+      "value": "ECO-CASCADING-FORM-LISTS"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "id": "ECO-CASCADING-FORM-LISTS",
+        "from": "qgis-plugins",
+        "to": "mobile-app",
+        "type": "server_resource_contract",
+        "transport": "Legacy NGFP ZIP meta.json.lisa_form_dependencies",
+        "statement": "Access synchronizer supplies shared stable-key dictionaries and declarative parent filters; desktop cloning preserves the complete namespace without resource-ID substitution. Native Android filters offline, clears descendants and validates Save while retaining pinned drafts and unchanged historical attributes. Managed legacy pairs render as separate labelled combobox fields without rewriting server forms; ordinary two-level controls and audit questions remain compatible.",
+        "owners": [
+          "maplib",
+          "maplibui",
+          "app"
+        ],
+        "local_docs": [
+          "docs/architecture/cascading-form-lists.md",
+          "docs/guides/cascading-form-lists-user-guide.md"
+        ],
+        "external_docs": [
+          {
+            "system": "qgis-plugins",
+            "path": "geonical-docs/architecture/mobile-client.md"
+          }
+        ],
+        "verify": [
+          "SMOKE-CASCADING-FORM-LISTS",
+          "SMOKE-REQUIRED-FIELDS"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/sectioned-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:ecosystem-contracts-eco-cascading-form-lists"
+    ]
+  }
+}

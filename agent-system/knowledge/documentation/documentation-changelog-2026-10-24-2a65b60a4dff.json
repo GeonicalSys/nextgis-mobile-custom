@@ -1,0 +1,62 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-24-2a65b60a4dff",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-24 — MapLibre 13.7.1, прежний OpenGL",
+        "",
+        "Все consuming-модули согласованно обновлены с `13.0.2` на `13.7.1` через",
+        "`android-sdk-opengl`. Обновлены checksum metadata, текущие dependency/backend",
+        "контракты и version-matrix gate; старые receipts сохранены с исходной версией.",
+        "Загрузка, тайлы, стили и редактор не перерабатываются. Сборки и настоящая",
+        "отрисовка проверяются отдельно в [квитанции SDK](reference/maplibre-13-7-1-verification-2026-10-24.md).",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-24",
+        "heading": "2026-10-24 — MapLibre 13.7.1, прежний OpenGL",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-24-2a65b60a4dff"
+    ]
+  }
+}

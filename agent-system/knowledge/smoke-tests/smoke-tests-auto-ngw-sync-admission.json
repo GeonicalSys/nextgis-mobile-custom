@@ -1,0 +1,50 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-auto-ngw-sync-admission",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "AUTO-NGW-SYNC-ADMISSION"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "automatic",
+        "scope": [
+          "maplib",
+          "app"
+        ],
+        "command": "& '.\\gradlew.bat' '--offline' '--no-daemon' '--continue' '-Pkotlin.incremental=false' '-PciReliabilityChecks=true' '--console=plain' ':maplib:testDebugUnitTest' '--tests' 'com.nextgis.maplib.map.NGWVectorLayerFullSnapshotHttpStatusTest' ':app:testLisaDebugUnitTest' '--tests' 'com.nextgis.mobile.util.NgwLookupCacheSyncTest'",
+        "expected": "Actual same shared19: Core4+App15 PASS/0fail/error/skips; baseline4 named AssertionErrors and15 controls with0technical errors. Core baseline first assertNull proved206 staging; later206 guards ran in GREEN only. Core200/203/404 controls and App15 memory/stats/one-save/throws/equal-next controls remain. Exact env/versions/source hashes and compile recipe live once in Core PR63 update-reports/entries/maplib-20261030-full-snapshot-http206.md. Native/SQL/full-snapshot apply/tenant/disk/retry/device/APK/fullCI remain NOT_RUN. --continue collects two filtered results only after all prelaunch gates; it is not permission to bypass nonzero input/observer/plan checks."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-auto-ngw-sync-admission"
+    ]
+  }
+}

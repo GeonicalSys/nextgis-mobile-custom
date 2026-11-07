@@ -1,0 +1,89 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:mobile-roadmap-skip-unchanged-postgres-layers",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "planned",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "planned",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "UNKNOWN",
+    "release": "unknown",
+    "retention": "Keep the complete full-sync fallback and the original marker counterexamples."
+  },
+  "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The proposed generation and change marker still depends on REL-01 and the PERF-01 baseline.",
+        "implementation": "The first prototype is one real authorized PostGIS resource with a conservative full-read fallback. The marker must account for deletion, dependencies and source recreation.",
+        "source_verification": "The acceptance oracle must distinguish equal counts, filters, permissions, schema and late commits. The verified prototype remains open.",
+        "merge": "The server marker and consumer need their own delivery record after agreement.",
+        "runtime_verification": "Test concurrent committed changes and independent outbound edits through the actual NGW path under separate authorization.",
+        "release": "Release eligibility follows verified prototype and consumer adoption."
+      }
+    },
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## SYNC-01 Пропуск неизменённых PostgreSQL слоёв",
+        "",
+        "Приоритет P1. Состояние: Предложена; нужен прототип серверного контракта. Зависимости: REL-01 и PERF-01.",
+        "",
+        "Служебный маркер изменения слоя и поколения источника должен учитывать все изменения результата, включая удаления и зависимые таблицы. Проверить возможность чтения служебных данных через обычные разрешённые PostGIS ресурсы и API установленного NGW. Начать с одного настоящего слоя и параллельных транзакций.",
+        "",
+        "Приёмка: неизменённый слой не скачивает объекты; изменённый использует безопасную полную загрузку; исходящие правки отправляются независимо. Изменения атрибута/геометрии при прежнем количестве, delete+insert с прежним количеством, длинная транзакция, смена фильтра/прав/схемы и пересоздание источника не пропускаются. Отсутствие достоверного маркера возвращает к полной проверке.",
+        "",
+        "Количество объектов и время последнего запуска приложения не являются достаточным доказательством актуальности. Протокол отдельно доказывает, что его граница не пропускает поздно завершившиеся транзакции.",
+        ""
+      ]
+    },
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "SYNC-01"
+    },
+    "priority": {
+      "role": "priority_at_pinned_roadmap_basis",
+      "value": "P1"
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "Requires the declared server contract prototype."
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:task:mobile-roadmap-reliable-server-ack",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:task:mobile-roadmap-field-measurement-baseline",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-skip-unchanged-postgres-layers"
+    ]
+  }
+}

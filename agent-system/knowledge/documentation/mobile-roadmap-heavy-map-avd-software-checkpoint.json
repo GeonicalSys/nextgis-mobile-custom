@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:mobile-roadmap-heavy-map-avd-software-checkpoint",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout",
+      "lisa:mobile:task:mobile-roadmap-heavy-map-diagnostics"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the pinned checkpoint and keep its results within the stated source and runtime bounds."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "После сообщения о трёх host hard hangs AVD были остановлены. Позднее27 октября",
+        "владелец разрешил software-only продолжение, аппаратный режим запретил.",
+        "Карточка android-20261027-emulator-host-safety: software-only runner,",
+        "явный admission и запрет actual host/unknown GLES. Проверка нового маршрута",
+        "source/unit PASS; новый реальный boot подтвердил actual SwiftShader. Итог",
+        "native проверки фиксируется отдельно. Software-related01:60 actual pan,",
+        "20 actual zoom changes,2 recreate, но FAIL по отсутствию конечной MVT отрисовки.",
+        "Следующий Full оборвался при AVD startup после ещё одного hard hang; владелец",
+        "отключил андервольтинг и явно поручил продолжить в software-only режиме.",
+        "Это мера изоляции риска,",
+        "а не установленная причина Windows hang или мобильного224 crash.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:mobile-roadmap-heavy-map-avd-software-checkpoint"
+    ]
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:map-rendering-polygon-patterns-and-outlines",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-rendering"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the rendering subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-rendering.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Штриховки и расширенный контур",
+        "",
+        "[Контракт нового пакета](polygon-style-controls.md): необязательные параметры сохраняют прежний вид старых полигонов. Узоры получают отдельные цвет/alpha и бесшовную решётку; расширенный контур рисуется штатными children прямого SQLite source. Native образец в редакторе использует те же фабрики, без сети и рабочей карты.",
+        "",
+        "`PatternTilePeriod` сохраняет исходную512×512ARGB решётку и уменьшает bitmap",
+        "только до точного прямоугольного повторяемого мотива, проверенного по каждому",
+        "пикселю. Density160, округление, color/alpha, native IDs/ownership и LRU4MiB",
+        "сохраняются; без доказанного периода остаётся полный размер. Геометрия и",
+        "saved style прежние. [Карточка](../../maplib/update-reports/entries/maplib-20261027-pattern-exact-motif.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:map-rendering-polygon-patterns-and-outlines"
+    ]
+  }
+}

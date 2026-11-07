@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-real-window-and-camera-fixture",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "LargeTextLayoutTest awaits the focused input window and a committed frame before",
+        "physical map taps after rotation, retaining actual touch/visible geometry checks.",
+        "MapEditingToolsTest waits for the recreated MapView's own map and sources before",
+        "creation actions, then checks camera coordinates after the form returns to the",
+        "visible map instead of reading a stopped SurfaceView. Geometry and saved SQL values remain checked.",
+        "Creation pans update native and model camera state together; regression checks",
+        "invoke the delayed legacy redraw and preserve the actual GPS centre and fractional zoom.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-real-window-and-camera-fixture"
+    ]
+  }
+}

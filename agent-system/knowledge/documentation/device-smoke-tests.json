@@ -1,0 +1,356 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:device-smoke-tests",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/runbooks/device-smoke-tests.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/device-smoke-tests.md"
+    },
+    "frontmatter": {
+      "role": "markdown_frontmatter_lines",
+      "value": [
+        "title: Ручные проверки на Android-устройстве",
+        "type: runbook",
+        "last_verified: 2026-11-02",
+        "related_code:",
+        "  - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt",
+        "  - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt"
+      ]
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "",
+        "# Ручные проверки на Android-устройстве",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-sqlite-priority-scripted-isolation-and-t40-receipt",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-sqlite-priority-manual-render-order-and-open-gates",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-feature-copy-transform-and-undo-smoke",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-smoke-selection-from-change-impact",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-base-smoke-matrix-heading",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-cursor-bearing-accuracy-and-style-refresh",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-feature-type-create-and-cancel",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-diagnostic-offline-fatal-restart-and-retry-smoke",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-stakeout-permission-emulator-smoke",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-stakeout-physical-smoke-and-android-fifteen-gap",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-cascading-form-lists-heading",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-pending-indicator-layer-identity",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-cascading-lists-automatic-and-project-smoke",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-form-aliases-and-split-pair",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-all-project-sync-isolated-emulator",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-all-project-sync-manual-and-existing-draft-guard",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-map-layout-and-recording-device-matrix",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-measurements-menu-and-control-bounds",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-track-mode-menu-and-rotation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-walking-speed-segments-and-loss-of-fix",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-walk-panel-resume-and-finish",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-device-hit-testing-versus-source-proofs",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-base-clean-existing-and-layer-order",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-offline-sync-project-and-walk-smoke",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-tracking-audio-provider-loss-and-permission-return",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-updater-heavy-sync-and-import-navigation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:device-smoke-tests-august-21-package-profile-and-evidence-instructions",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:device-smoke-tests-august-21-project-list-and-delete-guard",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:device-smoke-tests-august-21-sync-lock-and-switch",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:device-smoke-tests-august-21-heavy-layer-rebuild",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:device-smoke-tests-august-21-big-geometry-and-fill-checkpoint",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:device-smoke-tests-august-21-incremental-pull-and-style",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:device-smoke-tests-august-21-network-retry",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:device-smoke-tests-august-21-editable-layer-direction",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:device-smoke-tests-august-21-import-back-navigation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:device-smoke-tests-august-21-sketch-start-and-cancel",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:device-smoke-tests-august-21-selected-vertex-midpoint-and-part-boundaries",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:device-smoke-tests-august-21-walk-state-and-checkpoint",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:device-smoke-tests-august-21-gps-centre-and-form-save",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:device-smoke-tests-august-21-multipart-measurement-and-undo-redo",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:device-smoke-tests-august-21-import-lease-and-project-deletion",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:device-smoke-tests-august-21-identify-visible-layers",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:device-smoke-tests-august-21-polygon-restore-and-self-intersection",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:device-smoke-tests-august-21-walk-recovery-and-deferred-renderer",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:device-smoke-tests-august-21-fast-two-finger-rotation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-device-smoke-result-and-not-run",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-independent-walk-manual-finish-oracle",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:device-smoke-tests-a54-isolated-walk-and-point-receipt",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-walk-point-remaining-device-and-audio-guards",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-reliability-audit-separate-field-acceptance",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-reliability-recovery-and-resource-stress",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-physical-pigo-ble-cold-start-smoke",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:device-smoke-tests-pigo-gatt-api-result-and-unrun-physical-smoke",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-project-script-forms-and-package-rollback",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-tracker-registration-and-durable-upload-smoke",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-tracker-toggle-server-identity-and-packet-ack",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-stationary-phone-versus-movement-emulator",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:device-smoke-tests-full-approved-project-and-settings-restoration",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:device-smoke-tests"
+    ]
+  }
+}

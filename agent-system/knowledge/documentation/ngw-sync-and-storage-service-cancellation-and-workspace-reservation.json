@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-service-cancellation-and-workspace-reservation",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Завершение bound `NGWSyncService` не ждёт worker на Android main thread:",
+        "незавершённый проход фиксируется journal и повторяется после запуска, вместо",
+        "прежнего блокирующего ожидания, которое само могло вызвать ANR.",
+        "",
+        "`ProjectOperationCoordinator` резервирует active workspace ещё при нажатии",
+        "ручной sync и удерживает lease до конца всех project/account, включая промежутки между",
+        "ними. Поэтому project switch/create/rename/delete не может попасть в окно между",
+        "двумя адаптерами. Если пользователь запускает такое действие, загрузку слоя или",
+        "подложки во время sync, UI предупреждает об активной синхронизации, предлагает",
+        "прервать её и ждёт закрытия всех lease перед продолжением. Gate выполняется",
+        "повторно перед фактической подготовкой Collector workspace, закрывая окно",
+        "длительного выбора ресурса. Cancel handlers принадлежат своим reservations и",
+        "не перезаписывают друг друга. Периодический adapter",
+        "также получает lease; второй полный sync того же workspace отклоняется. Layer fill",
+        "и schema rebuild в scoped очереди сохраняют session token и получают доступ к SQLite",
+        "только в фазе ожидания собственных зависимых операций. Legacy unscoped clients",
+        "сохраняют ожидание освобождения full-sync lease.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-service-cancellation-and-workspace-reservation"
+    ]
+  }
+}

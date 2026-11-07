@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:maintenance-reminders-bounded-scroll-message-and-actions",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:maintenance-reminders"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/maintenance-reminders.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Для новых длинных сообщений app сохраняет штатный NestedScrollView и полный",
+        "системный шрифт. ScrollableAlertDialogs.MessagePanels измеряет целиком title/button panels",
+        "до выделения остатка сообщению: минимальная высота stacked ButtonBar не",
+        "должна обрезать второе действие. Предупреждение стоит первым, версия и release notes — ниже в прокрутке.",
+        "Native проверяет обе кнопки внутри окна и сохраняет PNG при 280 dp / 200%.",
+        "Остальные диалоги и короткое обычное предложение готового APK сохраняют",
+        "существующий shared builder.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:maintenance-reminders-bounded-scroll-message-and-actions"
+    ]
+  }
+}

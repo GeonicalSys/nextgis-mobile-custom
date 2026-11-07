@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:error-reporting-payload-and-priority-context-budgets",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:error-reporting"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/error-reporting.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "`DiagnosticsPayloadLimiter` ограничивает строки 4096 символами, дополнительные",
+        "структурированные данные — общим бюджетом 32768 символов/256 узлов, глубиной 6",
+        "и 64 элементами каждой коллекции. Циклы заменяются маркером; неизвестные объекты",
+        "не обходятся reflection и не вызывают произвольный toString. Основной stack,",
+        "номер строки, устройство и URL не удаляются при исчерпании бюджета дополнительных",
+        "данных. Пустые значения и типы чисел/boolean сохраняются. Бюджет разделён: 16 KiB/128 узлов",
+        "для report_origin, sync_journal, gps_recovery и map_runtime (в этом порядке),",
+        "8 KiB/64 для остальных данных, 4 KiB/16 для дополнительных полей stack и",
+        "4 KiB/48 для breadcrumbs. Последние операции/lifecycle получают бюджет первыми;",
+        "порядок breadcrumbs в событии сохраняется. Большие HTTP headers или frame vars",
+        "не вытесняют GPS-контекст и последние действия. Typed native os_linux сохраняется.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:error-reporting-payload-and-priority-context-budgets"
+    ]
+  }
+}

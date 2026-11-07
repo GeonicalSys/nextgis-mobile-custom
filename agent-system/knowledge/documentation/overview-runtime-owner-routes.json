@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:overview-runtime-owner-routes",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:overview"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the App architecture or upstream workflow topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/overview.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Основные runtime-потоки",
+        "",
+        "- Запуск: `MainApplication` → `MainActivity` → `MapFragment`.",
+        "- Карта: `MapFragment` реализует `MaplibreMapInteraction`, а `MapDrawable`",
+        "  управляет MapLibre style/sources/layers.",
+        "- NGW import: выбор ресурса в `maplibui` → `LayerFillService` → GIS objects в",
+        "  `maplib` → reload карты через интерфейсы `maplib`/`app`.",
+        "- Collector: metadata в `maplib`, registry/workspaces и orchestration в",
+        "  `maplibui`, переключение проекта в `app`.",
+        "- Sync: Android sync/service layer вызывает NGW/storage логику библиотек.",
+        "- Release/update: flavor/version задаются в `app/build.gradle`; self-hosted",
+        "  updater находится в `app`.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:overview-runtime-owner-routes"
+    ]
+  }
+}

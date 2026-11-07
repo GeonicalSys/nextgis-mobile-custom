@@ -1,0 +1,74 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-29-7ff581c6824b",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-29 — Владение переносом и сбросом настроек",
+        "",
+        "Исправлены оба legacy-входа storage/Reset: исключительный owner получается до",
+        "preferences/default-directory/task effects и удерживается через worker/UI.",
+        "Выбранные path/card не публикуются заранее. Reset defaults/delete выполняются",
+        "только после достижения target и commit actual path; обычный отказ/отмена после",
+        "retirement сохраняют проверенную actual-map перепривязку без этих Reset effects.",
+        "RESULT_OK request777 — refresh Activity/drawable, не move ACK. Предикаты mMap не",
+        "вызывают factory getMap, owner/path check и rebind атомарны под app monitor.",
+        "",
+        "До исправления6 actual-body JVM дали5 FAIL/1 штатный PASS; после21 PASS,",
+        "LisaDebug/BelkaRelease Java/Kotlin compile PASS, независимый разбор CLEAR.",
+        "Каталог UI38 содержит128 method и14 file tripwires, включая явный General Reset.",
+        "Два существующих impact trigger и invariant уточнены, новый smoke только planned",
+        "NOT_RUN. Исходные ID/history и F61 clock pin сохранены: полный текущий UI/docs",
+        "gate NOTPASS из-за отдельной library63→app pointer delivery dependency.",
+        "Реальное storage/WAL/renderer drain, registry/draft migration и disk/restart не",
+        "принимаются моделями JVM. Related/Full, устройство, ordinary APK, merge и выпуск",
+        "не запускались. Карточка android-20261029-storage-move-ownership, существующий MOB-02.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-29",
+        "heading": "2026-10-29 — Владение переносом и сбросом настроек",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-29-7ff581c6824b"
+    ]
+  }
+}

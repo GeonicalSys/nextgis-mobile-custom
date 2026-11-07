@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:stakeout-session-identity-and-stale-foreground-intent",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:stakeout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/stakeout.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Каждый старт получает новый process-local session ID. Stop, failure и queued Intent",
+        "старой сессии не останавливают новую; замена цели сохраняет текущий ID. Unowned",
+        "redelivery после process death удовлетворяет foreground-start contract и сразу",
+        "останавливается, не создавая GPS/audio или wake lock: простая остановка до",
+        "`startForeground` на Android 16 сама вызывает `ForegroundServiceDidNotStartInTimeException`.",
+        "Отмена ещё не запущенной службы также ждёт её queued `onStartCommand`; после",
+        "успешного foreground promotion Stop выполняется сразу.",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:stakeout-location-only-fgs-and-start-failure-cleanup",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:stakeout-session-identity-and-stale-foreground-intent"
+    ]
+  }
+}

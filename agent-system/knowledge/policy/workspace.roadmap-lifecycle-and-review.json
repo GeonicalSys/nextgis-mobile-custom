@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:instruction:workspace.roadmap-lifecycle-and-review",
+  "kind": "instruction",
+  "owner": "android_projects/android_gisapp",
+  "topic": "policy-workspace",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "."
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain editable logical subject and pinned provenance; product implementation/acceptance are separate records."
+  },
+  "facets": {
+    "body": {
+      "role": "permanent_rule",
+      "value": "В PR указать ID, связь с целью и влияние на данные, sync, карту, фон и батарею;\nдля внеплановой работы — причину и сдвигаемые задачи. Изменение приоритетов/объёма\nсогласует владелец продукта; технический review проверяет соответствие и зависимости.\nОбновлять статус по фактам: PR, merge, device verification и выпуск различаются.\nКарта не разрешает автоматически запускать её задачи, менять сервер или выпускать APK.\nРегламент обязателен для review; автоматический roadmap check и правило слияния\nпока не внедрены. Процесс и критерии — в карте, поля PR — в\n[шаблоне](.github/PULL_REQUEST_TEMPLATE.md).\n"
+    },
+    "classification": {
+      "role": "reviewed_knowledge_class",
+      "value": "permanent_rule"
+    },
+    "review": {
+      "role": "classification_reason",
+      "value": "Complete PR impact, product-owner prioritization, independent merge/device/release states and explicit absence of an implemented automatic gate."
+    },
+    "source_section": {
+      "role": "source_document_context",
+      "value": [
+        "# GeonicalSystem NextGIS Mobile fork — инструкции для ИИ-агентов",
+        "## Дорожная карта для любой доработки"
+      ]
+    },
+    "authority_limit": {
+      "role": "authority_and_acceptance_boundary",
+      "value": "Path applicability is reviewed separately from the rule's textual triggers. Every source condition and heading remains attached; no automatic predicate or lifecycle inference. Stored commands and dates do not grant current execution, freshness or product acceptance. Existing instruction clients/checkers remain effective until measured cutover."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/policy-migration.json",
+    "scopes": [
+      "lisa:mobile:instruction:workspace.roadmap-lifecycle-and-review"
+    ]
+  }
+}

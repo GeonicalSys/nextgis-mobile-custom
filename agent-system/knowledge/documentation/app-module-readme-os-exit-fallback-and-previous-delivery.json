@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:app-module-readme-os-exit-fallback-and-previous-delivery",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Автоматическая диагностика после закрытия процесса",
+        "",
+        "Новый restart fallback восстанавливает OS exit reason и доступные native/ANR",
+        "frames даже при отсутствии исходного SDK envelope. Контракт, ограничения и",
+        "исходная identity — docs/architecture/error-reporting.md. По поручению пользователя",
+        "передан приватный подписанный APK030f303 поверх224, без публичного выпуска и без",
+        "изменения renderer13.7.1. Публичная224 отдельно отозвана: latest/manifest223;",
+        "исправлен и портал. Приёмка клиента Samsung ещё не выполнена.",
+        "",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:app-module-readme-os-exit-fallback-and-previous-delivery"
+    ]
+  }
+}

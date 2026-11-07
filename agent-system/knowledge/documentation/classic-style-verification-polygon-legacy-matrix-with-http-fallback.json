@@ -1,0 +1,50 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:classic-style-verification-polygon-legacy-matrix-with-http-fallback",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:classic-style-verification",
+      "lisa:mobile:resource:polygon-style-controls"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original measurement or checkpoint and its acceptance limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/classic-style-verification.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Настраиваемые полигоны и живой образец",
+        "",
+        "[Пакет](polygon-style-controls.md) добавляет PolygonStyleRenderingTest (смешанные сохранённые категории, независимая alpha, реальные цветные pixels, дырки, Polygon/MultiPolygon, дробный zoom, visibility/picking/cleanup), PolygonStyleTileFallbackTest и PolygonStyleEditorTest. Последний проверяет 72 русских профиля с живым native MapView и реальными Configure/Casing/Save/Cancel touches. Классы включены в Related styles; отдельная область polygon-styles предназначена для адресной разработки. Наличие сценариев не заменяет фактическую квитанцию.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:classic-style-verification-polygon-legacy-matrix-with-http-fallback"
+    ]
+  }
+}

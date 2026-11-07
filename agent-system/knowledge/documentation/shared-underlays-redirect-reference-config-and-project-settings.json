@@ -1,0 +1,61 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:shared-underlays-redirect-reference-config-and-project-settings",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:shared-underlays"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/shared-underlays.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Один archive SHA может соответствовать старому дереву NGRc либо уже",
+        "преобразованному MBTiles. При миграции и redirect ссылка получает `tms_type`,",
+        "`levels` и bounds выбранного payload через `Asset.referenceConfig`; прежние",
+        "уровни дерева удаляются при переходе на MBTiles. Имя, видимость, заданные",
+        "пользователем min/max zoom и остальные проектные настройки сохраняются.",
+        "Целевой payload проверяется до переноса исходной папки и записи ссылки.",
+        "После прерывания redirect уже записанные ссылки остаются корректными, проход",
+        "продолжает остальные проекты. Ссылки предыдущих сборок с неверным `tms_type`",
+        "исправляются перед загрузкой слоя; корректные ссылки повторно не записываются.",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:shared-underlays-dedup-redirect-and-durable-links",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:shared-underlays-redirect-reference-config-and-project-settings"
+    ]
+  }
+}

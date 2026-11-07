@@ -1,0 +1,61 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-streamed-snapshot-http-206-admission",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Полный streamed GET не посылает Range и не собирает диапазоны. RFC9110§15.3.7",
+        "требует определить Content-Type/Content-Range;206 может охватывать всю запись,",
+        "но данный route не доказывает это. JSON array и Content-Length не доказывают",
+        "полный inventory. Поэтому только downloadFullSnapshot при явном206 добавляет",
+        "один numIoExceptions и возвращает failed206 до error/input stream, length и",
+        "нового snapshot. Другие2xx,404/error/transient retry и tracked/diff routes прежние.",
+        "Ранняя prefix-очистка временных файлов до GET и прежняя отправка local changes",
+        "остаются: отказ не предшествует всем SQL/cleanup. Outer null-file gate не допускает",
+        "scan/backup/SQL применения именно этого полного снимка.",
+        "",
+        "В обычном apply отсутствие NGW physical FID в принятом полном наборе может выбрать",
+        "локальный объект на удаление; существующие NEW/flags/invalid-geometry/backup gates,",
+        "transaction и post-commit attachment cleanup сохранены. Этот source trace не доказывает",
+        "actual206, потери данных или принятия SQL/full apply. Успешный неполный200, tracked,",
+        "initial import и count/revision races остаются AUDIT-TODO-NGW-PARTIAL-SNAPSHOT.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-streamed-snapshot-http-206-admission"
+    ]
+  }
+}

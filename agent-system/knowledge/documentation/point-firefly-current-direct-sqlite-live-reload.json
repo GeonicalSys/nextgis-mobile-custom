@@ -1,0 +1,51 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:point-firefly-current-direct-sqlite-live-reload",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:point-firefly",
+      "lisa:mobile:resource:classic-style-verification-direct-live-style-reload-oracle"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the style or label subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/point-firefly.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "После удаления HTTP renderer2ноября живое изменение обычной точки на",
+        "Светлячок остаётся прямым SQLite source; новый provider epoch проверяется в",
+        "DirectVectorTilesTest без старого server→classic перехода. Classic converter",
+        "сохранён для preview/overlay и отдельной style matrix. Новая live проверка NOT_RUN.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:point-firefly-current-direct-sqlite-live-reload"
+    ]
+  }
+}

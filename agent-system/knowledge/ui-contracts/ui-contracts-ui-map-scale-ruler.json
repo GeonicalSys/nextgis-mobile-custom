@@ -1,0 +1,101 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-map-scale-ruler",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-MAP-SCALE-RULER"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-MAP-SCALE-RULER",
+        "group": "map",
+        "title": "Линейка расстояния на карте",
+        "surface": "Map scale ruler",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [
+          "iv_ruler",
+          "tv_ruler",
+          "ll_ruler"
+        ],
+        "meaning": "Ruler measures map distance represented by its screen span, not a GPS range or selected feature length.",
+        "value_origin": "rulerText property: screen endpoints -> screenToMap -> EPSG3857 GeoLineString.length -> LocationUtil.formatLength; camera idle binds text",
+        "units": "Map distance formatted using preferred_units; bitmap span10mm/notch1mm.",
+        "updates": [
+          "Camera idle/relevant redraw; initial binding."
+        ],
+        "actions": [
+          "Change zoom/latitude; toggle show_scale_ruler."
+        ],
+        "conditions": [
+          "Laid-out ruler and projection available; show_scale_ruler defaults false; current mode can hide it."
+        ],
+        "saved_state": "Visibility/units preferences persist; text is derived, not feature data.",
+        "source_ids": [
+          "map-scale-bitmap",
+          "map-camera-idle",
+          "map-init-autopan"
+        ],
+        "expectations": [
+          "Fixed GPS with changed camera zoom changes represented span. Counterexample: ruler does not measure distance to phone."
+        ],
+        "unknowns": [
+          "Runtime NOT_RUN: no GUI, device, emulator, build or APK resource merge acceptance in this task.",
+          "rulerText is a property, not a method: exact source/prose is in map-review.md. Projection/metric correctness and layout measurement remain separate acceptance."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-map-scale-bitmap",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-map-camera-idle",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-map-init-autopan",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-map-scale-ruler"
+    ]
+  }
+}

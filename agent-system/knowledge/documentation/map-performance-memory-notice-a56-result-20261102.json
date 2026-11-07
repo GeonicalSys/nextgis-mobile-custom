@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:map-performance-memory-notice-a56-result-20261102",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-performance",
+      "lisa:mobile:resource:map-performance-memory-notice-process-scope"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original measurement or checkpoint and its acceptance limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-performance.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Доступность сообщения памяти — 2 ноября2026",
+        "",
+        "Адресный native прогон подтвердил сохранность всех129 технических polygon IDs,",
+        "но нашёл кнопку вне тесного диалога. MapFragment теперь использует общий",
+        "bounded message layout из напоминаний: фиксированные действия измеряются",
+        "полностью прежде scroll viewport. Resource policy, cache budget, queue и",
+        "геометрии не меняются. Component oracle измеряет видимый текст Layout.getLineMax,",
+        "проверяет layout каждого символа, ellipsis, обе кнопки и прокрутку. A56 matrix",
+        "после исправления PASS; это отдельно от actual OOM,2GiB/full-map и Full real-window",
+        "acceptance. Полный статус — в [release evidence](../reference/mobile-release-3.1.2.31-2026-11-01.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:map-performance-memory-notice-a56-result-20261102"
+    ]
+  }
+}

@@ -1,0 +1,1868 @@
+{
+  "schema_version": 1,
+  "registries": {
+    "config-keys": {
+      "source": {
+        "repository": "android_projects/android_gisapp",
+        "path": "docs/registry/config-keys.yaml",
+        "revision": "8a5d707e24f34f1d5e4cbc9f194f7d7a41902256",
+        "blob": "e48a9bfbfd10f41bb7b6c8c98dacb2d56c06f66a",
+        "sha256_utf8_lf": "7ed3ffbd672d7f2af7d7ef9a04c829f962d54eb41c8077527fc5f1de1f2085d1"
+      },
+      "spans": [
+        {
+          "lines": [
+            1,
+            1
+          ],
+          "sha256_utf8_lf": "5c9536c0f64193f535c425baf9f2c7431b89eb46bab5fb85d4bfcffabb565f43",
+          "target": "lisa:mobile:metadata:config-keys-registry",
+          "part": "schema"
+        },
+        {
+          "lines": [
+            2,
+            2
+          ],
+          "sha256_utf8_lf": "a44a76d8f3e82d3442183a18b2cc6b916a773c28ef10212113fb6fb64827892f",
+          "target": "lisa:mobile:metadata:config-keys-registry",
+          "part": "preferences"
+        },
+        {
+          "lines": [
+            3,
+            9
+          ],
+          "sha256_utf8_lf": "f624460c8fe6ce68fac4e92fc1b1a7d886f55bb1a9fd0d0154d748445cd8c187",
+          "target": "lisa:mobile:contract:config-keys-preferences-show-compass-accuracy-sector",
+          "part": "preferences",
+          "key": "show_compass_accuracy_sector"
+        },
+        {
+          "lines": [
+            10,
+            16
+          ],
+          "sha256_utf8_lf": "e55e8a28fa2a4ecb675ba8081b44bc734223769ca19d832828bfb9604d6f108b",
+          "target": "lisa:mobile:contract:config-keys-preferences-background-gps-enabled",
+          "part": "preferences",
+          "key": "background_gps_enabled"
+        },
+        {
+          "lines": [
+            17,
+            23
+          ],
+          "sha256_utf8_lf": "b5ed0b66d0fcb358bb0b4e41b995754a10e0f4f92a25c13d464a52100ae96e95",
+          "target": "lisa:mobile:contract:config-keys-preferences-show-sync",
+          "part": "preferences",
+          "key": "show_sync"
+        },
+        {
+          "lines": [
+            24,
+            30
+          ],
+          "sha256_utf8_lf": "5b8453dd0c73ef7a82d0bace010e8f20538c35b6233aa7bb67b54a65c05b4602",
+          "target": "lisa:mobile:contract:config-keys-preferences-track-send",
+          "part": "preferences",
+          "key": "track_send"
+        },
+        {
+          "lines": [
+            31,
+            35
+          ],
+          "sha256_utf8_lf": "96f9d99e05b4eab9bf9b7d4dbe9f283e5e426ccfa383153e900ce463233337f4",
+          "target": "lisa:mobile:contract:config-keys-preferences-track-registered-device",
+          "part": "preferences",
+          "key": "track_registered_device"
+        },
+        {
+          "lines": [
+            36,
+            41
+          ],
+          "sha256_utf8_lf": "c343326937e84962566120347896fe4bf86b52eb97e57c8556dc2115bc4d442f",
+          "target": "lisa:mobile:contract:config-keys-preferences-track-send-default-enabled-v1",
+          "part": "preferences",
+          "key": "track_send_default_enabled_v1"
+        },
+        {
+          "lines": [
+            42,
+            47
+          ],
+          "sha256_utf8_lf": "0eba337839e240c5a4ba142343a11a43c701bed7743044ced6bd23211b147bf5",
+          "target": "lisa:mobile:contract:config-keys-preferences-battery-dont-show-pref",
+          "part": "preferences",
+          "key": "battery_dont_show_pref"
+        },
+        {
+          "lines": [
+            48,
+            52
+          ],
+          "sha256_utf8_lf": "650fc186e72aecdd4acb2618bac6ebc3b2ffdab7b1133256647ca5753b6d46a7",
+          "target": "lisa:mobile:contract:config-keys-preferences-shared-track-layer",
+          "part": "preferences",
+          "key": "shared-track-layer"
+        },
+        {
+          "lines": [
+            53,
+            57
+          ],
+          "sha256_utf8_lf": "7605d5bb475b7d792f5ea4fb863fde6f2b08a54b37e4ce14df97027c273a2821",
+          "target": "lisa:mobile:contract:config-keys-preferences-tracks-temp",
+          "part": "preferences",
+          "key": "tracks_temp"
+        },
+        {
+          "lines": [
+            58,
+            63
+          ],
+          "sha256_utf8_lf": "012c96f3b759fc76b5ef5588a9438b9fc55a41a28741884770148c5f1dd3e592",
+          "target": "lisa:mobile:contract:config-keys-preferences-location-source",
+          "part": "preferences",
+          "key": "location_source"
+        },
+        {
+          "lines": [
+            64,
+            70
+          ],
+          "sha256_utf8_lf": "57911ebf91584911b09997e86b8640de0c47f1dabec856ce4f1531b5c1cf96c8",
+          "target": "lisa:mobile:contract:config-keys-preferences-gnss-input",
+          "part": "preferences",
+          "key": "gnss_input"
+        },
+        {
+          "lines": [
+            71,
+            76
+          ],
+          "sha256_utf8_lf": "495c4bf64be207906066f8dcd198c0266f359984228763329cf4e8f8b0d6addb",
+          "target": "lisa:mobile:contract:config-keys-preferences-gnss-device",
+          "part": "preferences",
+          "key": "gnss_device"
+        },
+        {
+          "lines": [
+            77,
+            82
+          ],
+          "sha256_utf8_lf": "e776ab7f1c759fcde61fb9ac041c26bb1e637baaac7eb140421595b1b2758bfe",
+          "target": "lisa:mobile:contract:config-keys-preferences-gnss-transport",
+          "part": "preferences",
+          "key": "gnss_transport"
+        },
+        {
+          "lines": [
+            83,
+            88
+          ],
+          "sha256_utf8_lf": "d148cfca8a564d80165990d5c404a890ded2017c244ca5c6b62ccf2086510241",
+          "target": "lisa:mobile:contract:config-keys-preferences-gnss-device-id",
+          "part": "preferences",
+          "key": "gnss_device_id"
+        },
+        {
+          "lines": [
+            89,
+            94
+          ],
+          "sha256_utf8_lf": "48acc3fbd798dfecbbb8874b1aef670d40a7fe115800d1e4955c6de071175068",
+          "target": "lisa:mobile:contract:config-keys-preferences-gnss-device-name",
+          "part": "preferences",
+          "key": "gnss_device_name"
+        },
+        {
+          "lines": [
+            95,
+            100
+          ],
+          "sha256_utf8_lf": "ff8799a4d47ea008dd4e1f44c2fc9ac0167bcc99a5bafbab2af476df4488c5e3",
+          "target": "lisa:mobile:contract:config-keys-preferences-gnss-tcp-host",
+          "part": "preferences",
+          "key": "gnss_tcp_host"
+        },
+        {
+          "lines": [
+            101,
+            106
+          ],
+          "sha256_utf8_lf": "8f2f5dc2a1b88fbe44c7c8851900d72673f07d70e321c240cd6ccb04e5733b12",
+          "target": "lisa:mobile:contract:config-keys-preferences-gnss-tcp-port",
+          "part": "preferences",
+          "key": "gnss_tcp_port"
+        },
+        {
+          "lines": [
+            107,
+            113
+          ],
+          "sha256_utf8_lf": "053e4eb4f7e69368a7fbb6e2051adeca27df3754d7fa06aa7e776ddae06f9dbe",
+          "target": "lisa:mobile:contract:config-keys-preferences-verbose-log",
+          "part": "preferences",
+          "key": "verbose_log"
+        },
+        {
+          "lines": [
+            114,
+            119
+          ],
+          "sha256_utf8_lf": "bdb88387b7b4c149754ae50dca84fba4d3a72593fe1974dffebcdf02936271b0",
+          "target": "lisa:mobile:contract:config-keys-preferences-tracks-location-source",
+          "part": "preferences",
+          "key": "tracks_location_source"
+        },
+        {
+          "lines": [
+            120,
+            125
+          ],
+          "sha256_utf8_lf": "aae97dcfab11f83bce1ed1712cc77a854bab8b5e8ef8a6e528888480ad85c527",
+          "target": "lisa:mobile:contract:config-keys-preferences-debug-companion-install",
+          "part": "preferences",
+          "key": "debug_companion_install"
+        },
+        {
+          "lines": [
+            126,
+            131
+          ],
+          "sha256_utf8_lf": "acfa4a4f01e7ca04e02b4653a3aee190bd5e93e153659c46054644f2dc9566d4",
+          "target": "lisa:mobile:contract:config-keys-preferences-shared-underlay-migration",
+          "part": "preferences",
+          "key": "shared_underlay_migration"
+        },
+        {
+          "lines": [
+            132,
+            137
+          ],
+          "sha256_utf8_lf": "d3ecf5479d96535c824efd9b685432ced8c13ac0ae3e321c89c73c301cb00be7",
+          "target": "lisa:mobile:contract:config-keys-preferences-com-nextgis-mobile-prefs-underlays",
+          "part": "preferences",
+          "key": "com.nextgis.mobile.PREFS_UNDERLAYS"
+        },
+        {
+          "lines": [
+            138,
+            144
+          ],
+          "sha256_utf8_lf": "170dfd46e5794199d48f69cdf05404eca2577abf995b462c7925bbf71a3df3d2",
+          "target": "lisa:mobile:contract:config-keys-preferences-sync-all-projects",
+          "part": "preferences",
+          "key": "sync_all_projects"
+        },
+        {
+          "lines": [
+            145,
+            150
+          ],
+          "sha256_utf8_lf": "7610386e9faef74326c8d78cbd02a65e43214547526d578dc1da62650324b947",
+          "target": "lisa:mobile:contract:config-keys-preferences-sync-recovery-journal",
+          "part": "preferences",
+          "key": "sync_recovery_journal"
+        },
+        {
+          "lines": [
+            151,
+            155
+          ],
+          "sha256_utf8_lf": "140d8b941613b3722cb9d42b315397cc0e38124a5a7e0a291807467800562faf",
+          "target": "lisa:mobile:contract:config-keys-preferences-map-show-loc",
+          "part": "preferences",
+          "key": "map_show_loc"
+        },
+        {
+          "lines": [
+            156,
+            160
+          ],
+          "sha256_utf8_lf": "778b59dc3328ac50e897ffdc08dfecbbf010003a5201530e6b06e2a3a8f81eb8",
+          "target": "lisa:mobile:contract:config-keys-preferences-map-show-compass",
+          "part": "preferences",
+          "key": "map_show_compass"
+        },
+        {
+          "lines": [
+            161,
+            167
+          ],
+          "sha256_utf8_lf": "086720d09c283de60db70168dbccef386e2b4bb312c254568f41b44b8fa6b3b7",
+          "target": "lisa:mobile:contract:config-keys-preferences-map-rotation-enabled",
+          "part": "preferences",
+          "key": "map_rotation_enabled"
+        },
+        {
+          "lines": [
+            168,
+            174
+          ],
+          "sha256_utf8_lf": "5f490c80dbd13b7fc8c633135a0f5ac30ced2e79ba7f1521724ab1978c44e0f5",
+          "target": "lisa:mobile:contract:config-keys-preferences-map-bearing",
+          "part": "preferences",
+          "key": "map_bearing"
+        },
+        {
+          "lines": [
+            175,
+            182
+          ],
+          "sha256_utf8_lf": "fcbeca01c2983a5142027ce666e280931abf99508ae6579b446f296298e193c5",
+          "target": "lisa:mobile:contract:config-keys-preferences-photo-overlay-enabled",
+          "part": "preferences",
+          "key": "photo_overlay_enabled"
+        },
+        {
+          "lines": [
+            183,
+            190
+          ],
+          "sha256_utf8_lf": "11dd37e233d7b046a91ee2012af5e56cd51fa5ed877fd40c150274cb3b3ba682",
+          "target": "lisa:mobile:contract:config-keys-preferences-photo-overlay-use-object-coords",
+          "part": "preferences",
+          "key": "photo_overlay_use_object_coords"
+        },
+        {
+          "lines": [
+            191,
+            196
+          ],
+          "sha256_utf8_lf": "213e702a999483ee71d77acb8314677d92fc8d40b2f32cdb6f4111d3dd260dfc",
+          "target": "lisa:mobile:contract:config-keys-preferences-photo-overlay-defaults-enabled-v1",
+          "part": "preferences",
+          "key": "photo_overlay_defaults_enabled_v1"
+        },
+        {
+          "lines": [
+            197,
+            206
+          ],
+          "sha256_utf8_lf": "1965d18745920b19165d843c716563079ed2a7a8ea778d02c2065e5823828b0a",
+          "target": "lisa:mobile:contract:config-keys-preferences-keep-screen-on",
+          "part": "preferences",
+          "key": "keep_screen_on"
+        },
+        {
+          "lines": [
+            207,
+            212
+          ],
+          "sha256_utf8_lf": "f5393cf1b7e9d0dccdf05e13939f0c99dc766e394ee5c9549c525e9e9a1597a8",
+          "target": "lisa:mobile:contract:config-keys-preferences-keep-screen-on-default-enabled-v1",
+          "part": "preferences",
+          "key": "keep_screen_on_default_enabled_v1"
+        },
+        {
+          "lines": [
+            213,
+            219
+          ],
+          "sha256_utf8_lf": "ec626f59bd9e1dabe963a621e3f7eba3c89ea67488f60e1fbd9e0dd6c7ccd28e",
+          "target": "lisa:mobile:contract:config-keys-preferences-stakeout-sound-enabled",
+          "part": "preferences",
+          "key": "stakeout_sound_enabled"
+        },
+        {
+          "lines": [
+            220,
+            226
+          ],
+          "sha256_utf8_lf": "26f1d7a3ff29f1f7f9a6a09ebb21261c4c4c1f62695be814ed764290b9fdea13",
+          "target": "lisa:mobile:contract:config-keys-preferences-stakeout-far-distance",
+          "part": "preferences",
+          "key": "stakeout_far_distance"
+        },
+        {
+          "lines": [
+            227,
+            233
+          ],
+          "sha256_utf8_lf": "a3093d6639c18bb40748818a43c171d2a6112a6be8b220e1b7515ee5573e9669",
+          "target": "lisa:mobile:contract:config-keys-preferences-stakeout-medium-distance",
+          "part": "preferences",
+          "key": "stakeout_medium_distance"
+        },
+        {
+          "lines": [
+            234,
+            240
+          ],
+          "sha256_utf8_lf": "62fd19b656e04fcabd09ad36d6c79475087a2f5d83e106da8491cb40329acecc",
+          "target": "lisa:mobile:contract:config-keys-preferences-stakeout-near-distance",
+          "part": "preferences",
+          "key": "stakeout_near_distance"
+        },
+        {
+          "lines": [
+            241,
+            247
+          ],
+          "sha256_utf8_lf": "c869634df89e4854df1084e0df3d5c3731b8d890646fcdc11fff24e59f27f2a7",
+          "target": "lisa:mobile:contract:config-keys-preferences-stakeout-reached-distance",
+          "part": "preferences",
+          "key": "stakeout_reached_distance"
+        },
+        {
+          "lines": [
+            248,
+            254
+          ],
+          "sha256_utf8_lf": "2b85a9f664610540afb2e0d3909006defd9a4e1f2c388d282fbeeed6273a6065",
+          "target": "lisa:mobile:contract:config-keys-preferences-stakeout-declination-correction",
+          "part": "preferences",
+          "key": "stakeout_declination_correction"
+        },
+        {
+          "lines": [
+            255,
+            259
+          ],
+          "sha256_utf8_lf": "6869a3b467746eabdc033b933fde8efeed0ac72377c1e7fdbfe834f5ccf31b7b",
+          "target": "lisa:mobile:contract:config-keys-preferences-check-updates",
+          "part": "preferences",
+          "key": "check_updates"
+        },
+        {
+          "lines": [
+            260,
+            266
+          ],
+          "sha256_utf8_lf": "da76c86808e84f264f233f69375edb0977ef1a7dcd85b9ecd429be20695845a1",
+          "target": "lisa:mobile:contract:config-keys-preferences-layer-backup-max-gb",
+          "part": "preferences",
+          "key": "layer_backup_max_gb"
+        },
+        {
+          "lines": [
+            267,
+            271
+          ],
+          "sha256_utf8_lf": "5c6aee53575ae1636722c8f327c11dd652c46f492f574f481004a87664031c36",
+          "target": "lisa:mobile:contract:config-keys-preferences-sw-track-service",
+          "part": "preferences",
+          "key": "sw_track_service"
+        },
+        {
+          "lines": [
+            272,
+            277
+          ],
+          "sha256_utf8_lf": "f3bf0c3c1da94b22f1bf2353d093297c8a6fe619e91066d0dc9bda662c744944",
+          "target": "lisa:mobile:contract:config-keys-preferences-track-recording-session",
+          "part": "preferences",
+          "key": "track_recording_session"
+        },
+        {
+          "lines": [
+            278,
+            287
+          ],
+          "sha256_utf8_lf": "0ceb7973ab1441ae73c69f069615cdaa95e55c32cb66430b0ce601617dc6383b",
+          "target": "lisa:mobile:contract:config-keys-preferences-track-recording-enabled",
+          "part": "preferences",
+          "key": "track_recording_enabled"
+        },
+        {
+          "lines": [
+            288,
+            299
+          ],
+          "sha256_utf8_lf": "1617b2f902b7f0aecff7a29ad86439997fe8e1cad2d122adb455206aed993d08",
+          "target": "lisa:mobile:contract:config-keys-preferences-track-recording-mode",
+          "part": "preferences",
+          "key": "track_recording_mode"
+        },
+        {
+          "lines": [
+            300,
+            305
+          ],
+          "sha256_utf8_lf": "6aab5e5fed6b33cf636d9311dabf7e67e4f68bbeeac20a8dcdec943712c1c7de",
+          "target": "lisa:mobile:contract:config-keys-preferences-permission-requested-marker",
+          "part": "preferences",
+          "key": "permission_requested_marker"
+        },
+        {
+          "lines": [
+            306,
+            320
+          ],
+          "sha256_utf8_lf": "da1f3ab64e5bcd1d39be3f1cd42312bef88f5cde3d6f47d7e90ea435f0a64702",
+          "target": "lisa:mobile:contract:config-keys-preferences-background-recording-sound",
+          "part": "preferences",
+          "key": "background_recording_sound"
+        },
+        {
+          "lines": [
+            321,
+            328
+          ],
+          "sha256_utf8_lf": "20bf96cc0154d934daac87ee56acb8837d21ce8623a9e1409937c7c2e2c01115",
+          "target": "lisa:mobile:contract:config-keys-preferences-ngw-identity-backup",
+          "part": "preferences",
+          "key": "ngw_identity_backup"
+        },
+        {
+          "lines": [
+            329,
+            333
+          ],
+          "sha256_utf8_lf": "a63b8aa2259ce7894669a71fa04589e7775c4f43c0f951052ea02765818f2d81",
+          "target": "lisa:mobile:contract:config-keys-preferences-feature-form-draft",
+          "part": "preferences",
+          "key": "feature_form_draft"
+        },
+        {
+          "lines": [
+            334,
+            340
+          ],
+          "sha256_utf8_lf": "3f370c5183e95c86c85b9cc902ad89def1dbc356bb9f2ef3d276e81ce76699b6",
+          "target": "lisa:mobile:contract:config-keys-preferences-geometry-edit-draft",
+          "part": "preferences",
+          "key": "geometry_edit_draft"
+        },
+        {
+          "lines": [
+            341,
+            351
+          ],
+          "sha256_utf8_lf": "dbde8f1684e76092273d15fad4bc3e45c69f1a6b29a0ba1994ea31f6638a6902",
+          "target": "lisa:mobile:contract:config-keys-preferences-walkedit-temp",
+          "part": "preferences",
+          "key": "walkedit_temp"
+        },
+        {
+          "lines": [
+            352,
+            352
+          ],
+          "sha256_utf8_lf": "d3e6b9d388872734b1c1fb369e89dcebf427a66c5db224407cc172ea6d4fcee1",
+          "target": "lisa:mobile:metadata:config-keys-registry",
+          "part": "manifest_metadata"
+        },
+        {
+          "lines": [
+            353,
+            356
+          ],
+          "sha256_utf8_lf": "c791f002720da0434cdf421987662a347214c6137b9b43ecf682e99d2fbb4c84",
+          "target": "lisa:mobile:contract:config-keys-manifest-metadata-io-sentry-auto-init",
+          "part": "manifest_metadata",
+          "key": "io.sentry.auto-init"
+        },
+        {
+          "lines": [
+            357,
+            360
+          ],
+          "sha256_utf8_lf": "8a42f0ee46c0088bec0cb85296ee7997cce2d0d45a3dfa21a01bdec688f25b2b",
+          "target": "lisa:mobile:contract:config-keys-manifest-metadata-com-nextgis-mobile-update-flavor",
+          "part": "manifest_metadata",
+          "key": "com.nextgis.mobile.UPDATE_FLAVOR"
+        },
+        {
+          "lines": [
+            361,
+            364
+          ],
+          "sha256_utf8_lf": "539498eb812c32bc7b06c6ea9d27a917accb27807c4ebaa216528635d14bcb14",
+          "target": "lisa:mobile:contract:config-keys-manifest-metadata-io-sentry-traces-user-interaction-enable",
+          "part": "manifest_metadata",
+          "key": "io.sentry.traces.user-interaction.enable"
+        },
+        {
+          "lines": [
+            365,
+            368
+          ],
+          "sha256_utf8_lf": "9651497bf41e8d59dc2e87ea082a4ccd1fd0d8e1a137842e00aed205e9e3af87",
+          "target": "lisa:mobile:contract:config-keys-manifest-metadata-io-sentry-attach-screenshot",
+          "part": "manifest_metadata",
+          "key": "io.sentry.attach-screenshot"
+        },
+        {
+          "lines": [
+            369,
+            372
+          ],
+          "sha256_utf8_lf": "82b636221eacd9865e716bda42f2b6d3b5151e2c6607fc724afc6813937f20ac",
+          "target": "lisa:mobile:contract:config-keys-manifest-metadata-io-sentry-attach-view-hierarchy",
+          "part": "manifest_metadata",
+          "key": "io.sentry.attach-view-hierarchy"
+        },
+        {
+          "lines": [
+            373,
+            376
+          ],
+          "sha256_utf8_lf": "8fcae407c78455742b97a5307b8079a4f2ace05955abf6cabc65205b2c8cd45a",
+          "target": "lisa:mobile:contract:config-keys-manifest-metadata-io-sentry-traces-sample-rate",
+          "part": "manifest_metadata",
+          "key": "io.sentry.traces.sample-rate"
+        },
+        {
+          "lines": [
+            377,
+            380
+          ],
+          "sha256_utf8_lf": "ba6f27e55e37291cab170fa8bda1251588ec46c02f95c5976c85a7bcaebfe402",
+          "target": "lisa:mobile:contract:config-keys-manifest-metadata-io-sentry-traces-profiling-sample-rate",
+          "part": "manifest_metadata",
+          "key": "io.sentry.traces.profiling.sample-rate"
+        },
+        {
+          "lines": [
+            381,
+            381
+          ],
+          "sha256_utf8_lf": "fdad07d3628e1454896bbd17ebcc9cf3bcca0591e40ca7f5c5ddb092c5d45a07",
+          "target": "lisa:mobile:metadata:config-keys-registry",
+          "part": "runtime_constants"
+        },
+        {
+          "lines": [
+            382,
+            385
+          ],
+          "sha256_utf8_lf": "a8a38d64a5b9ad248f89a5e14abaa09f9cfbec356e873676946976382a2acc8a",
+          "target": "lisa:mobile:contract:config-keys-runtime-constants-feature-type-initial-values",
+          "part": "runtime_constants",
+          "key": "feature_type_initial_values"
+        },
+        {
+          "lines": [
+            386,
+            390
+          ],
+          "sha256_utf8_lf": "98b7edb0f5bdbd51b4f89e81a670b0d36aa8b4c95a8ee9ce54de727bfb5c960c",
+          "target": "lisa:mobile:contract:config-keys-runtime-constants-source-revision",
+          "part": "runtime_constants",
+          "key": "SOURCE_REVISION"
+        },
+        {
+          "lines": [
+            391,
+            395
+          ],
+          "sha256_utf8_lf": "cf5d8d52cbdf2506eac42da146b3180661b2e480b48a1c76cdc4efe71574e65c",
+          "target": "lisa:mobile:contract:config-keys-runtime-constants-apk-version-update",
+          "part": "runtime_constants",
+          "key": "apk_version_update"
+        },
+        {
+          "lines": [
+            396,
+            396
+          ],
+          "sha256_utf8_lf": "3e52ec8cdcb2d5810b11a368afcf551631b001f9afb6f7d0563c524cbf54f33e",
+          "target": "lisa:mobile:metadata:config-keys-registry",
+          "part": "variant_resources"
+        },
+        {
+          "lines": [
+            397,
+            400
+          ],
+          "sha256_utf8_lf": "daf382cc3b3da8e19ecb97214ec3c456c56177c387f26a15541935b71bddecc0",
+          "target": "lisa:mobile:contract:config-keys-variant-resources-provider-auth",
+          "part": "variant_resources",
+          "key": "provider_auth"
+        },
+        {
+          "lines": [
+            401,
+            404
+          ],
+          "sha256_utf8_lf": "d5bd4517923c4415b0b72e93828a6f7166cbacf31a970a0905a89cb61cab0445",
+          "target": "lisa:mobile:contract:config-keys-variant-resources-nextgis-accounts-auth",
+          "part": "variant_resources",
+          "key": "nextgis_accounts_auth"
+        },
+        {
+          "lines": [
+            405,
+            408
+          ],
+          "sha256_utf8_lf": "8893ac84f38c6585fd1174534de2c8cd2942b0dfe6980aa19e029d9ae6ab92c8",
+          "target": "lisa:mobile:contract:config-keys-variant-resources-nextgis-accounts-auth-type",
+          "part": "variant_resources",
+          "key": "nextgis_accounts_auth_type"
+        },
+        {
+          "lines": [
+            409,
+            409
+          ],
+          "sha256_utf8_lf": "f45b7153b807debda81f366d5d3739d899da84435f4260a3385cd86bb0cf93e7",
+          "target": "lisa:mobile:metadata:config-keys-registry",
+          "part": "build_inputs"
+        },
+        {
+          "lines": [
+            410,
+            415
+          ],
+          "sha256_utf8_lf": "1a423cd3d03a25cd508955240d49e1053cc9829645422992310c5aaae9d02137",
+          "target": "lisa:mobile:contract:config-keys-build-inputs-privateresourceprofiling",
+          "part": "build_inputs",
+          "key": "privateResourceProfiling"
+        },
+        {
+          "lines": [
+            416,
+            421
+          ],
+          "sha256_utf8_lf": "b3248490137a72ead82cf36435c570b0efb80a4474240df5aed8ea5428a46eb4",
+          "target": "lisa:mobile:contract:config-keys-build-inputs-usage-properties",
+          "part": "build_inputs",
+          "key": "usage.properties"
+        },
+        {
+          "lines": [
+            422,
+            426
+          ],
+          "sha256_utf8_lf": "8fd8735c2b580a1b80714910f229fd359dcd9a7752cd7f94ef6a3874fbf899f7",
+          "target": "lisa:mobile:contract:config-keys-build-inputs-fieldverificationchecks",
+          "part": "build_inputs",
+          "key": "fieldVerificationChecks"
+        },
+        {
+          "lines": [
+            427,
+            431
+          ],
+          "sha256_utf8_lf": "e09875611b0d2fed96c7cbd7f150212d47ed1fb8ba2f6ce72b8d6057eab39306",
+          "target": "lisa:mobile:contract:config-keys-build-inputs-diagnosticdeliverychecks",
+          "part": "build_inputs",
+          "key": "diagnosticDeliveryChecks"
+        },
+        {
+          "lines": [
+            432,
+            436
+          ],
+          "sha256_utf8_lf": "6b0f3df16ca9e38f034dd2c395a14fb36f8fa29499e666f565ce484db2e3d929",
+          "target": "lisa:mobile:contract:config-keys-build-inputs-cireliabilitychecks",
+          "part": "build_inputs",
+          "key": "ciReliabilityChecks"
+        },
+        {
+          "lines": [
+            437,
+            442
+          ],
+          "sha256_utf8_lf": "b9bae429b537ed30bab448599510743c28a1eedc8dc2f204be91e64089c60cd1",
+          "target": "lisa:mobile:contract:config-keys-build-inputs-sentry-properties",
+          "part": "build_inputs",
+          "key": "sentry.properties"
+        },
+        {
+          "lines": [
+            443,
+            448
+          ],
+          "sha256_utf8_lf": "9d0bb3ac03a31d492337d2b52e22dfb818ff1c6635bfaa3d5c905c6902101103",
+          "target": "lisa:mobile:contract:config-keys-build-inputs-local-properties",
+          "part": "build_inputs",
+          "key": "local.properties"
+        },
+        {
+          "lines": [
+            449,
+            455
+          ],
+          "sha256_utf8_lf": "5614ef2a8d2b1182a305efe5b123e413b24b01a434e86f0b99fc1fe9317020dd",
+          "target": "lisa:mobile:contract:config-keys-build-inputs-maplibui-client-id",
+          "part": "build_inputs",
+          "key": "maplibui-client-id"
+        },
+        {
+          "lines": [
+            456,
+            456
+          ],
+          "sha256_utf8_lf": "3d7dfd8988f9111a162c5ff0f0ae9de9ddf2fb8d3f798f1eee37a754d15384ff",
+          "target": "lisa:mobile:metadata:config-keys-registry",
+          "part": "storage"
+        },
+        {
+          "lines": [
+            457,
+            461
+          ],
+          "sha256_utf8_lf": "c51c2ab9f65c6404fdfbfcb1a6b3e1c834b55e1f3cc49ea5e484ff96f12d52d9",
+          "target": "lisa:mobile:contract:config-keys-storage-diagnostic-process-owner",
+          "part": "storage",
+          "key": "diagnostic-process-owner"
+        },
+        {
+          "lines": [
+            462,
+            466
+          ],
+          "sha256_utf8_lf": "9430fc40c612cc81fc9144a253a5dfb69bf6fddf0a431b0136c4f29b4e2a88ef",
+          "target": "lisa:mobile:contract:config-keys-storage-process-exits-export",
+          "part": "storage",
+          "key": "process-exits-export"
+        },
+        {
+          "lines": [
+            467,
+            472
+          ],
+          "sha256_utf8_lf": "6cc567860b9474afd2ae2592f7adf2c13e4fe88947c8fae938c5cbf4f4204634",
+          "target": "lisa:mobile:contract:config-keys-storage-map-runtime-diagnostics",
+          "part": "storage",
+          "key": "map-runtime-diagnostics"
+        },
+        {
+          "lines": [
+            473,
+            477
+          ],
+          "sha256_utf8_lf": "1d424d2a5a106528b7366f6ad05df453ad0b26855c46a0cf6ecdf78a205ca8fc",
+          "target": "lisa:mobile:contract:config-keys-storage-hyperlog-local-only",
+          "part": "storage",
+          "key": "hyperlog-local-only"
+        },
+        {
+          "lines": [
+            478,
+            481
+          ],
+          "sha256_utf8_lf": "5412ecc7aa7713d4b0e78bbfdf97242d483c1b1d75c08bef627f85685f77e780",
+          "target": "lisa:mobile:contract:config-keys-storage-diagnostic-reports",
+          "part": "storage",
+          "key": "diagnostic-reports"
+        },
+        {
+          "lines": [
+            482,
+            486
+          ],
+          "sha256_utf8_lf": "ce8d63f7f361b8bc0fbf79c3ed55c6a2ea18ca8b001d453d98c7b2dbf581f77e",
+          "target": "lisa:mobile:contract:config-keys-storage-ngw-field-required",
+          "part": "storage",
+          "key": "ngw-field-required"
+        },
+        {
+          "lines": [
+            487,
+            491
+          ],
+          "sha256_utf8_lf": "96060c3c64009a42513ed92a9bbd1542269447d281e38c4954859892dc84089f",
+          "target": "lisa:mobile:contract:config-keys-storage-feature-save-journal",
+          "part": "storage",
+          "key": "feature-save-journal"
+        },
+        {
+          "lines": [
+            492,
+            496
+          ],
+          "sha256_utf8_lf": "02b9f831195f028eff7df27abc4960de83ec7e56620f42105eaf77c08ccd9452",
+          "target": "lisa:mobile:contract:config-keys-storage-pending-track-points",
+          "part": "storage",
+          "key": "pending-track-points"
+        },
+        {
+          "lines": [
+            497,
+            501
+          ],
+          "sha256_utf8_lf": "f009c9505a0679a6198e7ffc4593d80476fa1c7f2442e4cf76dd3428878e6b12",
+          "target": "lisa:mobile:contract:config-keys-storage-updater-ready",
+          "part": "storage",
+          "key": "updater-ready"
+        },
+        {
+          "lines": [
+            502,
+            506
+          ],
+          "sha256_utf8_lf": "f03099d8ffb71de3a13d273ba4ca08e2e66d544d276cb707193b7dc6470c16c4",
+          "target": "lisa:mobile:contract:config-keys-storage-maintenance-reminders",
+          "part": "storage",
+          "key": "maintenance-reminders"
+        },
+        {
+          "lines": [
+            507,
+            511
+          ],
+          "sha256_utf8_lf": "ebca9c3dccbfb29c0e872f477258598162cbcddbc96bdde07e18313f494e9a14",
+          "target": "lisa:mobile:contract:config-keys-storage-updater-background",
+          "part": "storage",
+          "key": "updater-background"
+        },
+        {
+          "lines": [
+            512,
+            516
+          ],
+          "sha256_utf8_lf": "de96f2c380a203f52cfe9f1083da7afc75b321e789098cca41df7826c9aed9be",
+          "target": "lisa:mobile:contract:config-keys-storage-updater-pending-install",
+          "part": "storage",
+          "key": "updater-pending-install"
+        },
+        {
+          "lines": [
+            517,
+            521
+          ],
+          "sha256_utf8_lf": "6ccbcdc79044d2c99d79e7891591000f96e97c7e85ae76ccbcafd8aaadb487fd",
+          "target": "lisa:mobile:contract:config-keys-storage-updater-startup-session",
+          "part": "storage",
+          "key": "updater-startup-session"
+        },
+        {
+          "lines": [
+            522,
+            526
+          ],
+          "sha256_utf8_lf": "490b23af8823eedf669ca92e8c64e822854722d97c99f1d19aeca3813af07fd2",
+          "target": "lisa:mobile:contract:config-keys-storage-collector-registry",
+          "part": "storage",
+          "key": "collector-registry"
+        },
+        {
+          "lines": [
+            527,
+            531
+          ],
+          "sha256_utf8_lf": "ca6096b016af5e4d15c916305d5f9576e65d8e928cd0cc9b47afaec56c299bd3",
+          "target": "lisa:mobile:contract:config-keys-storage-collector-workspaces",
+          "part": "storage",
+          "key": "collector-workspaces"
+        },
+        {
+          "lines": [
+            532,
+            536
+          ],
+          "sha256_utf8_lf": "ae8fa7b04fb01305012b2dd331a5fbfc8a087d46b01c67c72c9485372575cf5a",
+          "target": "lisa:mobile:contract:config-keys-storage-collector-initial-local-project",
+          "part": "storage",
+          "key": "collector-initial-local-project"
+        },
+        {
+          "lines": [
+            537,
+            540
+          ],
+          "sha256_utf8_lf": "4ffcfa566603f0828e4715203e26c463d22818ae839e8cab23350399785cc528",
+          "target": "lisa:mobile:contract:config-keys-storage-collector-import-journal",
+          "part": "storage",
+          "key": "collector-import-journal"
+        },
+        {
+          "lines": [
+            541,
+            544
+          ],
+          "sha256_utf8_lf": "23fa9767f50266dfca8068e08b092fe62893217b71113668aa56b260964bee30",
+          "target": "lisa:mobile:contract:config-keys-storage-collector-form-transaction",
+          "part": "storage",
+          "key": "collector-form-transaction"
+        },
+        {
+          "lines": [
+            545,
+            549
+          ],
+          "sha256_utf8_lf": "90ddb216ca1537ff2df30ac39de14212a6e6fdcef1b92e7cf62736534d42a9d0",
+          "target": "lisa:mobile:contract:config-keys-storage-ngw-schema-rebuild-guard",
+          "part": "storage",
+          "key": "ngw-schema-rebuild-guard"
+        },
+        {
+          "lines": [
+            550,
+            554
+          ],
+          "sha256_utf8_lf": "9bcc4ee038f3f6a76d487126e938dc4cfeb7e78ff342a5dd04c8e743c724ecc0",
+          "target": "lisa:mobile:contract:config-keys-storage-layer-backups",
+          "part": "storage",
+          "key": "layer-backups"
+        },
+        {
+          "lines": [
+            555,
+            555
+          ],
+          "sha256_utf8_lf": "bf212906e3d7857dd780d6c60b2fc652e1991be225217eae108ee7f4f2573d4e",
+          "target": "lisa:mobile:metadata:config-keys-registry",
+          "part": "layer_json"
+        },
+        {
+          "lines": [
+            556,
+            566
+          ],
+          "sha256_utf8_lf": "7c320972d8cc4a96cbdb089d624c29eeff8c54bd8e9d9dcaecda86330f234370",
+          "target": "lisa:mobile:contract:config-keys-layer-json-feature-label-field",
+          "part": "layer_json",
+          "key": "feature_label_field"
+        },
+        {
+          "lines": [
+            567,
+            572
+          ],
+          "sha256_utf8_lf": "7b247c13b90be1ca3ac707d502d2dca80dee67c45f47e6a70b6d012289eb1aee",
+          "target": "lisa:mobile:contract:config-keys-layer-json-mobile-render-mode",
+          "part": "layer_json",
+          "key": "mobile_render_mode"
+        },
+        {
+          "lines": [
+            573,
+            575
+          ],
+          "sha256_utf8_lf": "f32cdce04acd3c8a14c5c59bacc17967a610e3efc37ef3b73d9b347e2995a6a4",
+          "target": "lisa:mobile:contract:config-keys-layer-json-render-mode",
+          "part": "layer_json",
+          "key": "render_mode"
+        },
+        {
+          "lines": [
+            576,
+            578
+          ],
+          "sha256_utf8_lf": "33c1ade69d51f4f88d16ecb138dbb479d2a9812517e00083989a916164f75f79",
+          "target": "lisa:mobile:contract:config-keys-layer-json-layer-origin",
+          "part": "layer_json",
+          "key": "layer_origin"
+        },
+        {
+          "lines": [
+            579,
+            581
+          ],
+          "sha256_utf8_lf": "578b39b2c747b66bd412864987c04da0d243972b5a8ee5878a1b7cb49b0ae449",
+          "target": "lisa:mobile:contract:config-keys-layer-json-mobile",
+          "part": "layer_json",
+          "key": "mobile"
+        },
+        {
+          "lines": [
+            582,
+            585
+          ],
+          "sha256_utf8_lf": "51b04d5c87fd1810a2cf8bc3c4a632d6287886c5f09a4d06cc40d5bfd2b746fd",
+          "target": "lisa:mobile:contract:config-keys-layer-json-ngrc-provenance",
+          "part": "layer_json",
+          "key": "ngrc_provenance"
+        },
+        {
+          "lines": [
+            586,
+            590
+          ],
+          "sha256_utf8_lf": "02c3ddd02f1b5b823ec87447394ce27f9d18b4cdb3d66a25e12adf9082c40af6",
+          "target": "lisa:mobile:contract:config-keys-layer-json-legacy-underlay-migration",
+          "part": "layer_json",
+          "key": "legacy_underlay_migration"
+        },
+        {
+          "lines": [
+            591,
+            591
+          ],
+          "sha256_utf8_lf": "6edeeeb72d979f25453ca056499fbee81cc7e997ddb83e026285c7f772ee1607",
+          "target": "lisa:mobile:metadata:config-keys-registry",
+          "part": "form_rules"
+        },
+        {
+          "lines": [
+            592,
+            595
+          ],
+          "sha256_utf8_lf": "5a5462e72f68b1a75d234581e1de35d927ae1ce6007c132734016845d9117491",
+          "target": "lisa:mobile:contract:config-keys-form-rules-lisa-form-rules",
+          "part": "form_rules",
+          "key": "lisa_form_rules"
+        },
+        {
+          "lines": [
+            596,
+            599
+          ],
+          "sha256_utf8_lf": "e4dd901668aa2c26c296879f8fb94c4c7156157befc08d857a55821bd4188c10",
+          "target": "lisa:mobile:contract:config-keys-form-rules-lisa-id",
+          "part": "form_rules",
+          "key": "lisa_id"
+        },
+        {
+          "lines": [
+            600,
+            604
+          ],
+          "sha256_utf8_lf": "2564e4d37394b929647c16197580531ce99ed593125ff6690a19907c95e8524d",
+          "target": "lisa:mobile:contract:config-keys-form-rules-lisa-required-pin",
+          "part": "form_rules",
+          "key": "lisa_required_pin"
+        },
+        {
+          "lines": [
+            605,
+            605
+          ],
+          "sha256_utf8_lf": "cfe02f0301dfdd74dd5e5683cd89c9dda094fa79ada5bf9c00e2b23ed68bfc4e",
+          "target": "lisa:mobile:metadata:config-keys-registry",
+          "part": "form_dependencies"
+        },
+        {
+          "lines": [
+            606,
+            609
+          ],
+          "sha256_utf8_lf": "a10be14d7f51d1922806e3ba50942293b712f78df3089f2692a25898b1eeec89",
+          "target": "lisa:mobile:contract:config-keys-form-dependencies-lisa-form-dependencies",
+          "part": "form_dependencies",
+          "key": "lisa_form_dependencies"
+        },
+        {
+          "lines": [
+            610,
+            613
+          ],
+          "sha256_utf8_lf": "4669e6836acd191a8d7f13ecc5274be8bd79bc0aa020b52320d1e6198d872750",
+          "target": "lisa:mobile:contract:config-keys-form-dependencies-lisa-cascade-pin",
+          "part": "form_dependencies",
+          "key": "lisa_cascade_pin"
+        },
+        {
+          "lines": [
+            614,
+            617
+          ],
+          "sha256_utf8_lf": "9a976e494bd680ebef7d72556646390f7bd31e473b35784824765240333e03f5",
+          "target": "lisa:mobile:contract:config-keys-form-dependencies-lisa-cascade-fields",
+          "part": "form_dependencies",
+          "key": "lisa_cascade_fields"
+        },
+        {
+          "lines": [
+            618,
+            621
+          ],
+          "sha256_utf8_lf": "b6e54474ef5300e7300faa47e1eb4a246afdc54d9880aebe0978cd806c11a0ae",
+          "target": "lisa:mobile:contract:config-keys-form-dependencies-lisa-cascade-keys",
+          "part": "form_dependencies",
+          "key": "lisa_cascade_keys"
+        },
+        {
+          "lines": [
+            622,
+            626
+          ],
+          "sha256_utf8_lf": "b72a92b658a8517a1667071bfeeec8594e74a05c889a450c0e5e23c7e852b7d6",
+          "target": "lisa:mobile:contract:config-keys-form-dependencies-lisa-cascade-original",
+          "part": "form_dependencies",
+          "key": "lisa_cascade_original"
+        },
+        {
+          "lines": [
+            627,
+            627
+          ],
+          "sha256_utf8_lf": "10247e7d6df0ae951b78fa9213d2fcb0ad7ef495cd865f059d2d034db738fd76",
+          "target": "lisa:mobile:metadata:config-keys-registry",
+          "part": "project_scripts"
+        },
+        {
+          "lines": [
+            628,
+            631
+          ],
+          "sha256_utf8_lf": "4f40934ca953775b5a83fb0b932dc2ac375a2009b92892085aed615da574c380",
+          "target": "lisa:mobile:contract:config-keys-project-scripts-lisa-project-scripts",
+          "part": "project_scripts",
+          "key": "lisa_project_scripts"
+        },
+        {
+          "lines": [
+            632,
+            635
+          ],
+          "sha256_utf8_lf": "bc1c58bf70f72ff1c4d7b323b1ee987dd765792a419d5c43bdea4de01cc37755",
+          "target": "lisa:mobile:contract:config-keys-project-scripts-scripts-expected",
+          "part": "project_scripts",
+          "key": "scripts_expected"
+        },
+        {
+          "lines": [
+            636,
+            639
+          ],
+          "sha256_utf8_lf": "67cddebafe5a951eb5382317037b30c1cba3e31d8975fd1bf84a104e20c3613a",
+          "target": "lisa:mobile:contract:config-keys-project-scripts-scripts-active",
+          "part": "project_scripts",
+          "key": "scripts_active"
+        },
+        {
+          "lines": [
+            640,
+            643
+          ],
+          "sha256_utf8_lf": "acbba78f3498b47d8e1fd1305271290dee96660b7d5fd5131e392740d6b981d7",
+          "target": "lisa:mobile:contract:config-keys-project-scripts-scripts-status",
+          "part": "project_scripts",
+          "key": "scripts_status"
+        },
+        {
+          "lines": [
+            644,
+            647
+          ],
+          "sha256_utf8_lf": "a0fe7844c03dd302816459f7059f818595a0f6330fd461fb44a5108a22c5a7b6",
+          "target": "lisa:mobile:contract:config-keys-project-scripts-scriptreference",
+          "part": "project_scripts",
+          "key": "scriptReference"
+        },
+        {
+          "lines": [
+            648,
+            653
+          ],
+          "sha256_utf8_lf": "38687fe194e7f59d7d2536105c203522575c6c895f98cf9f50752706930ce499",
+          "target": "lisa:mobile:contract:config-keys-project-scripts-project-scripts-cache",
+          "part": "project_scripts",
+          "key": "project_scripts_cache"
+        },
+        {
+          "lines": [
+            654,
+            657
+          ],
+          "sha256_utf8_lf": "90f5fa48143e9198713034e81f2d0a17f1a1b4b2aa148168129190135e4bbaa0",
+          "target": "lisa:mobile:metadata:config-keys-registry",
+          "part": "notes"
+        }
+      ],
+      "sections": {
+        "preferences": 51,
+        "manifest_metadata": 7,
+        "runtime_constants": 3,
+        "variant_resources": 3,
+        "build_inputs": 8,
+        "storage": 20,
+        "layer_json": 7,
+        "form_rules": 3,
+        "form_dependencies": 5,
+        "project_scripts": 6
+      },
+      "complete_ordered_value_sha256": "d458bc4d4961f3c6bf576bd4dbbd519e284094d67a47f1536c59ad768651b6c5",
+      "source_line_count": 657,
+      "notes_count": 4
+    },
+    "dependencies": {
+      "source": {
+        "repository": "android_projects/android_gisapp",
+        "path": "docs/registry/dependencies.yaml",
+        "revision": "8a5d707e24f34f1d5e4cbc9f194f7d7a41902256",
+        "blob": "f163a188e716cdb1f631fa2c47db82eb2711b1a7",
+        "sha256_utf8_lf": "660281e9e4477fc3fb427280789112bee6875b76715ddf0b471c559484892191"
+      },
+      "spans": [
+        {
+          "lines": [
+            1,
+            1
+          ],
+          "sha256_utf8_lf": "5c9536c0f64193f535c425baf9f2c7431b89eb46bab5fb85d4bfcffabb565f43",
+          "target": "lisa:mobile:metadata:dependencies-registry",
+          "part": "schema"
+        },
+        {
+          "lines": [
+            2,
+            2
+          ],
+          "sha256_utf8_lf": "b30078452382a5eaf6ab46ca576aa77e0bc383d33847d714a1b1f80a56b9d31c",
+          "target": "lisa:mobile:metadata:dependencies-registry",
+          "part": "edges"
+        },
+        {
+          "lines": [
+            3,
+            27
+          ],
+          "sha256_utf8_lf": "a844243300c3a0ac3a0a10025b7241df0afb60a4a071f1f73e6ecb8d55f48a78",
+          "target": "lisa:mobile:contract:dependencies-edges-app-to-maplib",
+          "part": "edges",
+          "key": "app-to-maplib"
+        },
+        {
+          "lines": [
+            28,
+            53
+          ],
+          "sha256_utf8_lf": "bbe67526a114a7ae8494ca28d2847ec1a82ad7a5e4099cb481b5d7f827d44359",
+          "target": "lisa:mobile:contract:dependencies-edges-app-to-maplibui",
+          "part": "edges",
+          "key": "app-to-maplibui"
+        },
+        {
+          "lines": [
+            54,
+            59
+          ],
+          "sha256_utf8_lf": "1524014fe1aaa318338e4c229c9e70253aeb412fc6df71ccd3c685b9ca453684",
+          "target": "lisa:mobile:contract:dependencies-edges-app-to-easypicker-module",
+          "part": "edges",
+          "key": "app-to-easypicker-module"
+        },
+        {
+          "lines": [
+            60,
+            65
+          ],
+          "sha256_utf8_lf": "c11f66323a2b59256733d35db9d26e3ce9854b8c023f07310077c383b23e8247",
+          "target": "lisa:mobile:contract:dependencies-edges-app-to-wizardpager",
+          "part": "edges",
+          "key": "app-to-wizardpager"
+        },
+        {
+          "lines": [
+            66,
+            90
+          ],
+          "sha256_utf8_lf": "a205adc0dc38e902883e1c83b29475fd5a9ad79239935481cb21dd21d2e304c7",
+          "target": "lisa:mobile:contract:dependencies-edges-maplibui-to-maplib",
+          "part": "edges",
+          "key": "maplibui-to-maplib"
+        },
+        {
+          "lines": [
+            91,
+            96
+          ],
+          "sha256_utf8_lf": "33e3fe1e57a15a54cbd471ad1910d82f7cc8e6a4ce7413fd8bf24fe22e0ceb5b",
+          "target": "lisa:mobile:contract:dependencies-edges-maplibui-to-easypicker-module",
+          "part": "edges",
+          "key": "maplibui-to-easypicker-module"
+        },
+        {
+          "lines": [
+            97,
+            97
+          ],
+          "sha256_utf8_lf": "d570c8f1dbf26af8a89fd13e72cebc030dc824c170f170d988fadae6de83f90f",
+          "target": "lisa:mobile:metadata:dependencies-registry",
+          "part": "runtime_contracts"
+        },
+        {
+          "lines": [
+            98,
+            111
+          ],
+          "sha256_utf8_lf": "d0d4712be0e31138413b44b348de3c4c07519d9cb89810cf5889e8afa786fc55",
+          "target": "lisa:mobile:contract:dependencies-runtime-contracts-local-tile-cache-and-admission",
+          "part": "runtime_contracts",
+          "key": "local-tile-cache-and-admission"
+        },
+        {
+          "lines": [
+            112,
+            117
+          ],
+          "sha256_utf8_lf": "29a8c8f0b6148b83fef5f19028c996ef1894f8f6e6810890f7f3118e52724e8e",
+          "target": "lisa:mobile:contract:dependencies-runtime-contracts-sqlite-bounded-original-reads",
+          "part": "runtime_contracts",
+          "key": "sqlite-bounded-original-reads"
+        },
+        {
+          "lines": [
+            118,
+            123
+          ],
+          "sha256_utf8_lf": "b5529c493d8ede32fb129b5c7bd71b307aceb837d1e4d73a7ae8f368be50c75d",
+          "target": "lisa:mobile:contract:dependencies-runtime-contracts-sqlite-native-layer-priority",
+          "part": "runtime_contracts",
+          "key": "sqlite-native-layer-priority"
+        },
+        {
+          "lines": [
+            124,
+            129
+          ],
+          "sha256_utf8_lf": "4cae86752e638c3def8994f515dec5f0ed86112fbfc7d998dd855cf27d96b9fe",
+          "target": "lisa:mobile:contract:dependencies-runtime-contracts-sqlite-phase-diagnostics",
+          "part": "runtime_contracts",
+          "key": "sqlite-phase-diagnostics"
+        },
+        {
+          "lines": [
+            130,
+            135
+          ],
+          "sha256_utf8_lf": "ae5b2b45c6e0f8a4911684f3b935132a8e17dff452d4aa1ba9f21453ca7764bf",
+          "target": "lisa:mobile:contract:dependencies-runtime-contracts-render-memory-pressure",
+          "part": "runtime_contracts",
+          "key": "render-memory-pressure"
+        },
+        {
+          "lines": [
+            136,
+            141
+          ],
+          "sha256_utf8_lf": "96ef512bc9256102daba3322cd3982562ff72d464c8a7aadad0fa545ebb9cff8",
+          "target": "lisa:mobile:contract:dependencies-runtime-contracts-native-geojson-payload",
+          "part": "runtime_contracts",
+          "key": "native-geojson-payload"
+        },
+        {
+          "lines": [
+            142,
+            147
+          ],
+          "sha256_utf8_lf": "a48992cbd5c8c40f1410ee50cc191c76f9d951625a90d0327edf2a1ac25b8c05",
+          "target": "lisa:mobile:contract:dependencies-runtime-contracts-render-memory-notice",
+          "part": "runtime_contracts",
+          "key": "render-memory-notice"
+        },
+        {
+          "lines": [
+            148,
+            153
+          ],
+          "sha256_utf8_lf": "f901373d6ea01111bc48e2d86109a6d88288e0bc1128edd22aa13159cf90b01b",
+          "target": "lisa:mobile:contract:dependencies-runtime-contracts-point-firefly",
+          "part": "runtime_contracts",
+          "key": "point-firefly"
+        },
+        {
+          "lines": [
+            154,
+            159
+          ],
+          "sha256_utf8_lf": "917a709113d4527dcaf4b8f5e023016d48ce8bac690ba372a54741687d29ea8f",
+          "target": "lisa:mobile:contract:dependencies-runtime-contracts-compass-sector-visibility",
+          "part": "runtime_contracts",
+          "key": "compass-sector-visibility"
+        },
+        {
+          "lines": [
+            160,
+            165
+          ],
+          "sha256_utf8_lf": "efe14a61ed3195cbbed20595833c1e2de44dff031012f2269dabafd95b95b3de",
+          "target": "lisa:mobile:contract:dependencies-runtime-contracts-local-log-startup",
+          "part": "runtime_contracts",
+          "key": "local-log-startup"
+        },
+        {
+          "lines": [
+            166,
+            171
+          ],
+          "sha256_utf8_lf": "771d6786fc16341227a175b8af42e38b9e278f7b11ffdb22ca09b2a5e847ea01",
+          "target": "lisa:mobile:contract:dependencies-runtime-contracts-app-error-diagnostics",
+          "part": "runtime_contracts",
+          "key": "app-error-diagnostics"
+        },
+        {
+          "lines": [
+            172,
+            177
+          ],
+          "sha256_utf8_lf": "4d0f4b77e458763a27a6963321b17d3cf1286b06cf7e4f482e75fc7f94edea2c",
+          "target": "lisa:mobile:contract:dependencies-runtime-contracts-gps-cache-fix-witness",
+          "part": "runtime_contracts",
+          "key": "gps-cache-fix-witness"
+        },
+        {
+          "lines": [
+            178,
+            183
+          ],
+          "sha256_utf8_lf": "f48205876d920d106e72058e84e4b9ed38059742fb990ea22887afccc0e345e4",
+          "target": "lisa:mobile:contract:dependencies-runtime-contracts-sync-workspace-session",
+          "part": "runtime_contracts",
+          "key": "sync-workspace-session"
+        },
+        {
+          "lines": [
+            184,
+            188
+          ],
+          "sha256_utf8_lf": "0f462d632e5c137470066520abc3fd6afbcdb091f019675104332ff298461431",
+          "target": "lisa:mobile:contract:dependencies-runtime-contracts-conditional-form-rules",
+          "part": "runtime_contracts",
+          "key": "conditional-form-rules"
+        },
+        {
+          "lines": [
+            189,
+            194
+          ],
+          "sha256_utf8_lf": "200d4a0550eba25c979001810256c018c2559104da89d7920c48c3d49dbc5a34",
+          "target": "lisa:mobile:contract:dependencies-runtime-contracts-project-scripts",
+          "part": "runtime_contracts",
+          "key": "project-scripts"
+        },
+        {
+          "lines": [
+            195,
+            199
+          ],
+          "sha256_utf8_lf": "40e413e24cb9be578231c93ace7a45a91f077e0b95a738b7513bd5dda876c0bc",
+          "target": "lisa:mobile:contract:dependencies-runtime-contracts-ngw-required-fields",
+          "part": "runtime_contracts",
+          "key": "ngw-required-fields"
+        },
+        {
+          "lines": [
+            200,
+            204
+          ],
+          "sha256_utf8_lf": "a612fd8924ae54670aaacf0126e0e90e8ef7e9ba4793753bd8edd2f47d037917",
+          "target": "lisa:mobile:contract:dependencies-runtime-contracts-local-write-commit",
+          "part": "runtime_contracts",
+          "key": "local-write-commit"
+        },
+        {
+          "lines": [
+            205,
+            209
+          ],
+          "sha256_utf8_lf": "67b04b574a9fb1cf5481fc76c59e60debacf128de880a63821aaa574ce3e063c",
+          "target": "lisa:mobile:contract:dependencies-runtime-contracts-track-retry",
+          "part": "runtime_contracts",
+          "key": "track-retry"
+        },
+        {
+          "lines": [
+            210,
+            214
+          ],
+          "sha256_utf8_lf": "094eb960144d411e66907c1145aaf1cd614486ed76f71dfddf14509d8cc21b72",
+          "target": "lisa:mobile:contract:dependencies-runtime-contracts-independent-walk-session",
+          "part": "runtime_contracts",
+          "key": "independent-walk-session"
+        },
+        {
+          "lines": [
+            215,
+            219
+          ],
+          "sha256_utf8_lf": "b07c8e8df77788d4110fa791cf42dcb6e8db168dde241cff922b5927fbc577b1",
+          "target": "lisa:mobile:contract:dependencies-runtime-contracts-passive-walk-preview",
+          "part": "runtime_contracts",
+          "key": "passive-walk-preview"
+        },
+        {
+          "lines": [
+            220,
+            225
+          ],
+          "sha256_utf8_lf": "3409d6f06fb0f497c64956c60a44b1f734a52a20246a8c342d17e60d07264a6c",
+          "target": "lisa:mobile:contract:dependencies-runtime-contracts-map-host",
+          "part": "runtime_contracts",
+          "key": "map-host"
+        },
+        {
+          "lines": [
+            226,
+            231
+          ],
+          "sha256_utf8_lf": "fa27b67f27dc03a5158c5fc6a2b0090507a0db8ed00894a9d93f07c55b04d047",
+          "target": "lisa:mobile:contract:dependencies-runtime-contracts-gis-application",
+          "part": "runtime_contracts",
+          "key": "gis-application"
+        },
+        {
+          "lines": [
+            232,
+            236
+          ],
+          "sha256_utf8_lf": "2a4af7c793186ed6781acbc0d31e8f4c918e3af978a9486026237d3404cbfaee",
+          "target": "lisa:mobile:contract:dependencies-runtime-contracts-collector-metadata",
+          "part": "runtime_contracts",
+          "key": "collector-metadata"
+        },
+        {
+          "lines": [
+            237,
+            241
+          ],
+          "sha256_utf8_lf": "4b76ec0e454c392bf7c7d159835b181dfe46fded1d9546114ebf31649808697f",
+          "target": "lisa:mobile:contract:dependencies-runtime-contracts-ngw-url-import",
+          "part": "runtime_contracts",
+          "key": "ngw-url-import"
+        },
+        {
+          "lines": [
+            242,
+            246
+          ],
+          "sha256_utf8_lf": "b72370ab2f3ed5e521ad31d8110fb83da0137b57a353b6e4b453165d61cbdd7c",
+          "target": "lisa:mobile:contract:dependencies-runtime-contracts-ngw-account-identity",
+          "part": "runtime_contracts",
+          "key": "ngw-account-identity"
+        },
+        {
+          "lines": [
+            247,
+            254
+          ],
+          "sha256_utf8_lf": "1a603c2772a47988d2ccfa4489728c2de2a466c0560a00efcb7c9364779c9d60",
+          "target": "lisa:mobile:contract:dependencies-runtime-contracts-maplibre-renderer-backend",
+          "part": "runtime_contracts",
+          "key": "maplibre-renderer-backend"
+        },
+        {
+          "lines": [
+            255,
+            260
+          ],
+          "sha256_utf8_lf": "95d29821edd0fbd9289645b45029f86aa81d277a03f930d9642d2cccfa738a10",
+          "target": "lisa:mobile:contract:dependencies-runtime-contracts-historical-process-exit",
+          "part": "runtime_contracts",
+          "key": "historical-process-exit"
+        },
+        {
+          "lines": [
+            261,
+            265
+          ],
+          "sha256_utf8_lf": "e0684dfa54e516f082f78bedf5193ea6410460c54085e3049ed0bf05b53f6dd0",
+          "target": "lisa:mobile:contract:dependencies-runtime-contracts-stakeout-guidance",
+          "part": "runtime_contracts",
+          "key": "stakeout-guidance"
+        },
+        {
+          "lines": [
+            266,
+            271
+          ],
+          "sha256_utf8_lf": "724842b48296788b2584bbcefdc1915ebb66dd543dacdb896b0e3c556b046dac",
+          "target": "lisa:mobile:contract:dependencies-runtime-contracts-private-resource-profiler",
+          "part": "runtime_contracts",
+          "key": "private-resource-profiler"
+        }
+      ],
+      "sections": {
+        "edges": 6,
+        "runtime_contracts": 29
+      },
+      "complete_ordered_value_sha256": "cfd73a6fcab90706cb8ee7d94d924e81dda88c57e9ce57ae9e62ecee5ae09d4d",
+      "source_line_count": 271,
+      "notes_count": 0
+    },
+    "ecosystem": {
+      "source": {
+        "repository": "android_projects/android_gisapp",
+        "path": "docs/registry/ecosystem.yaml",
+        "revision": "8a5d707e24f34f1d5e4cbc9f194f7d7a41902256",
+        "blob": "ba2ce2fb0b078628aae5d4f215734df3f923c94a",
+        "sha256_utf8_lf": "8b6976a9467d360052a6a110772e374eddbfab5f54e9e845131275f8535e81f2"
+      },
+      "spans": [
+        {
+          "lines": [
+            1,
+            1
+          ],
+          "sha256_utf8_lf": "5c9536c0f64193f535c425baf9f2c7431b89eb46bab5fb85d4bfcffabb565f43",
+          "target": "lisa:mobile:metadata:ecosystem-registry",
+          "part": "schema"
+        },
+        {
+          "lines": [
+            2,
+            2
+          ],
+          "sha256_utf8_lf": "349cc15fc7575acd16dae42e4c4e80a1fa3c43f0249e26daee74c8c1d05ef851",
+          "target": "lisa:mobile:metadata:ecosystem-registry",
+          "part": "systems"
+        },
+        {
+          "lines": [
+            3,
+            10
+          ],
+          "sha256_utf8_lf": "8083f8a277f3a79824c2a3781129f835b5a4b46c11c9d5b0e04dc100df9c5266",
+          "target": "lisa:mobile:contract:ecosystem-systems-mobile-usage-server",
+          "part": "systems",
+          "key": "mobile-usage-server"
+        },
+        {
+          "lines": [
+            11,
+            19
+          ],
+          "sha256_utf8_lf": "02d2b8d3bfcc258caf51dd872e7aa2b6d67038e1a9c34846e88e4403d18d1a6b",
+          "target": "lisa:mobile:contract:ecosystem-systems-mobile-app",
+          "part": "systems",
+          "key": "mobile-app"
+        },
+        {
+          "lines": [
+            20,
+            28
+          ],
+          "sha256_utf8_lf": "5c8f0eb88925304a914b1b8d71e6f032fdf6a38c0ab7a5f65a2d1b14c246bb04",
+          "target": "lisa:mobile:contract:ecosystem-systems-desktop-profiles",
+          "part": "systems",
+          "key": "desktop-profiles"
+        },
+        {
+          "lines": [
+            29,
+            37
+          ],
+          "sha256_utf8_lf": "fc8a5a26c851e120ee201c7870beb1cae9de9d732e0e14d197373fd604c29a04",
+          "target": "lisa:mobile:contract:ecosystem-systems-qgis-plugins",
+          "part": "systems",
+          "key": "qgis-plugins"
+        },
+        {
+          "lines": [
+            38,
+            38
+          ],
+          "sha256_utf8_lf": "25f62fe3122c9a29fe1ff6680568fab08a5e9e40e1e1cc0988f625ec23e807eb",
+          "target": "lisa:mobile:metadata:ecosystem-registry",
+          "part": "contracts"
+        },
+        {
+          "lines": [
+            39,
+            56
+          ],
+          "sha256_utf8_lf": "cb5a4f16fcc25d4400f66e7f06d30cdf495739db7d30984b6c652dee240e2d12",
+          "target": "lisa:mobile:contract:ecosystem-contracts-eco-shared-source-contracts",
+          "part": "contracts",
+          "key": "ECO-SHARED-SOURCE-CONTRACTS"
+        },
+        {
+          "lines": [
+            57,
+            76
+          ],
+          "sha256_utf8_lf": "bfbd3b3c6ef7e47a0f56a093bdbe1237aab96d0c02b0ff4e3c156521372d66c1",
+          "target": "lisa:mobile:contract:ecosystem-contracts-eco-dependency-discovery",
+          "part": "contracts",
+          "key": "ECO-DEPENDENCY-DISCOVERY"
+        },
+        {
+          "lines": [
+            77,
+            88
+          ],
+          "sha256_utf8_lf": "c870703775f982eea886232febd79824b797d891ba562493ae92643a0213f53b",
+          "target": "lisa:mobile:contract:ecosystem-contracts-eco-conditional-form-rules",
+          "part": "contracts",
+          "key": "ECO-CONDITIONAL-FORM-RULES"
+        },
+        {
+          "lines": [
+            89,
+            100
+          ],
+          "sha256_utf8_lf": "99bc7f435014c30d62b15a378a112efaba307582b6216abedf05d1147c1737cb",
+          "target": "lisa:mobile:contract:ecosystem-contracts-eco-cascading-form-lists",
+          "part": "contracts",
+          "key": "ECO-CASCADING-FORM-LISTS"
+        },
+        {
+          "lines": [
+            101,
+            112
+          ],
+          "sha256_utf8_lf": "e702c6b5c655aef4bc11697f379e67933196b18ca81c94060108b0c53cd56345",
+          "target": "lisa:mobile:contract:ecosystem-contracts-eco-project-scripts",
+          "part": "contracts",
+          "key": "ECO-PROJECT-SCRIPTS"
+        },
+        {
+          "lines": [
+            113,
+            156
+          ],
+          "sha256_utf8_lf": "1a19825c0586bd93761377198264f7e4aa3c463904c4ea2c05d3a7c3f7da205d",
+          "target": "lisa:mobile:contract:ecosystem-contracts-eco-ngw-resource-exchange",
+          "part": "contracts",
+          "key": "ECO-NGW-RESOURCE-EXCHANGE"
+        },
+        {
+          "lines": [
+            157,
+            175
+          ],
+          "sha256_utf8_lf": "7b52e72fd3c00455f5151dbd27a5862174721e75e0c1eeccb198d9a1c0ef7c2f",
+          "target": "lisa:mobile:contract:ecosystem-contracts-eco-desktop-mobile-operations",
+          "part": "contracts",
+          "key": "ECO-DESKTOP-MOBILE-OPERATIONS"
+        },
+        {
+          "lines": [
+            176,
+            205
+          ],
+          "sha256_utf8_lf": "3877e9081ac87ea329d6076b915e063714ca8482fe49dd6018951c9f543af2b0",
+          "target": "lisa:mobile:contract:ecosystem-contracts-eco-offline-basemap-handoff",
+          "part": "contracts",
+          "key": "ECO-OFFLINE-BASEMAP-HANDOFF"
+        },
+        {
+          "lines": [
+            206,
+            206
+          ],
+          "sha256_utf8_lf": "0974b13059b9d95c3fb80519c620c77d3d1185bc9a3526e401214e5d1ef5c73b",
+          "target": "lisa:mobile:metadata:ecosystem-registry",
+          "part": "boundaries"
+        },
+        {
+          "lines": [
+            207,
+            213
+          ],
+          "sha256_utf8_lf": "9d24b94d70c67a3bb8c1c8aa0feb62d7988543ca983fa4a809def4ecb69f948b",
+          "target": "lisa:mobile:contract:ecosystem-boundaries-eco-no-direct-filesystem",
+          "part": "boundaries",
+          "key": "ECO-NO-DIRECT-FILESYSTEM"
+        },
+        {
+          "lines": [
+            214,
+            221
+          ],
+          "sha256_utf8_lf": "26c5c24297c5260ec070d7a1a45700d514fe9bba2d89c0370545d18b521a8621",
+          "target": "lisa:mobile:contract:ecosystem-boundaries-eco-source-ownership",
+          "part": "boundaries",
+          "key": "ECO-SOURCE-OWNERSHIP"
+        },
+        {
+          "lines": [
+            222,
+            225
+          ],
+          "sha256_utf8_lf": "1cff0c3b68708711e09ed9b658ef3ee33a37ff47a813164ab2cdc3dde4ebe5b7",
+          "target": "lisa:mobile:metadata:ecosystem-registry",
+          "part": "notes"
+        }
+      ],
+      "sections": {
+        "systems": 4,
+        "contracts": 8,
+        "boundaries": 2
+      },
+      "complete_ordered_value_sha256": "16c99112c37d47dbe2e9917ac521a0e6d984cb3a5f852a0c2dfaa6682657c27a",
+      "source_line_count": 225,
+      "notes_count": 4
+    }
+  }
+}

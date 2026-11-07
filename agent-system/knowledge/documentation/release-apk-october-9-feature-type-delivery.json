@@ -1,0 +1,61 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:release-apk-october-9-feature-type-delivery",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:release-apk"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/release-apk.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Перед итоговой сборкой закрыть все требуемые PR из delivery matrix. Для исходной",
+        "задачи порядок: maplib #45 (Merge Commit) → maplibui #33 (Merge Commit) → app #53",
+        "(Squash). Исправление пустых списков: maplibui #34 (Merge Commit) → app #54",
+        "(Squash), [матрица исправления](../history/feature-type-empty-lists-2026-10-09.md).",
+        "После library merges app закрепляет fetched remote merge commits;",
+        "после app merge сверяются remote tip, содержимое и все строки",
+        "[матрицы закрытия](../history/feature-type-delivery-2026-10-09.md).",
+        "Затем выполнить APK version matrix. Запрос от 9 октября — локальный Lisa Release",
+        "APK без повышения версии и публикации: publisher, включая dry-run, не запускается.",
+        "Предыдущая цепочка форм и sync: [историческая матрица](../history/mobile-form-sync-delivery-2026-10-08.md).",
+        "Предыдущий debug-only цикл: [историческая матрица](../reference/debug-3.1.2.23-delivery.md).",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Records the Oct 9 request, two chains and earlier sync/debug cycles."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:release-apk-october-9-feature-type-delivery"
+    ]
+  }
+}

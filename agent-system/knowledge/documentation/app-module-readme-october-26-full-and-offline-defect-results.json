@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:app-module-readme-october-26-full-and-offline-defect-results",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Исходная приёмка 26 октября: Full09 смартфон/API36+AVD253/253 PASS; после отключения VPN",
+        "планшет/API30 завершил Full02:249 PASS/4 FAIL, missing/effective skips=0.",
+        "Три ошибки — API30 test capture/readers, одна — unresolved azimuth word wrap.",
+        "Код/набор253 методов после67f0125 не менялся. Отдельно подтверждён offline local",
+        "MVT defect, CIbbceec8 failed TrackUpload assertion не закрыт. Публикация заблокирована.",
+        "Состояние и ограничения: [квитанция](../../docs/reference/mobile-full-2026-10-25.md).",
+        "Новая исправляющая стадия: [квитанция выпуска](../../docs/reference/mobile-release-fixes-2026-10-26.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:app-module-readme-october-26-full-and-offline-defect-results"
+    ]
+  }
+}

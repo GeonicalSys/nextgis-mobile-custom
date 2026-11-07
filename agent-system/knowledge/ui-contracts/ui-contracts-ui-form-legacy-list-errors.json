@@ -1,0 +1,90 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-form-legacy-list-errors",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-FORM-LEGACY-LIST-ERRORS"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-FORM-LEGACY-LIST-ERRORS",
+        "group": "forms",
+        "title": "Ошибки списков формы локализуются вместо имени строки",
+        "surface": "Legacy form table validation Toast",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [],
+        "meaning": "Missing column, vanished selected row and empty row list show the corresponding localized human explanation rather than literal R.string text. Existing row selection, controls, callback and Save behavior are unchanged.",
+        "value_origin": "Legacy FormBuilderModifyAttributesActivity fillTable/askForRow validation branch -> integer R.string Toast overload -> owned RU/EN resource. These are dynamic form paths, not declared XML widgets.",
+        "units": "Human-readable localized text; no coordinates, CRS, server-body units or technical status dump.",
+        "updates": [
+          "Existing operation lifecycle decides when a dialog/notification/progress message is delivered. A displayed explanation is separate from remote ACK, durable save or full-project completion."
+        ],
+        "actions": [
+          "Read the cause and suggested next action; retry through the existing operation only after the reported condition changes."
+        ],
+        "conditions": [
+          "The existing Activity route is preserved; no new field validation, business defaults, schema or draft migration."
+        ],
+        "saved_state": "No new persistent error journal, automatic resend, saved-state migration or server mutation is introduced. Existing local edits/recovery and cancellation ownership remain separate contracts.",
+        "source_ids": [
+          "WF-FORM-LEGACY-LIST-FILL",
+          "WF-FORM-LEGACY-LIST-ROW"
+        ],
+        "expectations": [
+          "Each of three invalid technical list cases displays the exact owned resource, while valid-row control keeps its former behavior."
+        ],
+        "unknowns": [
+          "Reflection/Robolectric cases cover actual private method text branches only; no full Activity lifecycle, real form/database, Save or device large-font acceptance."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-legacy-list-fill",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-legacy-list-row",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-form-legacy-list-errors"
+    ]
+  }
+}

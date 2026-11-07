@@ -1,0 +1,66 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-account-identity-and-reporting-limits",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "- Для каждого build variant один account type обязан одновременно использоваться",
+        "  в runtime `MainApplication`, `AccountAuthenticator` и `SyncAdapter`; release",
+        "  использует `com.nextgis.account.geonical`, debug — `com.nextgis.account.debug`.",
+        "- Реальные DSN, client secrets и signing credentials не входят в docs.",
+        "- GlitchTip получает автоматические error reports со stack/device/version и",
+        "  структурированными стадиями работы. SDK cache сохраняется при offline/5xx;",
+        "  WorkManager повторяет отправку без открытого экрана. Screenshots, view hierarchy",
+        "  и performance payloads отключены. [Доставка](../../docs/architecture/error-reporting.md),",
+        "  [руководство](../../docs/guides/bug-reports-user-guide.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:error-reporting",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:documentation-bug-reports-user-guide",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-account-identity-and-reporting-limits"
+    ]
+  }
+}

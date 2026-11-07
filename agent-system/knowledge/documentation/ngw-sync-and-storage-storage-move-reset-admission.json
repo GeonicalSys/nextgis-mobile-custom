@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-storage-move-reset-admission",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Storage move и Reset: lease, actual path и REFRESH — 2026-10-29",
+        "",
+        "`SettingsFragment` объединяет два входа, сохраняя разные эффекты. Storage chooser",
+        "всегда получает false от listener, поэтому не пишет proposed path/card до worker.",
+        "Reset confirmation только запускает admission. Публичный `tryBegin(PROJECT_SWITCH)`",
+        "атомарно отказывает при занятом coordinated owner или walk draft; default",
+        "resolver, prefs/defaults, retirement/reset и result не исполняются при отказе.",
+        "Это исправляет подтверждённый source bypass общей защиты sync/fill, а не выбирает",
+        "политику переноса всех saved-state stores.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-storage-move-reset-admission"
+    ]
+  }
+}

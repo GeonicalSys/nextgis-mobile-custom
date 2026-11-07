@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:app-module-key-components-diagnosticstracepolicy-b6155c421a",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "app-module-manifest",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/main/java/com/nextgis/mobile/util/DiagnosticsTracePolicy.java"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [
+      "lisa:mobile:metadata:app-module-manifest"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed module definition and its pinned source provenance."
+  },
+  "facets": {
+    "manifest-field": {
+      "role": "module_manifest_section",
+      "value": "key_components"
+    },
+    "definition": {
+      "role": "module_manifest_ordered_value",
+      "value": {
+        "path": "app/src/main/java/com/nextgis/mobile/util/DiagnosticsTracePolicy.java",
+        "responsibility": "Attempt bounded SIGNALED traces from API30 with automatic native/ANR recognition and may-precede-exit association; preserve null, unknown and unavailable evidence without inferring OOM or changing OS reason/status."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/app-module-manifest.json",
+    "scopes": [
+      "lisa:mobile:contract:app-module-key-components-diagnosticstracepolicy-b6155c421a"
+    ]
+  }
+}

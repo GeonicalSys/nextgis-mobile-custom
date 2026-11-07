@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:workspace.incident-software-failure",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "policy-workspace",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "."
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "UNKNOWN",
+    "release": "unknown",
+    "retention": "Retain exact source and individual review; historical narrative is not fresh evidence or authority."
+  },
+  "facets": {
+    "body": {
+      "role": "historical_receipt",
+      "value": " Затем ещё один\nFull оборвался при software startup; программная графика сама по себе не\nдоказана достаточной защитой."
+    },
+    "classification": {
+      "role": "reviewed_knowledge_class",
+      "value": "historical_receipt"
+    },
+    "review": {
+      "role": "classification_reason",
+      "value": "Observed software-startup failure and explicit insufficiency of software graphics as proof of host safety."
+    },
+    "source_section": {
+      "role": "source_document_context",
+      "value": [
+        "# GeonicalSystem NextGIS Mobile fork — инструкции для ИИ-агентов",
+        "## Локальные проверки и лимиты GitHub"
+      ]
+    },
+    "authority_limit": {
+      "role": "authority_and_acceptance_boundary",
+      "value": "Path applicability is reviewed separately from the rule's textual triggers. Every source condition and heading remains attached; no automatic predicate or lifecycle inference. Stored commands and dates do not grant current execution, freshness or product acceptance. Existing instruction clients/checkers remain effective until measured cutover."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/policy-migration.json",
+    "scopes": [
+      "lisa:mobile:evidence:workspace.incident-software-failure"
+    ]
+  }
+}

@@ -1,0 +1,112 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-collector-district-filter",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "**Фильтр по району (district).** В official NextGIS Mobile такого механизма нет:",
+        "при импорте Collector project на устройство обычно попадают все объекты каждого",
+        "слоя. В форке проект может быть привязан к одному району — тогда на телефон",
+        "загружается и синхронизируется только подмножество данных.",
+        "",
+        "*Настройка на сервере.* Администратор задаёт на ресурсе `collector_project` в NGW",
+        "метаданные `resmeta.items.district` — латинское значение района (например,",
+        "`vologda` или `olonec`). Это не геометрический фильтр на карте, а **именованный",
+        "ключ**. Поле `district` у объектов — список имён через запятую с пробелом",
+        "(`karel_west, olonec`), как пишет `technical.district_names_for_geom`. Ключ",
+        "проекта должен **входить в этот список**, а не совпадать со всей строкой.",
+        "Чек-лист: [collector-project-setup.md](../runbooks/collector-project-setup.md).",
+        "",
+        "*Что хранится локально.* При импорте значение попадает в:",
+        "",
+        "- `CollectorProjectMetadata.district` и `LayerGroup.collector_district` (в",
+        "  `map.ngm` workspace);",
+        "- реестр проектов `collector_projects_registry.json`; district виден только в",
+        "  разделе «Настройки → Проект», а не в быстром списке переключения.",
+        "",
+        "*Когда и как применяется.* Перед первой загрузкой слоя и при каждой синхронизации",
+        "`NGWVectorLayer.applyDistrictFilterFromProjectGroup()` вызывает",
+        "`DistrictFilterUtil.resolveDistrictFilter()`. Фильтр включается **только если",
+        "выполнены все условия**:",
+        "",
+        "| Условие | Если не выполнено |",
+        "|---------|-------------------|",
+        "| у проекта задан непустой `district` в resmeta | слой грузится целиком |",
+        "| слой — vector или PostGIS | фильтр не применяется (lookup, raster и т.д.) |",
+        "| в схеме слоя есть атрибут `district` | слой грузится целиком, в лог пишется причина |",
+        "",
+        "При успехе к запросу NGW Feature API добавляется параметр вида",
+        "`fld_district__like=%olonec%` (URL-encoded, в SQL LIKE экранируются `\\`, `%`",
+        "и `_`, поэтому `karel_west` не читается как шаблон с одним произвольным",
+        "символом). И первичный импорт (`createFromNGW`), и последующий pull",
+        "(`getChangesFromServer`) используют этот `serverWhere`. Объект с",
+        "`district=karel_west, olonec` попадает в проект `olonec`; объект только с",
+        "`karel_west` — нет. Если одно имя района — подстрока другого (`karel` vs",
+        "`karel_west`), короткий ключ может захватить и длинный.",
+        "",
+        "*Поведение синхронизации.* Для отфильтрованного слоя принудительно",
+        "`tracked = false`: инкрементальный режим по timestamp отключается, каждая сверка",
+        "идёт как выборка по `fld_district__like=…`, а не как полный слепок всех объектов",
+        "слоя. Это согласовано с тем, что на устройстве физически нет объектов других",
+        "районов. Слои с исходящей синхронизацией подхватывают новый `serverWhere` на",
+        "следующем pull. Слои `SYNC_NONE` (кварталы, выдела, ЛВПЦ) feature-sync не ведут:",
+        "при каждой синхронизации сравнивается отфильтрованное число объектов, и при",
+        "расхождении (если на сервере не 0) слой пересобирается snapshot. Смена фильтра",
+        "с равенства на LIKE на уже импортированном `SYNC_NONE` слое не требует ручного",
+        "переимпорта — достаточно следующего sync.",
+        "",
+        "*Пример для полевой команды.* На Web GIS один Collector project «Лесничества»",
+        "содержит слой «Кварталы» по всей области. Для бригады Олонецкого района в",
+        "resmeta проекта указано `district=olonec`. После импорта на планшете в слое",
+        "остаются кварталы, у которых в `district` есть токен `olonec`, в том числе",
+        "пограничные `karel_west, olonec`; объекты только соседнего района не",
+        "скачиваются и не занимают память. Слой без поля `district` в схеме по-прежнему",
+        "загрузится полностью — фильтр к нему не применяется.",
+        "",
+        "*Ограничения.* Значение district задаётся на уровне **проекта**, не отдельного",
+        "слоя; смена `resmeta` на сервере требует, чтобы composition sync обновил",
+        "метаданные проекта (district хранится в snapshot при сверке). Фильтр не заменяет",
+        "`server_where` из Description слоя — district добавляется поверх механизма",
+        "Collector project. Ручной NGW-слой в том же workspace district проекта не",
+        "наследует автоматически, если не лежит внутри той же `LayerGroup` с",
+        "`collector_district`.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-collector-district-filter"
+    ]
+  }
+}

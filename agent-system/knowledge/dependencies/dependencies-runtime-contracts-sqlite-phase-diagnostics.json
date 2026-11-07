@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:dependencies-runtime-contracts-sqlite-phase-diagnostics",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "dependencies",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_registry_section",
+      "value": "runtime_contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_mapping_or_list_key",
+      "value": "sqlite-phase-diagnostics"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "owner": "maplib",
+        "defined_in": "maplib/src/main/java/com/nextgis/maplib/util/MapRuntimeDiagnostics.java",
+        "implementers": [
+          "maplib"
+        ],
+        "callers": [
+          "maplib",
+          "app"
+        ],
+        "contract": "Typed SqliteScope spans bridge IO queue through Java provider return and existing VectorLayer attributes/BLOB/full decode, style, clip, labels, PBF and cache operations without extra reads or changed rendering. The compatible backend overload retains old callers. One observer and bounded writer retain at most16 active scopes and32 layer summaries, throttle local LISA-SqlitePhase to10s per layer, report observation loss and release slots after clock/writer/watch failures. Numeric layer/source/content IDs, zoom and fixed count/phase arrays exclude URI, tile X/Y, coordinates, business attributes and error messages. Provider-return, SDK-return, cancelled and failed outcomes differ; native content ready stays unverified. No data/project/style migration, memory-policy change or producer resource-format change is involved."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/sectioned-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:dependencies-runtime-contracts-sqlite-phase-diagnostics"
+    ]
+  }
+}

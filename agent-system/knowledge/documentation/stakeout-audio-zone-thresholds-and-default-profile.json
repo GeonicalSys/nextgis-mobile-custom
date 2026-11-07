@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:stakeout-audio-zone-thresholds-and-default-profile",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:stakeout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/stakeout.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Звуковой контракт",
+        "",
+        "Пороги задаются в «Настройки → Местоположение → Вынос координат» и обязаны быть",
+        "положительными и строго убывать. Дефолтный профиль:",
+        "",
+        "| Расстояние | Поведение |",
+        "|---|---|",
+        "| больше 5 м | без звука |",
+        "| 1–5 м | короткий приглушённый «деревянный» щелчок раз в 2,5 с |",
+        "| 0,5–1 м | тот же щелчок раз в 1,2 с |",
+        "| 0,1–0,5 м | тот же щелчок раз в 0,5 с |",
+        "| до 0,1 м | однократный двойной щелчок «в допуске» |",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:stakeout-audio-zone-thresholds-and-default-profile"
+    ]
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-crash-recovery-ownership-and-geometry",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "- crash recovery: запись трека возобновляется без диалога, затем recovery hub",
+        "  последовательно предлагает черновик обхода, обычной геометрии и формы атрибутов;",
+        "  пустой обход, чей сервис не подтвердил первый snapshot, очищается тихо, а",
+        "  реальный stopped/foreign-map owner предлагается продолжить, удалить или",
+        "  аварийно сбросить; подтверждённый сброс есть также в общих настройках и",
+        "  затрагивает только состояние обхода;",
+        "  восстановленный Polygon сохраняет заливку, внешнее кольцо и только реальные",
+        "  отверстия без удвоения узлов; после cold Continue дополнения обходом красный",
+        "  контур и заливка не мерцают, а Stop возвращает редактируемые вершины; раннее",
+        "  Continue ждёт принадлежности edit sources текущему MapLibre style, а вход в",
+        "  обход удаляет параллельный черновик обычного редактора того же скетча;",
+        "  восстановленные LineString/MultiLineString показываются без polygon fill;"
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-crash-recovery-ownership-and-geometry"
+    ]
+  }
+}

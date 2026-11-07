@@ -1,0 +1,84 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:mobile-roadmap-incremental-server-sync",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "planned",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "planned",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "UNKNOWN",
+    "release": "unknown",
+    "retention": "Keep form, attachment and composition versions separate from the feature cursor."
+  },
+  "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The proposal follows an accepted unchanged-layer contract and an agreed conflict policy.",
+        "implementation": "The design needs tombstones, access-scoped cursors, a bounded page set and bootstrap/resync. Data and cursor advance together.",
+        "source_verification": "Delta replay needs an independent full-sync oracle, including filter removal and local geometry conflicts. The choice of timestamp or sequence remains undecided.",
+        "merge": "The server and mobile consumer have a future joint delivery boundary.",
+        "runtime_verification": "Retry, interruption, competing update/delete and loss of history still need checks on the actual owners.",
+        "release": "Release depends on accepted server support and proven fallback."
+      }
+    },
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## SYNC-02 Получение только изменений",
+        "",
+        "Приоритет P1. Состояние: Предложена. Зависимости: SYNC-01 и принятое решение о конфликтах.",
+        "",
+        "Нужны журнал изменений, удаления, устойчивый cursor по слою и области доступа, ограниченная граница пакета, безопасная загрузка страниц и bootstrap/resync при разрыве истории. Объект, вышедший из фильтра проекта, должен исчезнуть на телефоне как положено.",
+        "",
+        "Приёмка: одинаковый итог после delta и эталонной полной проверки; повтор пакета безопасен; данные и cursor фиксируются вместе; прерывание не продвигает cursor. Локальные правки сохраняются. Для конкурентной правки и update/delete есть явная политика; геометрия не перезаписывается молча. Вложения, формы, настройки и состав проекта имеют собственные версии/проверки.",
+        "",
+        "Сценарий без серверной поддержки сохраняет существующий полный путь с уменьшением повторной работы и измеренными бюджетами. PostgreSQL механизм выбирается после проверки нагрузки и порядка фиксации транзакций; раннее решение «достаточно timestamp или sequence» не принимается без доказательства.",
+        ""
+      ]
+    },
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "SYNC-02"
+    },
+    "priority": {
+      "role": "priority_at_pinned_roadmap_basis",
+      "value": "P1"
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "Depends on unchanged-layer detection and an accepted conflict design."
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:task:mobile-roadmap-skip-unchanged-postgres-layers",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-incremental-server-sync"
+    ]
+  }
+}

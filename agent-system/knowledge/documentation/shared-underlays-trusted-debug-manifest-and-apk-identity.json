@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:shared-underlays-trusted-debug-manifest-and-apk-identity",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:shared-underlays"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/shared-underlays.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Manifest: HTTPS `/lisa-mobile/debug/manifest.json`, schema 1, flavor/channel debug,",
+        "пакет `com.nextgis.mobile.debug`. APK допускается только из",
+        "`/lisa-mobile/debug/releases/<versionCode>/<filename>.apk`, без redirects,",
+        "query/fragment, path traversal или percent-encoded путей. Проверяются code/name,",
+        "SDK, размер, SHA-256, pinned Debug certificate и **текущая подпись установленного",
+        "Debug**, manifest flavor APK, а также наличие enabled/exported export Activity.",
+        "Archive signature flags сохраняют Android 9/10 legacy fallback.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:shared-underlays-trusted-debug-manifest-and-apk-identity"
+    ]
+  }
+}

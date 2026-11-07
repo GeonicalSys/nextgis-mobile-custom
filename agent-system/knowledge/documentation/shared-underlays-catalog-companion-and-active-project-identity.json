@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:shared-underlays-catalog-companion-and-active-project-identity",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:shared-underlays"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/shared-underlays.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "В «Хранилище подложек» кнопка «Импортировать из старого приложения» видна только",
+        "в production Geonical при установленном доверенном Debug, в том числе без exporter.",
+        "В режиме выбора подложки для слоя её нет. Перенос идёт в активный проект: без",
+        "проекта показывается сообщение, экспорт не запускается. После установки companion",
+        "этот путь возвращается к подтверждению переноса из каталога, только если UID",
+        "активного проекта совпал. Из стартового предложения показывается сообщение о",
+        "доступности переноса в хранилище подложек.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:shared-underlays-catalog-companion-and-active-project-identity"
+    ]
+  }
+}

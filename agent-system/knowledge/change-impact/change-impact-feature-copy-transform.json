@@ -1,0 +1,91 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:change-impact-feature-copy-transform",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "change-impact",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "definition": {
+      "role": "complete_change_impact_definition",
+      "value": {
+        "id": "FEATURE-COPY-TRANSFORM",
+        "paths": [
+          "maplib/src/main/java/com/nextgis/maplib/util/FeatureCopyPolicy.java",
+          "maplib/src/main/java/com/nextgis/maplib/util/GeometryTransform.java",
+          "maplib/src/main/java/com/nextgis/maplib/map/GeometryTransformGesture.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/util/FeatureCopyDefaults.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/fragment/BottomToolbar.java",
+          "maplibui/src/main/res/menu/edit_transform.xml",
+          "app/src/main/res/values/feature_copy_strings.xml",
+          "app/src/main/res/values-ru/feature_copy_strings.xml"
+        ],
+        "owners": [
+          "app",
+          "maplib",
+          "maplibui"
+        ],
+        "read": [
+          "docs/architecture/feature-copy-transform.md",
+          "docs/architecture/feature-type-creation.md",
+          "docs/architecture/map-rendering.md",
+          "docs/architecture/crash-recovery.md"
+        ],
+        "invariants": [
+          "INV-FEATURE-COPY",
+          "INV-WHOLE-OBJECT-TRANSFORM",
+          "INV-GEOMETRY-SKETCH-WORKFLOW",
+          "INV-CRASH-DRAFT-RECOVERY"
+        ],
+        "must_update_docs": [
+          "docs/architecture/feature-copy-transform.md",
+          "docs/architecture/feature-type-creation.md",
+          "docs/architecture/map-rendering.md",
+          "docs/architecture/crash-recovery.md",
+          "docs/reference/official-differences.md",
+          "docs/runbooks/automated-tests.md",
+          "docs/runbooks/device-smoke-tests.md",
+          "app/docs/README.md",
+          "app/docs/manifest.yaml",
+          "maplib/docs/README.md",
+          "maplib/docs/manifest.yaml",
+          "maplibui/docs/README.md",
+          "maplibui/docs/manifest.yaml"
+        ],
+        "verify": [
+          "AUTO-MAPLIB-UNIT",
+          "AUTO-MAPLIBUI-UNIT",
+          "AUTO-MAPLIBUI-ASSEMBLE",
+          "AUTO-APP-DEBUG",
+          "AUTO-FEATURE-EDITING",
+          "SMOKE-FEATURE-COPY-TRANSFORM"
+        ],
+        "strict_docs": true
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/change-impact.json",
+    "scopes": [
+      "lisa:mobile:contract:change-impact-feature-copy-transform"
+    ]
+  }
+}

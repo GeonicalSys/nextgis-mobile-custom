@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:stakeout-wmm2025-point-height-time-and-cache",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:stakeout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/stakeout.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "вычисляется офлайн по WMM2025 в исходной точке, высоте и времени фикса; для",
+        "статического A→B без высотных данных используется `0 м`; модель",
+        "нормативно применяется в 2025–2029 годах. Она заменяет платформенный",
+        "`android.hardware.GeomagneticField`, который в используемом Android API основан",
+        "на устаревшем для 2026 года WMM2020. Контрольные unit-тесты используют официальный",
+        "набор WMM2025 для эпох `2025.0` и `2027.5`. В live-режиме склонение кэшируется",
+        "до перемещения на 1 км либо изменения времени модели на 6 часов и не вычисляется",
+        "на каждом callback датчика.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:stakeout-wmm2025-point-height-time-and-cache"
+    ]
+  }
+}

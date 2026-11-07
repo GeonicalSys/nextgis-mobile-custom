@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:map-rendering-stakeout-and-azimuth-overlays",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-rendering"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the rendering subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-rendering.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "19. Виджет выноса/азимута является обычным Android overlay над картой. Вынос к",
+        "    выбранному feature сохраняет штатный view-selection. Свободное измерение",
+        "    добавляет только непостоянные `azimuth-measurement-*` GeoJSON source и line/",
+        "    point layers: они восстанавливаются после full/lite style reload, находятся",
+        "    выше пользовательских слоёв, но ниже всегда верхнего `user-location-layer`,",
+        "    поддерживают drag доступных для корректировки начальной/целевой точек через",
+        "    host callback и очищаются при закрытии режима. Ни один из вариантов не меняет `LayerGroup`,",
+        "    не создаёт прикладной feature и не требует пересоздания style. Геодезический",
+        "    расчёт описан в [`stakeout.md`](stakeout.md)."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:map-rendering-stakeout-and-azimuth-overlays"
+    ]
+  }
+}

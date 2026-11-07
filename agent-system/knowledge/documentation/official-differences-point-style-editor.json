@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-point-style-editor",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "**Что добавляет форк — точки.** Помимо встроенных фигур MapLibre доступны",
+        "PNG-маркеры из `MarkerIconRegistry` (встроенные и пользовательские): размер,",
+        "поворот, смещение по X/Y, якорь (9 позиций), `icon-allow-overlap` и",
+        "`icon-ignore-placement`. Пользовательские PNG грузятся из",
+        "`app/src/main/assets/marker_icons/*.png` (сейчас `wood_truck`, `turn`). Для круговых маркеров — отдельная прозрачность заливки",
+        "и обводки, `circle-blur` (пресеты 0–3), масштабирование радиуса по zoom с",
+        "пользовательскими остановками (`interpolate` на `circle-radius` / `icon-size`).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-point-style-editor"
+    ]
+  }
+}

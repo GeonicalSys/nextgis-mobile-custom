@@ -1,0 +1,66 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:invariants-inv-shared-underlays",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "invariants",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "INV-SHARED-UNDERLAYS"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "title": "Shared offline payloads outlive project links",
+        "owners": [
+          "maplib",
+          "maplibui",
+          "app"
+        ],
+        "statement": "NGRc and raster MBTiles live once outside project workspaces; new NGRc streams directly to MBTiles, legacy payloads move without re-encoding, and confirmed catalog deletion unlinks every project before payload removal.",
+        "related_code": [
+          "maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlayCatalog.java",
+          "maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlayStore.java",
+          "maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlayKind.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/util/SharedUnderlayProjects.java",
+          "app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt"
+        ],
+        "verify_smoke": [
+          "AUTO-MAPLIB-UNIT",
+          "SMOKE-SHARED-UNDERLAYS"
+        ],
+        "must_update_docs": [
+          "docs/architecture/shared-underlays.md",
+          "docs/architecture/map-rendering.md",
+          "docs/architecture/collector-projects.md"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:invariants-inv-shared-underlays"
+    ]
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:automated-tests-sqlite-marker-related-pixel-and-capture-oracle",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Related `-Area sqlite-marker` выбирает только существующий MultiPoint/custom-icon",
+        "метод SQL класса, включая PhoneOnly; Full по-прежнему содержит этот класс один",
+        "раз. Его failure PNG сохраняется в исходном разрешении (текущий AVD1080×2274)",
+        "с encoded cap2MiB,",
+        "а bounded JSON содержит global cyan/blue/magenta/red/green pixel counts и local",
+        "sample matches/dimensions. Это диагностические свидетельства, не ослабление",
+        "pixel assertions и не доказательство исправления исчезающего значка.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:automated-tests-sqlite-marker-related-pixel-and-capture-oracle"
+    ]
+  }
+}

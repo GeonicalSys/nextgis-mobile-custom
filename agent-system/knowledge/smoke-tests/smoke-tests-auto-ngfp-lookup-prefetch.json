@@ -1,0 +1,50 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-auto-ngfp-lookup-prefetch",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "AUTO-NGFP-LOOKUP-PREFETCH"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "automatic",
+        "scope": [
+          "maplibui",
+          "app"
+        ],
+        "command": "& '.\\gradlew.bat' '--offline' '--no-daemon' '-Pkotlin.incremental=false' '-PciReliabilityChecks=true' '--console=plain' ':app:testLisaDebugUnitTest' '--tests' 'com.nextgis.mobile.util.NgfpLookupPrefetchTest'",
+        "expected": "Twelve actual-reader SDK28 technical JSON methods: root/autocomplete, nested pages, both orientations, nonbinding values, sentinel/malformed-present errors, normalized first-appearance dedup, plus four direct old-public reader controls. Baseline12 had3 AssertionFAIL/9PASS; unchanged12 GREEN2.149s/Gradle0/49s. This is source helper coverage, not import/cache availability/deletion/device acceptance. Belka0/41s is separate from failed prelaunch classifier/launch-order NOT_PASS; exact100/Java-JAR postproof and exit7 fail-fast control do not turn it into gate PASS. See public owner card. Old cache9/clock19/journal22/storage21 and desktop1117/1192 were not rerun."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-auto-ngfp-lookup-prefetch"
+    ]
+  }
+}

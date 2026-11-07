@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-authoritative-schema-rebuild-decision",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Несовпадение схемы и тяжёлый rebuild",
+        "",
+        "Сверка схемы трёхсторонняя: authoritative NGW resource metadata определяет",
+        "`resource.cls`, geometry и поля; локальный `config.json` является repairable",
+        "metadata; SQLite `PRAGMA table_info` подтверждает физические имена и affinities.",
+        "Если NGW и SQLite уже совпадают, а serialized fields устарели (например, нет",
+        "`idqgs`) либо vector/PostGIS class записан неверно, исправляется только metadata",
+        "без refill. Geometry или физическая таблица, несовместимые с authoritative NGW,",
+        "запускают staged rebuild. При импорте мобильный config не может перезаписать уже",
+        "проверенные NGW class/geometry/fields. Отсутствующий `ngw_layer_type` в legacy",
+        "config сначала остаётся неизвестным, затем восстанавливается из NGW metadata, а",
+        "не ошибочно считается PostGIS.",
+        "",
+        "`NGWVectorLayer` передаёт приложению fingerprint причины mismatch: отсутствующая",
+        "таблица, hash server metadata/config либо hash SQLite-ошибки. Guard хранится по",
+        "`workspace + account + remote_id` и допускает для неизменного fingerprint не",
+        "более двух rebuild-попыток за 24 часа с интервалом не менее 10 минут. Изменившийся",
+        "fingerprint или истёкшее окно разрешает новую попытку. Число остановленных",
+        "слоёв и явный сброс guard доступны в «Настройки → Проект».",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-authoritative-schema-rebuild-decision"
+    ]
+  }
+}

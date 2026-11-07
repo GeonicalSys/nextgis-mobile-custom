@@ -1,0 +1,664 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:automated-tests",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/runbooks/automated-tests.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "frontmatter": {
+      "role": "markdown_frontmatter_lines",
+      "value": [
+        "title: Автоматические проверки на смартфоне и эмуляторе",
+        "type: runbook",
+        "last_verified: 2026-11-02",
+        "related_code:",
+        "  - tools/verify-mobile-tests.ps1",
+        "  - tools/run_mobile_tests.py",
+        "  - tools/mobile_test_support.py",
+        "  - tools/mobile_build_identity.py",
+        "  - tools/tests/test_mobile_build_identity.py",
+        "  - tools/mobile-test-plan.json",
+        "  - app/src/androidTest/java/com/nextgis/mobile/util/VerificationTestRunner.java",
+        "  - app/src/androidTest/java/com/nextgis/mobile/util/VerificationTestApplication.java",
+        "  - app/src/androidTest/java/com/nextgis/mobile/util/VerificationEnvironment.java",
+        "  - app/src/androidTest/java/com/nextgis/mobile/reliability/LayerSelectionDialogTest.java"
+      ]
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "",
+        "# Автоматические проверки",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-related-editing-source-native-identity",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-related-memory-dialog-layout-oracle",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-related-orbit-model-stack",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:automated-tests-october-29-focused-sqlite-priority-authorization",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-focused-sqlite-priority-selection-and-isolation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-sqlite-priority-independent-content-and-order",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:automated-tests-sqlite-priority-source-red-and-correction",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:automated-tests-sqlite-priority-t40-native-result-and-gaps",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:automated-tests-sqlite-priority-ordinary-apk-matrix",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:automated-tests-sqlite-priority-ordinary-t40-install-smoke",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-cache-admission-technical-fixture-oracles",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:automated-tests-october-28-ordinary-apk-scope",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:automated-tests-d101-final-jvm-source-closure",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:automated-tests-d101-independent-dense-video-gate",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:automated-tests-small-blob-window-red-green-and-api-proof",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-sqlite-phase-logical-buffer-counter-scope",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:automated-tests-small-blob-window-cold-d101-observation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:automated-tests-bounded-original-reads-red-green",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-same-tablet-sharp-zoom-and-new-extent-oracle",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:automated-tests-sqlite-phase-jvm-checkpoint",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-sqlite-phase-tablet-identity-and-coverage",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-related-independent-assertion-and-logcat-lifecycle",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-sqlite-render-native-payload-and-raw-hit-oracles",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-sqlite-render-failure-capture-and-first-software-failure",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-render-memory-related-device-isolation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-memory-warning-independent-data-and-window-oracle",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-free-memory-warning-admission-and-queue",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-native-feature-projection-preserves-editable-source",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-stress-required-load-device-matrix-and-failure",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:automated-tests-memory-checkpoint-before-native-acceptance",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:automated-tests-free-only-queue-addressed-jvm-result",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-native-heap-map-route-ownership",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-native-heap-map-route-command-shape",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-native-heap-input-versus-render-and-trace-proof",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:automated-tests-october-27-avd-host-failures-and-authorization",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-emulator-software-admission-and-phone-only",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-emulator-and-host-evidence-references",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-crash-startup-related-and-os-exit",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-render-stress-separate-process-and-native-camera",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-render-stress-exact-visible-fid-and-failure-evidence",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-render-stress-publication-matrix-boundary",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-sqlite-marker-related-pixel-and-capture-oracle",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-local-full-and-real-window-publication-gate",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-local-docs-and-environment-check-route",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-offline-mvt-related-and-october-26-catalogue",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-track-map-action-and-snackbar-evidence",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-full-and-related-failures-continue-only-independent-cases",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-instrumentation-start-timeout-and-package-reset",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-clean-target-full-documentation-validation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-owned-avd-stop-before-pass",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-authorized-metadata-only-policy-fixture",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-policy-fixture-private-transport-and-hash",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-form-layout-related-native-oracle",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-offline-sync-related-backoff-and-no-attempt",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-form-navigation-related-focus-and-blank-area",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-map-teardown-related-addressed-methods",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-track-controls-related-allowed-routes",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-polygon-style-related-case-selection",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-firefly-and-style-editor-native-routes",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-copy-transform-and-maintenance-related-heading",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-maintenance-related-variant-and-ui",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-feature-editing-related-device-scope",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-windows-acceleration-read-only-diagnosis",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:automated-tests-october-23-hypervisor-readback",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-hypervisor-change-explicit-consent-and-reboot-proof",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:automated-tests-october-23-bcd-change-without-reboot",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:automated-tests-october-26-aehd-bcd-and-next-boot",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-glitchtip-october-23-related-diagnostics",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-updater-transfer-after-destroyed-activity",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-verification-startup-recovery-and-lease-barrier",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-project-sync-fixture-startup-lease",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-orbit-method-isolation-and-geometry-readback",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-phone-lock-wait-and-full-order",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-manual-linux-emulator-graphics-and-pin",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-background-gps-native-lifecycle-and-listeners",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-isolated-verification-apk-and-data",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-physical-phone-identity-and-fixed-package-guard",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-classic-style-graphics-and-fixture-guards",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-shared-track-native-fixtures-and-related-route",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-updater-related-versus-published-device-smoke",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-local-mvt-label-rendering-oracle",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-related-command-and-reuse-boundary",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-full-and-check-publication-entry",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-full-variant-matrix-and-native-routing",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-local-diagnostic-delivery-and-crash-ack",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:automated-tests-former-host-egl-screenshot-route",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-synthetic-gnss-and-separate-rf-field-gates",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-native-ui-profile-matrix-and-device-restoration",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-exact-build-basis-before-device-action",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-skip-build-related-only-and-stale-refusal",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-publication-build-basis-and-apk-identity-limits",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-full-result-and-raw-production-data-exclusion",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-check-publication-fingerprint-and-complete-native-membership",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-publication-dependency-closure-and-review-pins",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-approved-project-and-policy-only-snapshot",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-missing-or-ambiguous-test-project-requires-choice",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-keyguard-and-screen-awake-scope",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-source-guards-for-project-and-receipt",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-native-project-script-isolated-process-guard",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-per-method-fixture-isolation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-sync-outbox-isolation-and-diagnostic-exception",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-manual-reliability-ci-and-local-phone-gate",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:automated-tests-former-194-case-ci-and-delayed-ack",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:automated-tests-october-17-glitchtip-regression-catalogue",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-bounded-native-png-and-live-style-oracle",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-style-category-real-touch-and-viewport",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-style-editor-related-scope",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-track-stop-confirmation-and-colour-migration",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-line-label-and-firefly-editor-related",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-cursor-rendering-scene-barrier",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-track-candidate-route-and-stationary-verification",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-cold-render-stress-and-crash-transport",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-stress-full-device-matrix-and-incident-model",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-private-cold-rendering-profiling-boundary",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-prepared-direct-vector-tile-related",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-prepared-underlay-related-limits",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:automated-tests-allowlisted-artifact-json-and-png-budgets",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:automated-tests-november-2-prepared-source-and-paused-runtime",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:automated-tests"
+    ]
+  }
+}

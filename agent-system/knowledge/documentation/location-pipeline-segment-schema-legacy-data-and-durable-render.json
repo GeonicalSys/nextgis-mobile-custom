@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:location-pipeline-segment-schema-legacy-data-and-durable-render",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:location-pipeline"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/location-pipeline.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Разрывы и долговечность",
+        "",
+        "База `layers.db` версии 6 добавляет `trackpoints.segment INTEGER NOT NULL DEFAULT 0`.",
+        "Старые точки остаются сегментом 0. После потери пригодного GPS более чем на",
+        "8 секунд или восстановления процесса новая точка начинает новый сегмент.",
+        "Буфер до разрыва выгружается до уведомления о потере сигнала. Чтение по `rowid`",
+        "сохраняет порядок вставки даже при переводе часов. MapLibre, Canvas и GPX",
+        "сохраняют разделение; в GPX создаются отдельные `trkseg`. Старый протокол отправки",
+        "в NextGIS Tracker остаётся потоком точек и не передаёт номера сегментов.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "The original layers.db v6 migration wording is legacy. The segment order and GPX/Tracker protocol distinctions are preserved."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:location-pipeline-segment-schema-legacy-data-and-durable-render"
+    ]
+  }
+}

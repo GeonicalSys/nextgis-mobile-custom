@@ -1,0 +1,68 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:release-note-3.1.2.28",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:release-notes"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the published version text and original placement."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "WHATS_NEW.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 3.1.2.28 — 2026-10-11",
+        "",
+        "- Новый контрастный курсор «Орбита-кольцо» оставляет видимой точку, поставленную",
+        "  в текущем местоположении. Направление следует компасу, при его недоступности —",
+        "  движению; сектор показывает неопределённость компаса.",
+        "- Тип нового объекта можно выбрать по условным обозначениям проекта перед",
+        "  рисованием, созданием по местоположению и обходом; значения заполняются в форме.",
+        "- Улучшены зависимые списки и поведение полей формы.",
+        "- Упрощены панель обхода и начало создания по GPS; линейка и азимут объединены.",
+        "- Улучшены общая синхронизация проектов, отправка треков и работа без соединения.",
+        "  Завершённая синхронизация больше не оставляет работающий индикатор.",
+        "- При открытии проверяются ограничения фоновой работы GPS; запись и обход",
+        "  надёжнее продолжают работу после потери и возвращения координат.",
+        "- Исправлено завершение перетаскивания слоёв после прокрутки списка.",
+        "- Ускорен запуск с накопленным журналом, улучшена обработка отчётов об ошибках.",
+        ""
+      ]
+    },
+    "release": {
+      "role": "published_release_version",
+      "value": {
+        "version": "3.1.2.28",
+        "date": "2026-10-11"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:release-note-3.1.2.28"
+    ]
+  }
+}

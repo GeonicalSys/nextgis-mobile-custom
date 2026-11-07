@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-contracts-f61-api28-clock-fault-model",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:ui-contracts"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ui-contracts.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Whole исходные F61 source row/UI contract сохранены в новом coverage history;",
+        "датированные прежние drift/check results ниже не переписаны. API28 fault-model19",
+        "с теми же source/test hashes дал10 assertion FAIL до исправления и19 PASS после;",
+        "это исторический source checkpoint, не реальный failed-write/restart. Первичные AOSP",
+        "и disk/backup/restart oracles находятся в [sync/storage](ngw-sync-and-storage.md);",
+        "`AUDIT-TODO-SYNC-ACK-RECOVERY` остаётся открытой для этих исходов.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Historical F61 replay and 10 RED/19 GREEN. Physical restart remains an independent open check."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-contracts-f61-api28-clock-fault-model"
+    ]
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:shared-underlays-streaming-ngrc-import-and-full-archive-hash",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:shared-underlays"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/shared-underlays.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Новый NGRc проходит два потоковых чтения. Первое находит `config.json` либо",
+        "штатный `Mapnik.json` даже в конце ZIP и вычисляет SHA-256 **всего архива**, включая central directory и",
+        "comment. При совпадении с готовым ассетом конвертация не нужна. Второе чтение",
+        "передаёт `z/x/y.tile` непосредственно в SQLite writer, максимум один тайл в",
+        "памяти (16 MiB). Нет распакованного дерева и промежуточного полного ZIP.",
+        "Повторная проверка хеша отвергает изменившийся между чтениями источник."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:shared-underlays-streaming-ngrc-import-and-full-archive-hash"
+    ]
+  }
+}

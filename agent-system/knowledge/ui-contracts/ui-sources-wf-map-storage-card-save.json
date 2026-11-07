@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-wf-map-storage-card-save",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "WF-MAP-STORAGE-CARD-SAVE"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "WF-MAP-STORAGE-CARD-SAVE",
+        "repository": "root",
+        "path": "app/src/main/java/com/nextgis/mobile/util/SelectMapPathPreference.java",
+        "marker": "public void saveStoredCardNameToSettings(final String sdCardName)",
+        "requires": [
+          "KEY_PREF_SD_CARD_NAME, sdCardName",
+          "apply()"
+        ],
+        "forbids": [],
+        "sha256": "e87d88a7d9e60933bafdd10b71af42c3b399a632b4a71b4b5713e14141ed747c"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-wf-map-storage-card-save"
+    ]
+  }
+}

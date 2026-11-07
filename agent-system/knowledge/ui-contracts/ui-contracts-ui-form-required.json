@@ -1,0 +1,97 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-form-required",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-FORM-REQUIRED"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-FORM-REQUIRED",
+        "group": "forms",
+        "title": "Обязательные поля и сохранённые значения",
+        "surface": "Обычная/NGFP форма",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [
+          "form_save",
+          "controls_list"
+        ],
+        "meaning": "Save проверяет обязательные данные; значение существующего поля вне формы читается из сохранённой строки, а не считается автоматически пустым.",
+        "value_origin": "requiredFieldDefinitions/Field.required, controls ContentValues, stored values из SQLite; NGW metadata parser переносит required.",
+        "units": "Единицы принадлежат полю; required сам единиц не задаёт.",
+        "updates": [
+          "Перед Save пересчитываются required definitions и отсутствующие значения.",
+          "Показывается список caption и ошибка доступного control."
+        ],
+        "actions": [
+          "Сохранить",
+          "Перейти к полю ошибки"
+        ],
+        "conditions": [
+          "Явно очищенное поле и отсутствующий control различаются.",
+          "Новому объекту недоступное required поле нельзя считать заполненным из старой строки."
+        ],
+        "saved_state": "Проверка не должна терять черновик или старое значение вне формы.",
+        "source_ids": [
+          "WF-FORM-REQUIRED",
+          "WF-NGW-FIELD-SCHEMA"
+        ],
+        "expectations": [
+          "Oracle: существующее заполненное required поле вне NGFP не блокирует сохранение другого поля; новое обязательное без значения блокирует Save с понятным указанием.",
+          "Контрпример: невидимое заполненное поле обнулено; либо отсутствующее required у нового объекта пропущено без проверки."
+        ],
+        "unknowns": [
+          "Полная conditional visibility/cascade engine и серверные ограничения имеют собственные контракты; здесь не заявлена их runtime-приёмка."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-required",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-ngw-field-schema",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-form-required"
+    ]
+  }
+}

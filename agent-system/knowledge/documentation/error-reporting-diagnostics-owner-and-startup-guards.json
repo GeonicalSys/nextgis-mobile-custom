@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:error-reporting-diagnostics-owner-and-startup-guards",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:error-reporting"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/error-reporting.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Владение и запуск",
+        "",
+        "`app` владеет политикой диагностики, `maplib.LocalLogInitializer` — общей",
+        "инициализацией локального журнала в app/maplibui. NGW-ресурсы не меняются.",
+        "`MainApplication.initializeDiagnostics` запускается после раннего guard",
+        "изолированного script UID, до HyperLog и `GISApplication.onCreate`.",
+        "`io.sentry.auto-init=false` предотвращает вторую автоматическую инициализацию.",
+        "Пустой DSN в явно разрешённой CI-конфигурации отключает отчёты и retry job.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:error-reporting-diagnostics-owner-and-startup-guards"
+    ]
+  }
+}

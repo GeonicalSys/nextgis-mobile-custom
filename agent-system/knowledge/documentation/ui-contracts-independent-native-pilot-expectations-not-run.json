@@ -1,0 +1,67 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ui-contracts-independent-native-pilot-expectations-not-run",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:ui-contracts"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ui-contracts.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Независимые пилоты — NOT_RUN",
+        "",
+        "Следующие ожидания задают будущую приёмку; перечисление не является прогоном:",
+        "",
+        "- Движение камеры не меняет координату устройства. Autopan действует только",
+        "  в предусмотренном состоянии; missing fix и stale fix различаются.",
+        "- Busy track/edit/walk/fill сохраняет прежний проект. Успешное переключение",
+        "  меняет owning workspace, а запоздалый callback другого проекта не меняет UI.",
+        "- Read-only слой остаётся доступным для просмотра без Edit; текущие лесосеки",
+        "  и НЭП не получают мобильного writer-требования для `area_origin`.",
+        "- Навигация по разреженным FID выбирает следующую существующую запись,",
+        "  а не вычисляет следующий номер арифметически.",
+        "- Save не теряет черновик и поля вне формы; validation/provider failure",
+        "  не выдаётся за сохранение. Повтор одной операции не создаёт дубликат.",
+        "- Partial upload не обновляет полный clock; badges не переносятся между",
+        "  workspace, а неизвестная регистрация не считается подтверждённой отправкой.",
+        "- Cancel Rename/Delete сохраняет трек; пустое имя отвергается, подтверждённые",
+        "  IDs удаления не подменяются новым mutable selection.",
+        "",
+        "Native проверки, устройства, AVD и сборки требуют отдельной авторизации и",
+        "штатных gates. Source PASS не возобновляет остановленные этапы.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ui-contracts-independent-native-pilot-expectations-not-run"
+    ]
+  }
+}

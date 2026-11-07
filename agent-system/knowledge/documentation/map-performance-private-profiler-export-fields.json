@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:map-performance-private-profiler-export-fields",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-performance",
+      "lisa:mobile:resource:map-performance-private-profiler-aggregation"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the performance subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-performance.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Приватный app-side JSONL в Downloads/LISA-Diagnostics содержит числовые SDK frame",
+        "stats, SDK-managed texture/buffer bytes, scenes/zoom, Java/native/RSS/PSS/Graphics,",
+        "затраты наблюдателя и контрольные aggregate snapshots (первый через10с, затем30с).",
+        "SDK durations seconds переводятся в ms; это не GPU time и не OS thread CPU.",
+        "Aggregate/subcategory bytes не суммируются; отрицательные int counters invalid.",
+        "Не включаются renderedFeatureInfo/feature-ID lists, координаты, URI и атрибуты.",
+        "`returned_to_sdk`, `fully` и `idle` различаются и не принимают полноту карты.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:map-performance-private-profiler-export-fields"
+    ]
+  }
+}

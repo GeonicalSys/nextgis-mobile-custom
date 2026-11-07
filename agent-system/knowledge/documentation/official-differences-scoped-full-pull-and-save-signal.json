@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-scoped-full-pull-and-save-signal",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Текущий scoped NGW admission и save-signal —30 октября2026",
+        "",
+        "Собственный Draft Core #63 отклоняет206 только в полном streamed pull без Range",
+        "и сборки диапазонов; другие2xx,404/transient/tracked routes, ранний push и prefix",
+        "cleanup прежние. Две lookup ветви теперь добавляют IO на false save при уже новой",
+        "памяти/одной записи/прежнем throws/equal-next no-write. Это локальная source-правка,",
+        "не новый upstream comparison, repin или сертификат полноты NGW/disk/retry.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-scoped-full-pull-and-save-signal"
+    ]
+  }
+}

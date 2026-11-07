@@ -1,0 +1,785 @@
+{
+  "schema_version": 1,
+  "source": {
+    "repository": "android_projects/android_gisapp",
+    "path": "docs/registry/change-impact.yaml",
+    "revision": "0db7b9730794028cc8d43a946f8f4f377f3a9034",
+    "blob": "5401b527da6a67e1e8b6f0dcc700bba42be4bffb",
+    "sha256_utf8_lf": "fd9efec327e70e0e57ab5eeb2efd129de64b918d40e57b32757d855ddce95116"
+  },
+  "header": {
+    "lines": [
+      1,
+      2
+    ],
+    "sha256_utf8_lf": "b020b75d917643d26969f5cc7476f442667d3fa9649e552267ead681573aa8d6",
+    "target": "lisa:mobile:metadata:change-impact-registry"
+  },
+  "triggers": [
+    {
+      "key": "UI-VALUE-PROVENANCE",
+      "lines": [
+        3,
+        38
+      ],
+      "sha256_utf8_lf": "595141bc5967848592a9745f87a61bb9d7b88415d2f49489aafd946386f23158",
+      "target": "lisa:mobile:contract:change-impact-ui-value-provenance"
+    },
+    {
+      "key": "GPS-CACHE-WITNESS",
+      "lines": [
+        39,
+        46
+      ],
+      "sha256_utf8_lf": "13cc3a3a359fa7ae50372a73a1affd95fda9ca7e682811fc6353eab44fae9a43",
+      "target": "lisa:mobile:contract:change-impact-gps-cache-witness"
+    },
+    {
+      "key": "SQLITE-NATIVE-LAYER-PRIORITY",
+      "lines": [
+        47,
+        54
+      ],
+      "sha256_utf8_lf": "460a001a38f2521953cb903e49c79ac7947144c9c6b398966eb8bae554eb14ce",
+      "target": "lisa:mobile:contract:change-impact-sqlite-native-layer-priority"
+    },
+    {
+      "key": "LOCAL-TILE-CACHE-AND-IO-ADMISSION",
+      "lines": [
+        55,
+        86
+      ],
+      "sha256_utf8_lf": "95bfb115ae4b7fc679d4a832157ff0765b270ac4e0dec86c331c7e9226b3728e",
+      "target": "lisa:mobile:contract:change-impact-local-tile-cache-and-io-admission"
+    },
+    {
+      "key": "SQLITE-BOUNDED-ORIGINAL-READS",
+      "lines": [
+        87,
+        101
+      ],
+      "sha256_utf8_lf": "cc491b912f4b37f6f60b5fca2b69574c1c963e92907336d08a53f25138923697",
+      "target": "lisa:mobile:contract:change-impact-sqlite-bounded-original-reads"
+    },
+    {
+      "key": "SQLITE-PHASE-DIAGNOSTICS",
+      "lines": [
+        102,
+        118
+      ],
+      "sha256_utf8_lf": "b83866c4d6acd293e9b67e786af16a4199bfc885447fff24328b5ed288430375",
+      "target": "lisa:mobile:contract:change-impact-sqlite-phase-diagnostics"
+    },
+    {
+      "key": "SQLITE-NATIVE-VECTORS",
+      "lines": [
+        119,
+        142
+      ],
+      "sha256_utf8_lf": "d33ff1dc531d78f795b61e8d3aef42f10dbf13adcd4e041de6ddc3ffe0f3c97f",
+      "target": "lisa:mobile:contract:change-impact-sqlite-native-vectors"
+    },
+    {
+      "key": "RENDER-MEMORY-PRESSURE-AND-NOTICE",
+      "lines": [
+        143,
+        165
+      ],
+      "sha256_utf8_lf": "1776563c21c1b4206a7555bba3a64ab40c037cbe9a73780ef13cbd70c4621518",
+      "target": "lisa:mobile:contract:change-impact-render-memory-pressure-and-notice"
+    },
+    {
+      "key": "NATIVE-GEOJSON-PAYLOAD",
+      "lines": [
+        166,
+        173
+      ],
+      "sha256_utf8_lf": "51c86be6e4340966b8d68ea5d0583056bc33b3ea3187373f8c4d9850d5ecc821",
+      "target": "lisa:mobile:contract:change-impact-native-geojson-payload"
+    },
+    {
+      "key": "RENDER-MEMORY-ACCEPTANCE",
+      "lines": [
+        174,
+        181
+      ],
+      "sha256_utf8_lf": "fbecebd7476ac2bc173c302c0e824b18c9c9fd5f6e539961b78b60a2e04f82ea",
+      "target": "lisa:mobile:contract:change-impact-render-memory-acceptance"
+    },
+    {
+      "key": "NATIVE-HEAP-MAP-DIAGNOSTIC-ROUTE",
+      "lines": [
+        182,
+        189
+      ],
+      "sha256_utf8_lf": "884565821460cbf13e864f723a4c0c7e108ec538e43b4ec7ba4ab0b78927e6d8",
+      "target": "lisa:mobile:contract:change-impact-native-heap-map-diagnostic-route"
+    },
+    {
+      "key": "LOCAL-VECTOR-TILE-OFFLINE-TRANSPORT",
+      "lines": [
+        190,
+        212
+      ],
+      "sha256_utf8_lf": "42e3a3b44ab09b14a9f643a70d1b23257c82f237eb072b1745776e8a03fa31eb",
+      "target": "lisa:mobile:contract:change-impact-local-vector-tile-offline-transport"
+    },
+    {
+      "key": "MIXED-MAP-CANDIDATES-AND-FIELD-LINES",
+      "lines": [
+        213,
+        220
+      ],
+      "sha256_utf8_lf": "157859077f976ee1b6165ad7d98ed5b1e8b5ad1616e4797d3defc84f6ac45e84",
+      "target": "lisa:mobile:contract:change-impact-mixed-map-candidates-and-field-lines"
+    },
+    {
+      "key": "MAINTENANCE-REMINDERS",
+      "lines": [
+        221,
+        228
+      ],
+      "sha256_utf8_lf": "778aad173d4e8bec8839eb41246d00d0743c8fe45105690d5ce9e9aaee157e70",
+      "target": "lisa:mobile:contract:change-impact-maintenance-reminders"
+    },
+    {
+      "key": "VISIBLE-LINE-LABELS",
+      "lines": [
+        229,
+        236
+      ],
+      "sha256_utf8_lf": "1c9f040e6ef4ef3357c11a479e8e59e3f3a4b1f1577237ed6bd987b0b0cf80cb",
+      "target": "lisa:mobile:contract:change-impact-visible-line-labels"
+    },
+    {
+      "key": "TRACK-STOP-AND-LEGACY-COLORS",
+      "lines": [
+        237,
+        244
+      ],
+      "sha256_utf8_lf": "48bd05f342baa684d6071a43f317817649f7bf0319e57647199222057bcae08e",
+      "target": "lisa:mobile:contract:change-impact-track-stop-and-legacy-colors"
+    },
+    {
+      "key": "TRACK-CONTROLS",
+      "lines": [
+        245,
+        252
+      ],
+      "sha256_utf8_lf": "3e23625e619bdba78af53d2564dfdca88f43166006acfa3501116514f3b6adc4",
+      "target": "lisa:mobile:contract:change-impact-track-controls"
+    },
+    {
+      "key": "POLYGON-STYLE-CONTROLS",
+      "lines": [
+        253,
+        292
+      ],
+      "sha256_utf8_lf": "a0ff7057b3284cabd42636b23ea3fd6008d9f37b2a12fdf4324e5e254d0dd480",
+      "target": "lisa:mobile:contract:change-impact-polygon-style-controls"
+    },
+    {
+      "key": "POINT-FIREFLY",
+      "lines": [
+        293,
+        300
+      ],
+      "sha256_utf8_lf": "827e58eaa1ca5ace3dcfae88f8a8b23b66f33f16a01ff051a744df37f8ef3ed0",
+      "target": "lisa:mobile:contract:change-impact-point-firefly"
+    },
+    {
+      "key": "FEATURE-COPY-TRANSFORM",
+      "lines": [
+        301,
+        308
+      ],
+      "sha256_utf8_lf": "e52909f5ae61135ff2b2e2ee5433a0e2c14a3e520f7fecba7b4e91a5e5fed8de",
+      "target": "lisa:mobile:contract:change-impact-feature-copy-transform"
+    },
+    {
+      "key": "COMPASS-OPTIONAL-VIBRATION",
+      "lines": [
+        309,
+        316
+      ],
+      "sha256_utf8_lf": "f81b28271f6f48ce73f4071b1ffc2ef0e4f8eed1d3e197d3143197cff23448b6",
+      "target": "lisa:mobile:contract:change-impact-compass-optional-vibration"
+    },
+    {
+      "key": "COMPASS-SECTOR-SETTING",
+      "lines": [
+        317,
+        324
+      ],
+      "sha256_utf8_lf": "9f27fdf7e49111559b8fbd477570e98f677d7d61b93593c3b2332c32266bedf0",
+      "target": "lisa:mobile:contract:change-impact-compass-sector-setting"
+    },
+    {
+      "key": "MOBILE-USAGE",
+      "lines": [
+        325,
+        332
+      ],
+      "sha256_utf8_lf": "1f18b88906e21e02b7dbf40d8f50ba108983352ecf98569120e5892afb1820b3",
+      "target": "lisa:mobile:contract:change-impact-mobile-usage"
+    },
+    {
+      "key": "LOCAL-VECTOR-TILE-LABELS",
+      "lines": [
+        333,
+        360
+      ],
+      "sha256_utf8_lf": "1607ea69216a948c29f2f768a5e603278d9c2ea32310499c24bb48203183259b",
+      "target": "lisa:mobile:contract:change-impact-local-vector-tile-labels"
+    },
+    {
+      "key": "SHARED-TRACKS-AND-CLASSIC-STYLES",
+      "lines": [
+        361,
+        368
+      ],
+      "sha256_utf8_lf": "3dfce957b1f247ccb8bff97abd7a9b495cd4ff619c863f4ce18950dd04b6affe",
+      "target": "lisa:mobile:contract:change-impact-shared-tracks-and-classic-styles"
+    },
+    {
+      "key": "LAYER-CHOOSER-AND-MOBILE-ACCEPTANCE",
+      "lines": [
+        369,
+        376
+      ],
+      "sha256_utf8_lf": "e4a96a5fa6ee953f82502e1579660205e74db112031cb85627887c04326af9da",
+      "target": "lisa:mobile:contract:change-impact-layer-chooser-and-mobile-acceptance"
+    },
+    {
+      "key": "LOCAL-DELIVERY-PROJECT-CLOCK",
+      "lines": [
+        377,
+        437
+      ],
+      "sha256_utf8_lf": "6f0d7eaed1f722760064e42d225f6a17e81c828faf1a83db70f91aa3ef8dc1e5",
+      "target": "lisa:mobile:contract:change-impact-local-delivery-project-clock"
+    },
+    {
+      "key": "BACKGROUND-GPS-RECOVERY",
+      "lines": [
+        438,
+        445
+      ],
+      "sha256_utf8_lf": "45305b79854fed67716a14658fc01b78d549e1b99815c8e5053b8828beb4befa",
+      "target": "lisa:mobile:contract:change-impact-background-gps-recovery"
+    },
+    {
+      "key": "UI-LARGE-TEXT",
+      "lines": [
+        446,
+        453
+      ],
+      "sha256_utf8_lf": "22b63ea0fff38af1617913269ccd4937c8c4b398e7d1074eedbbc4f8af21e7b6",
+      "target": "lisa:mobile:contract:change-impact-ui-large-text"
+    },
+    {
+      "key": "SYNC-NETWORK-FEEDBACK",
+      "lines": [
+        454,
+        461
+      ],
+      "sha256_utf8_lf": "c982942ce8a2538e6000f9f53bc011a937ae06ebcf3c175bc6d9161d9fe474ab",
+      "target": "lisa:mobile:contract:change-impact-sync-network-feedback"
+    },
+    {
+      "key": "SYNC-NOTIFICATIONS",
+      "lines": [
+        462,
+        469
+      ],
+      "sha256_utf8_lf": "bf2a199ee9fbe1a543ac40152ae7c37cbd04adfe32a496bd1181d423eb3eb552",
+      "target": "lisa:mobile:contract:change-impact-sync-notifications"
+    },
+    {
+      "key": "BACKGROUND-LOCATION-WARNING",
+      "lines": [
+        470,
+        477
+      ],
+      "sha256_utf8_lf": "6edebe9c5470752d7ca9b32e88bdd05da06d8a5656d6b07f42adb79cd7f7917d",
+      "target": "lisa:mobile:contract:change-impact-background-location-warning"
+    },
+    {
+      "key": "LOCAL-LOG-STARTUP",
+      "lines": [
+        478,
+        485
+      ],
+      "sha256_utf8_lf": "f9bac9d9d73b8537b7cf6ee6009de2449560f20d87f9bbac81e2a08ea4f8d879",
+      "target": "lisa:mobile:contract:change-impact-local-log-startup"
+    },
+    {
+      "key": "TRACK-DELIVERY",
+      "lines": [
+        486,
+        493
+      ],
+      "sha256_utf8_lf": "89f2c5ddfbf3d2fc622bc6949c69bb21b5a506306934a4076fa8c7bc395b3899",
+      "target": "lisa:mobile:contract:change-impact-track-delivery"
+    },
+    {
+      "key": "FEATURE-TYPE-CREATION",
+      "lines": [
+        494,
+        501
+      ],
+      "sha256_utf8_lf": "872ca5d7111e141d00dcbe26380c01b292260289651bf8931ffcaea9d9159e3c",
+      "target": "lisa:mobile:contract:change-impact-feature-type-creation"
+    },
+    {
+      "key": "MAP-RUNTIME-DIAGNOSTICS",
+      "lines": [
+        502,
+        509
+      ],
+      "sha256_utf8_lf": "b444df0ee559dbff5e154b1f80300f51d699063fbffeb1207a655f2c11f5eaaf",
+      "target": "lisa:mobile:contract:change-impact-map-runtime-diagnostics"
+    },
+    {
+      "key": "SYNC-JOURNAL-CANCELLATION",
+      "lines": [
+        510,
+        517
+      ],
+      "sha256_utf8_lf": "9b514889ee54ac589e082829a4809223aa4e2bfc757b43bdab5019c56b279baf",
+      "target": "lisa:mobile:contract:change-impact-sync-journal-cancellation"
+    },
+    {
+      "key": "ERROR-REPORTING",
+      "lines": [
+        518,
+        525
+      ],
+      "sha256_utf8_lf": "b540ba776dc2417a60b34eb5a7991b9b8adab5581a973bb2001d8fbdeae76232",
+      "target": "lisa:mobile:contract:change-impact-error-reporting"
+    },
+    {
+      "key": "CONDITIONAL-FORM-RULES",
+      "lines": [
+        526,
+        533
+      ],
+      "sha256_utf8_lf": "6e84dcf1382be665bfdcf62cb01e6f6ccb06c37c4ac4ab51ceffcd5df5d5946d",
+      "target": "lisa:mobile:contract:change-impact-conditional-form-rules"
+    },
+    {
+      "key": "LAYER-PENDING-INDICATOR",
+      "lines": [
+        534,
+        541
+      ],
+      "sha256_utf8_lf": "aca6515377dbaf7ce307d8da5227797466143497074ec0a7fc6c6053f06bbf24",
+      "target": "lisa:mobile:contract:change-impact-layer-pending-indicator"
+    },
+    {
+      "key": "CASCADING-FORM-LISTS",
+      "lines": [
+        542,
+        549
+      ],
+      "sha256_utf8_lf": "c57c8fddf81b7ccb901d89cf90bad39a340b78f0d9ffda1ae18b6b91080acd20",
+      "target": "lisa:mobile:contract:change-impact-cascading-form-lists"
+    },
+    {
+      "key": "PROJECT-SCRIPTS",
+      "lines": [
+        550,
+        557
+      ],
+      "sha256_utf8_lf": "2b8212f33a8582f585b9ec4b705198ab399cdff04f23162c221e709e3222d872",
+      "target": "lisa:mobile:contract:change-impact-project-scripts"
+    },
+    {
+      "key": "REQUIRED-FIELDS",
+      "lines": [
+        558,
+        565
+      ],
+      "sha256_utf8_lf": "21e5f860a1b52c06867a15d588d77cc5feb50870a599189f4e2047275f9cb1cf",
+      "target": "lisa:mobile:contract:change-impact-required-fields"
+    },
+    {
+      "key": "LOCAL-WRITE-AND-TRACK-RELIABILITY",
+      "lines": [
+        566,
+        573
+      ],
+      "sha256_utf8_lf": "69065e90151956ed81ebce069b9be024ed7a009aa8488fe3d9d03692a3db89b6",
+      "target": "lisa:mobile:contract:change-impact-local-write-and-track-reliability"
+    },
+    {
+      "key": "TOOL-TAP-AND-SELECTION",
+      "lines": [
+        574,
+        581
+      ],
+      "sha256_utf8_lf": "d9a39e608122e5469aa792a7465c13c16887ff986e6156ae40e12d1f14c5ce4d",
+      "target": "lisa:mobile:contract:change-impact-tool-tap-and-selection"
+    },
+    {
+      "key": "NGID-LOGIN-NORMALIZATION",
+      "lines": [
+        582,
+        589
+      ],
+      "sha256_utf8_lf": "3ba809df1027086414ff8ab7076dd69217ffa080fc5653b408799f26a171b9fe",
+      "target": "lisa:mobile:contract:change-impact-ngid-login-normalization"
+    },
+    {
+      "key": "DOCUMENTATION-CI",
+      "lines": [
+        590,
+        597
+      ],
+      "sha256_utf8_lf": "c8866e06a723b05470b74646c63fc89034bdfebb7755a3b600ecd775224426c0",
+      "target": "lisa:mobile:contract:change-impact-documentation-ci"
+    },
+    {
+      "key": "RELIABILITY-CI",
+      "lines": [
+        598,
+        605
+      ],
+      "sha256_utf8_lf": "f36823eb79e9765a1189ccccb208f6e3571dce844557b6eff5a285c21bd1235c",
+      "target": "lisa:mobile:contract:change-impact-reliability-ci"
+    },
+    {
+      "key": "MAP-CONTROL-LAYOUT",
+      "lines": [
+        606,
+        613
+      ],
+      "sha256_utf8_lf": "8574600b4371953e4a2a0f2bed2ed623065567ac61639aa02401890780587252",
+      "target": "lisa:mobile:contract:change-impact-map-control-layout"
+    },
+    {
+      "key": "SHARED-UNDERLAY-CATALOG",
+      "lines": [
+        614,
+        621
+      ],
+      "sha256_utf8_lf": "3e7503e4a203a7023752f82d9af1ecbfe262f726919c51461dfc433d674cc87e",
+      "target": "lisa:mobile:contract:change-impact-shared-underlay-catalog"
+    },
+    {
+      "key": "DEBUG-COMPANION-INSTALLER",
+      "lines": [
+        622,
+        629
+      ],
+      "sha256_utf8_lf": "e1d4b972929cd2d784d875c0e7b80547ff9742477be39a51e245514bc37f5326",
+      "target": "lisa:mobile:contract:change-impact-debug-companion-installer"
+    },
+    {
+      "key": "OFFICIAL-DIFFERENCES",
+      "lines": [
+        630,
+        641
+      ],
+      "sha256_utf8_lf": "af50196b2159f0bb85c43a4e85b2c0751873668f3a6acb227867cfc93ac6f8e4",
+      "target": "lisa:mobile:contract:change-impact-official-differences"
+    },
+    {
+      "key": "BUILD-AND-FLAVORS",
+      "lines": [
+        642,
+        657
+      ],
+      "sha256_utf8_lf": "d887c00d3485a4183a72607d875ac582f19c14f4cd5f7af1ab237b840db3c3ff",
+      "target": "lisa:mobile:contract:change-impact-build-and-flavors"
+    },
+    {
+      "key": "NGW-ACCOUNT-IDENTITY",
+      "lines": [
+        658,
+        679
+      ],
+      "sha256_utf8_lf": "2ab29afa2b627ae76ecd2897225d327857094a3b50fcc6949f60df9b11c7375e",
+      "target": "lisa:mobile:contract:change-impact-ngw-account-identity"
+    },
+    {
+      "key": "MAPLIBRE-BACKEND",
+      "lines": [
+        680,
+        699
+      ],
+      "sha256_utf8_lf": "2a025006bac37c21c087a9d3aaa32830ff5ada2d9c93c8eeec0c255a2f1abbca",
+      "target": "lisa:mobile:contract:change-impact-maplibre-backend"
+    },
+    {
+      "key": "NGW-RESOURCE-SELECTION-LIFECYCLE",
+      "lines": [
+        700,
+        713
+      ],
+      "sha256_utf8_lf": "833e0248457d4c6699b179a38ca8b9906244489309ec866f753a147aa7b9c3b2",
+      "target": "lisa:mobile:contract:change-impact-ngw-resource-selection-lifecycle"
+    },
+    {
+      "key": "REPOSITORY-TOPOLOGY",
+      "lines": [
+        714,
+        726
+      ],
+      "sha256_utf8_lf": "9f1aa98d68455f8f3f1c8664b03688b3c18e7a6bdf717dec0fa8d807caf7622c",
+      "target": "lisa:mobile:contract:change-impact-repository-topology"
+    },
+    {
+      "key": "MAPLIBRE-RENDERING",
+      "lines": [
+        727,
+        782
+      ],
+      "sha256_utf8_lf": "2abbffe6c08f91d773e2b79d9e65de9c9bf19b0879f4dd66aa7576a7a690b9dc",
+      "target": "lisa:mobile:contract:change-impact-maplibre-rendering"
+    },
+    {
+      "key": "SPATIAL-CACHE-CONSISTENCY",
+      "lines": [
+        783,
+        804
+      ],
+      "sha256_utf8_lf": "0f4ccb48662aa09ebf041226857b45be4f1f5677c3b0f3d936e4ff759009e891",
+      "target": "lisa:mobile:contract:change-impact-spatial-cache-consistency"
+    },
+    {
+      "key": "MULTIPOLYGON-REPAIR",
+      "lines": [
+        805,
+        822
+      ],
+      "sha256_utf8_lf": "bec4da70e439d858b092b8a0b050dda0ad12a6c7fdb13a75a9cfeb2253f6bb91",
+      "target": "lisa:mobile:contract:change-impact-multipolygon-repair"
+    },
+    {
+      "key": "GEOMETRY-SKETCH-WORKFLOW",
+      "lines": [
+        823,
+        873
+      ],
+      "sha256_utf8_lf": "2cf796e704b08c4ea09fd05c07e81b149d8a90d2f6cecdaa42e60bfa482bb949",
+      "target": "lisa:mobile:contract:change-impact-geometry-sketch-workflow"
+    },
+    {
+      "key": "GEOMETRY-EDIT-HISTORY",
+      "lines": [
+        874,
+        894
+      ],
+      "sha256_utf8_lf": "7fd5b4b028b384d724231a02e1ae45da3245fda8d801b72743030b7972da51b8",
+      "target": "lisa:mobile:contract:change-impact-geometry-edit-history"
+    },
+    {
+      "key": "MAP-BASE-LAYERS",
+      "lines": [
+        895,
+        910
+      ],
+      "sha256_utf8_lf": "a6148445dad7a2e189378287ba8779e534f09d0fa906afba0e7710f9e18556c0",
+      "target": "lisa:mobile:contract:change-impact-map-base-layers"
+    },
+    {
+      "key": "GPS-RECORDING",
+      "lines": [
+        911,
+        976
+      ],
+      "sha256_utf8_lf": "749c387d31de0e1d0e6eaef02f3a78dc1b7d39635a0ec50420eab51da788d4ff",
+      "target": "lisa:mobile:contract:change-impact-gps-recording"
+    },
+    {
+      "key": "STAKEOUT-GUIDANCE",
+      "lines": [
+        977,
+        1022
+      ],
+      "sha256_utf8_lf": "d4542933dd92836e6a83e710e72e83c8183e8450919fc535b346a42392a39a23",
+      "target": "lisa:mobile:contract:change-impact-stakeout-guidance"
+    },
+    {
+      "key": "LAYER-FILL-AND-REORDER",
+      "lines": [
+        1023,
+        1037
+      ],
+      "sha256_utf8_lf": "ebeb206f99e110c61a1e1b4ff8fae346cd0b11f8dd5b21bdd894f1bf127b5f93",
+      "target": "lisa:mobile:contract:change-impact-layer-fill-and-reorder"
+    },
+    {
+      "key": "SHARED-MAP-API",
+      "lines": [
+        1038,
+        1053
+      ],
+      "sha256_utf8_lf": "3c5f0d79bea29a68f25ca186464590b3917dfcbc3ebb2fe13c451cfae7f2e640",
+      "target": "lisa:mobile:contract:change-impact-shared-map-api"
+    },
+    {
+      "key": "COLLECTOR",
+      "lines": [
+        1054,
+        1106
+      ],
+      "sha256_utf8_lf": "b9f65b4d1b7ed3cb410e0959630bfd715ba6a155712b5c22b90c0347e37b3e22",
+      "target": "lisa:mobile:contract:change-impact-collector"
+    },
+    {
+      "key": "NGRC-LOCAL-UNDERLAY",
+      "lines": [
+        1107,
+        1123
+      ],
+      "sha256_utf8_lf": "9edce130add2f91e0f912d8e4a104bc0747b94288018563417217ee9c9414801",
+      "target": "lisa:mobile:contract:change-impact-ngrc-local-underlay"
+    },
+    {
+      "key": "LEGACY-UNDERLAY-MIGRATION",
+      "lines": [
+        1124,
+        1167
+      ],
+      "sha256_utf8_lf": "dd6839b1e6848795e1fc62a5815935f074a2f7c2ce805d6d5bcc29f9b4029a0f",
+      "target": "lisa:mobile:contract:change-impact-legacy-underlay-migration"
+    },
+    {
+      "key": "ACCOUNT-SYNC-SCHEDULING",
+      "lines": [
+        1168,
+        1203
+      ],
+      "sha256_utf8_lf": "a145d23c6a9380da8872b3d307053ed981f9ab434cb6c9aa0ac7a2eb942c1a06",
+      "target": "lisa:mobile:contract:change-impact-account-sync-scheduling"
+    },
+    {
+      "key": "BACKUP-AND-DESTRUCTIVE-LAYER-CHANGE",
+      "lines": [
+        1204,
+        1217
+      ],
+      "sha256_utf8_lf": "32400169a7d1df31b62088d238e93ef5c407a6ed08f3206ba9a30feb4329f525",
+      "target": "lisa:mobile:contract:change-impact-backup-and-destructive-layer-change"
+    },
+    {
+      "key": "SELF-HOSTED-UPDATER",
+      "lines": [
+        1218,
+        1246
+      ],
+      "sha256_utf8_lf": "3922275f69cf6622ff73b9c9bdc28ecc9ba366ff5623fdabb30a885284a576d7",
+      "target": "lisa:mobile:contract:change-impact-self-hosted-updater"
+    },
+    {
+      "key": "NGW-URL-IMPORT",
+      "lines": [
+        1247,
+        1267
+      ],
+      "sha256_utf8_lf": "e54bc592ac44def2d3cb5d13122c958aca8c3ba2e062a1ebbe0ba62d8b74a812",
+      "target": "lisa:mobile:contract:change-impact-ngw-url-import"
+    },
+    {
+      "key": "LISA-ECOSYSTEM-CONTRACT",
+      "lines": [
+        1268,
+        1286
+      ],
+      "sha256_utf8_lf": "faee7b18fe0849d64ee7e6eb1506bd650997d91d399b92f85d923b78cbcaa12d",
+      "target": "lisa:mobile:contract:change-impact-lisa-ecosystem-contract"
+    },
+    {
+      "key": "LOCAL-VECTOR-LAYERS",
+      "lines": [
+        1287,
+        1314
+      ],
+      "sha256_utf8_lf": "aae62fa4fe3fc1be4ab5802ad3107de4f14d941db9808978fe1a482afcfc361a",
+      "target": "lisa:mobile:contract:change-impact-local-vector-layers"
+    },
+    {
+      "key": "PRIVATE-RESOURCE-PROFILING",
+      "lines": [
+        1315,
+        1330
+      ],
+      "sha256_utf8_lf": "d83fa381e611dd4c7363522ec2ac57d05bc93545d0020245a08b789b53375983",
+      "target": "lisa:mobile:contract:change-impact-private-resource-profiling"
+    },
+    {
+      "key": "NGW-LOOKUP-CACHE-CONTENT",
+      "lines": [
+        1331,
+        1357
+      ],
+      "sha256_utf8_lf": "9d3a285e8f54f32c7a4bf876593abfc49c17f51f4c6e411eb99beb86fd04a4ef",
+      "target": "lisa:mobile:contract:change-impact-ngw-lookup-cache-content"
+    },
+    {
+      "key": "NGFP-LOOKUP-PREFETCH",
+      "lines": [
+        1358,
+        1389
+      ],
+      "sha256_utf8_lf": "17fc9399794c3011c25d302df03126d82585140dca07588b69bb6b2ab7d01b9a",
+      "target": "lisa:mobile:contract:change-impact-ngfp-lookup-prefetch"
+    },
+    {
+      "key": "NGW-FULL-SNAPSHOT-ADMISSION",
+      "lines": [
+        1390,
+        1415
+      ],
+      "sha256_utf8_lf": "cba7b02d31a99064bac67b98d22b5aac4a099773a5ca1b757a57543becfe02ef",
+      "target": "lisa:mobile:contract:change-impact-ngw-full-snapshot-admission"
+    },
+    {
+      "key": "NGW-USER-MESSAGES",
+      "lines": [
+        1416,
+        1456
+      ],
+      "sha256_utf8_lf": "831a3d00490b311d941d563d235873a9e305816f6fcffe81e9b4b2816bbfee2b",
+      "target": "lisa:mobile:contract:change-impact-ngw-user-messages"
+    },
+    {
+      "key": "NGW-RESOURCE-CHECKBOX-SELECTION",
+      "lines": [
+        1457,
+        1487
+      ],
+      "sha256_utf8_lf": "ee54a542cbdfccb43a8279a555a0abaaab3b1273cf50048c83431ff6f941f39a",
+      "target": "lisa:mobile:contract:change-impact-ngw-resource-checkbox-selection"
+    },
+    {
+      "key": "VECTOR-SPATIAL-CACHE-RECOVERY",
+      "lines": [
+        1488,
+        1525
+      ],
+      "sha256_utf8_lf": "6e1a7931bb06798b303e031526bc4358e89560624b4f727cc5a91806dbbd7697",
+      "target": "lisa:mobile:contract:change-impact-vector-spatial-cache-recovery"
+    },
+    {
+      "key": "NGW-RESOURCE-ROW-TEXT-FIT",
+      "lines": [
+        1526,
+        1550
+      ],
+      "sha256_utf8_lf": "c0913196795fc1ea66bfc4af311e0f7c78c0b905790d489e85e2e0829f957e1f",
+      "target": "lisa:mobile:contract:change-impact-ngw-resource-row-text-fit"
+    },
+    {
+      "key": "TRACK-SELECTED-GPX-SHARE",
+      "lines": [
+        1551,
+        1592
+      ],
+      "sha256_utf8_lf": "b3b99abb71f0cf42578d8f82349007f951abbb012d402378d6fbb093ebcf7264",
+      "target": "lisa:mobile:contract:change-impact-track-selected-gpx-share"
+    }
+  ]
+}

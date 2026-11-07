@@ -1,0 +1,64 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-25-085dc441b200",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-25 — Уточнение ширины свечения треков",
+        "",
+        "Повторным выбором пользователь увеличил свечение до 6.5 px. Сердцевина",
+        "1.4 px / затемнение 73%, blur 3 и opacity .83 сохранены. Контракт треков,",
+        "описание выбора и native expectations обновлены; локальные тесты по-прежнему",
+        "отложены пользователем. Предыдущий APK 280b78b сохранён с исходной квитанцией.",
+        "",
+        "[Release APK f06ccfb](history/lisa-local-release-track-glow-2026-10-25.md)",
+        "с уточнённым свечением собран; версия, production подпись и hash проверены.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-25",
+        "heading": "2026-10-25 — Уточнение ширины свечения треков",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-25-085dc441b200"
+    ]
+  }
+}

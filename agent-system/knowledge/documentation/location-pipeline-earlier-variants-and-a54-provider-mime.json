@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:location-pipeline-earlier-variants-and-a54-provider-mime",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:location-pipeline"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/location-pipeline.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "ЛИСА Debug/Release и БЕЛКА Release собраны на Java 21.0.9 / AGP 9.1.0 /",
+        "Gradle 9.3.1, compile/target SDK 36; APK metadata и coupling maplib проверены.",
+        "На самом A54 изолированный instrumentation harness с фактическим исходником",
+        "ExportFileProvider и AndroidX Core 1.18.0 проверил MIME, anonymous MIME, имя,",
+        "размер, чтение GPX XML, прежний тип APK и запрет выхода из настроенного корня.",
+        "Стандартный FileProvider на этом устройстве вернул application/octet-stream",
+        "для обоих GPX MIME запросов; новый — application/gpx+xml. Временный harness",
+        "удалён; проверка не останавливала текущую запись и не читала проекты пользователя.",
+        "Проверка конкретного внешнего файлового менеджера через Share UI ещё не проведена.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Former GPX MIME behavior and isolated QA acceptance precede the current text/xml provider route."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:location-pipeline-earlier-variants-and-a54-provider-mime"
+    ]
+  }
+}

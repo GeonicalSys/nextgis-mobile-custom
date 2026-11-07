@@ -1,0 +1,62 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:automated-tests-october-27-avd-host-failures-and-authorization",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Остановка запусков AVD после зависаний Windows — 27 октября",
+        "",
+        "На рабочем компьютере подтверждены три аварийных завершения Windows; два дневных",
+        "совпадают с началом AVD в аппаратном режиме. Позднее27 октября владелец явно",
+        "разрешил продолжение с программной графикой и запретил аппаратный режим.",
+        "Stress09 остаётся оборванным, не PASS. Новые запуски выполняются только через",
+        "software admission; первый boot подтвердил actual Google SwiftShader.",
+        "Software-related01 прошёл настоящий pan/pinch workload, но FAIL по отсутствию",
+        "MVT объектов в конце; software-full01 оборвался при следующем запуске AVD из-за",
+        "нового зависания Windows. После него владелец отключил андервольтинг и явно",
+        "поручил продолжить с прежними условиями. Причина host hang не установлена;",
+        "software не объявляется исправлением. Незавершённые прогоны сохраняются отдельно.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Retains interrupted runs, software admission history and unresolved hang cause."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:automated-tests-october-27-avd-host-failures-and-authorization"
+    ]
+  }
+}

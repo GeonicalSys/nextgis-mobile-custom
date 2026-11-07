@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:location-pipeline-medium-accuracy-median-centres-and-turns",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:location-pipeline"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/location-pipeline.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "При accuracy до 12 м обычная неточность измеренной speed больше не отправляет",
+        "пешехода в 30-секундное подтверждение без поворотов. Положение проверяется в",
+        "окне 12 секунд: минимум 8 измерений и 8 секунд истории, три временных медианных",
+        "центра, два последовательных смещения от 1 м, без разворота между ними, тренд",
+        "от 0.25 м/с и R² не менее 0.7. Поворот около угла дома не обнуляет всё начало",
+        "пути. Удаление от якоря оценивается медианой последних двух секунд.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:location-pipeline-medium-accuracy-median-centres-and-turns"
+    ]
+  }
+}

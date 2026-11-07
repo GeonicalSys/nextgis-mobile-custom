@@ -1,0 +1,51 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:fork-customizations-ngw-account-import-and-layer-config-routes",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:fork-customizations"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the App architecture or upstream workflow topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/fork-customizations.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "| NGW sync, account scheduling, layer fill и staged schema rebuild | [ngw-sync-and-storage.md](../architecture/ngw-sync-and-storage.md), [collector-projects.md](../architecture/collector-projects.md) | `SyncAdapter`, `SyncAccountWorker`, `LayerFillService`, `GISApplication` |",
+        "| Variant-specific Android account/provider identity | [flavors-and-versioning.md](flavors-and-versioning.md), [ngw-sync-and-storage.md](../architecture/ngw-sync-and-storage.md) | `app/build.gradle`, `MainApplication`, authenticator/sync adapter XML |",
+        "| NGW resource UI и batch import | [collector-project-setup.md](../runbooks/collector-project-setup.md) | `SelectNGWResourceActivity`, `NGWResourcesListAdapter`, `LayerFillProgressDialogFragment` |",
+        "| Прямой импорт NGW vector/raster по URL и read-only permissions | [ngw-sync-and-storage.md](../architecture/ngw-sync-and-storage.md) | `NGWResourceUrl`, `ResourceGroup`, `NGWResourceImportHelper`, `MainActivity` |",
+        "| Локальные редактируемые vector layers и GeoJSON/KML/GPX WGS 84 | module packs `maplib`/`maplibui`/`app`, `INV-LOCAL-VECTOR-LAYERS` | `VectorLayer`, `GeoJSONUtil`, `CoordinatePointParser`, `LayerFillService` |",
+        "| Config из NGW description и `SYNC_NONE` | [settings-and-config.md](settings-and-config.md), [collector-projects.md](../architecture/collector-projects.md) | `NgwLayerConfigAdapter`, sync classes |"
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:fork-customizations-ngw-account-import-and-layer-config-routes"
+    ]
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:map-performance-bounded-original-read-transport",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-performance",
+      "lisa:mobile:resource:map-rendering-bounded-original-reads"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the performance subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-performance.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Следующий source-кандидат сохраняет32-ID attributes-only cursors и один",
+        "compiled PFD statement на visit. Отдельный geometry-only cursor на API28+",
+        "материализует не более32 полных BLOB<=16KiB в явном1MiB window; large BLOB,",
+        "API26/27 и safely unsupported driver читаются прежним полным PFD путём.",
+        "Nested CASE typeof/length исключает large/TEXT payload, без truncation.",
+        "512KiB small payload — не общий RAM budget: sorter buffers, Java buffer и",
+        "decoded geometry остаются отдельными. Query/getCount/refill/getBlob отнесены к",
+        "BLOB_READ, attrs projection прежняя. Нет потери объектов/полей/NULL/geometry или",
+        "изменения style/order/epochs/gate/free-only policy. Обязательный повтор —",
+        "sharp17→12 и полностью новая область; полный кадр требует отдельного видео witness.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:map-performance-bounded-original-read-transport"
+    ]
+  }
+}

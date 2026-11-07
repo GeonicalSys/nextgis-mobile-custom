@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:classic-style-verification-category-zoom-curves-and-explicit-defaults",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:classic-style-verification"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the style or label subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/classic-style-verification.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Category geometry/text zoom curves carry their effective stop spec in feature",
+        "properties. The renderer unions all curve breakpoints in one top-level interpolate;",
+        "its stop outputs choose each category multiplier without nesting zoom under case.",
+        "This preserves piecewise-linear interpolation and native expression constraints.",
+        "Explicit nullable label defaults (overlap/upright) survive JSON null reload.",
+        "Explicit scale=false remains fixed, and an explicit cleared geometry curve stays",
+        "cleared after JSON reload instead of inheriting Other. Non-finite stops are rejected.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:classic-style-verification-category-zoom-curves-and-explicit-defaults"
+    ]
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:mobile-usage-related-client-and-server-oracles",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-usage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/mobile-usage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Проверки: `UsageOpenPolicyTest`, native `UsageDeliveryTest` в изолированном",
+        "verification APK, `tools\\verify-mobile-tests.ps1 -Scope Related -Area usage`.",
+        "Native проверяет сохранность UUID/seq после reopen, точные ACK, HTTP 503,",
+        "повтор с прежним UUID, привязку проекта к аккаунту, исключение credentials",
+        "и отсутствие duration. Серверные проверки — в owner repo."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:mobile-usage-related-client-and-server-oracles"
+    ]
+  }
+}

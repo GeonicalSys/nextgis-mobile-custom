@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:workstation-and-build-historical-reliability-suite-scope",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:workstation-and-build"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/workstation-and-build.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "После установки Lisa Debug/test APK запустить `AUTO-RELIABILITY-NATIVE`; сначала",
+        "разрешить storage/location/notifications и включить системную location. Suite",
+        "использует свои local layers, SQLite triggers и localhost sign-in, без настоящего",
+        "аккаунта/NGW. Runtime и ограничения фиксируются в",
+        "[отчёте аудита](../reference/mobile-reliability-audit.md).",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "The earlier local layers, SQLite and localhost fixture retain their original scope."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:workstation-and-build-historical-reliability-suite-scope"
+    ]
+  }
+}

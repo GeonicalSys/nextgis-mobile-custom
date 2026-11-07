@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:lisa-ecosystem-graph-write-and-explicit-live-owner-frame",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:lisa-ecosystem"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/lisa-ecosystem.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Воспроизводимый `--write` по умолчанию использует live working tree LISA root",
+        "`.` и committed HEAD остальных repositories. Это точные source snapshots,",
+        "не признак публикации/приёмки. Для OWN Android task в этом же доступном контуре",
+        "нужно явно включить собственные рабочие источники:",
+        "",
+        "```powershell",
+        "py -3.13 -B -m tools.ecosystem_tests.dependency_discovery --write --live-repository . --live-repository android_projects/android_gisapp",
+        "```",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:lisa-ecosystem-actual-owner-root-and-read-only-plan",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:lisa-ecosystem-graph-write-and-explicit-live-owner-frame"
+    ]
+  }
+}

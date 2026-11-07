@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-smoke-feature-copy-transform",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "SMOKE-FEATURE-COPY-TRANSFORM"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "device",
+        "scope": [
+          "app",
+          "maplibui",
+          "maplib"
+        ],
+        "steps": [
+          "Select a read-only point, line or polygon and copy it to a compatible editable target, including a hidden target; reject incompatible types and lossy multipart truncation.",
+          "Choose a destination category; check matching fields, NULL, zero, int64, unbound form fields, Cancel, recreate and independent SQLite identity.",
+          "Move an editable multipart feature with one finger and rotate it with two; retain holes, scale and fixed camera, transition pointer counts, Undo/Redo, exact gesture Cancel and Save.",
+          "Check every action and full Russian mode caption in both themes and orientations with 100/130/200 percent fonts and normal/320/280 dp effective widths."
+        ],
+        "expected": "Source remains unchanged, the destination uses normal form gates, each transform gesture is one reversible step and every bottom-panel command is reachable without overflow."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-smoke-feature-copy-transform"
+    ]
+  }
+}

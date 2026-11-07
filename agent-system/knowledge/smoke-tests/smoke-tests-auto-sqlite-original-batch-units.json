@@ -1,0 +1,49 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-auto-sqlite-original-batch-units",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "AUTO-SQLITE-ORIGINAL-BATCH-UNITS"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "automatic",
+        "scope": [
+          "maplib"
+        ],
+        "command": ".\\gradlew.bat -PciReliabilityChecks=true :maplib:testDebugUnitTest --tests com.nextgis.maplib.map.SqliteVectorFeatureReaderTest --tests com.nextgis.maplib.map.SqliteVectorTileProviderTest",
+        "expected": "Independent technical originals preserve65IDs/order/typedNULL/wide integers/fullBLOB;65 small buffers need three bounded geometry cursors and zero PFD reads, while16385-byte/multiMiB originals remain whole through lazy PFD. API26/27 do not query geometry windows; API30 SQLite CASE excludes large/TEXT/NULL payloads, attrs projection stays unchanged, mid-window fallback never duplicates callbacks, cancellation/cleanup/SQL/cardinality errors cannot cache partial PBF. Multipart/hole bytes and logical path diagnostics remain complete; this is not native/PSS/speed acceptance."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-auto-sqlite-original-batch-units"
+    ]
+  }
+}

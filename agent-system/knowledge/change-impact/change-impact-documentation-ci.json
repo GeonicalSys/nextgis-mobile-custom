@@ -1,0 +1,66 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:change-impact-documentation-ci",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "change-impact",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "definition": {
+      "role": "complete_change_impact_definition",
+      "value": {
+        "id": "DOCUMENTATION-CI",
+        "paths": [
+          ".github/workflows/docs-validate.yml",
+          "tools/docs-check.ps1",
+          "docs/scripts/check_change_impact.py",
+          "docs/scripts/module_manifest_knowledge.py",
+          "docs/scripts/prose_knowledge.py",
+          "docs/scripts/validate_docs.py",
+          "docs/tests/test_change_impact_ci.py",
+          "docs/tests/test_prose_knowledge.py",
+          "docs/scripts/structured_view_proof.py",
+          "agent-system/provenance/structured-views.json"
+        ],
+        "owners": [
+          "app"
+        ],
+        "read": [
+          "docs/reference/build-matrix.md"
+        ],
+        "invariants": [],
+        "must_update_docs": [
+          "docs/reference/build-matrix.md"
+        ],
+        "verify": [
+          "AUTO-DOCS-VALIDATE"
+        ],
+        "strict_docs": true
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/change-impact.json",
+    "scopes": [
+      "lisa:mobile:contract:change-impact-documentation-ci"
+    ]
+  }
+}

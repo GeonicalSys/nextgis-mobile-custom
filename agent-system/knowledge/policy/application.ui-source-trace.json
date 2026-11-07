@@ -1,0 +1,64 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:instruction:application.ui-source-trace",
+  "kind": "instruction",
+  "owner": "android_projects/android_gisapp",
+  "topic": "policy-application",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain editable logical subject and pinned provenance; product implementation/acceptance are separate records."
+  },
+  "facets": {
+    "body": {
+      "role": "permanent_rule",
+      "value": "Перед интерпретацией UI или выбором GUI-действия читать\n[`../docs/architecture/ui-contracts.md`](../docs/architecture/ui-contracts.md)\nи соответствующий ID в `../docs/registry/ui-contracts.json`. Проверять источник\nзначения, формат/CRS, режим и последствия обработчика по текущему коду. Положение\nэлемента и его подпись не доказывают назначение: device/display location,\ncamera center, saved viewport и selected geometry — разные состояния.\nНедостающий контракт исследовать и сохранить самостоятельно; проверку строить\nна независимо различающихся значениях. `check_ui_contracts.py` — source drift\ngate, не реальное выполнение Android. Продуктовые/native ограничения остаются.\n"
+    },
+    "classification": {
+      "role": "reviewed_knowledge_class",
+      "value": "permanent_rule"
+    },
+    "review": {
+      "role": "classification_reason",
+      "value": "Complete effective UI provenance, identity/CRS/action semantics, independent oracle and source-versus-native evidence boundary."
+    },
+    "source_section": {
+      "role": "source_document_context",
+      "value": [
+        "# app — инструкции для ИИ-агентов"
+      ]
+    },
+    "authority_limit": {
+      "role": "authority_and_acceptance_boundary",
+      "value": "Path applicability is reviewed separately from the rule's textual triggers. Every source condition and heading remains attached; no automatic predicate or lifecycle inference. Stored commands and dates do not grant current execution, freshness or product acceptance. Existing instruction clients/checkers remain effective until measured cutover."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/policy-migration.json",
+    "scopes": [
+      "lisa:mobile:instruction:application.ui-source-trace"
+    ]
+  }
+}

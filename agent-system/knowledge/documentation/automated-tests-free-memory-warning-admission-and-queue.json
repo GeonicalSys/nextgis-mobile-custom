@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:automated-tests-free-memory-warning-admission-and-queue",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Последнее поручение владельца: economy/предупреждение определяются только",
+        "фактическим свободным остатком system RAM/Java headroom и OS low-memory state.",
+        "Номинальный объём RAM, Android low-RAM class и абсолютные used/native/RSS сами",
+        "по себе не включают warning, cache degradation или сериализацию. RAM class",
+        "может задавать обычный размер disk cache и резерв свободной памяти;",
+        "неизвестный счётчик не считается нулевым остатком. RSS/used/native сохраняются только",
+        "как диагностика, без hard cap. Переполненная очередь сама по себе не означает",
+        "нехватку памяти и не вызывает memory warning. RenderMemorySafetyTest",
+        "запрашивает технический режим для проверки доставки и сохранности данных;",
+        "он не воспроизводит реальное исчерпание памяти на2GiB.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:automated-tests-free-memory-warning-admission-and-queue"
+    ]
+  }
+}

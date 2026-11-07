@@ -1,0 +1,46 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:crash-recovery-recording-intent-service-state-and-stop-uuid",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:crash-recovery"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/crash-recovery.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "| Recording flag | Durable preference `track_recording_enabled` is intent, not proof of an active service or track row. The menu and the walking-person button under the ruler distinguish Start, Starting, Recording and Error; neither shows a false active state before service confirmation. Map/menu/notification request confirmation before Stop; Cancel/Back leave intent untouched. A durable recording-session UUID rejects stale dialogs/notifications and survives recovery/split. Confirmed Stop persists pending_stop and clears recording intent only after all queued points and track closure are committed. A foreground/SQLite failure keeps the queue and warns without deleting unfinished data. |"
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:crash-recovery-recording-intent-service-state-and-stop-uuid"
+    ]
+  }
+}

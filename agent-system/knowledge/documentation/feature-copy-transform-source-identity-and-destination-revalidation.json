@@ -1,0 +1,50 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:feature-copy-transform-source-identity-and-destination-revalidation",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:feature-copy-transform"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the App feature editing subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/feature-copy-transform.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Выбор слоя/категории удерживает source map/layer/feature identity в Fragment state.",
+        "Перед открытием формы повторно проверяются исходный объект, карта, права",
+        "назначения и совместимость. Отсутствующий источник приводит к понятному сообщению",
+        "без вставки. Если point-lock фонового обхода восстановился без черновика и без",
+        "контекста выбора копии, он освобождается с предложением выбрать объект заново."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:feature-copy-transform-source-identity-and-destination-revalidation"
+    ]
+  }
+}

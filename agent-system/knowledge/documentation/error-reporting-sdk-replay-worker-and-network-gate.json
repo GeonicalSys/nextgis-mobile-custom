@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:error-reporting-sdk-replay-worker-and-network-gate",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:error-reporting"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/error-reporting.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "SDK повторяет отправку при старте и смене доступности сети.",
+        "`DiagnosticsRetryWorker` — уникальная periodic WorkManager job каждые 15 минут",
+        "с constraint CONNECTED и exponential backoff от 30 секунд. Android может",
+        "запустить её без Activity. Она вызывает существующие SDK disk integrations,",
+        "дожидается очереди replay через SDK executor, затем HTTP flush; наличие оставшихся",
+        "envelopes возвращает retry. Один `Sentry.flush()` сам по себе не читает disk cache.",
+        "При пустой очереди job не обращается к серверу. Синхронизация GIS не запускается.",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:error-reporting-durable-envelope-enqueue-and-ack",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:error-reporting-sdk-replay-worker-and-network-gate"
+    ]
+  }
+}

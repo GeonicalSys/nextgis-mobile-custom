@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-26-df6130f5f104",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-26 — Adaptive native fixtures и финализация Full",
+        "",
+        "Full05 попытался выполнить все 253 метода:249 PASS/4 обычных FAIL в трёх группах,",
+        "без эффективных required skips. Уточнены viewport/oracle проверки форм и",
+        "изолирован accuracy graphics fixture; адресно emulator28/tablet26 PASS.",
+        "Owned emulator останавливается даже при потере ADB, PASS следует после cleanup.",
+        "Добавлен явный ограниченный policy-fixture input, без автоматического fallback;",
+        "выбор 1403 snapshot для планшета ожидает пользователя. Runner43 PASS.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-26",
+        "heading": "2026-10-26 — Adaptive native fixtures и финализация Full",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-26-df6130f5f104"
+    ]
+  }
+}

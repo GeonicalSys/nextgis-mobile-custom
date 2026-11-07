@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:location-pipeline-recording-fix-admission-and-raw-navigation-stream",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:location-pipeline"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/location-pipeline.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Проверка движения",
+        "",
+        "Поток записи принимает GNSS чипа, mock GPS с extras приёмника или native NMEA",
+        "с `nativeNmea` extras, конечные",
+        "корректные координаты, положительную accuracy до 50 м и корректное время.",
+        "Network, заглушка mock без extras и повреждённые speed/accuracy не записываются.",
+        "Координаты внешнего GNSS идут в трек/обход без пешеходного smoother; прореживание",
+        "для mock и native NMEA не грубее 2 с и 1 м (если пользовательские интервалы уже чаще — они",
+        "сохраняются). Для выноса остаётся отдельная подписка на исходные GNSS/mock/NMEA",
+        "измерения: пешеходное сглаживание не затрагивает его точные пороги.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:location-pipeline-recording-fix-admission-and-raw-navigation-stream"
+    ]
+  }
+}

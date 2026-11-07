@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-25-824e49dfda35",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-25 — прямые подписи текущего экстента и упрощение редактора",
+        "",
+        "VisibleLineLabelLayout/Controller размещают один целый блок по преобладающему направлению видимой части SQL-объекта, без изгиба букв и нового SQLite чтения. Карандаш переименования получил активную насыщенность. Кнопка пресета «Полевые точки» удалена при сохранении ручных настроек и preview. Native проверки расширены line-labels/firefly-editor-ui.",
+        "",
+        "Автоматический OS restart fallback и отдельный hardware render-stress gate",
+        "добавлены по MOB-02/MOB-03. Ограничения и точные свидетельства —",
+        "[разбор224](reference/mobile-crash-224-2026-10-27.md). Публичная224 отозвана; приватная диагностическая сборка без",
+        "публикации не является обычным release PASS.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-25",
+        "heading": "2026-10-25 — прямые подписи текущего экстента и упрощение редактора",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-25-824e49dfda35"
+    ]
+  }
+}

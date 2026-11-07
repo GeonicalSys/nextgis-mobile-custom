@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-visible-sync-progress-and-lifecycle",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "- индикатор синхронизации всё время видимого lifecycle двусторонне сверяется с",
+        "  worker/lease state: запускается либо останавливается даже при пропущенном",
+        "  start/finish broadcast; вокруг иконки кольцо без процентов отражает взвешенные",
+        "  слои и реальные фазы push/download/apply, скрывается вместе со spinner;",
+        "- проверка несинхронизированных правок для точки на sync-кнопке выполняется",
+        "  последовательно в фоне, а результат старой карты или уничтоженного view",
+        "  отбрасывается. Чужой early finish не останавливает spinner/foreground worker;"
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-visible-sync-progress-and-lifecycle"
+    ]
+  }
+}

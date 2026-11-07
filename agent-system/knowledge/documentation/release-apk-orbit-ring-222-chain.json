@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:release-apk-orbit-ring-222-chain",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:release-apk"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/release-apk.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Выпуск «Орбиты-кольца» 3.1.2.28 / 222: maplib #49 (Merge Commit) → fetched",
+        "remote merge pin в app #58 → зелёный CI итогового app head → app #58 (Squash)",
+        "→ APK version matrix → подпись/identity → publisher dry-run → публикация",
+        "только `lisa` и `belka`. Debug сохраняет 3.1.2.23 / 218 и не публикуется.",
+        "Перед сборкой сверить [матрицу доставки](../history/orbit-ring-delivery-2026-10-11.md).",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "The Orbit Ring delivery has a separate branch, pin and original publisher scope."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:release-apk-orbit-ring-222-chain"
+    ]
+  }
+}

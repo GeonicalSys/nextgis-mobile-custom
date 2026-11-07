@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:error-reporting-restart-fallback-owner-and-durable-ack",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:error-reporting"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/error-reporting.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Автоматический restart fallback — 2026-10-27",
+        "",
+        "До SDK/загрузки карты DiagnosticsProcessExitReporter атомарно сохраняет",
+        "маленький owner marker с PID, временем, исходной версией и source revision.",
+        "После запуска фоновый поток сопоставляет предыдущие процессы с OS exit history",
+        "по имени, PID и lifetime. Ненормальный exit получает отдельный ERROR event",
+        "process_exit_fallback; User/update/permission/self stops его не создают.",
+        "В очереди максимум четыре owner; удаление из неё — после DiskFlushNotification",
+        "от существующего durable transport. Event ID детерминирован по process/PID/time,",
+        "поэтому retry не создаёт новую identity. Возможен отдельный fallback рядом с",
+        "основным SDK crash: число отчётов не считается числом независимых падений.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:error-reporting-restart-fallback-owner-and-durable-ack"
+    ]
+  }
+}

@@ -1,0 +1,116 @@
+---
+id: android-20261104-lifecycle-knowledge
+area: Документация
+kind: internal
+at: 2026-11-04T14:51:08+04:00
+title: Восстановление, напоминания и статистика из записей App
+why: Проверить штатную правку тем и сохранность прежних документов
+covers:
+  - agent-system/README.md
+  - agent-system/knowledge/documentation/crash-recovery-attribute-form-table.json
+  - agent-system/knowledge/documentation/crash-recovery-automatic-gps-and-durable-recording-intent.json
+  - agent-system/knowledge/documentation/crash-recovery-cascade-ui-saved-state.json
+  - agent-system/knowledge/documentation/crash-recovery-cascading-definition-and-selection-recovery.json
+  - agent-system/knowledge/documentation/crash-recovery-cold-save-map-reload-and-mode-reset.json
+  - agent-system/knowledge/documentation/crash-recovery-copy-and-transform-draft-recovery.json
+  - agent-system/knowledge/documentation/crash-recovery-delete-and-close-owned-recording.json
+  - agent-system/knowledge/documentation/crash-recovery-derived-insertion-overlay-and-key-types.json
+  - agent-system/knowledge/documentation/crash-recovery-explicit-save-gate.json
+  - agent-system/knowledge/documentation/crash-recovery-external-receiver-state-and-late-callbacks.json
+  - agent-system/knowledge/documentation/crash-recovery-form-hub-restore-and-validation.json
+  - agent-system/knowledge/documentation/crash-recovery-form-owner-and-checkpoint-contents.json
+  - agent-system/knowledge/documentation/crash-recovery-form-write-cadence-and-terminal-clear.json
+  - agent-system/knowledge/documentation/crash-recovery-former-project-worker-ownership.json
+  - agent-system/knowledge/documentation/crash-recovery-fresh-gnss-and-background-sound.json
+  - agent-system/knowledge/documentation/crash-recovery-gap-segments-and-walk-resume.json
+  - agent-system/knowledge/documentation/crash-recovery-gps-diagnostic-and-recording-owner.json
+  - agent-system/knowledge/documentation/crash-recovery-gps-filter-and-acquisition-owner.json
+  - agent-system/knowledge/documentation/crash-recovery-idempotent-point-durability.json
+  - agent-system/knowledge/documentation/crash-recovery-location-disabled-error-and-resume.json
+  - agent-system/knowledge/documentation/crash-recovery-location-permission-and-process-ordering.json
+  - agent-system/knowledge/documentation/crash-recovery-manual-geometry-cold-style-retry.json
+  - agent-system/knowledge/documentation/crash-recovery-manual-geometry-existing-and-new-restore.json
+  - agent-system/knowledge/documentation/crash-recovery-manual-geometry-journal-writes.json
+  - agent-system/knowledge/documentation/crash-recovery-manual-geometry-table.json
+  - agent-system/knowledge/documentation/crash-recovery-manual-geometry-terminal-clear-and-map-validation.json
+  - agent-system/knowledge/documentation/crash-recovery-minimum-finished-walk-geometry.json
+  - agent-system/knowledge/documentation/crash-recovery-pending-stop-permission-and-device-gap.json
+  - agent-system/knowledge/documentation/crash-recovery-point-owner-and-walk-control-lock.json
+  - agent-system/knowledge/documentation/crash-recovery-polygon-rings-and-wkt-reconstruction.json
+  - agent-system/knowledge/documentation/crash-recovery-post-commit-outbox-and-project-clock.json
+  - agent-system/knowledge/documentation/crash-recovery-privacy-safe-recovery-logging.json
+  - agent-system/knowledge/documentation/crash-recovery-project-account-sync-recovery.json
+  - agent-system/knowledge/documentation/crash-recovery-recording-intent-service-state-and-stop-uuid.json
+  - agent-system/knowledge/documentation/crash-recovery-recording-mode-checkpoint.json
+  - agent-system/knowledge/documentation/crash-recovery-recovery-dialog-and-host-lifecycle.json
+  - agent-system/knowledge/documentation/crash-recovery-recovery-exclusions.json
+  - agent-system/knowledge/documentation/crash-recovery-recovery-hub-precedence.json
+  - agent-system/knowledge/documentation/crash-recovery-registered-controls-and-tabs-state.json
+  - agent-system/knowledge/documentation/crash-recovery-reporting-and-journal-isolation.json
+  - agent-system/knowledge/documentation/crash-recovery-required-and-visibility-rule-pin.json
+  - agent-system/knowledge/documentation/crash-recovery-required-gate-and-terminal-draft.json
+  - agent-system/knowledge/documentation/crash-recovery-scope-and-recovery-invariant.json
+  - agent-system/knowledge/documentation/crash-recovery-script-reference-pin-and-save-hook.json
+  - agent-system/knowledge/documentation/crash-recovery-shared-track-migration-and-pending-stop.json
+  - agent-system/knowledge/documentation/crash-recovery-silent-boot-and-track-continuity.json
+  - agent-system/knowledge/documentation/crash-recovery-spool-pressure-and-failed-stop.json
+  - agent-system/knowledge/documentation/crash-recovery-sticky-restart-permission-revocation.json
+  - agent-system/knowledge/documentation/crash-recovery-sync-journal-process-and-restart-boundary.json
+  - agent-system/knowledge/documentation/crash-recovery-track-recording-power-warning.json
+  - agent-system/knowledge/documentation/crash-recovery-track-recovery-table.json
+  - agent-system/knowledge/documentation/crash-recovery-track-types-and-monotonic-fix-age.json
+  - agent-system/knowledge/documentation/crash-recovery-typed-feature-defaults-checkpoint.json
+  - agent-system/knowledge/documentation/crash-recovery-upload-opt-in-and-retained-points.json
+  - agent-system/knowledge/documentation/crash-recovery-uuid-lost-reply-and-cross-store-save.json
+  - agent-system/knowledge/documentation/crash-recovery-walk-and-point-coexistence.json
+  - agent-system/knowledge/documentation/crash-recovery-walk-emergency-reset-and-owner-commands.json
+  - agent-system/knowledge/documentation/crash-recovery-walk-final-save-and-draft-retention.json
+  - agent-system/knowledge/documentation/crash-recovery-walk-finish-and-tail-commit.json
+  - agent-system/knowledge/documentation/crash-recovery-walk-gnss-and-ui-lifecycle.json
+  - agent-system/knowledge/documentation/crash-recovery-walk-initial-values-and-form-handoff.json
+  - agent-system/knowledge/documentation/crash-recovery-walk-journal-and-full-geometry.json
+  - agent-system/knowledge/documentation/crash-recovery-walk-layer-protection-and-legacy-adoption.json
+  - agent-system/knowledge/documentation/crash-recovery-walk-owner-and-control-surface.json
+  - agent-system/knowledge/documentation/crash-recovery-walk-panel-and-preview-restoration.json
+  - agent-system/knowledge/documentation/crash-recovery-walk-panel-targets.json
+  - agent-system/knowledge/documentation/crash-recovery-walk-pause-resume-and-stale-commands.json
+  - agent-system/knowledge/documentation/crash-recovery-walk-persistence-warning-and-checkpoint-cost.json
+  - agent-system/knowledge/documentation/crash-recovery-walk-preview-source-and-reload.json
+  - agent-system/knowledge/documentation/crash-recovery-walk-process-recovery-and-startup-reconciliation.json
+  - agent-system/knowledge/documentation/crash-recovery-walk-recovery-table.json
+  - agent-system/knowledge/documentation/crash-recovery.json
+  - agent-system/knowledge/documentation/documentation-maintenance.json
+  - agent-system/knowledge/documentation/maintenance-reminders-advisory-actions-and-roadmap.json
+  - agent-system/knowledge/documentation/maintenance-reminders-bounded-scroll-message-and-actions.json
+  - agent-system/knowledge/documentation/maintenance-reminders-canonical-project-full-sync-clock.json
+  - agent-system/knowledge/documentation/maintenance-reminders-foreground-presentation-and-pending-retry.json
+  - agent-system/knowledge/documentation/maintenance-reminders-manifest-clock-available-version-and-validated-apk.json
+  - agent-system/knowledge/documentation/maintenance-reminders-native-window-attachment-oracle.json
+  - agent-system/knowledge/documentation/maintenance-reminders-november-2-review-heading.json
+  - agent-system/knowledge/documentation/maintenance-reminders-october-25-full-evidence.json
+  - agent-system/knowledge/documentation/maintenance-reminders-online-project-detection-and-stale-result.json
+  - agent-system/knowledge/documentation/maintenance-reminders-release-31231-cooldown-and-a56-evidence.json
+  - agent-system/knowledge/documentation/maintenance-reminders-session-cooldown-and-open-trigger.json
+  - agent-system/knowledge/documentation/maintenance-reminders-seven-day-state-to-action-table.json
+  - agent-system/knowledge/documentation/maintenance-reminders-ui-contract-clock-and-process-identity.json
+  - agent-system/knowledge/documentation/maintenance-reminders-unknown-history-and-strict-overdue-threshold.json
+  - agent-system/knowledge/documentation/maintenance-reminders-verification-clock-and-dialog-matrix.json
+  - agent-system/knowledge/documentation/maintenance-reminders.json
+  - agent-system/knowledge/documentation/mobile-usage-durable-outbox-and-saturation.json
+  - agent-system/knowledge/documentation/mobile-usage-october-17-results.json
+  - agent-system/knowledge/documentation/mobile-usage-original-delivery-order-and-backfill-limit.json
+  - agent-system/knowledge/documentation/mobile-usage-production-default-process-and-private-config.json
+  - agent-system/knowledge/documentation/mobile-usage-project-identity-capture-and-inventory.json
+  - agent-system/knowledge/documentation/mobile-usage-recorded-metadata-and-ui-event-boundaries.json
+  - agent-system/knowledge/documentation/mobile-usage-related-client-and-server-oracles.json
+  - agent-system/knowledge/documentation/mobile-usage-server-and-operator-ownership.json
+  - agent-system/knowledge/documentation/mobile-usage-upload-worker-packet-ack-and-retry.json
+  - agent-system/knowledge/documentation/mobile-usage.json
+  - agent-system/provenance/documentation.json
+  - agent-system/source-dispositions.json
+  - docs/changelog.md
+  - docs/guides/documentation-maintenance.md
+---
+
+MOB-DEV-02. Штатные проекции сохраняют исходный Markdown.
+Восстановление, часы напоминаний и доставка статистики разделены по темам.

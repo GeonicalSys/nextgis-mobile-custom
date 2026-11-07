@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:application.diagnostic-ownership",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "policy-application",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain editable logical subject and pinned provenance; product implementation/acceptance are separate records."
+  },
+  "facets": {
+    "body": {
+      "role": "standing_contract",
+      "value": "Читать `../docs/architecture/error-reporting.md` и\n`../docs/guides/bug-reports-user-guide.md`. AppDiagnostics запускается после\nisolated-script guard, до HyperLog handler. Не глотать fatal exceptions и не\nпереинициализировать SDK ради retry. DiagnosticsTransport сохраняет SDK envelopes\nпри offline, 5xx и rate limiting; стандартный AsyncHttpTransport 8.37.1 теряет\nотчёты при HTTP 503. После обновления SDK перепроверять hints/cache/WorkManager.\nНе читать business storage, raw HyperLog или фото из crash callback. По явному\nтребованию владельца сохранять уже предоставленные event URL/query/headers,\nконтекст и значения без маскирования, с ограничением размера/глубины; HTTP streams\nне читать и не расходовать ради отчёта.\nНовые operation/phase — enum; новые handled captures должны исключать обычную\noffline/cancel ситуацию. Реальные DSN/пароли не коммитить. Delivery test runner\nвключается только `-PdiagnosticDeliveryChecks=true`, тесты — на отдельном эмуляторе.\n"
+    },
+    "classification": {
+      "role": "reviewed_knowledge_class",
+      "value": "standing_contract"
+    },
+    "review": {
+      "role": "classification_reason",
+      "value": "Initialization order, fatal/offline/503 transport retention, SDK re-review, no business/stream reads, bounded provided context and enum/secret/test isolation constraints."
+    },
+    "source_section": {
+      "role": "source_document_context",
+      "value": [
+        "# app — инструкции для ИИ-агентов",
+        "## Диагностические отчёты"
+      ]
+    },
+    "authority_limit": {
+      "role": "authority_and_acceptance_boundary",
+      "value": "Path applicability is reviewed separately from the rule's textual triggers. Every source condition and heading remains attached; no automatic predicate or lifecycle inference. Stored commands and dates do not grant current execution, freshness or product acceptance. Existing instruction clients/checkers remain effective until measured cutover."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/policy-migration.json",
+    "scopes": [
+      "lisa:mobile:contract:application.diagnostic-ownership"
+    ]
+  }
+}

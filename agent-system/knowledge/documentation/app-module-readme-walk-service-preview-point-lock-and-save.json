@@ -1,0 +1,66 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-walk-service-preview-point-lock-and-save",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "`MapFragment` возвращает обычные меню после передачи геометрии сервису,",
+        "подключает пассивный preview и отдельную `WalkRecordingPanel`.",
+        "Preview обновляется также прямым получателем событий сервиса и при `onResume`,",
+        "поэтому наличие или видимость панели не управляет показом записанной геометрии.",
+        "UUID точки записывается до выбора слоя; все walk-команды остаются закрыты до Save/Cancel.",
+        "После подтверждения дискеты сервис завершает запись, затем автоматически открывается",
+        "форма атрибутов. После подтверждённого FINISHED линия требует две разные вершины, каждое кольцо",
+        "полигона — три. При нехватке обход завершается без объекта и формы, с сообщением",
+        "«Собрано недостаточно точек, выхожу без сохранения». При достаточной геометрии",
+        "атрибуты нового или существующего объекта открываются через общий Save gate. Иконки toolbar получают независимое состояние;",
+        "после пересоздания меню доступность и прозрачность Save/Undo/Redo обновляются вместе.",
+        "`MainActivity` восстанавливает принадлежащую этой сессии форму раньше",
+        "дублирующего черновика геометрии. Полный контракт и ограничения проверки:",
+        "[crash recovery](../../docs/architecture/crash-recovery.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:crash-recovery",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-walk-service-preview-point-lock-and-save"
+    ]
+  }
+}

@@ -1,0 +1,230 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-global-docs",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "app-module-manifest",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/architecture/ui-contracts.md",
+          "docs/architecture/map-performance.md",
+          "docs/architecture/point-firefly.md",
+          "docs/architecture/feature-copy-transform.md",
+          "docs/runbooks/automated-tests.md",
+          "docs/architecture/error-reporting.md",
+          "docs/guides/bug-reports-user-guide.md",
+          "docs/guides/project-synchronization-user-guide.md",
+          "docs/architecture/conditional-form-rules.md",
+          "docs/guides/form-behavior-user-guide.md",
+          "docs/architecture/project-scripts.md",
+          "docs/guides/project-scripts-user-guide.md",
+          "docs/reference/project-scripts-verification.md",
+          "docs/architecture/location-pipeline.md",
+          "docs/architecture/overview.md",
+          "docs/architecture/lisa-ecosystem.md",
+          "docs/architecture/collector-projects.md",
+          "docs/architecture/ngw-sync-and-storage.md",
+          "docs/architecture/map-rendering.md",
+          "docs/architecture/crash-recovery.md",
+          "docs/architecture/stakeout.md",
+          "docs/architecture/shared-underlays.md",
+          "docs/reference/build-matrix.md",
+          "docs/reference/flavors-and-versioning.md",
+          "docs/runbooks/release-apk.md",
+          "docs/architecture/cascading-form-lists.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [
+      "lisa:mobile:metadata:app-module-manifest"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed module definition and its pinned source provenance."
+  },
+  "facets": {
+    "manifest-field": {
+      "role": "module_manifest_section",
+      "value": "global_docs"
+    },
+    "definition": {
+      "role": "module_manifest_ordered_value",
+      "value": [
+        "docs/architecture/ui-contracts.md",
+        "docs/architecture/map-performance.md",
+        "docs/architecture/point-firefly.md",
+        "docs/architecture/feature-copy-transform.md",
+        "docs/runbooks/automated-tests.md",
+        "docs/architecture/error-reporting.md",
+        "docs/guides/bug-reports-user-guide.md",
+        "docs/guides/project-synchronization-user-guide.md",
+        "docs/architecture/conditional-form-rules.md",
+        "docs/guides/form-behavior-user-guide.md",
+        "docs/architecture/project-scripts.md",
+        "docs/guides/project-scripts-user-guide.md",
+        "docs/reference/project-scripts-verification.md",
+        "docs/architecture/location-pipeline.md",
+        "docs/architecture/overview.md",
+        "docs/architecture/lisa-ecosystem.md",
+        "docs/architecture/collector-projects.md",
+        "docs/architecture/ngw-sync-and-storage.md",
+        "docs/architecture/map-rendering.md",
+        "docs/architecture/crash-recovery.md",
+        "docs/architecture/stakeout.md",
+        "docs/architecture/shared-underlays.md",
+        "docs/reference/build-matrix.md",
+        "docs/reference/flavors-and-versioning.md",
+        "docs/runbooks/release-apk.md",
+        "docs/architecture/cascading-form-lists.md"
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:ui-contracts",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:map-performance",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:point-firefly",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:feature-copy-transform",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:automated-tests",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:error-reporting",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:documentation-bug-reports-user-guide",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:documentation-project-synchronization-user-guide",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:conditional-form-rules",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:documentation-form-behavior-user-guide",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:project-scripts",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:documentation-project-scripts-user-guide",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:location-pipeline",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:overview",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:lisa-ecosystem",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:collector-projects",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:documentation-ngw-sync-and-storage",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:map-rendering",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:crash-recovery",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:stakeout",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:shared-underlays",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:documentation-build-matrix",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:documentation-flavors-and-versioning",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:release-apk",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:cascading-form-lists",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/app-module-manifest.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-global-docs"
+    ]
+  }
+}

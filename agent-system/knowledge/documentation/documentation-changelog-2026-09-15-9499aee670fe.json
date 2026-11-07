@@ -1,0 +1,68 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-09-15-9499aee670fe",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-09-15",
+        "",
+        "- Подготовлен выпуск Lisa/Belka `3.1.2.19` / `versionCode 213` и Lisa Debug",
+        "  `3.1.2.19` / `versionCode 214`. В выпуск входят общее хранилище подложек,",
+        "  конус направления компаса с подписью азимута и шаринг GPX с URI MIME",
+        "  `text/xml`. Root закрепляет Merge Commit maplib PR #25 `02a9fa4` (содержит",
+        "  конус #24) и maplibui PR #15 `cc19ef66`; app squash #30 и #31 уже в",
+        "  `my-maplibre`.",
+        "",
+        "- Шаринг трека отдаёт URI MIME `text/xml` через FileProvider, чтобы MAX не",
+        "  склеивал неизвестный `application/gpx+xml` в `.gpx.null`. Intent остаётся",
+        "  `application/gpx+xml`. На устройстве MAX показал `.gpx.xml`; QGIS такой файл",
+        "  открывает. Копия в Загрузках не создаётся.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-09-15",
+        "heading": "2026-09-15",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-09-15-9499aee670fe"
+    ]
+  }
+}

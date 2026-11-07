@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:automated-tests-sqlite-priority-ordinary-t40-install-smoke",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Этот точный APK установлен `-r` на T40 без очистки пользовательских данных;",
+        "установленный SHA совпал. Восстановлены прежний проект и viewport14.2,",
+        "просмотрен `tablet-final-settled.png`; редактор/Tracker/Walk не запускались.",
+        "Это normal install/launch/view smoke, отдельно от10 verification native методов,",
+        "не полнота/pixel приёмка реальной карты или Full. Сохраняемый APK:",
+        "`Q:/Codex/Deliverables/mobile-field-order-fix-20261029/LISA-3.1.2.30-field-order-fix.apk`.",
+        "Receipts: `Q:/Codex/Scratch/mobile-field-order-fix-20261028-01a1817f/`",
+        "(`apk-receipt.json`, `tablet-final-installed.json`, `source-before-build.json`,",
+        "`source-after-build.json`). Публикация не выполнялась.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Exact artifact install and normal viewing were checked without accepting the full real map."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:automated-tests-sqlite-priority-ordinary-t40-install-smoke"
+    ]
+  }
+}

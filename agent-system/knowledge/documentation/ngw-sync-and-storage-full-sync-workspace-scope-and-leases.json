@@ -1,0 +1,78 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-full-sync-workspace-scope-and-leases",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Ручной и автоматический запуск используют один ProjectSyncRunner. Настройка",
+        "sync_all_projects по умолчанию true: обходятся все загруженные Web GIS/local",
+        "projects из CollectorProjectRegistry и текущая карта, без повторения одной базы.",
+        "При false выполняется только открытый проект. Запуск для конкретного слоя всегда",
+        "ограничен открытым проектом. Ручной запуск берёт все Android accounts; автоматический",
+        "tick обходит проекты только для своего account, сохраняя его включение и период.",
+        "Accounts/project passes выполняются последовательно с отдельными SyncResult;",
+        "ошибка одной пары не останавливает остальные. Активный Collector account",
+        "сохраняет приоритет при ручном запуске. Кнопка не ставит дублирующие framework jobs.",
+        "",
+        "Карта закрытого проекта открывается MapDrawable(..., activate=false) без renderer.",
+        "SyncWorkspaceSession временно предоставляет её только своему потоку через",
+        "MapBase.getInstance/GISApplication.getMap. MapBase.getActiveInstance, mMap и",
+        "preferences выбранного проекта не меняются. Следовательно, открытая карта,",
+        "форма и её pinned draft продолжают принадлежать прежнему проекту.",
+        "",
+        "Каждая отложенная операция формы, composition apply, schema rebuild и LayerFillService",
+        "сохраняет владельца через Session.capture/post/execute/start. Service intent несёт",
+        "opaque live token и delivery ticket; ContentProvider URI — sync_workspace token.",
+        "Неверный/просроченный token не имеет fallback к активной базе. Untagged UI URI",
+        "всегда обслуживает открытый проект, даже на scoped потоке. Вложения используют",
+        "такой же owning URI. Изменения spatial cache фоновой карты применяются синхронно",
+        "после commit, до закрытия её базы; уведомления другой карты не обновляют UI.",
+        "",
+        "Один DATA_SYNC lease охватывает всю очередь. Зависимые fill/rebuild резервируются",
+        "со своим session token и ждут разрешения awaitChildren после синхронного прохода.",
+        "Unrelated fill и второй full sync отклоняются. Следующий проект начинается только",
+        "после завершения всех callbacks, service tickets и mutating requests. Недоставленный",
+        "service ticket истекает через 60 секунд, закрывает reservation, оставляет пару pending;",
+        "поздняя доставка не обращается к базе. При отмене закрываются чтения и сохраняется",
+        "исходная cancellation generation во всех дочерних задачах. Уже отправленная запись",
+        "дожидается результата; закрывать её базу или освобождать lease по таймеру запрещено.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-full-sync-workspace-scope-and-leases"
+    ]
+  }
+}

@@ -1,0 +1,108 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-navigation-stakeout-freshness",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-NAVIGATION-STAKEOUT-FRESHNESS"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-NAVIGATION-STAKEOUT-FRESHNESS",
+        "group": "navigation",
+        "title": "Ожидание GPS, расстояние и достигнуто",
+        "surface": "Live Stakeout",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [
+          "stakeout_distance",
+          "stakeout_details",
+          "stakeout_direction"
+        ],
+        "meaning": "Range/reached uses live target/freshness, not retained status text. Arrival requires repeated eligible precision fixes.",
+        "value_origin": "Raw fix -> hasFreshFix -> target calculation -> precision distance band -> consecutive confirmations -> UiState -> widget",
+        "units": "Metres; ordinary max3s, native NMEA freshness8s, future tolerance1s; under10m two decimals otherwise maxone.",
+        "updates": [
+          "Raw fixes and scheduler; waiting hides details and dims arrow."
+        ],
+        "actions": [
+          "Wait/recover fix; configured distance thresholds."
+        ],
+        "conditions": [
+          "Active controller/foreground acquisition; GNSS/mock precision policy; Network is not precision."
+        ],
+        "saved_state": "Thresholds loaded at start; reached count transient, not stored feature proof.",
+        "source_ids": [
+          "stakeout-fix",
+          "stakeout-freshness",
+          "stakeout-publish",
+          "map-stakeout-widget"
+        ],
+        "expectations": [
+          "Old retained Network coordinates cannot certify fresh guidance or reached.",
+          "One within-threshold precision fix is insufficient: source needs two consecutive eligible fixes."
+        ],
+        "unknowns": [
+          "Runtime NOT_RUN: no GUI, device, emulator, build or APK resource merge acceptance in this task.",
+          "Scheduler/service permissions and sound/arrival delivery not executed."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-stakeout-fix",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-stakeout-freshness",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-stakeout-publish",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-map-stakeout-widget",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-navigation-stakeout-freshness"
+    ]
+  }
+}

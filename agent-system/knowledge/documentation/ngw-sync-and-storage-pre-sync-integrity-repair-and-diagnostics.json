@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-pre-sync-integrity-repair-and-diagnostics",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Перед feature sync выполняется backup-gated integrity repair именно owning проекта:",
+        "managed layers группируются по account + project_uid + remote_id. Копии без",
+        "локальных правок сначала резервируются и сводятся к одной копии одним map commit;",
+        "edited-дубликаты блокируют проход без удаления.",
+        "",
+        "SyncRecoveryJournal.enqueueOrThrow сохраняет исходный exception как cause и",
+        "добавляет этап read_queue/legacy_inventory/merge_pairs/commit, число project/account",
+        "и записей, размер JSON и доступное место. Runner передаёт эту причину в GlitchTip",
+        "и полный stack в HyperLog вместо общего boolean failure. Legacy inventory",
+        "читается только при наличии legacy active marker. Ошибочная очередь не сбрасывается.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-pre-sync-integrity-repair-and-diagnostics"
+    ]
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:location-pipeline-movement-evidence-distance-and-speed-uncertainty",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:location-pipeline"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/location-pipeline.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Движение телефона в руках само по себе не подтверждает перемещение человека.",
+        "Выход из стоянки требует нескольких согласованных GNSS измерений и удаления более",
+        "`max(3 м, 2 × max(accuracy якоря, accuracy нового fix))`. Так, при accuracy 10 м",
+        "смещение до 20 м остаётся подозрительным. Проверяется тренд координат, отсутствие",
+        "одиночного доминирующего скачка и согласованность GNSS скорости с направлением.",
+        "При достаточной точности скорости (sigma не более max(0.25 м/с, 15% скорости))",
+        "подтверждение возможно после короткого окна не менее 4 секунд. Сама ненулевая speed",
+        "не является доказательством: полевой замер неподвижного A54 показал ложные 6.4 м/с.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:location-pipeline-movement-evidence-distance-and-speed-uncertainty"
+    ]
+  }
+}

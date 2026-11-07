@@ -1,0 +1,72 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-journal-process-view-and-owner-state",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "SyncRecoveryJournal фиксирует preferences owner один раз на API-вызов. Общий",
+        "typed/presence snapshot содержит pending_v2, active, account, workspace, manual,",
+        "started_at и attempt. До edit/commit доступен прежний принятый snapshot; true",
+        "публикует новый, false/Throwable оставляет прежний. После первой неуспешной",
+        "записи view остаётся привязанным к точному owner даже при последующих true.",
+        "До первой ошибки здоровая transient view освобождается после true. Weak identity",
+        "не удерживает Context/preferences; JSONObject/JSONArray не являются shared state.",
+        "",
+        "Все последующие обычные editor writes переносят семь известных ключей вместе,",
+        "включая отсутствие ключа и поддерживаемый raw тип. Unknown keys не очищаются.",
+        "enqueue сохраняет manual OR и прежнюю миграцию совпавшего legacy owner; schedule",
+        "сохраняет свою прежнюю схему удаления active и отправляет requests только после",
+        "true. Повреждённый JSON или применимый неверный тип остаётся ошибкой с прежней",
+        "причиной/фазой, без [] fallback и без новой миграционной политики.",
+        "",
+        "load использует короткий state lock и повторную проверку после raw-cache miss;",
+        "при установленной view он не ждёт class monitor или удерживаемый commit.",
+        "Первичная загрузка preferences сама может ждать чтения файла. Сериализация",
+        "mutators и SyncJournalCommit owned writer/interrupt policy не меняются. Реальные",
+        "listeners writer-потока публикуются Android на Main; новый контракт вложенных",
+        "синхронных writers не вводится.",
+        "",
+        "Первый raw snapshot — as-read baseline с неизвестной disk provenance. Нет",
+        "compensating commit, retry, cache/disk rollback или изменения resend policy.",
+        "Физический файл после false может остаться старым либо новым; запись другого",
+        "ключа тем же backend может сохранить его cache. Native/restart witnesses,",
+        "post-ACK cleanup и full clock остаются в AUDIT-TODO-SYNC-ACK-RECOVERY."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-journal-process-view-and-owner-state"
+    ]
+  }
+}

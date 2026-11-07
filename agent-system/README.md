@@ -1,0 +1,235 @@
+# Application-owned agent knowledge
+
+App maintains its own typed Git records in the six-repository knowledge system.
+The shared LISA compiler builds a local SQLite generation outside Git.
+Start the scoped read from the LISA root and follow both page streams to completion.
+
+Edit this guide and the two compatibility pages in the App
+[documentation records](knowledge/documentation/). Run the ordinary prose
+writer from the App root and check the Markdown at its published address.
+
+`policy-migration.json` maps every character of six complete original instruction
+sources: root and app AGENTS plus all four Cursor entrances. It binds their exact
+Git commit/blob and normalized source hashes to132 logical values/134 projections.
+Two individually reviewed identical sync/label subjects each have one value, both
+source projections and the complete root/app scope union. Four original Cursor
+frontmatters retain every typed loading field. Historical retry commands and the
+shared19 test result remain retained evidence, separately from lasting conditions.
+
+`migration/instruction-review.json` and three owner-local question records preserve
+two Git wording conflicts and two distinct subjects sharing legacy MOB-02. The
+current task's explicit routine Git authorization is external. Neither the old
+Cursor wording nor a stored retry can authorize a new product/native operation.
+
+The App docs validator reads its change-impact triggers from
+`knowledge/change-impact/`. Regenerate the standalone YAML from the App root with
+`python -B docs/scripts/change_impact_knowledge.py --write`. The original Draft
+blob and all source spans are identified in
+[`provenance/change-impact.json`](provenance/change-impact.json).
+For rollback, project intervening owner edits back to YAML and compare the full
+ordered registry before restoring the former reader.
+
+The App docs validator and module pack scaffolder read topology from
+`knowledge/repositories/` and `knowledge/modules/`. Run
+`python -B docs/scripts/keyed_registry_knowledge.py --write` to refresh both
+standalone YAML views. The [topology provenance](provenance/repository-topology.json)
+pins the original Draft blobs and covers every ordered value. For rollback,
+first regenerate both views so they carry any intervening owner edits.
+
+The same generator refreshes the YAML views for `knowledge/invariants/`,
+`knowledge/upstream-overlaps/` and `knowledge/smoke-tests/`. The validator
+reads their owner records. The [keyed registry provenance](provenance/keyed-docs-registries.json)
+pins all three original blobs and ordered values.
+
+Configuration keys, dependencies and ecosystem use the same generator with
+section order, keyed maps, ordered lists and reviewed YAML comments stored in
+the App records. The [sectioned registry provenance](provenance/sectioned-docs-registries.json)
+pins the original values and every source line.
+
+The UI checker reads `knowledge/ui-contracts/` and checks the standalone
+JSON. Use `python -B docs/scripts/ui_catalogue_knowledge.py --write` after an
+approved catalogue edit. The [UI provenance](provenance/ui-contracts.json)
+pins the exact original bytes, record spans and explicit evidence links.
+
+After regenerating a structured YAML or JSON view, refresh the ordered proof
+with `python -B docs/scripts/structured_view_proof.py --write`. The ordinary
+App validator checks the proof against the owner renderers, exact view bytes
+and complete ordered records. The standalone views keep their existing paths.
+
+Edit the App documentation entry, change checklist, documentation and registry
+indexes, documentation maintenance guide, five user guides, safe patterns,
+glossary and build, compatibility, flavors and settings references in
+`knowledge/documentation/`.
+Run `python -B docs/scripts/prose_knowledge.py --write` to refresh their Markdown
+views. The ordinary validator reads the records and checks the views.
+GitHub, links in existing instructions and standalone doc
+packs continue to open the published paths. The
+[prose provenance](provenance/documentation.json) pins the original Git bytes.
+To restore the previous reader, regenerate the views first so they carry any
+intervening edits. The [App inventory](migration/prose-inventory.json) separates
+the other active entrances, current documents and historical evidence.
+
+Edit the App pull request template in `knowledge/documentation/pull-request-template.json`.
+Use the same projector to refresh `.github/PULL_REQUEST_TEMPLATE.md` at its GitHub address.
+
+Edit the repository landing page in `knowledge/documentation/repository-readme.json`.
+The same projector refreshes the root `README.md` for GitHub and local readers.
+The separate [historical review](knowledge/documentation-evidence/repository-readme-original.json)
+pins the earlier Git text and records the decision for each original section.
+
+Edit the three module scaffold inputs in the `scaffold-*-template.json` records
+under `knowledge/documentation/`. The App scaffold uses these records for a
+draft module pack. Run the prose projector to refresh the literal templates
+at `docs/templates/module-docs/` for independent documentation folders.
+
+Add documentation changelog events as dated records in `knowledge/documentation/`.
+The `documentation-changelog.json` record orders them and the prose projector
+updates `docs/changelog.md`. Follow the [authoring steps](../docs/guides/documentation-maintenance.md#журнал-документации).
+
+For the official comparison, edit the appropriate `official-differences-*.json`
+record. `official-differences.json` carries the frontmatter and orders the
+topics through `contains` relations. Add, move or remove a topic through
+those relations, then regenerate the Markdown. The pinned byte spans in
+provenance describe the original revision. Keep dated comparisons and
+verification in evidence records with their original scope.
+
+For sync and storage, edit the appropriate **ngw-sync-and-storage-*.json**
+record in the same directory. The layout **ngw-sync-and-storage.json** keeps
+the published headings and orders topics through contains relations. The
+account acknowledgment, full-project clock and local outbox have separate
+records. Earlier pins and dated checks are evidence with their original scope.
+
+Edit mobile roadmap tasks in **knowledge/documentation/mobile-roadmap-*.json**.
+Each task has a stable ID, its published alias and separate goal, implementation,
+source verification, merge, runtime verification and release fields. Update
+the affected task's prose for Markdown readers. Add dated outcomes as evidence
+and link them from the task. Use **mobile-roadmap-layout.json** to order topics
+and evidence, then run `python -B docs/scripts/prose_knowledge.py --write`.
+The published `docs/roadmap/mobile.md` address carries the generated view.
+
+The two **MOB-02** headings remain in the view. The process exit incident is
+`lisa:mobile:task:mobile-roadmap-process-exit-224` and dependency discovery is
+`lisa:mobile:task:mobile-roadmap-dependency-discovery`. Use the stable ID for
+knowledge queries. The original ambiguity is documented in
+[the instruction review question](knowledge/policy-questions/roadmap-mob02-distinct-subjects.json).
+For rollback, project the latest task records and check the full Markdown
+before restoring the former authoring route.
+
+Edit rendering contracts in **knowledge/documentation/map-rendering-*.json**.
+**map-rendering.json** orders the topics for the published architecture.
+The two numbered clauses 12 have separate IDs for rule defaults and identify
+refinement. Preserve their labels and order in the view. Record dated device
+and source results as evidence linked to the applicable topic. After editing,
+run the ordinary prose projector and check the generated Markdown.
+
+Edit map performance topics in **knowledge/documentation/map-performance-*.json**.
+**map-performance.json** preserves their order at `docs/architecture/map-performance.md`.
+Keep cache, admission and rendering contracts separate from D101 and 787
+measurements. Record each run with its source frame, scope and acceptance limits.
+Keep unresolved investigations linked to MOB-04. Run the same prose projector
+after edits and review the generated document.
+
+Edit the classic verification matrix, firefly, polygon styles and visible line
+labels in their respective records under **knowledge/documentation/**.
+Keep the retired HTTP fallback and older runs in historical evidence.
+Use the current SQLite live reload and classic preview records when updating
+renderer and test contracts. Run the same projector after editing.
+
+Edit conditional NGFP rules, cascading lists and project scripts in their
+respective records under **knowledge/documentation/**.
+Keep the common Save boundary, each form pin and the isolated script grants
+distinct. Store dated source anchors and results as historical evidence.
+Run the ordinary projector after editing and verify the established addresses.
+
+Edit feature copying, geometry transforms and feature type creation in
+their records under **knowledge/documentation/**. Keep source identity,
+destination eligibility, gesture cancellation and form checkpoints separate.
+Keep earlier device, boot and integration results as historical evidence.
+Run the ordinary projector after editing and check the established addresses.
+
+Edit the App architecture, fork model, customizations catalog and upstream
+workflow under **knowledge/documentation/**. Keep runtime owner boundaries,
+conflict decisions and staged library pointers separate. Generate the views
+with the ordinary projector. Historical cycles keep their original scope.
+
+Edit the mobile project architecture, setup and roadmap in
+**knowledge/documentation/**. Keep remote identity, workspace ownership,
+backup and form commits, dated evidence and open work separate.
+Regenerate and check the three established Markdown addresses.
+
+Edit shared track storage and controls in **knowledge/documentation/**.
+Keep the shared history ID, recording session UUID and selected track distinct.
+Edit migration, rendering order and GPX ownership in their own records.
+Regenerate both Markdown views with the ordinary projector.
+
+Edit App recovery, maintenance reminders and usage analytics in **knowledge/documentation/**.
+Keep form, geometry, walk, track and project sync journals separate.
+Edit the reminder clocks and analytics acknowledgment in their own records.
+Regenerate the three published Markdown views with the ordinary projector.
+
+Edit App diagnostics, incident recovery and GlitchTip triage in **knowledge/documentation/**.
+Keep event eligibility, transport acknowledgment, OS exit evidence and backup recovery independent.
+Keep dated incident results and original limits in evidence records.
+Regenerate the three published views with the ordinary projector.
+
+Edit App workstation and APK release runbooks in **knowledge/documentation/**.
+Keep version, build, updater, Full and publication gates separate.
+Preserve dated authorizations, release frames and earlier device setup in evidence.
+Regenerate the two published views with the ordinary projector.
+
+Edit App automated testing and device smoke in **knowledge/documentation/**.
+Keep runner scope, device isolation, build identity, independent oracles and publication gates separate.
+Preserve older scenario lists, outcomes and user authorizations with their source frames.
+Regenerate both published views with the ordinary projector.
+
+Edit the manual resource profiling runbook in **knowledge/documentation/**.
+Keep capture ownership, stop acknowledgment, transfer and interpretation independent.
+Keep T40 evidence in its original frame and regenerate the established view.
+
+Edit shared underlay storage and the Debug bridge in **knowledge/documentation/**.
+Keep asset identity, project links, migration and deletion journals, and transfer ownership distinct.
+Preserve each device, APK and native check in its original frame.
+Regenerate the published view with the ordinary projector.
+
+Edit App UI value and accessibility prose in **knowledge/documentation/**.
+Keep the machine catalogue, widget meaning, fitting and real-client evidence distinct.
+Preserve source-only checkpoints and device gaps in their original scope.
+Regenerate both published views with the ordinary prose projector.
+
+Edit App location and field guidance in **knowledge/documentation/**.
+Keep display position, raw fix, recorder and guidance ownership independent.
+Preserve old queue and provider behavior and field evidence in their original frames.
+Regenerate the established Markdown views with the ordinary projector.
+
+Edit App ecosystem prose in **knowledge/documentation/**.
+Keep source-frame discovery, operational ownership, portable artifacts and actual acceptance distinct.
+Preserve the dated foreign-owner observation and regenerate the published view.
+
+The App module README uses the same prose projector as the central documents.
+Its module pack validator checks the generated Markdown at the original address.
+
+The App module manifest uses separate ordered component and reference records.
+Refresh the YAML with `python -B docs/scripts/prose_knowledge.py --write`.
+The original Git blob and complete byte spans are pinned in its provenance.
+
+The EasyPicker reader verifies both README views and the module manifest from
+EasyPicker's owner records when its generated pack is present. From the App
+root, refresh the views with
+`python -B docs/scripts/prose_knowledge.py --write --module easypicker-module`
+and seal the YAML with
+`python -B docs/scripts/structured_view_proof.py --write --module easypicker-module`.
+App checkouts with earlier EasyPicker pins read the module's checked-in YAML.
+
+The [working entrance](../AGENTS.md) and Cursor use the shared scoped reader.
+Original Git object retention before future squash/branch deletion needs its
+own durable reachability decision.
+
+From the LISA root use `py -3.13 -B -m tools.agent_system check-policy-migration`
+with this owned working repository included in the declared source frame when
+required. Default committed-owner reads cannot certify uncommitted records.
+Library Merge Commit and fetched merged pins precede application Squash and
+publisher Squash. App records the three verified library merge commits.
+
+Whole migration acceptance also requires ordinary maintenance across six owners,
+independent replay, separate Wiki reconciliation and an individual decision
+for each former source path. Product verification and release have separate gates.

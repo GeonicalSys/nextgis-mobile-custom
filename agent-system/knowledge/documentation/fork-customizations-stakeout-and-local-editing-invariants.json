@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:fork-customizations-stakeout-and-local-editing-invariants",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:fork-customizations"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the App architecture or upstream workflow topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/fork-customizations.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "- Вынос использует ближайшую точку/границу, WGS84-расстояние, отображает accuracy,",
+        "  ведёт дистанционные звуковые зоны по GPS/mock fix, ориентирует стрелку по компасу телефона",
+        "  и сохраняет звук/частый GPS при выключенном экране через foreground service:",
+        "  `INV-STAKEOUT-GUIDANCE`.",
+        "- Ручные и импортированные локальные векторные слои редактируемы; GeoJSON",
+        "  принимает стандартные формы WGS 84/EPSG:4326, а KML/GPX разворачиваются в",
+        "  последовательность точек WGS 84. Выключенный редактируемый слой остаётся в",
+        "  выборе для нового объекта и автоматически включается после выбора:",
+        "  `INV-LOCAL-VECTOR-LAYERS`.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:fork-customizations-stakeout-and-local-editing-invariants"
+    ]
+  }
+}

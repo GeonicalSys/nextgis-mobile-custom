@@ -1,0 +1,78 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:collector-roadmap-config-hash-and-change-classification",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "planned",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:collector-roadmap"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "UNKNOWN",
+    "release": "unknown",
+    "retention": "Keep the configuration read, feature-data sync and destructive rebuild boundaries separate."
+  },
+  "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The proposed unification covers configuration hashes and consistent soft/hard change classification.",
+        "implementation": "Current form hash, required metadata and feature-data sync have separate paths. Known resource class correction can update metadata without refilling a layer.",
+        "source_verification": "The existing hash and class repair source checks apply to their declared fields. The common config classification needs a distinct review of form, schema and style changes.",
+        "merge": "App adopts the class-metadata repair through maplib 64. Delivery of the proposed general config classifier remains open.",
+        "runtime_verification": "Verify offline required metadata and safe behavior for missing or incomplete snapshots when the new scope is authorized.",
+        "release": "Release requires the chosen classifier's own contract and checks.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/architecture/collector-projects.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp/maplib",
+            "revision": "7152e3cd403f9020cebcf752b8299538a85136c1",
+            "path": "src/main/java/com/nextgis/maplib/datasource/ngw/CollectorProjectCompositionSync.java"
+          },
+          {
+            "repository": "android_projects/android_gisapp/maplib",
+            "revision": "7152e3cd403f9020cebcf752b8299538a85136c1",
+            "path": "update-reports/entries/maplib-20261101-class-metadata-repair.md"
+          }
+        ]
+      }
+    },
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/collector.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "| Config sync | частично | унифицировать hash и классификацию soft/hard changes |"
+      ]
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "Lifecycle describes the next action in the pinned roadmap. Existing implementation claims are source wording."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:collector-roadmap-config-hash-and-change-classification"
+    ]
+  }
+}

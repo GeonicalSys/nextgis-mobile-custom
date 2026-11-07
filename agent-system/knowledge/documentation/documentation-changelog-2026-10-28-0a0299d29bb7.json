@@ -1,0 +1,68 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-28-0a0299d29bb7",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-28 — Cache index и отменяемый native IO допуск",
+        "",
+        "Убраны полный scan/regex/sort/stat каталога перед каждым put: общий bounded",
+        "canonical-root metadata ledger, incremental recency и отдельная reconciliation",
+        "с прежними PBF/identity/byte/file budgets. Перед native IO dispatcher — общий",
+        "отменяемый допуск2, permit до настоящего unwind и release до Main. SDK current",
+        "tiles/геометрии/подписи не отбрасываются.70focused JVM/9classes PASS50с;",
+        "обычные LisaDebug/LisaRelease/BelkaRelease PASS110с/versionmatrixPASS.",
+        "LisaAPK224/3.1.2.30 SHA256b0f55cda…bb67e37, прежняя подпись, profiler/verification",
+        "false и нет profileable. Агент не устанавливал APK и не готовил новые замеры.",
+        "Владелец сообщил о почти моментальной отрисовке; формальная content/скорость",
+        "приёмка, Full/публикация/новый merge остаются отложены. Final whole-contour",
+        "refresh INVALID из-за чужих меняющихся контрактных docs; index follow-up UNKNOWN.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-28",
+        "heading": "2026-10-28 — Cache index и отменяемый native IO допуск",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-28-0a0299d29bb7"
+    ]
+  }
+}

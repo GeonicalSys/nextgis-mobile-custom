@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:device-smoke-tests-august-21-sketch-start-and-cancel",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:device-smoke-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/device-smoke-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "8. **Скетч геометрии.** Для Point/MultiPoint, LineString/MultiLineString,",
+        "   Polygon/MultiPolygon начать новый объект. Сразу после выбора слоя появляется",
+        "   точка/первый узел точно под экранным центром, экрана и нижней команды с `+` нет;",
+        "   отмена нового скетча крестиком показывает подтверждение: «Продолжить» оставляет",
+        "   скетч, а подтверждение отмены возвращает обычную карту без неактивной панели;",
+        "   линия/полигон строятся тапами без стартового отрезка/квадрата. Перед созданием",
+        "   сдвинуть карту далеко от начального положения и проверить, что первая вершина"
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Dated package recipe for sketch start, Cancel and initial vertex position."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:device-smoke-tests-august-21-sketch-start-and-cancel"
+    ]
+  }
+}

@@ -1,0 +1,118 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:mobile-roadmap-process-exit-224",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "implemented",
+    "source_verification": "UNKNOWN",
+    "merge": "merged",
+    "runtime_verification": "UNKNOWN",
+    "release": "not_applicable",
+    "retention": "Retain the OS exit, delivery and issue receipts without promoting an unexplained cause to a confirmed repair."
+  },
+  "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The cause of the 224 exit sequence remains open. The observed memory failures and the unknown regression trigger keep separate identities.",
+        "implementation": "The bounded OS exit export and native allocation mitigations landed through the App 82 chain. App 84 added coordinate-free GPS evidence.",
+        "source_verification": "Use the named source, build and GlitchTip receipts at their stated versions. Diagnostic collection leaves the unknown trigger unresolved.",
+        "merge": "App 82 merged at 4bd9f7d9. App 84 merged at 69edfe78 with the later fetched library pin.",
+        "runtime_verification": "SM-X115 OS exit and allocation observations describe 224. The field cause and reproduction of the remaining exits remain unresolved.",
+        "release": "Historical 224 publication and withdrawal belong to the incident context. The investigation has no APK release stage.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/reference/mobile-crash-224-2026-10-27.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/reference/glitchtip-triage-2026-10-29.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "4bd9f7d981ebd444a6821891b6a2b4ec962efcc8",
+            "path": "docs/roadmap/mobile.md"
+          }
+        ]
+      }
+    },
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Приоритет P1. Состояние: В Draft PR app82/maplib61; memory failure подтверждён,",
+        "конкретный триггер регрессии и остальные abort ожидают свидетельств/проверок.",
+        "Основание — поручение пользователя27 октября,",
+        "логи повторных запусков Samsung Galaxy Tab при движении карты и GlitchTip53/67.",
+        "Владельцы — app и maplib; зависимости — сохранённые pins MOB-01. Внеплановая",
+        "причина — инцидент опубликованной224; на время разбора откладывается следующая",
+        "обычная задача очереди, приоритеты остальных пунктов не меняются.",
+        "",
+        "Объём: убрать доказанно пустые marker/vertex native queries, буферизовать чтение",
+        "прежнего индекса и добавить ограниченную OS exit metadata к явному экспорту ZIP.",
+        "Данные/sync/фон/GPS не меняются. Полный async startup, переработка MVT и новое",
+        "обновление SDK сюда не входят. Критерии: legacy byte-compatible persistence,",
+        "пустой handle без native access, прежнее редактирование/линейка, bounded export,",
+        "Related на изолированном AVD, обе release build-проверки и строгие docs.",
+        "Прямая причина вылетов224 без fatal stack остаётся неизвестной; выпуск отдельно.",
+        "[Свидетельства, карточки и порядок доставки](../reference/mobile-crash-224-2026-10-27.md).",
+        ""
+      ]
+    },
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "MOB-02"
+    },
+    "priority": {
+      "role": "priority_at_pinned_roadmap_basis",
+      "value": "P1"
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "The complete incident and its unresolved trigger are the lifecycle goal. Diagnostic source work and named drafts have narrower scope. Publication of the incident APK is historical evidence, not the outcome of the investigation."
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:task:mobile-roadmap-styles-and-tracks",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-process-exit-224-glitchtip-20261029",
+      "status": "source_backed"
+    },
+    {
+      "type": "related_unknown",
+      "target": "lisa:mobile:question:roadmap-mob02-distinct-subjects",
+      "status": "unknown"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-process-exit-224"
+    ]
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:release-apk-ordinary-apk-version-matrix",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:release-apk"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/release-apk.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "```powershell",
+        "Set-Location C:\\dev\\lisa\\android_projects\\android_gisapp",
+        "powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\\verify-apk-version-matrix.ps1",
+        "```",
+        "",
+        "Скрипт собирает `lisaDebug`, `lisaRelease`, `belkaRelease`, читает APK metadata",
+        "через `aapt` и проверяет сопряжённые debug/release значения",
+        "`maplib.BuildConfig.VERSION_NAME`, а также разрешённый Lisa Release dependency",
+        "graph: OpenGL artifact MapLibre присутствует, generic/Vulkan artifact отсутствует.",
+        "Version change нельзя передавать дальше,",
+        "если этот скрипт не запускался или завершился ошибкой.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:release-apk-ordinary-apk-version-matrix"
+    ]
+  }
+}

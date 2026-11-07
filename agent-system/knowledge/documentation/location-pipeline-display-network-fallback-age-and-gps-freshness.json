@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:location-pipeline-display-network-fallback-age-and-gps-freshness",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:location-pipeline"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/location-pipeline.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "`getLastKnownLocation` и запись сохраняют восьмисекундное правило свежести.",
+        "Отдельный `getLastDisplayLocation` удерживает последнюю отображённую Network-точку",
+        "между редкими обновлениями, пока источник доступен и разрешён. GPS остаётся первым",
+        "выбором, пока свежий. После потери GPS скрытый старый Network не вызывает скачок",
+        "назад: fallback должен быть новее последней отображённой GPS-точки.",
+        "Исходные accuracy и timestamp не подменяются: старая сетевая точка показывает",
+        "«Сеть · ≈… с назад» и ±accuracy; возраст обновляется раз в пять секунд. Она не",
+        "становится recording fix и не используется как свежая координата через",
+        "`getLastKnownLocation`. Потеря разрешения/отключение Network очищает её.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:location-pipeline-display-network-fallback-age-and-gps-freshness"
+    ]
+  }
+}

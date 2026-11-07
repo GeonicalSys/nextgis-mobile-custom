@@ -1,0 +1,120 @@
+---
+id: android-20261104-ui-prose-knowledge
+area: Документация
+kind: internal
+at: 2026-11-04T15:57:10+04:00
+title: Значения и доступность интерфейса из записей App
+why: Проверить штатную правку тем и сохранность прежних документов
+covers:
+  - agent-system/README.md
+  - agent-system/knowledge/documentation/documentation-maintenance.json
+  - agent-system/knowledge/documentation/ui-accessibility-background-gps-and-network-position-age.json
+  - agent-system/knowledge/documentation/ui-accessibility-changed-ui-states-and-visible-text-oracle.json
+  - agent-system/knowledge/documentation/ui-accessibility-firefly-editor-layout-and-touch-profiles.json
+  - agent-system/knowledge/documentation/ui-accessibility-fitted-dialogs-callbacks-list-and-keyboard.json
+  - agent-system/knowledge/documentation/ui-accessibility-fitted-panel-native-scale-and-touch.json
+  - agent-system/knowledge/documentation/ui-accessibility-glyph-width-and-whole-word-oracle.json
+  - agent-system/knowledge/documentation/ui-accessibility-gnss-hud-drawer-walk-and-login-sizing.json
+  - agent-system/knowledge/documentation/ui-accessibility-guidance-header-and-responsive-map-layout.json
+  - agent-system/knowledge/documentation/ui-accessibility-help-links-full-text-and-span-destinations.json
+  - agent-system/knowledge/documentation/ui-accessibility-independent-guidance-panels-and-full-sync-clock.json
+  - agent-system/knowledge/documentation/ui-accessibility-main-screen-back-and-home-lifecycle.json
+  - agent-system/knowledge/documentation/ui-accessibility-native-large-text-layout-and-touch-acceptance.json
+  - agent-system/knowledge/documentation/ui-accessibility-nested-dialog-list-viewport-preservation.json
+  - agent-system/knowledge/documentation/ui-accessibility-nested-list-rows-real-taps-and-approved-policy.json
+  - agent-system/knowledge/documentation/ui-accessibility-october-14-settings-and-status-profiles.json
+  - agent-system/knowledge/documentation/ui-accessibility-october-17-related-bugreports-scope.json
+  - agent-system/knowledge/documentation/ui-accessibility-osm-attribution-and-transparent-map-action-touch.json
+  - agent-system/knowledge/documentation/ui-accessibility-phone-gps-accuracy-number-and-native-radius.json
+  - agent-system/knowledge/documentation/ui-accessibility-polygon-style-preview-and-contrast.json
+  - agent-system/knowledge/documentation/ui-accessibility-real-settings-navigation-and-stale-screen-listeners.json
+  - agent-system/knowledge/documentation/ui-accessibility-real-window-profiles-and-form-appearance.json
+  - agent-system/knowledge/documentation/ui-accessibility-resumed-tab-navigation-and-fragment-state.json
+  - agent-system/knowledge/documentation/ui-accessibility-selected-track-actions-width-and-order.json
+  - agent-system/knowledge/documentation/ui-accessibility-status-panel-wrap-and-height-bound.json
+  - agent-system/knowledge/documentation/ui-accessibility-system-scale-ownership-and-fitting-order.json
+  - agent-system/knowledge/documentation/ui-accessibility-toolbar-local-text-fit-and-overflow.json
+  - agent-system/knowledge/documentation/ui-accessibility-track-share-icon-static-alpha-and-contrast.json
+  - agent-system/knowledge/documentation/ui-accessibility-warning-overlay-text-actions-and-map-scope.json
+  - agent-system/knowledge/documentation/ui-accessibility-whole-element-wrap-and-fixed-grid-autosize.json
+  - agent-system/knowledge/documentation/ui-accessibility.json
+  - agent-system/knowledge/documentation/ui-contracts-attachment-end-and-offline-picker-state.json
+  - agent-system/knowledge/documentation/ui-contracts-attachment-integrity-and-same-final-unknown.json
+  - agent-system/knowledge/documentation/ui-contracts-attachment-progress-versus-preview-and-complete-cache.json
+  - agent-system/knowledge/documentation/ui-contracts-attachment-request-owned-staging-and-atomic-publish.json
+  - agent-system/knowledge/documentation/ui-contracts-canonical-catalogue-projection-and-standalone-route.json
+  - agent-system/knowledge/documentation/ui-contracts-checkbox-schema-and-optional-last-cache.json
+  - agent-system/knowledge/documentation/ui-contracts-checkbox-source-slice-and-installed-unknown.json
+  - agent-system/knowledge/documentation/ui-contracts-currentcenter-device-coordinate-and-camera-producers.json
+  - agent-system/knowledge/documentation/ui-contracts-date-device-locale-and-native-coverage.json
+  - agent-system/knowledge/documentation/ui-contracts-date-time-storage-versus-display-and-cursor-unknown.json
+  - agent-system/knowledge/documentation/ui-contracts-debug-underlay-progress-and-owner-boundary.json
+  - agent-system/knowledge/documentation/ui-contracts-effective-layer-edit-policy-and-recheck.json
+  - agent-system/knowledge/documentation/ui-contracts-f61-api28-clock-fault-model.json
+  - agent-system/knowledge/documentation/ui-contracts-failure-message-producer-and-oracle-matrix.json
+  - agent-system/knowledge/documentation/ui-contracts-forest-layer-readonly-and-desktop-area-origin.json
+  - agent-system/knowledge/documentation/ui-contracts-former-easypicker-pin-adoption-gap.json
+  - agent-system/knowledge/documentation/ui-contracts-former-f61-drift-and-unrun-ui-checkpoint.json
+  - agent-system/knowledge/documentation/ui-contracts-full-project-ack-and-active-map-clock.json
+  - agent-system/knowledge/documentation/ui-contracts-identify-visible-vectors-and-activate-source-guards.json
+  - agent-system/knowledge/documentation/ui-contracts-independent-native-pilot-expectations-not-run.json
+  - agent-system/knowledge/documentation/ui-contracts-independent-oracle-and-explicit-unknown.json
+  - agent-system/knowledge/documentation/ui-contracts-legacy-positive-size-attachment-readback.json
+  - agent-system/knowledge/documentation/ui-contracts-maintenance-warning-clock-and-process-cooldown.json
+  - agent-system/knowledge/documentation/ui-contracts-map-memory-warning-and-scrollable-action-priority.json
+  - agent-system/knowledge/documentation/ui-contracts-map-status-device-camera-and-control-matrix.json
+  - agent-system/knowledge/documentation/ui-contracts-mobile-project-load-action-and-server-format.json
+  - agent-system/knowledge/documentation/ui-contracts-mobile-project-load-source-versus-device-acceptance.json
+  - agent-system/knowledge/documentation/ui-contracts-mobile-project-workspace-and-batch-ack-boundaries.json
+  - agent-system/knowledge/documentation/ui-contracts-move-map-files-versus-registry-and-journal-migration.json
+  - agent-system/knowledge/documentation/ui-contracts-ngfp-checkbox-init-and-raw-copy-equality.json
+  - agent-system/knowledge/documentation/ui-contracts-ngfp-checkbox-value-boundary-matrix.json
+  - agent-system/knowledge/documentation/ui-contracts-ngfp-checkbox-versus-standard-integer-control.json
+  - agent-system/knowledge/documentation/ui-contracts-ngfp-date-seed-null-and-save-gates.json
+  - agent-system/knowledge/documentation/ui-contracts-ngfp-resource-binding-namespace-and-remap-exclusions.json
+  - agent-system/knowledge/documentation/ui-contracts-ngfp-text-display-line-cap-and-save-boundary.json
+  - agent-system/knowledge/documentation/ui-contracts-optional-metadata-overload-fingerprint-scope.json
+  - agent-system/knowledge/documentation/ui-contracts-ordinary-ui-source-checker-and-evidence-boundary.json
+  - agent-system/knowledge/documentation/ui-contracts-programmatic-controls-and-flavor-scope.json
+  - agent-system/knowledge/documentation/ui-contracts-programmatic-message-and-local-only-payload.json
+  - agent-system/knowledge/documentation/ui-contracts-release-225-gradle-witness-review.json
+  - agent-system/knowledge/documentation/ui-contracts-repository-resource-and-runtime-identity-namespaces.json
+  - agent-system/knowledge/documentation/ui-contracts-reset-after-target-commit-and-failure-guard.json
+  - agent-system/knowledge/documentation/ui-contracts-resource-caption-combined-failed-attempts.json
+  - agent-system/knowledge/documentation/ui-contracts-resource-caption-layout-final-results-and-limits.json
+  - agent-system/knowledge/documentation/ui-contracts-resource-checkbox-aggregate-state-and-owner-mutation.json
+  - agent-system/knowledge/documentation/ui-contracts-resource-checkbox-api28-checkpoint.json
+  - agent-system/knowledge/documentation/ui-contracts-resource-checkbox-mode-and-view-recycling.json
+  - agent-system/knowledge/documentation/ui-contracts-resource-local-and-remote-id-and-json-restore.json
+  - agent-system/knowledge/documentation/ui-contracts-resource-parcel-fallback-and-open-refresh-policy.json
+  - agent-system/knowledge/documentation/ui-contracts-resource-row-caption-layout-and-measure-cache.json
+  - agent-system/knowledge/documentation/ui-contracts-resource-row-layout-independent-native-gap.json
+  - agent-system/knowledge/documentation/ui-contracts-resource-row-source-reference-and-semantic-oracles.json
+  - agent-system/knowledge/documentation/ui-contracts-saved-work-and-cross-owner-resource-trace.json
+  - agent-system/knowledge/documentation/ui-contracts-screen-contract-matrix-and-counterexamples.json
+  - agent-system/knowledge/documentation/ui-contracts-selected-track-compositional-regression.json
+  - agent-system/knowledge/documentation/ui-contracts-selected-track-gpx-share-and-stale-owner-guard.json
+  - agent-system/knowledge/documentation/ui-contracts-semantic-review-before-fingerprint-update.json
+  - agent-system/knowledge/documentation/ui-contracts-standard-and-ngfp-date-widget-bindings.json
+  - agent-system/knowledge/documentation/ui-contracts-storage-choice-and-project-switch-lease.json
+  - agent-system/knowledge/documentation/ui-contracts-storage-move-and-reset-separate-preference-keys.json
+  - agent-system/knowledge/documentation/ui-contracts-storage-worker-exact-map-and-refresh-result.json
+  - agent-system/knowledge/documentation/ui-contracts-subsystem-contract-links-and-evidence-limit.json
+  - agent-system/knowledge/documentation/ui-contracts-sync-clock-process-visible-owner-and-key.json
+  - agent-system/knowledge/documentation/ui-contracts-sync-clock-ring-busy-and-pending-value-matrix.json
+  - agent-system/knowledge/documentation/ui-contracts-sync-layer-bindings-and-variant-review.json
+  - agent-system/knowledge/documentation/ui-contracts-technical-message-regression-and-unrun-native.json
+  - agent-system/knowledge/documentation/ui-contracts-ui-catalogue-ngfp-stakeout-and-settings-checkpoints.json
+  - agent-system/knowledge/documentation/ui-contracts-value-and-action-origin-before-ui-interpretation.json
+  - agent-system/knowledge/documentation/ui-contracts-webgis-account-catalog-and-explicit-resource-selection.json
+  - agent-system/knowledge/documentation/ui-contracts-whole-file-tripwires-for-widget-and-unit-semantics.json
+  - agent-system/knowledge/documentation/ui-contracts-widget-to-producer-trace-and-conditions.json
+  - agent-system/knowledge/documentation/ui-contracts.json
+  - agent-system/provenance/documentation.json
+  - agent-system/source-dispositions.json
+  - docs/changelog.md
+  - docs/guides/documentation-maintenance.md
+---
+
+MOB-DEV-02. Оба адреса сохраняют исходный Markdown.
+Смысл значения, компоновка и фактический результат проверяются раздельно.

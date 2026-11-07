@@ -1,0 +1,66 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:instruction:workspace.integration-release-closure",
+  "kind": "instruction",
+  "owner": "android_projects/android_gisapp",
+  "topic": "policy-workspace",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "."
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain editable logical subject and pinned provenance; product implementation/acceptance are separate records."
+  },
+  "facets": {
+    "body": {
+      "role": "permanent_rule",
+      "value": "- Наличие коммита, опубликованной ветки, зелёного Draft PR или локального pin\n  сабмодуля не означает, что исправление вошло в приложение.\n- Перед новой integration/release-веткой, merge, release-сборкой или выдачей\n  команд публикации после fetch составь матрицу всех открытых PR и опубликованных\n  `codex/*` веток в `android_gisapp`, `maplib`, `maplibui`, `easypicker` и\n  `upload_mobile`, изменённых после базовой версии выпуска. Для каждой строки\n  зафиксируй требование, commit/PR/base, стек зависимостей, merge-state и\n  фактическое присутствие изменения в итоговом tip.\n- Проверяй присутствие через ancestry для merge commit и через patch/content\n  comparison для squash merge. Совпадение названия ветки, PR или локального\n  файла не является проверкой.\n- Итоговая ветка обязана включать транзитивное объединение всех ещё нужных\n  stacked/parallel PR. Пропуск допускается только как явно согласованное с\n  пользователем отложенное изменение; он перечисляется в handoff.\n- Библиотеки сливаются Merge Commit в порядке зависимостей. Только после fetch\n  их удалённых merge commits root обновляет submodule pointers. Pin на commit\n  незамерженной ветки считается незакрытой зависимостью и блокирует выпуск.\n- Запрос «смержи всё», «выпускай» или «публикуй» запускает этот аудит для всей\n  Android-цепочки. Пока нужный код остаётся только в открытом/параллельном PR\n  либо root указывает не на merged library commit, запрещено объявлять сборку\n  готовой, публиковать APK или выдавать команды публикации.\n- После merge повторно сделай fetch и сверь каждую строку матрицы с удалёнными\n  целевыми ветками и submodule pointers; затем запускай version matrix и release\n  builds. В финале перечисли включённые/merged PR и все согласованно отложенные.\n"
+    },
+    "classification": {
+      "role": "reviewed_knowledge_class",
+      "value": "permanent_rule"
+    },
+    "review": {
+      "role": "classification_reason",
+      "value": "One complete conditional closure process: all open/published predecessors, transitive inclusion, content proof, fetched merged library pins, blocked release and post-merge recheck."
+    },
+    "source_section": {
+      "role": "source_document_context",
+      "value": [
+        "# GeonicalSystem NextGIS Mobile fork — инструкции для ИИ-агентов",
+        "## Реестр обновлений для отчёта",
+        "### Обязательное закрытие цепочки перед сборкой и выпуском"
+      ]
+    },
+    "authority_limit": {
+      "role": "authority_and_acceptance_boundary",
+      "value": "Path applicability is reviewed separately from the rule's textual triggers. Every source condition and heading remains attached; no automatic predicate or lifecycle inference. Stored commands and dates do not grant current execution, freshness or product acceptance. Existing instruction clients/checkers remain effective until measured cutover."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/policy-migration.json",
+    "scopes": [
+      "lisa:mobile:instruction:workspace.integration-release-closure"
+    ]
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:automated-tests-publication-build-basis-and-apk-identity-limits",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Пара повторно проверяется перед/после установки и до/после финализации прогона.",
+        "Новые schema2 progress/result включают build_basis с его digest и hashes APK.",
+        "Check-Publication требует basis внутри успешного Full и сверяет сохранённую",
+        "пару с текущими файлами APK; прежний source fingerprint сам по себе недостаточен.",
+        "Эта локальная цепочка доверяет штатному успешному Gradle и проверке package",
+        "через aapt. Она не является подписью воспроизводимой/hermetic сборки и сама",
+        "не подтверждает bytes установленного PackageManager APK. Публикация production",
+        "release остаётся отдельным запрещённым без команды действием; связывание",
+        "release candidate hash с Full/publisher — явный следующий delivery follow-up.",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:automated-tests-exact-build-basis-before-device-action",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:automated-tests-publication-build-basis-and-apk-identity-limits"
+    ]
+  }
+}

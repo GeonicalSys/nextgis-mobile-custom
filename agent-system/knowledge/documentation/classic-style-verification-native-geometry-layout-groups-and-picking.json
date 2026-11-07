@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:classic-style-verification-native-geometry-layout-groups-and-picking",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:classic-style-verification"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the style or label subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/classic-style-verification.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Icon allow-overlap/ignore-placement and fill-translate are also native constants.",
+        "RuleGeometryLayouts groups their effective category values; classic factories use",
+        "literals, including the asset-icon overlay which previously forced overlap/ignore",
+        "on. Child layers preserve filters, paints, zoom and visibility. Restyle/deletion",
+        "remove children, order anchors include them, and feature picking queries all",
+        "geometry children and dashed strokes of the selected logical layer. These children share the original",
+        "source and do not change project menus or configured tile layers.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:classic-style-verification-native-geometry-layout-groups-and-picking"
+    ]
+  }
+}

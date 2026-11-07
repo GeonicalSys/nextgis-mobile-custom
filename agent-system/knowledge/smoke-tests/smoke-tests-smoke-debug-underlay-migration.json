@@ -1,0 +1,67 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-smoke-debug-underlay-migration",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "SMOKE-DEBUG-UNDERLAY-MIGRATION"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "device",
+        "scope": [
+          "app",
+          "maplib",
+          "maplibui"
+        ],
+        "steps": [
+          "Prepare a signed 3.0.3.2 or 3.0.3.3 Debug installation with no project registry and at least two large unpacked local underlays in different TMS/OSM schemes",
+          "Record the source underlay names, visibility, relative order, tile count and total source size",
+          "Update Debug in place with the same debug signing certificate, wait more than 3 seconds, and verify its legacy default map still opens with original extracted folders rather than a recursive project copy or shared-catalog conversion",
+          "Install the signed Geonical release, manually import and select the intended current Web GIS or local project",
+          "Open Underlay storage, start Import from the old app and approve the request in Debug",
+          "On Honor 400 / Android 16 transfer a large underlay; verify the status keeps updating bytes or tiles and a second tap reports that this same transfer is active rather than referring ambiguously to synchronization",
+          "Stall the producer pipe long enough to cross the inactivity deadline; verify one automatic retry, a bounded failure after the second stall, partial-stage cleanup and an enabled sync button",
+          {
+            "Start again, press Cancel transfer; then start again and press toolbar Back and system Back": "declining the exit prompt leaves the transfer running, confirming it cancels I/O, releases UNDERLAY_MIGRATION and lets a later sync start"
+          },
+          "Complete all underlays, cold-open the Geonical project, run project composition/data sync and verify the progress ring works and Debug still retains its original workspace",
+          "Before bytes arrive, verify visible Opening, elapsed pulses and a reachable Cancel; then record per-phase bytes/tiles and elapsed during a real large transfer",
+          "After the final stream record, verify Finalizing remains visible through SQLite checkpoint, validation, hash and publication, followed by Attaching; do not equate received bytes with complete migration",
+          "Cancel a queued transfer before its worker starts and verify screen/lease recovery; ensure stale callbacks cannot overwrite a subsequent transfer",
+          "Check full Russian phase/counter text and fixed Cancel in light/dark, portrait/landscape, font1.0/1.3/2.0 with effective320/280dp widths; retain screenshots and phase timings"
+        ],
+        "expected": "Only local raster underlays enter the selected Geonical project; project/account/vector/track data do not cross. Extracted tiles stream directly into one raster MBTiles file per underlay without a second extracted tree or per-tile fsync, TMS/OSM rows render in the same locations, names/visibility/relative order are preserved above OSM, an interrupted partial database is ignored and removed, a retry creates no duplicate completed layer, visible progress distinguishes a long transfer from a stalled pipe, cancellation/confirmed Back never leaves a project-operation lease, declining the exit prompt keeps the transfer running, sync retains the imported underlays and its progress ring remains usable, and the complete Debug source remains available for rollback because the updated Debug did not convert its workspace before export.\n Phase/time evidence must distinguish stalled remote open/read from local finalization/attach. Post-change real Debug migration and its reported ten-minute delay are NOT_RUN; prepared session/UI regressions alone do not certify throughput or cause."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-smoke-debug-underlay-migration"
+    ]
+  }
+}

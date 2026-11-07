@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:crash-recovery-script-reference-pin-and-save-hook",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:crash-recovery"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/crash-recovery.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Версия правил в черновике",
+        "",
+        "Форма хранит полную `scriptReference` в Bundle и FeatureFormDraftStore. Пустая",
+        "строка закрепляет отсутствие правил; null в старом черновике сохраняет legacy",
+        "поведение. Перед транзакцией Save выполняет закреплённый `before_save`; warning",
+        "можно подтвердить, block/closed-ошибка оставляют форму и черновик. Журнал Save",
+        "восстанавливает уже созданный ID до hook, чтобы retry не считал объект новым.",
+        "Пакеты старых pin автоматически не удаляются. [Контракт](project-scripts.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:crash-recovery-script-reference-pin-and-save-hook"
+    ]
+  }
+}

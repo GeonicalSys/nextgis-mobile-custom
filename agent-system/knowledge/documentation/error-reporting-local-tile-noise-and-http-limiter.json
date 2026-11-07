@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:error-reporting-local-tile-noise-and-http-limiter",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:error-reporting"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/error-reporting.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Автоматические `SentryHttpClientException` от `SentryOkHttpInterceptor` проходят",
+        "отдельный фильтр `DiagnosticsHttpPolicy` в BeforeSend. Штатный GET локального",
+        "`/tiles/<layer>/<z>/<x>/<y>.pbf` с HTTP 503 и явным X-Lisa-Tile-Reason",
+        "queue_full/heap_headroom не создаёт отдельного багрепорта. Bounded MapRuntime",
+        "журнал, причины и resource guards сохраняются. Неизвестная причина, иной endpoint,",
+        "remote response и fatal/unhandled событие не проходят это исключение.",
+        "Для остальных HTTP 5xx первый отчёт сохраняется,",
+        "повторы в течение десяти минут подавляются по status/method/operation/месту вызова",
+        "и endpoint. Только в ключе лимитера числовые сегменты пути тайлов/ресурсов",
+        "объединяются, query отбрасывается;",
+        "endpoint хранится только как SHA-256 в ограниченном process-local наборе (64 ключа).",
+        "После окна допускается следующий отчёт; после перезапуска лимит начинается заново.",
+        "Другие endpoint, серверы, статусы и операции остаются отдельными. Fatal/unhandled",
+        "exceptions этот фильтр не проходят, cached replay не фильтруется повторно.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:error-reporting-local-tile-noise-and-http-limiter"
+    ]
+  }
+}

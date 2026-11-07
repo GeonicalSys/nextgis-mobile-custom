@@ -1,0 +1,93 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-non-method-evidence-ad24f03d1dfbc9186f3fc2ac",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "non_method_evidence"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": [
+        "root",
+        "app/src/main/res/xml/preferences_map.xml"
+      ]
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "repository": "root",
+        "path": "app/src/main/res/xml/preferences_map.xml",
+        "purpose": "Reviewed XML defaults and keys for coordinates/precision/units/status/location/compass/ruler/zoom; deployed overrides and old preferences remain separate. map_path has android:key, no resource android:id; custom SelectMapPathPreference binding and restore_layers are independent controls. Reset default XML is applied only after owned completion.",
+        "contract_ids": [
+          "UI-MAP-STATUS-COORDINATES",
+          "UI-MAP-SCALE-RULER",
+          "UI-MAP-ZOOM",
+          "UI-MAP-COMPASS",
+          "UI-SETTINGS-MAP-STORAGE-MOVE",
+          "UI-SETTINGS-RESET-WORKSPACE"
+        ],
+        "sha256": "dc8ef3537bbe3e1679b456c30d4ad0f4f98461944a1582121d2304d1af0f7536"
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "consumed_by",
+      "target": "lisa:mobile:contract:ui-contracts-ui-map-status-coordinates",
+      "status": "source_backed"
+    },
+    {
+      "type": "consumed_by",
+      "target": "lisa:mobile:contract:ui-contracts-ui-map-scale-ruler",
+      "status": "source_backed"
+    },
+    {
+      "type": "consumed_by",
+      "target": "lisa:mobile:contract:ui-contracts-ui-map-zoom",
+      "status": "source_backed"
+    },
+    {
+      "type": "consumed_by",
+      "target": "lisa:mobile:contract:ui-contracts-ui-map-compass",
+      "status": "source_backed"
+    },
+    {
+      "type": "consumed_by",
+      "target": "lisa:mobile:contract:ui-contracts-ui-settings-map-storage-move",
+      "status": "source_backed"
+    },
+    {
+      "type": "consumed_by",
+      "target": "lisa:mobile:contract:ui-contracts-ui-settings-reset-workspace",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-non-method-evidence-ad24f03d1dfbc9186f3fc2ac"
+    ]
+  }
+}

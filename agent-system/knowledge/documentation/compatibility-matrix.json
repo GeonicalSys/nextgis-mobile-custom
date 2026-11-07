@@ -1,0 +1,92 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:documentation-compatibility-matrix",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/reference/compatibility-matrix.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the published Markdown address and pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/compatibility-matrix.md"
+    },
+    "frontmatter": {
+      "role": "markdown_frontmatter_lines",
+      "value": [
+        "title: Матрица совместимости",
+        "type: reference",
+        "last_verified: 2026-10-24",
+        "related_code:",
+        "  - app/build.gradle",
+        "  - maplib/build.gradle",
+        "  - maplibui/build.gradle",
+        "  - tools/verify-apk-version-matrix.ps1"
+      ]
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "",
+        "# Матрица совместимости",
+        "",
+        "Для MapLibre `13.7.1` фактическое покрытие и ограничения перечислены в",
+        "[адресной проверке SDK](maplibre-13-7-1-verification-2026-10-24.md).",
+        "Старые native receipts с `13.0.2` не подтверждают новую версию.",
+        "",
+        "| Связка | Статус |",
+        "|---|---|",
+        "| app `3.1.2.27` ↔ maplib `3.1.2.27` (release) | Подготовленный Lisa/Belka Release |",
+        "| app `3.1.2.23` ↔ maplib `3.1.2.23` (debug) | Подготовленный Lisa Debug |",
+        "| app ↔ maplibui pointer из root | Проверять совместной сборкой |",
+        "| maplibui ↔ maplib pointer из root | Публичный API проверять compile + smoke |",
+        "| Android API 26–36 | Gradle declaration; device coverage зависит от выполненной матрицы |",
+        "| Android API 26–28 ↔ MapLibre TextureView | Targeted resume compatibility; требует device smoke после сна/background |",
+        "| Android API 29–36 ↔ MapLibre SurfaceView | Основной производительный render view |",
+        "| MapLibre `android-sdk-opengl:13.7.1` ↔ текущий rendering fork | OpenGL backend обязателен; generic `android-sdk` MapLibre 13 (Vulkan) несовместим с частью целевых устройств |",
+        "| Root ↔ upstream NextGIS tips | Не гарантируется без cycle integration |",
+        "",
+        "Variant coupling реализован разными механизмами: app debug использует",
+        "`androidComponents.onVariants`, а maplib debug — override",
+        "`BuildConfig.VERSION_NAME`. Совместимость считается подтверждённой только после",
+        "`tools/verify-apk-version-matrix.ps1`, который также доказывает, что debug bump",
+        "не изменил production APK metadata.",
+        "",
+        "Таблица не утверждает device-покрытие, если соответствующий smoke не был",
+        "выполнен. Результаты конкретных устройств фиксируются в release/incident notes.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:documentation-compatibility-matrix"
+    ]
+  }
+}

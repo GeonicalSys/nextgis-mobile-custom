@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:automated-tests-sqlite-priority-t40-native-result-and-gaps",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Focused native case1/1 PASS на T40/API30 (`priority-related-t40-02`), source",
+        "fingerprint `ebb3b78d81a45c2b1a95e634369d6e2e4768a16129f0fc795a31fc58b290617f`.",
+        "Затем весь NativeSqliteVectorRenderingTest10 distinct методов PASS на T40,",
+        "та же source fingerprint: `sqlite-related-t40-03/result.json`, `native-run03.log`.",
+        "T40 logcat отвергает `--uid`, поэтому UID collector остаётся diagnostic gap;",
+        "class PASS не означает all-green всего Related/Full. Root-child corpus не покрывает nested groups и Activity",
+        "recreation, historical4/4 classic PASS их не заменяет.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "One focused and ten distinct T40 cases on the same source frame. Nested and recreation routes remain separate."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:automated-tests-sqlite-priority-t40-native-result-and-gaps"
+    ]
+  }
+}

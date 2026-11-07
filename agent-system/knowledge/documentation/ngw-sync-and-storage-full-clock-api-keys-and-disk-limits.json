@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-full-clock-api-keys-and-disk-limits",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Публичные `lastComplete(Context,String):long` и",
+        "`markComplete(Context,String,long):boolean`, файл `full-project-sync-state`,",
+        "`UUID.nameUUIDFromBytes(canonical path UTF-8)` и long Unix-ms не изменены.",
+        "Миграции schema/key, переноса global/account legacy timestamps и дополнительных",
+        "компенсирующих/async записей нет. Weak identity registry не удерживает",
+        "prefs/context/editor через values; его подтверждение ограничено текущим процессом",
+        "и живым exact prefs owner. False может оставить cache и диск старыми либо новыми;",
+        "успешный commit другого project key может записать прежнее failed cached value.",
+        "Shield не является physical rollback, disk repair или гарантией fresh-process view.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-full-clock-api-keys-and-disk-limits"
+    ]
+  }
+}

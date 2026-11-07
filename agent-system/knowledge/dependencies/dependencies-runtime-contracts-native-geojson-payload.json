@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:dependencies-runtime-contracts-native-geojson-payload",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "dependencies",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_registry_section",
+      "value": "runtime_contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_mapping_or_list_key",
+      "value": "native-geojson-payload"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "owner": "maplib",
+        "defined_in": "maplib/src/main/java/com/nextgis/maplib/map/NativeFeaturePayload.java",
+        "implementers": [
+          "maplib"
+        ],
+        "callers": [
+          "maplib",
+          "app"
+        ],
+        "contract": "MPLFeaturesUtils, MapDrawable and all six MLP background constructors project separate native property maps while retaining rich Java editor features and full geometry/IDs/unknowns. Polygon label sources omit empty signatures and geometry paint; point sources keep combined roles and lines retain query fallback inputs. Uniform sparsity needs exact factory-default context; rules retain actual consumers, zoom curves/layout keys/gates. App verification fixture observes this transport projection without weakening rich Java or GPU assertions; source/URI/edit paths cannot bypass it."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/sectioned-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:dependencies-runtime-contracts-native-geojson-payload"
+    ]
+  }
+}

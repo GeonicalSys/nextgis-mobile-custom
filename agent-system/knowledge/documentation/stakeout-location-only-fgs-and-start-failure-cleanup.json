@@ -1,0 +1,61 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:stakeout-location-only-fgs-and-start-failure-cleanup",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:stakeout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/stakeout.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Manifest и явный runtime type службы выноса содержат только `location`.",
+        "Bluetooth/USB/TCP keep-alive внешнего приёмника принадлежит отдельной службе;",
+        "обычное измерение не требует `BLUETOOTH_CONNECT`/`SCAN`. Проверка разрешений",
+        "Android выполняется внутри `onStartCommand`, после возврата из",
+        "`startForegroundService`, поэтому одного try/catch в MapFragment недостаточно.",
+        "Отказ внутри службы снимает уведомление/wake lock и через process-local owning",
+        "session callback завершает controller, GPS lease/listener и звук. UI выходит из",
+        "live-режима и предлагает проверить доступ к местоположению. Синхронный отказ",
+        "старта также полностью откатывает ресурсы.",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:stakeout-owner-based-raw-gps-lease",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:stakeout-location-only-fgs-and-start-failure-cleanup"
+    ]
+  }
+}

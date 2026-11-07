@@ -1,0 +1,73 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:change-impact-ngw-account-identity",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "change-impact",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "definition": {
+      "role": "complete_change_impact_definition",
+      "value": {
+        "id": "NGW-ACCOUNT-IDENTITY",
+        "paths": [
+          "app/build.gradle",
+          "app/src/main/java/com/nextgis/mobile/MainApplication.java",
+          "app/src/main/res/xml/syncadapter.xml",
+          "maplibui/src/main/res/xml/authenticator.xml",
+          "maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/activity/NGWLoginActivity.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/fragment/NGWLoginFragment.java"
+        ],
+        "owners": [
+          "app",
+          "maplibui"
+        ],
+        "read": [
+          "docs/reference/flavors-and-versioning.md",
+          "docs/architecture/ngw-sync-and-storage.md"
+        ],
+        "invariants": [
+          "INV-NGW-ACCOUNT-IDENTITY"
+        ],
+        "must_update_docs": [
+          "docs/reference/flavors-and-versioning.md",
+          "docs/architecture/ngw-sync-and-storage.md",
+          "docs/registry/config-keys.yaml",
+          "app/docs/manifest.yaml",
+          "maplibui/docs/manifest.yaml"
+        ],
+        "verify": [
+          "AUTO-MAPLIBUI-ASSEMBLE",
+          "AUTO-APP-RELEASES",
+          "SMOKE-NGW-ACCOUNT-ADD"
+        ],
+        "strict_docs": true
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/change-impact.json",
+    "scopes": [
+      "lisa:mobile:contract:change-impact-ngw-account-identity"
+    ]
+  }
+}

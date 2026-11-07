@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-editor-hit-test-and-exit-history",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Разбор зависаний и завершений 224 — 2026-10-27",
+        "",
+        "MOB-02: fork пропускает пустые editor hit-tests и буферизует чтение GeometryRTree,",
+        "а явный ZIP export дополняет системной историей без назначения текущей версии",
+        "старому процессу. Official app master проверен через API:6113485be698606240b9bc7f0740a18ecc084aaa;",
+        "maplib master:014247eea4a424e828c24d9e52e45fefed362f8d.",
+        "Эти правки не являются upstream merge или доказанным устранением native crash 224.",
+        "[Разбор и приёмка](mobile-crash-224-2026-10-27.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-editor-hit-test-and-exit-history"
+    ]
+  }
+}

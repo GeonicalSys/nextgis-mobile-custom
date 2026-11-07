@@ -1,0 +1,90 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-09-22-6843c6d7c901",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-09-22",
+        "",
+        "- Подготовлен выпуск Lisa/Belka `3.1.2.26` / `versionCode 220`. Lisa Debug",
+        "  остаётся `3.1.2.22` / `versionCode 217`. Root закрепляет Merge Commit maplib",
+        "  PR #36 `f9ab155` и maplibui PR #24 `d79f2e98`.",
+        "- Запуск трека теперь требует включённую системную геопозицию: до создания",
+        "  трека приложение предлагает открыть настройки Android, а сервис повторно",
+        "  проверяет состояние на случай lifecycle race. Кнопка человека под линейкой",
+        "  только запускает/останавливает трек и показывает Stop/Starting/Recording/Error;",
+        "  краткое ложное «Не пишется» при штатном старте убрано.",
+        "- При запуске приложения пустой обход, который не получил первого подтверждённого",
+        "  снимка от сервиса, очищается автоматически. Реальный остановленный обход",
+        "  предлагает Continue/Discard, сессия другой карты — аварийный сброс. В общих",
+        "  настройках добавлен подтверждённый ручной сброс только walk-owned состояния,",
+        "  без удаления проектов, слоёв, объектов, учётных записей и других черновиков.",
+        "- Подготовлен выпуск Lisa/Belka `3.1.2.25` / `versionCode 219`. Lisa Debug",
+        "  остаётся `3.1.2.22` / `versionCode 217`. Root закрепляет Merge Commit maplib",
+        "  PR #35 `08df9be` и maplibui PR #23 `6dadbd7a`.",
+        "- Меню во время идущей записи трека показывает «Завершить запись трека»: свежий",
+        "  старт публикует активный сервис, а не только восстановление прежнего трека.",
+        "  Пока запись ещё не активна, пункт меню — короткая строка «Не пишется — нажмите стоп».",
+        "- Подготовлен выпуск Lisa/Belka `3.1.2.24` / `versionCode 218`. Lisa Debug",
+        "  остаётся `3.1.2.22` / `versionCode 217`. Root закрепляет Merge Commit maplib",
+        "  PR #34 `5100feb` и maplibui PR #22 `dffe7079`.",
+        "- По логу отказа Android 14/target 36 запись трека и обход объявляют и запускают",
+        "  только location foreground service. Отказ запуска трека теперь виден в меню и",
+        "  сопровождается предупреждением, без выдачи намерения за реальную запись.",
+        "  Черновик обхода и прежние точки не удаляются.",
+        "- При каждом запуске карты и возврате из системных настроек заново проверяется",
+        "  цепочка необходимых разрешений; для повторного отказа предлагается страница",
+        "  разрешений приложения. Текст `GET_ACCOUNTS` больше не утверждает, что",
+        "  приложение читает контакты. Bluetooth, background location и установка APK",
+        "  остаются контекстными разрешениями. Уведомления исключены из проверки при",
+        "  запуске и возврате в приложение; запрос остаётся только при включении",
+        "  соответствующей настройки.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-09-22",
+        "heading": "2026-09-22",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-09-22-6843c6d7c901"
+    ]
+  }
+}

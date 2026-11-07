@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-form-and-accuracy-fixtures-with-prior-device-results",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Adaptive form fixtures раскрывают контрол перед свайпом и проверяют полное",
+        "имя на default/320/280dp ширине. Accuracy graphics fixture изолирует heading,",
+        "ждёт камеру/сцену и сохраняет sample/radius diagnostics. Адресно пройдены",
+        "26 form cases на T40 Plus/API30 и 28 form/cursor cases на API36 AVD; текущий",
+        "Full остаётся отдельным обязательным этапом. Runner48 проверяет также owned",
+        "AVD cleanup перед PASS, явно выбранный policy-fixture input и его передачу",
+        "через verification UID в private files с проверкой SHA-256. Android/data",
+        "рабочего приложения и системные storage permissions не меняются.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-form-and-accuracy-fixtures-with-prior-device-results"
+    ]
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:mobile-roadmap-map-memory-ordinary-build-and-actual-device-20261028",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout",
+      "lisa:mobile:task:mobile-roadmap-map-memory"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the pinned checkpoint and keep its results within the stated source and runtime bounds."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "28 октября после возобновления собраны обычные приватные Debug/Lisa Release/",
+        "Belka Release: build02 PASS83s, version matrix всех трёх PASS. Runtime source",
+        "`1b0c09ce…`, app `dbbd453f77f3` с точными maplib8d41588/maplibui edc189cc pins",
+        "не менялся. Первый обычный SQLite B diagnostic на SM-A566B завершил300s:",
+        "total RSS460.7–614.3MiB, до включения владельцем подписей выделов. Это не",
+        "строгий A/B и не физическая2GiB приёмка. Отдельная A-B-B-A серия с одинаково",
+        "включёнными подписями, реальным PK3688 и камерой14.5→11.5→14.5 дала168 raw",
+        "samples: A1/B1/B2/A2 retry по42/6/210s. Среднее двух run-level statistics:",
+        "late60 RSS958.12→659.66MiB (−31.15%), sampled peak1043.82→792.76MiB (−24.05%).",
+        "A1 collector FAIL сохранён; исходный A2 transport5037 partial исключён,",
+        "успешный retry отдельный. Все DB bytes неизменны,16 configs совпадают с labels-ON",
+        "basis; exact camera UNKNOWN, f80920px CENTER/TOP label difference остаётся.",
+        "Phone video medians примерно0.2–0.5s перекрываются, ускорение не установлено.",
+        "Tablet Collector1403 delay3–10s около12.1 не закрыта; требуются sharp17→12 и",
+        "полностью новая область. Небольшие warm11.7 pans не являются его приёмкой.",
+        "[Точная основа сборки, измерения и ограничения](../reference/mobile-crash-224-2026-10-27.md).",
+        "Merge, публичный выпуск и Full этим checkpoint не закрыты.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:mobile-roadmap-map-memory-ordinary-build-and-actual-device-20261028"
+    ]
+  }
+}

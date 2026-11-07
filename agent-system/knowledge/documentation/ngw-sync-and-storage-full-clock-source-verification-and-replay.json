@@ -1,0 +1,72 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ngw-sync-and-storage-full-clock-source-verification-and-replay",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original source frame, dated result and acceptance limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Same-source checkpoint29 октября: неизменные old3 +publication16 API28 технических",
+        "MemoryPreferences methods дали19 executed,10 assertion FAIL/9 controls до исправления",
+        "и те же19 PASS после (errors0/skips0; BUILD40s/31s). Product raw SHA256",
+        "`0a7b03b912aadfcbd87e26fe77cc260942c49df610635459ba5eb20b1fbc71bb`,",
+        "publication fixture `bcd031656cb87f227ab3d538cb05262cd62b84783204f55a8ad45ca284afe12b`,",
+        "old fixture `d7998443a137b9df92090ee010f03b36972d2ee353a53b6a139ed85c64a19c7d`.",
+        "Exact retained evidence: `project-sync-clock/implementation-final-receipt.json`",
+        "SHA256 `6bc5c28edadc4b003c423309519547def85aa2819ab54ed17b2d1c08a7c657e3`;",
+        "green XML publication16 `96ee7b672302f1437e096a08e3cb3ba7c66f742c81989311524299bd3bc52fd9`,",
+        "old3 `17af4503c26f96691c2c251c24ee9957a02e47517a2fba02ea4a3224a2c67642`.",
+        "Baseline XML hashes, cases и полные прежние semantic rows — в новой coverage history.",
+        "Эти retained evidence не являются runtime-зависимостью проверки.",
+        "",
+        "Публичное воспроизведение этой узкой source regression из Android root при прежних",
+        "JBR21/offline API28/Q caches после graph/input gate:",
+        "",
+        "`& '.\\gradlew.bat' '--offline' '--no-daemon' '-Pkotlin.incremental=false' '-PciReliabilityChecks=true' '--console=plain' ':maplib:testDebugUnitTest' '--tests' 'com.nextgis.maplib.util.ProjectSyncStateTest' '--tests' 'com.nextgis.maplib.util.ProjectSyncStatePublicationTest'`",
+        "",
+        "Новых tests/runtimes этот semantic delivery review не запускал. Исторические",
+        "LisaDebug42s/BelkaRelease46s compiles относятся к тогдашнему source checkpoint,",
+        "а не к позднейшему изменённому Runner. Current consumer compile/полный UI/docs итог",
+        "принимается только по отдельным свежим Root receipts. Ни API fault model, ни новый",
+        "source pin не исполняют реальные failed physical write/backup/restart,",
+        "weak-owner GC, full project sync, native redraw/locale/timezone или новый APK.",
+        "`AUDIT-TODO-SYNC-ACK-RECOVERY` сохраняет physical/fresh-process и post-ACK cleanup/",
+        "crash/full-clock retry вопросы. Installed APK/phone acceptance остаётся UNKNOWN.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:ngw-sync-and-storage-full-clock-source-verification-and-replay"
+    ]
+  }
+}

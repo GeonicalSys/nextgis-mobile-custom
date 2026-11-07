@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-captured-map-and-actual-path-commit",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Preference change listener возвращает false также при принятой задаче: выбранные path/card",
+        "не сохраняются до результата. Worker проверяет exact captured map, запрещает новые",
+        "renderer requests и перемещает одну карту; затем сохраняет её actual path.",
+        "`MainApplication` проверяет поле mMap напрямую, без побочного создания карты через",
+        "getMap. Проверка cached path/owner и rebind выполняются под одним application",
+        "monitor. Card label берётся от фактического storage root, прежний label сохраняется",
+        "при отсутствии соответствия. Сохранённые preference keys и публичные void-входы",
+        "moveMap/resetSettings прежние.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-captured-map-and-actual-path-commit"
+    ]
+  }
+}

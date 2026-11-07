@@ -1,0 +1,61 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:automated-tests-sqlite-phase-jvm-checkpoint",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## SQLite phase diagnostics — focused source и ordinary tablet",
+        "",
+        "Для typed phases выполнены39 JVM tests: `MapRuntimeDiagnosticsTest`18,",
+        "`SqliteVectorTileProviderTest`8, `SqliteVectorSourceBridgeTest`13; failures,",
+        "errors и skipped —0. Тесты проверяют timing/privacy, delayed outcomes,",
+        "active/layer bounds и overflow/reuse, clock/writer/watch fail-open cleanup,",
+        "совместимый backend overload и прежние bytes/cancellation. Команда из app root:",
+        "",
+        "```powershell",
+        ".\\gradlew.bat '-Pkotlin.incremental=false' '-PciReliabilityChecks=true' '--console=plain' ':maplib:testDebugUnitTest' '--tests' 'com.nextgis.maplib.util.MapRuntimeDiagnosticsTest' '--tests' 'com.nextgis.maplib.map.SqliteVectorTileProviderTest' '--tests' 'com.nextgis.maplib.map.SqliteVectorSourceBridgeTest'",
+        "```",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "39 focused tests and their exact source command retain the date and prior scope."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:automated-tests-sqlite-phase-jvm-checkpoint"
+    ]
+  }
+}

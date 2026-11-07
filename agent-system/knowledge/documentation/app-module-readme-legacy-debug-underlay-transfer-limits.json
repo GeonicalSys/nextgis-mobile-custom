@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-legacy-debug-underlay-transfer-limits",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Ограничения",
+        "",
+        "- Geonical не может читать private storage Debug напрямую. Перенос доступен",
+        "  только после установки совместимой Debug bridge-сборки с прежним сертификатом",
+        "  и только в уже выбранный активный проект. Версии `3.0.3.2`/`3.0.3.3` не дают",
+        "  надёжной source-project identity для автоматического сопоставления.",
+        "- Export provider отдаёт только перечисленные локальные TMS-подложки через",
+        "  read-only content URI; accounts, credentials, registry, vector layers, tracks",
+        "  и feature data не входят в контракт.",
+        "- Cross-package stream может быть отменён пользователем или watchdog после",
+        "  отсутствия новых байтов; это завершает worker и освобождает lease до следующей",
+        "  операции с проектом."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-legacy-debug-underlay-transfer-limits"
+    ]
+  }
+}

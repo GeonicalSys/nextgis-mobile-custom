@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-resource-selector-compact-state",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### Выбор способа импорта и повторные записи compact state — source checkpoint30 октября",
+        "",
+        "См. `UI-NGW-RESOURCE-CHECKBOX-SELECTION` в ui-contracts.md. Raster/vector flags относятся к local resource",
+        "ID в текущем Connections tree; remote path/account в compact JSON сопоставляется",
+        "с заново найденным localID при restore. Каждый прежний resolve и чтение flags",
+        "выполняется, включая повторную запись: только после этого same resolved localID",
+        "coalesces OR flags в первой owned записи. Ошибка позднего duplicate всё ещё",
+        "прерывает restore; different accounts/localIDs и первый порядок не смешиваются.",
+        "Схема JSON/Parcel, save filtering, alias public setter и Activity legacy input",
+        "не изменены. UI callback может очищать duplicate requested flags, но не обещает",
+        "dedup произвольного внешнего списка либо единственность side effects import loops.",
+        "Refresh/reconciliation policy остаётся `AUDIT-TODO-NGW-RESOURCE-BROWSER-REFRESH`; это не подтверждение поведения",
+        "реального сервера/перезапуска или native import. Новый source slice37 PASS; Belka source compile0/BUILD47s; native acceptance NOT_RUN.",
+        "",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-resource-selector-compact-state"
+    ]
+  }
+}

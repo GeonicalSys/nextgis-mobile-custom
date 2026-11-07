@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:lisa-ecosystem-project-script-package-and-runtime-ownership",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:lisa-ecosystem"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/lisa-ecosystem.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Доставка правил проекта",
+        "",
+        "`stand_project` публикует source-only ZIP во вложение нового native vector_layer",
+        "и ссылку в Collector. Android не читает desktop-диск: `maplib` владеет форматом,",
+        "изолированным QuickJS и native API, `maplibui` — формой, `app` — lifecycle guard.",
+        "[Project scripts](project-scripts.md) и `ECO-PROJECT-SCRIPTS` фиксируют границу.",
+        "GIS/расчётные функции расширяются постепенно в APK, без arbitrary SQL/сети в JS.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:lisa-ecosystem-project-script-package-and-runtime-ownership"
+    ]
+  }
+}

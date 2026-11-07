@@ -1,0 +1,169 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-navigation-stakeout-target",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-NAVIGATION-STAKEOUT-TARGET"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-NAVIGATION-STAKEOUT-TARGET",
+        "group": "navigation",
+        "title": "Слежение: цель — выбранная геометрия",
+        "surface": "Selected feature «Слежение» / «Вынос координат»",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [
+          "menu_feature_stakeout",
+          "stakeout_panel",
+          "stakeout_distance"
+        ],
+        "meaning": "Russian «Слежение» starts guidance to a copied selected geometry, not camera follow. The geometry/index is a snapshot; for lines/polygons the nearest planar facet point is recalculated for each eligible device fix, not automatically a centroid, first vertex or frozen nearest point.",
+        "value_origin": "Selected overlay Feature.geometry first: ordinary ID selection loads full geometry, while Feature/Bundle/draft restoration can supply its stored snapshot. Full DB fallback runs only when null -> private GeoGeometry copy with restored CRS -> EPSG3857 JTS index -> nearest target facet per device lon/lat -> target point back to4326 -> inverse distance/true bearing -> controller/widget. Camera centre is not an origin or target source.",
+        "units": "Source geometry EPSG4326 degrees or EPSG3857 projected XY; nearest facet choice uses3857. Reported range is metres from WGS84 ellipsoid inverse, with explicit spherical nonconvergence fallback; true initial bearing is clockwise degrees. Magnetic correction and camera-relative arrow are separate consumers.",
+        "updates": [
+          "Selected feature action constructs the geometry snapshot/index once; eligible device fixes recalculate nearest point/result against that copy.",
+          "Database/FID/overlay changes are not themselves an updateTarget subscription. Freeze/follow/invalidate/notify behavior after such change remains a policy question in the existing canonical TODO."
+        ],
+        "actions": [
+          "Enter Stakeout; stop/exit releases owned resources."
+        ],
+        "conditions": [
+          "Selected supported Point/MultiPoint/Line/MultiLine/Polygon/MultiPolygon; constructor checks non-null/type,4326-or3857 and nonempty indexable WKT. Complete target-coordinate/topology/domain acceptance remains unverified.",
+          "Both shared portrait/land layouts bind the same panel and metre formatter for Lisa/Belka; no runtime resource-merge proof is inferred.",
+          "Polygon stakeout currently targets outer/inner boundaries even for an inside fix; an 'arrive anywhere inside' goal would be another explicit policy, not an inferred bug fix."
+        ],
+        "saved_state": "Target holds private geometry/index, no layer/FID/workspace token. MapFragment saves mode plus selected layer/FID/geometry blob; same-process Boolean marker permits reconstructing guidance from that selected blob, while process death suppresses audible restart. This does not prove workspace/FID replacement safety or migrate live target/draft/account identity.",
+        "source_ids": [
+          "map-stakeout-start",
+          "stakeout-start",
+          "stakeout-geometry-calculate",
+          "map-stakeout-widget",
+          "stakeout-release",
+          "WF-STAKEOUT-TARGET-CONSTRUCT",
+          "WF-STAKEOUT-TARGET-INVERSE",
+          "WF-STAKEOUT-TARGET-SPHERE-FALLBACK",
+          "WF-STAKEOUT-SELECTION-GEOMETRY",
+          "WF-STAKEOUT-FULL-GEOMETRY",
+          "WF-STAKEOUT-SELECTION-SAVE",
+          "WF-STAKEOUT-SELECTION-RESTORE",
+          "WF-STAKEOUT-TARGET-STOP"
+        ],
+        "expectations": [
+          "Independent source oracle: original geometry/CRS does not change when a target is constructed/calculated; nearest[0] is on indexed target, not current position.",
+          "Changing current device fix may move nearest point along the same line/polygon snapshot; panning camera cannot redefine geometry/origin. Range is not WebMercator planar length, and numeric magnetic azimuth remains separate from screen rotation.",
+          "Inside polygon has positive boundary range by current contract; a hole is a boundary. No centroid/containment-zero replacement is inferred.",
+          "A/B geometry/DB/Bundle controls must distinguish copied guidance target from current row and rendering. Accepted freeze/follow/invalidate policy must precede a product change.",
+          "Counterexample: isLocked hides layer controls but is not a ProjectOperationCoordinator DATA_SYNC lease or proof that sync cannot change data."
+        ],
+        "unknowns": [
+          "Runtime NOT_RUN: no GUI/device/emulator/build/native resource merge acceptance in this proposal.",
+          "Constructor/copy/CRS and fallback branches are now manually pinned in source; all6-family runtime behavior, metric error envelope and invalid/global-coordinate cases remain unverified.",
+          "Existing AUDIT-TODO-NGW-REPLACE-FID owns source/DB/Bundle/workspace target replacement and expected freeze/follow/invalidate/notify behavior. No product bug or accepted migration policy is invented."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-map-stakeout-start",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-stakeout-start",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-stakeout-geometry-calculate",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-map-stakeout-widget",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-stakeout-release",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-stakeout-target-construct",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-stakeout-target-inverse",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-stakeout-target-sphere-fallback",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-stakeout-selection-geometry",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-stakeout-full-geometry",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-stakeout-selection-save",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-stakeout-selection-restore",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-stakeout-target-stop",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-navigation-stakeout-target"
+    ]
+  }
+}

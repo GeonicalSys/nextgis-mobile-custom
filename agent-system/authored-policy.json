@@ -1,0 +1,24 @@
+{
+  "format": "lisa.agent-system.authored-policy.v1",
+  "owner": "android_projects/android_gisapp",
+  "units": [
+    {
+      "id": "lisa:mobile:instruction:application.required-entry",
+      "review": "Route existing obligations through the maintained owner policy and documentation. Keep the pinned original body, applicability and execution limits.",
+      "base_revision": "80e1423d4912908e4b4174fb201249387051df17",
+      "record_sha256": "0042c0cbe6f20d263b661a98916ccc2425b6e59f38d60f765e62da2050e50e4f"
+    },
+    {
+      "id": "lisa:mobile:instruction:cursor-android-development-contracts.required-entry",
+      "review": "Route existing obligations through the maintained owner policy and documentation. Keep the pinned original body, applicability and execution limits.",
+      "base_revision": "80e1423d4912908e4b4174fb201249387051df17",
+      "record_sha256": "6e681f5392e1a3023fb2025a4e827a952b0e525e013d6517cf3f02b24a7cfae7"
+    },
+    {
+      "id": "lisa:mobile:instruction:workspace.required-entry",
+      "review": "Route existing obligations through the maintained owner policy and documentation. Keep the pinned original body, applicability and execution limits.",
+      "base_revision": "80e1423d4912908e4b4174fb201249387051df17",
+      "record_sha256": "9ff0111b26c774c77cc59a4230154f7a224a980fedbc7bb655bce95afeb5859f"
+    }
+  ]
+}

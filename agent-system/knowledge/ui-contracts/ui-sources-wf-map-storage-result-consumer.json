@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-wf-map-storage-result-consumer",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "WF-MAP-STORAGE-RESULT-CONSUMER"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "WF-MAP-STORAGE-RESULT-CONSUMER",
+        "repository": "root",
+        "path": "app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt",
+        "marker": "override fun onActivityResult(\n        requestCode: Int,\n        resultCode: Int,\n        data: Intent?)",
+        "requires": [
+          "RELOAD_ACTIVITY_DATA -> if (resultCode == RESULT_OK)",
+          "finish()",
+          "startActivity(intent)"
+        ],
+        "forbids": [],
+        "sha256": "9acc94200817c748f914205976430b69971b69b1b55f98878ef8a43471fdf4b4"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-wf-map-storage-result-consumer"
+    ]
+  }
+}

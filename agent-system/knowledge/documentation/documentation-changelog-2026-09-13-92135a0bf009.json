@@ -1,0 +1,85 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-09-13-92135a0bf009",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-09-13",
+        "",
+        "- Исправлены AppCompat-тема экрана хранилища и ссылки при объединении одного",
+        "  NGRc в разных форматах. Описаны сохранение проектных масштабов, восстановление",
+        "  прежних неверных ссылок и регрессии с прерыванием move/redirect; актуализирована",
+        "  цепочка уже объединённых PR и порядок доставки исправлений.",
+        "- «Хранилище подложек» вынесено из общих настроек на первый экран настроек,",
+        "  рядом с «Проект»; явный Toolbar и системные insets устраняют перекрытие",
+        "  первой строки на Android 16. Обновлены маршрутизация, registry и smoke.",
+        "",
+        "- Разделены текущий маркер и вершина стоянки: круг не растёт из-за удержания",
+        "  начала маршрута. Описаны быстрый старт при 3–5 м и устойчивое подтверждение",
+        "  при обычной уличной точности, новые регрессии и пределы полевой проверки.",
+        "- Обход получил независимого владельца полной геометрии, пассивный MapLibre",
+        "  контур и панель. Создание точки блокирует все команды обхода от выбора слоя",
+        "  до Save/Cancel; durable handoff и Finish требуют соответствующего UUID.",
+        "- Исправлена потеря CRS в копии скетча. На A54 проверена отрисовка во время",
+        "  обхода/создания точки и после формы, блокировка команд и подтверждение Finish.",
+        "- Обновлены storage, invariants, dependencies, manifests и smoke. Особенность",
+        "  имени GPX только в MAX отложена по указанию пользователя.",
+        "- Root закрепляет Merge Commit maplib PR #21 `761d7a2` и maplibui PR #13",
+        "  `223f8b04` вместо промежуточных feature pins.",
+        "- В APK добавлены PNG-маркеры точек `wood_truck` и `turn` (64×64) в",
+        "  `app/src/main/assets/marker_icons/`.",
+        "- Описаны общий каталог NGRc/MBTiles, move recovery, потоковая конвертация,",
+        "  межпроектный unlink и отдельный установщик Debug с проверкой exporter.",
+        "  Добавлены registry/smoke и local module packs; версии и desktop/publisher-форматы",
+        "  не менялись.",
+        "- Root закрепляет Merge Commit maplib PR #22 `998daff` и maplibui PR #14",
+        "  `4052cde3` для общего каталога подложек.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-09-13",
+        "heading": "2026-09-13",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-09-13-92135a0bf009"
+    ]
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:map-rendering-direct-sqlite-geometry-and-paint",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-rendering"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the rendering subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-rendering.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Память без потери геометрии — MOB-04, 2026-10-28",
+        "",
+        "Поддерживаемые ordinary Simple/Field Rule слои используют SQLite/RTree → MVT8192",
+        "→ штатный CustomVectorSource13.7.1 без HTTP и полного startup Java/GeoJSON слоя.",
+        "Редактор/selection читает по одному полному DB original; transient GeoJSON",
+        "нужен только малым overlays. Все factories/rule groups сохраняют paint/layout",
+        "и получают source-layer `features`. Polygon Fill/Line допускают только Polygon,",
+        "Symbol — inline Point anchors, чтобы query/picking не смешивал разные роли",
+        "одного FID. Source owner/content/style epochs и terminal cancel защищают",
+        "смену стиля/проекта/Activity. Это реализованный исходник, не завершённая native",
+        "приёмка или опубликованный APK; benchmark и2GiB/полный styles/edit gates открыты.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:map-rendering-direct-sqlite-geometry-and-paint"
+    ]
+  }
+}

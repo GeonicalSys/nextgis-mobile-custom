@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:location-pipeline-september-13-a54-installed-artifact",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:location-pipeline"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/location-pipeline.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "2026-09-13 тестовые Debug и основная ЛИСА обновлены на A54 с сохранением данных,",
+        "при отсутствии активной записи. Установленный основной APK 3.1.2.18/212 имеет",
+        "SHA-256 `a94b98af61f79fe68c46b5a74b4b2980b8c275194071472e7f18d060eae0ef34`,",
+        "совпадающий с локальной QA-сборкой. Документационный validator и все 7 его тестов",
+        "также прошли. Временный instrumentation package удалён.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Exact installed checksum, prior docs tests and cleanup receipt."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:location-pipeline-september-13-a54-installed-artifact"
+    ]
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:instruction:application.enlarged-ui-scenario",
+  "kind": "instruction",
+  "owner": "android_projects/android_gisapp",
+  "topic": "policy-application",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain editable logical subject and pinned provenance; product implementation/acceptance are separate records."
+  },
+  "facets": {
+    "body": {
+      "role": "permanent_rule",
+      "value": "Любая правка панелей, диалогов и подписей проходит проверки крупного шрифта\nи display size из корневого AGENTS.md. Для карты особенно проверять полные\nинструкции азимута/выноса, числовую коррекцию, GPS-статус и предупреждения,\nвключая portrait/landscape, обе темы и совместное увеличение до 200% шрифта\nпри ширине 320 и 280 dp. Сначала переносить элементы и разумно сокращать текст,\nзатем при реальном переполнении адаптивно уменьшать конкретный шрифт/компонент.\nПри закрытой клавиатуре Close/Stop/Save/Cancel остаются в видимой области и\nнажимаются. Не требовать одновременного вписывания всего интерфейса с открытой\nклавиатурой; после закрытия клавиатуры доступность восстанавливается. Регрессии включать в native\nreliability suite, проверяя реальные границы строк и кнопок.\n"
+    },
+    "classification": {
+      "role": "reviewed_knowledge_class",
+      "value": "permanent_rule"
+    },
+    "review": {
+      "role": "classification_reason",
+      "value": "Both themes/orientations/enlargement widths, actual local fitting, keyboard/action reachability and real geometric native expectations."
+    },
+    "source_section": {
+      "role": "source_document_context",
+      "value": [
+        "# app — инструкции для ИИ-агентов"
+      ]
+    },
+    "authority_limit": {
+      "role": "authority_and_acceptance_boundary",
+      "value": "Path applicability is reviewed separately from the rule's textual triggers. Every source condition and heading remains attached; no automatic predicate or lifecycle inference. Stored commands and dates do not grant current execution, freshness or product acceptance. Existing instruction clients/checkers remain effective until measured cutover."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/policy-migration.json",
+    "scopes": [
+      "lisa:mobile:instruction:application.enlarged-ui-scenario"
+    ]
+  }
+}

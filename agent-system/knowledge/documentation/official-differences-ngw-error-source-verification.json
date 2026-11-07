@@ -1,0 +1,49 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:official-differences-ngw-error-source-verification",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the dated comparison or verification at its original source span."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Проверено в текущем source-срезе: Actual89 PASS/0fail/errors/skips: Core46 (37 API28 models+9 plain JUnit), App43 API28 models,11 XML10.995s, Gradle process0/BUILD50s. Reviewed153 actual task set and68 source/runtime inputs exact; all15 observed unit-owned PIDs settled absent. BelkaRelease Java/Kotlin source compile process0/BUILD59s (61.275s observed), actual100 task SET equals reviewed100 while order differs; CoreJava/UIJava/AppJava+Kotlin executed. Four Java JARs28/535/670/45 classes, required typed classes present and no dex/so/APK/AAB/AAR.68 inputs unchanged; all13 observed compile-owned PIDs settled absent. These are source/model results, not native/device/window/Service/SQLite/server/APK acceptance.",
+        "First85 remains historical NOT_PASS:81PASS/4assertFAIL/0errors/skips. One producer stale-cohort oracle8 was explicitly corrected to original knownSERVER|OTHER12; Core16/App13/all other fixture bodies stayed unchanged. Product repair was only the independent body-only422 gate preventing408 externalDB text from claiming server maintenance; retry classification unchanged. Literal4 independent old-source baseline3assertFAIL/1control/0errors and exact same6eb9 GREEN are separate, not89+4 methods.",
+        "",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:official-differences-ngw-error-source-verification"
+    ]
+  }
+}

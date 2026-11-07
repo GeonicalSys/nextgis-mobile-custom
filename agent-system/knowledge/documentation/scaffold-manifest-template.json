@@ -1,0 +1,92 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:scaffold-manifest-template",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/templates/module-docs/manifest.yaml.tmpl",
+          "agent-system/knowledge/documentation/scaffold-manifest-template.json",
+          "docs/scripts/scaffold_module_docs.py",
+          "tools/docs-scaffold.ps1"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the generated portable input for independent docs roots."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_template_path",
+      "value": "docs/templates/module-docs/manifest.yaml.tmpl"
+    },
+    "body": {
+      "role": "literal_template_lines",
+      "value": [
+        "schema_version: 1",
+        "module_id: ${module_id}",
+        "repository_id: ${repository_id}",
+        "maturity: draft",
+        "last_verified: ${today}",
+        "entrypoints:",
+        "${entrypoints_yaml}",
+        "key_components:",
+        "  - path: ${first_entrypoint}",
+        "    responsibility: \"TODO: уточнить ответственность по коду\"",
+        "public_contracts: []",
+        "settings_refs: []",
+        "storage_contracts: []",
+        "invariant_refs: []",
+        "global_docs:",
+        "  - docs/architecture/overview.md",
+        "  - docs/registry/change-impact.yaml",
+        "smoke_tests: []",
+        "upstream_hotspots: []",
+        ""
+      ]
+    },
+    "scaffold-output": {
+      "role": "draft_module_pack_output",
+      "value": {
+        "path": "docs/manifest.yaml",
+        "purpose": "Start the draft module manifest with ordered entrypoints and central documentation references."
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:overview",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:metadata:change-impact-registry",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:scaffold-manifest-template"
+    ]
+  }
+}

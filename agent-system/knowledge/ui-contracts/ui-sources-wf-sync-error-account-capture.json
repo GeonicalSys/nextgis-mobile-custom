@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-wf-sync-error-account-capture",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "WF-SYNC-ERROR-ACCOUNT-CAPTURE"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "WF-SYNC-ERROR-ACCOUNT-CAPTURE",
+        "repository": "maplib",
+        "path": "src/main/java/com/nextgis/maplib/datasource/ngw/SyncAdapter.java",
+        "marker": "public void onPerformSync(\n            Account account,\n            Bundle bundle,\n            String authority,\n            ContentProviderClient contentProviderClient,\n            SyncResult syncResult)",
+        "requires": [
+          "SyncResultUtil.beginSync(syncResult)",
+          "SyncResultUtil.exportAccountFailureSnapshot(bundle, syncResult)",
+          "SyncResultUtil.endSync()"
+        ],
+        "forbids": [],
+        "sha256": "8eb6facb31093dab630915b185bd4e243676a05e13369376b0dda0ed279f2174"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-wf-sync-error-account-capture"
+    ]
+  }
+}

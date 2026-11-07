@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:polygon-style-controls-pattern-geometry-and-opacity",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:polygon-style-controls"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the style or label subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/polygon-style-controls.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Встроенные шесть узоров получают угол (по часовой стрелке от горизонтали карты),",
+        "шаг 4–64 px, толщину 0,5–16 px, цвет и отдельную непрозрачность. У перекрёстной",
+        "и лесной штриховок есть независимое второе направление. Если толщина достигает шага, линии закрывают фон; у точек это диаметр.",
+        "Заливка фона может быть выключена или прозрачна при видимой штриховке.",
+        "Custom image сохраняет прежнюю семантику и приоритет; новые генераторные настройки",
+        "к нему не применяются. Существующее смещение заливки продолжает сдвигать геометрию,",
+        "а не только фазу узора. Штриховка имеет фиксированный экранный шаг: geometry zoom",
+        "curve её не растягивает. Редактор проверяет диапазоны и блокирует Save при ошибке.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:polygon-style-controls-pattern-geometry-and-opacity"
+    ]
+  }
+}

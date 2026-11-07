@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-wf-sync-clock-store",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "WF-SYNC-CLOCK-STORE"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "WF-SYNC-CLOCK-STORE",
+        "repository": "maplib",
+        "path": "src/main/java/com/nextgis/maplib/util/ProjectSyncState.java",
+        "marker": "public static long lastComplete(Context context, String path)",
+        "requires": [
+          "if (path == null) return 0L",
+          "String project = key(path);",
+          "OwnerState owner = owner(preferences);",
+          "ClockState clock = owner.clocks.get(project);",
+          "if (clock != null) return clock.confirmed;",
+          "long value = preferences.getLong(project, 0L);",
+          "return clock == null ? value : clock.confirmed;",
+          "catch (IOException error) { return 0L; }"
+        ],
+        "forbids": [],
+        "sha256": "ca983f34cfc606c0d5258255982c31cec721439980ca135d9591517a1ff9d25b"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-wf-sync-clock-store"
+    ]
+  }
+}

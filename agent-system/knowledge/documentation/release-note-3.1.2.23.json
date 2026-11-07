@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:release-note-3.1.2.23",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:release-notes"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the published version text and original placement."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "WHATS_NEW.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 3.1.2.23 — 2026-09-21",
+        "",
+        "- Экран карты по умолчанию не гаснет; после обновления пункт можно выключить.",
+        "- «Загрузить проект» показывает список с точками выбора; загрузка — кнопкой",
+        "  «Загрузить».",
+        "- Длинные имена в «Добавить из Веб ГИС» переносятся, а не обрезаются.",
+        "- «Сменить проект»: сначала выбирается строка, карта открывается по «Открыть».",
+        "- Загрузка подложки из файла показывает имя файла и ход, а не служебный код.",
+        "- Перенос подложек из старого приложения: видны объём и тайлы, можно отменить;",
+        "  выход из хранилища во время переноса спрашивает подтверждение.",
+        ""
+      ]
+    },
+    "release": {
+      "role": "published_release_version",
+      "value": {
+        "version": "3.1.2.23",
+        "date": "2026-09-21"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:release-note-3.1.2.23"
+    ]
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-smoke-feature-type-creation",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "SMOKE-FEATURE-TYPE-CREATION"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "automatic",
+        "scope": [
+          "app",
+          "maplib",
+          "maplibui"
+        ],
+        "command": "adb -s emulator-5554 shell am instrument -w -e class com.nextgis.mobile.reliability.CascadingFormsTest,com.nextgis.mobile.reliability.MapEditingToolsTest,com.nextgis.mobile.reliability.StandardFeatureTypesTest com.nextgis.mobile.debug.test/androidx.test.runner.AndroidJUnitRunner",
+        "expected": "Isolated emulator only. Category defaults fill all stable-key parents, preserve blank unrelated branches, override remembered legacy values, survive dialog/form recreation and durable recovery, and write the selected pair through the shared SQLite Save gate. Real map creation paths choose a category before sketching, current-location form or walk recording, preserve the originating tool through recreation and interrupted recorder recovery, hand defaults to the attribute form, save both fields and return to the map without drafts. Cancelling a point category during a walk releases the point lock and retains the recording. Manual project smoke also covers Cancel, a single layer, simple styling and real project symbols."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-smoke-feature-type-creation"
+    ]
+  }
+}

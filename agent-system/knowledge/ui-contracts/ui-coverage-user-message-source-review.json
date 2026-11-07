@@ -1,0 +1,141 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:metadata:ui-coverage-user-message-source-review",
+  "kind": "metadata",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "coverage"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "user_message_source_review"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "reviewed_at": "2026-10-30",
+        "basis": "Manual semantic review of Root actual35 frozen own source, plus approved NetworkUtil body-only422 fix. All changed source pins correspond to explicitly reviewed cause/ownership/privacy conditions; not an automatic expectation updater. Original source context and prior review histories remain historical.",
+        "old_run_row": {
+          "id": "WF-SYNC-RUN",
+          "repository": "root",
+          "path": "app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java",
+          "marker": "static void run(Context context, List<Account> accounts, Bundle extras, String authority,\n                    ContentProviderClient provider, SyncResult result, Pass pass)",
+          "requires": [
+            "SyncWorkspaceSession session",
+            "fullProjectComplete = projectComplete && fullProject",
+            "ProjectSyncState.markComplete(context, target.path, now)",
+            "!com.nextgis.maplibui.mapui.LocalChangesWorker.hasPending(map, null)"
+          ],
+          "forbids": [],
+          "sha256": "eb5556de998a800fa9f52ce4c5f5134014acaacb8ef6ad883f3a9e2d5d495fc8"
+        },
+        "protected": "All old39 contract objects,141 other method rows,19 old file rows,48 widgets and the whole original F61 clock row remain exact. Only WF-SYNC-RUN is intentionally reviewed for new cause/late-outcome behavior. No alternate clock hash or checker exception.",
+        "runtime": "NOT_RUN here; technical source-JVM receipts and native/permission/window acceptance are distinct.",
+        "source_freeze_receipt": "mobile-user-messages/resume-20261030/actual-composed-source-freeze.json",
+        "verification_limits": "Actual89 PASS/0fail/errors/skips: Core46 (37 API28 models+9 plain JUnit), App43 API28 models,11 XML10.995s, Gradle process0/BUILD50s. Reviewed153 actual task set and68 source/runtime inputs exact; all15 observed unit-owned PIDs settled absent. BelkaRelease Java/Kotlin source compile process0/BUILD59s (61.275s observed), actual100 task SET equals reviewed100 while order differs; CoreJava/UIJava/AppJava+Kotlin executed. Four Java JARs28/535/670/45 classes, required typed classes present and no dex/so/APK/AAB/AAR.68 inputs unchanged; all13 observed compile-owned PIDs settled absent. These are source/model results, not native/device/window/Service/SQLite/server/APK acceptance. First85 remains historical NOT_PASS:81PASS/4assertFAIL/0errors/skips. One producer stale-cohort oracle8 was explicitly corrected to original knownSERVER|OTHER12; Core16/App13/all other fixture bodies stayed unchanged. Product repair was only the independent body-only422 gate preventing408 externalDB text from claiming server maintenance; retry classification unchanged. Literal4 independent old-source baseline3assertFAIL/1control/0errors and exact same6eb9 GREEN are separate, not89+4 methods.",
+        "first_85_source_inputs_sha256": {
+          "maplib/src/main/java/com/nextgis/maplib/util/SyncResultUtil.java": "7ecbb674fab0294a184ce130e3329ddefc5795f780cf79b8628316c35f00b28d",
+          "maplib/src/main/java/com/nextgis/maplib/datasource/ngw/SyncAdapter.java": "7f05cb1b7cdc6f0b0da5cc06e397bdc120f0f116895f4425980d78270b0561c7",
+          "app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java": "d22bbafd6f78773e0a9b73de81c5fb9aee8b4a87b655f0924e9d511545ad88cb",
+          "app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java": "06f21f33fc73754fe61139c9c54a5a035b88a0f13c47544aa40a34ab9ac6bd16",
+          "app/src/main/res/values/sync_recovery_strings.xml": "dd861357d7cf566fb028c3979a780f1ea3455141c8348fed12e7597628d11a1f",
+          "app/src/main/res/values-ru/sync_recovery_strings.xml": "23bd6831aaa44d1649a9f21b3397b0487eeaff6a53f6d761065fd6203690e8bb",
+          "maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java": "30fa06e0524e4afa83f7f4ab4a1e15d84e343a69077c0dac0e9db5982016553e",
+          "maplib/src/main/java/com/nextgis/maplib/map/NGWLookupTable.java": "167792626fc98df60e501364ba7cb1e3317a67f4d29929e72bf5c7a8f065facd",
+          "maplib/src/main/java/com/nextgis/maplib/util/NGWLayerSchemaCompat.java": "b11d08de3903198626e2071b8efabba9eafe8f9ab55a713746f080f6f5b939b7",
+          "maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java": "67539f26ef48bc67eb3313e47e35b728d014ae03db43d912daf512cdae36adfe",
+          "maplib/src/main/res/values/strings.xml": "581d9791aee4752b933e43f584c54695a71d1be1f2fab8629f0f1b7e7df2ddd9",
+          "maplib/src/main/res/values-ru/strings.xml": "30096f4c56b4eae0927ba8d8094bad4b09874281169dfaa15dece057bbc16963",
+          "maplib/src/main/java/com/nextgis/maplib/datasource/ngw/ResourceGroup.java": "8bf5614d7a9dd3f8de7935b68121206d49957ac82ec076d120398a2ac5302cd1",
+          "maplib/src/main/java/com/nextgis/maplib/datasource/ngw/Connection.java": "87039492ca47e87e7d5da52647dbfde9f4372a07647ee860cad82fd2b453e93b",
+          "maplibui/src/main/java/com/nextgis/maplibui/dialog/NGWResourcesListAdapter.java": "b703bf2cb2f6b5937b839c5b1c4fda9bccc5af936e056dced155400bdeaaa6ac",
+          "maplibui/src/main/res/values/resource_list_error_strings.xml": "8c80be88a63102e7b078d5bba18118aa8d00748bab28854f7e995fa55f12e45c",
+          "maplibui/src/main/res/values-ru/resource_list_error_strings.xml": "c43d9ffb71a83dc97db173e7fcd072fac25614692632dc6b49b4df852b25f6db",
+          "maplib/src/main/java/com/nextgis/maplib/util/NgwHttpException.java": "8e0c3d5a27285c8e308feb3ef5102493664eaa29ecfb3f8dcb805f1641afe34c",
+          "maplibui/src/main/java/com/nextgis/maplibui/util/LayerFillErrorMessage.java": "2ecb1ae1029c4471d59001a810419f482d938ab294d07d36e3cb07b98c901269",
+          "maplibui/src/main/res/values/layer_fill_error_strings.xml": "29e3a3c0e142957007caaa61fbdb81410d0592c54eb4d09852de21a5fa549f39",
+          "maplibui/src/main/res/values-ru/layer_fill_error_strings.xml": "1c762bee99c90e882945345c42468bea120822fb2e314aabf2bd3307806dad49",
+          "maplib/src/test/java/com/nextgis/maplib/util/NgwHttpExceptionTest.java": "4526485720e8bc12431267be73ebaf5a8b40e401f2c63ff1cc53a9ee79acffe6",
+          "app/src/test/java/com/nextgis/maplib/datasource/ngw/ResourceChildrenMessagesTest.java": "5a97b88c481a6d128afbbff472e42afcbb6ceeccdb07b4218cfa18eb504e1ec3",
+          "app/src/test/java/com/nextgis/maplibui/util/LayerFillErrorMessageTest.java": "2d73f5d150d067a21c4dadb6768444d865d2a4bb9fa79b4d0f0dc86b746fb96c",
+          "maplib/src/main/java/com/nextgis/maplib/util/NgwHttpResponseException.java": "85cad32895bc653cefcbe6b3f86d673a87fba0c8c5e97aa2811e1f84a3863a71",
+          "maplib/src/test/java/com/nextgis/maplib/util/NgwHttpResponseExceptionTest.java": "9ee30861813aad044527fd922bcab3556e79eb8dffc69ffad8bd1507a51ff714",
+          "maplib/src/test/java/com/nextgis/maplib/util/SyncFailureSnapshotTest.java": "a32edc3fecdc5d6c8cd083f081d5342bcb1e47e63fca1050dcd8d46f82f5ba52",
+          "app/src/test/java/com/nextgis/mobile/util/SyncFailurePresentationTest.java": "a4267054cc650c91b14cd9cb6430f73fb98ceb75a5ec6615aa665d274e5ee1ec",
+          "app/src/test/java/com/nextgis/mobile/util/ProjectSyncLateFailureTest.java": "712410f4b5f69333a034b093a6a070c766f0f3fa8e35c8cd6e50ccc7618cff37",
+          "maplib/src/test/java/com/nextgis/maplib/map/NGWHttpFailureReasonProducerTest.java": "d69c82873b64150d2c695599e63c0dd343390f81fab85f6280519c9578258dbc",
+          "maplib/src/test/java/com/nextgis/maplib/map/NGWSyncNoneServerFailureTest.java": "0759f9637ffc353c75bf3b849593436559689f0a548f1dcac54b22157270c58c",
+          "maplibui/src/main/java/com/nextgis/maplibui/activity/FormBuilderModifyAttributesActivity.java": "430da5992ebec1d44078cba3b46ba9d6d42b334e8b65a70d83c7d062676fb195",
+          "maplibui/src/main/res/values/legacy_form_error_strings.xml": "f82302e2a970a9996ebc2fbd8599e2640688b2acd5930d78b9e3d26416c19b97",
+          "maplibui/src/main/res/values-ru/legacy_form_error_strings.xml": "cedfe95a1c7683b39ee43745e26c88d794566cd2a940837b464a3d55d8b78da3",
+          "app/src/test/java/com/nextgis/maplibui/activity/FormLegacyListMessagesTest.java": "6eb9fd09eec07dc466305fd6bef0d0876806c59721e8439f635b9e0f9dbc183d",
+          "maplib/src/main/java/com/nextgis/maplib/util/NetworkUtil.java": "14afc9d4d4451a5dba1e564c9ec6844432a24b83c57a63f98de919aeb7e3fdd1"
+        },
+        "post_85_reviewed_product_inputs_sha256": {
+          "maplib/src/main/java/com/nextgis/maplib/util/SyncResultUtil.java": "7ecbb674fab0294a184ce130e3329ddefc5795f780cf79b8628316c35f00b28d",
+          "maplib/src/main/java/com/nextgis/maplib/datasource/ngw/SyncAdapter.java": "7f05cb1b7cdc6f0b0da5cc06e397bdc120f0f116895f4425980d78270b0561c7",
+          "app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java": "d22bbafd6f78773e0a9b73de81c5fb9aee8b4a87b655f0924e9d511545ad88cb",
+          "app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java": "06f21f33fc73754fe61139c9c54a5a035b88a0f13c47544aa40a34ab9ac6bd16",
+          "app/src/main/res/values/sync_recovery_strings.xml": "dd861357d7cf566fb028c3979a780f1ea3455141c8348fed12e7597628d11a1f",
+          "app/src/main/res/values-ru/sync_recovery_strings.xml": "23bd6831aaa44d1649a9f21b3397b0487eeaff6a53f6d761065fd6203690e8bb",
+          "maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java": "30fa06e0524e4afa83f7f4ab4a1e15d84e343a69077c0dac0e9db5982016553e",
+          "maplib/src/main/java/com/nextgis/maplib/map/NGWLookupTable.java": "167792626fc98df60e501364ba7cb1e3317a67f4d29929e72bf5c7a8f065facd",
+          "maplib/src/main/java/com/nextgis/maplib/util/NGWLayerSchemaCompat.java": "b11d08de3903198626e2071b8efabba9eafe8f9ab55a713746f080f6f5b939b7",
+          "maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java": "67539f26ef48bc67eb3313e47e35b728d014ae03db43d912daf512cdae36adfe",
+          "maplib/src/main/res/values/strings.xml": "581d9791aee4752b933e43f584c54695a71d1be1f2fab8629f0f1b7e7df2ddd9",
+          "maplib/src/main/res/values-ru/strings.xml": "30096f4c56b4eae0927ba8d8094bad4b09874281169dfaa15dece057bbc16963",
+          "maplib/src/main/java/com/nextgis/maplib/datasource/ngw/ResourceGroup.java": "8bf5614d7a9dd3f8de7935b68121206d49957ac82ec076d120398a2ac5302cd1",
+          "maplib/src/main/java/com/nextgis/maplib/datasource/ngw/Connection.java": "87039492ca47e87e7d5da52647dbfde9f4372a07647ee860cad82fd2b453e93b",
+          "maplibui/src/main/java/com/nextgis/maplibui/dialog/NGWResourcesListAdapter.java": "b703bf2cb2f6b5937b839c5b1c4fda9bccc5af936e056dced155400bdeaaa6ac",
+          "maplibui/src/main/res/values/resource_list_error_strings.xml": "8c80be88a63102e7b078d5bba18118aa8d00748bab28854f7e995fa55f12e45c",
+          "maplibui/src/main/res/values-ru/resource_list_error_strings.xml": "c43d9ffb71a83dc97db173e7fcd072fac25614692632dc6b49b4df852b25f6db",
+          "maplib/src/main/java/com/nextgis/maplib/util/NgwHttpException.java": "8e0c3d5a27285c8e308feb3ef5102493664eaa29ecfb3f8dcb805f1641afe34c",
+          "maplibui/src/main/java/com/nextgis/maplibui/util/LayerFillErrorMessage.java": "2ecb1ae1029c4471d59001a810419f482d938ab294d07d36e3cb07b98c901269",
+          "maplibui/src/main/res/values/layer_fill_error_strings.xml": "29e3a3c0e142957007caaa61fbdb81410d0592c54eb4d09852de21a5fa549f39",
+          "maplibui/src/main/res/values-ru/layer_fill_error_strings.xml": "1c762bee99c90e882945345c42468bea120822fb2e314aabf2bd3307806dad49",
+          "maplib/src/main/java/com/nextgis/maplib/util/NgwHttpResponseException.java": "85cad32895bc653cefcbe6b3f86d673a87fba0c8c5e97aa2811e1f84a3863a71",
+          "maplibui/src/main/java/com/nextgis/maplibui/activity/FormBuilderModifyAttributesActivity.java": "430da5992ebec1d44078cba3b46ba9d6d42b334e8b65a70d83c7d062676fb195",
+          "maplibui/src/main/res/values/legacy_form_error_strings.xml": "f82302e2a970a9996ebc2fbd8599e2640688b2acd5930d78b9e3d26416c19b97",
+          "maplibui/src/main/res/values-ru/legacy_form_error_strings.xml": "cedfe95a1c7683b39ee43745e26c88d794566cd2a940837b464a3d55d8b78da3",
+          "maplib/src/main/java/com/nextgis/maplib/util/NetworkUtil.java": "14afc9d4d4451a5dba1e564c9ec6844432a24b83c57a63f98de919aeb7e3fdd1"
+        },
+        "input_history_qualification": "first_85_source_inputs_sha256 retains original candidate/source basis; one producer fixture expectation is explicitly reconciled after that failed run and is not claimed byte-current. Product inputs are separately re-read after the independently reviewed NetworkUtil-only fix. No historical result is relabelled green.",
+        "technical_receipts": {
+          "unit": "resume-20261030/corrected-green/final-result-source-stop.json",
+          "unit_sha256": "388571c67300a886996c6351dbb05968667f85030074e56a98c411f0ce1549b4",
+          "compile": "resume-20261030/compile/final-result-source-stop.json",
+          "compile_sha256": "e1f809c28c97472650c5ee2bcc2a1c9de533e95c02e9617947c6444055bb44d9",
+          "source_not_native": true
+        }
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:metadata:ui-coverage-user-message-source-review"
+    ]
+  }
+}

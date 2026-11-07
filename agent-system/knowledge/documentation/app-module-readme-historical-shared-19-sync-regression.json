@@ -1,0 +1,73 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:app-module-readme-historical-shared-19-sync-regression",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Текущая регрессия15 в совместном19 —30 октября2026",
+        "",
+        "NgwLookupCacheSyncTest содержит15 actual-public-sync методов:8 прежних controls,",
+        "один revised false-save и6 новых. Две false-save ветви добавляют IO без отката",
+        "новой памяти, второй записи или подавления throws; старый equal-next no-write",
+        "сохранён. Это сигнал ошибки прохода, а не disk/retry/installed-cache acceptance.",
+        "[Центральный контракт](../../docs/architecture/ngw-sync-and-storage.md) разделяет риски.",
+        "",
+        "Новые результаты получены только в shared19 с Core4: baseline4 meaningful assertion",
+        "FAIL/15 controls/0technical, затем19PASS/0errors/skips (Core1.905с/App2.298с,",
+        "Gradle35с). Standalone15 отдельно не исполнялся. Belka source compile0/39с,",
+        "100 задач совпадают как множество, не как порядок;7 owned процессов завершились.",
+        "Первый compile dry capture UNKNOWN/NOT_PASS сохранён отдельно от успешного recovery",
+        "dry и единственного actual compile. Это не общее прохождение всех gates.",
+        "",
+        "[Новая App internal карточка](../../update-reports/entries/android-20261030-sync-admission-regression.md)",
+        "ссылается на стабильный Core Draft PR #63 и точный recipe path. UI39/142/19/F61,",
+        "старые9/19/22/21/12 и desktop1117/1192 сохранены; они не являются новыми прогонами.",
+        "Source Draft не равен merged pointer/APK/release/native. Полные metadata checks",
+        "после этой интеграции ещё не выполнены; прежние clock/wiki ограничения сохранены.",
+        "",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:documentation-ngw-sync-and-storage",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:app-module-readme-historical-shared-19-sync-regression"
+    ]
+  }
+}

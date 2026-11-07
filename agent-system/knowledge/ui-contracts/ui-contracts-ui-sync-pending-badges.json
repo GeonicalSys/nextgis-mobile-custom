@@ -1,0 +1,118 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-sync-pending-badges",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-SYNC-PENDING-BADGES"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-SYNC-PENDING-BADGES",
+        "group": "sync",
+        "title": "Метки ожидающих отправки данных",
+        "surface": "Кнопка sync и строки слоёв",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [
+          "sync_pending_badge",
+          "layer_pending_badge",
+          "sync"
+        ],
+        "meaning": "Отметка описывает локальную очередь, а не полноту загрузки или общую сетевую ошибку.",
+        "value_origin": "XML sync_pending_badge связан в onCreateView; collectPendingLayers рекурсивно собирает group IDs и VectorLayer.isChanges либо разрешённый registered/enabled TrackUploader.hasPending. Row badge связан getStandardLayerView с mPendingChanges.contains(layer.getId()). Это отличается от full-clock ready-outbox gate.",
+        "units": "Булево pending; не количество ошибок.",
+        "updates": [
+          "Result применяется только к тому же map и поколению UI.",
+          "Новая регистрационная доступность вызывает повторный расчёт."
+        ],
+        "actions": [
+          "Открыть слои",
+          "Запустить обмен"
+        ],
+        "conditions": [
+          "TrackSendSettings и положительное подтверждение конкретного device URL обязательны для track badge.",
+          "Старый result другой карты/Activity игнорируется.",
+          "Пустой badge, raw isChanges и готовый к отправке outbox не являются взаимозаменяемыми full-success oracles."
+        ],
+        "saved_state": "Данные очереди остаются в storage; переиспользованная строка не должна хранить самостоятельный badge state.",
+        "source_ids": [
+          "WF-SYNC-BADGE",
+          "WF-TRACK-REGISTRATION",
+          "WF-LAYER-ROW",
+          "WF-SYNC-WIDGET-BINDING",
+          "WF-SYNC-BADGE-COLLECT"
+        ],
+        "expectations": [
+          "Oracle: результат queryA после switchB не меняет badgesB; незарегистрированный tracker не показывает подтверждённую pending-track метку.",
+          "Контрпример: наличие track row считается регистрацией; старый async result переносится в другой проект.",
+          "Oracle: staged/TEMP/NOT_SYNC draft и готовая очередь проверяются отдельно; исчезновение pending badge не переносит project clock."
+        ],
+        "unknowns": [
+          "Разница canSendTracks/canShowPending намеренная; полный TrackUploader ACK protocol здесь не исполнялся."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-badge",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-track-registration",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-layer-row",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-widget-binding",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-badge-collect",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-sync-pending-badges"
+    ]
+  }
+}

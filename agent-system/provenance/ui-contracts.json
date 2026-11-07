@@ -1,0 +1,5472 @@
+{
+  "schema_version": 1,
+  "source": {
+    "repository": "android_projects/android_gisapp",
+    "path": "docs/registry/ui-contracts.json",
+    "revision": "462bfb86e7a08cab9246c445bfc15fda49fe8b3a",
+    "blob": "2050633988f85605b0f4acb8793ddb0b2f41e0df",
+    "sha256_utf8_lf": "b70df43752cec608c99cc9884ea6f12a6485633788a20a09d10876fcf3d73e94",
+    "bytes": 451059,
+    "lines": 8257
+  },
+  "counts": {
+    "sources": 268,
+    "contracts": 53,
+    "widget_evidence": 71,
+    "coverage": 20,
+    "non_method_evidence": 75
+  },
+  "spans": [
+    {
+      "bytes_half_open": [
+        0,
+        4
+      ],
+      "sha256": "2fcde7527e9cd81d62ae7ad3b1131615570c5028a57e630f18dc6a21e0c27bc6",
+      "section": "header",
+      "key": null,
+      "target": "lisa:mobile:metadata:ui-contracts-registry"
+    },
+    {
+      "bytes_half_open": [
+        4,
+        27
+      ],
+      "sha256": "2caf0767dbd7d39408589f1907515bb097f329dadd089125d65e3d47d1056651",
+      "section": "schema_version",
+      "key": null,
+      "target": "lisa:mobile:metadata:ui-contracts-registry"
+    },
+    {
+      "bytes_half_open": [
+        27,
+        44
+      ],
+      "sha256": "137cde23a17264002977f34bd2d7cc342715a100a75d90a445e563f3a842e5ec",
+      "section": "sources",
+      "key": null,
+      "target": "lisa:mobile:metadata:ui-contracts-registry"
+    },
+    {
+      "bytes_half_open": [
+        44,
+        509
+      ],
+      "sha256": "8d821734758b6c79275a9c7658efe45fbd9659ff8a7a9cac8f4e6d2f07178f17",
+      "section": "sources",
+      "key": "map-last-display",
+      "target": "lisa:mobile:evidence:ui-sources-map-last-display"
+    },
+    {
+      "bytes_half_open": [
+        509,
+        1142
+      ],
+      "sha256": "4a29ea1bc84c7518c6d58a6655e26ceb7405ce9ae1d2caf40c3bff880f745c7a",
+      "section": "sources",
+      "key": "map-status-location",
+      "target": "lisa:mobile:evidence:ui-sources-map-status-location"
+    },
+    {
+      "bytes_half_open": [
+        1142,
+        1670
+      ],
+      "sha256": "472ec5cd25076e87331aab5e945e90688b50a7cd7aa79154734a44738045c195",
+      "section": "sources",
+      "key": "map-status-bind",
+      "target": "lisa:mobile:evidence:ui-sources-map-status-bind"
+    },
+    {
+      "bytes_half_open": [
+        1670,
+        2208
+      ],
+      "sha256": "93c9726dceb1f558f3252fed0ca949cfa5674a7319e09662211a4e94b783667d",
+      "section": "sources",
+      "key": "map-status-empty",
+      "target": "lisa:mobile:evidence:ui-sources-map-status-empty"
+    },
+    {
+      "bytes_half_open": [
+        2208,
+        2686
+      ],
+      "sha256": "6c719b2a61fc4eb63363fac5450c5d37d9d70f51dc022eb06d0ec9b4f173fdf5",
+      "section": "sources",
+      "key": "map-format-coordinate",
+      "target": "lisa:mobile:evidence:ui-sources-map-format-coordinate"
+    },
+    {
+      "bytes_half_open": [
+        2686,
+        3247
+      ],
+      "sha256": "2adf2549e559725dc4ab14f18429a7848487a0049e14c8c62e53fabe0e48122f",
+      "section": "sources",
+      "key": "map-resume-settings",
+      "target": "lisa:mobile:evidence:ui-sources-map-resume-settings"
+    },
+    {
+      "bytes_half_open": [
+        3247,
+        3740
+      ],
+      "sha256": "31969ddab61b9fc4fa125ae44eeb534d2e411ac23e54d94e94357a7159ec4e07",
+      "section": "sources",
+      "key": "gps-current-fix",
+      "target": "lisa:mobile:evidence:ui-sources-gps-current-fix"
+    },
+    {
+      "bytes_half_open": [
+        3740,
+        4381
+      ],
+      "sha256": "9c461e497c126669a306692f00de261bd387a8d6491e16aa4c96f23ccca60f63",
+      "section": "sources",
+      "key": "gps-display-retention",
+      "target": "lisa:mobile:evidence:ui-sources-gps-display-retention"
+    },
+    {
+      "bytes_half_open": [
+        4381,
+        4876
+      ],
+      "sha256": "a6587755fd57b8afeb02d392e5672a23f7da81055bf73ef5ad68487e165de5e5",
+      "section": "sources",
+      "key": "fix-freshness",
+      "target": "lisa:mobile:evidence:ui-sources-fix-freshness"
+    },
+    {
+      "bytes_half_open": [
+        4876,
+        5507
+      ],
+      "sha256": "05a5b86b85f2669b292d7d135d8c5f4266408a33a35ad85c83e5ff0042f4dea8",
+      "section": "sources",
+      "key": "accuracy-display",
+      "target": "lisa:mobile:evidence:ui-sources-accuracy-display"
+    },
+    {
+      "bytes_half_open": [
+        5507,
+        6104
+      ],
+      "sha256": "ec7ed5c791c2f22d626ffb53f39b7fdd7c09553e5eb0a9511750d8e3b4e1d240",
+      "section": "sources",
+      "key": "gnss-hud",
+      "target": "lisa:mobile:evidence:ui-sources-gnss-hud"
+    },
+    {
+      "bytes_half_open": [
+        6104,
+        6597
+      ],
+      "sha256": "50136d67a3c26f5ef6110576e7ab6eea0639f455004dee202fa3407c92a47327",
+      "section": "sources",
+      "key": "gnss-quality",
+      "target": "lisa:mobile:evidence:ui-sources-gnss-quality"
+    },
+    {
+      "bytes_half_open": [
+        6597,
+        7001
+      ],
+      "sha256": "1e0de715f93a64a308aec4ea99d82113c0b1c2f0908cb9aeca36ca21229aa591",
+      "section": "sources",
+      "key": "map-zoom-text",
+      "target": "lisa:mobile:evidence:ui-sources-map-zoom-text"
+    },
+    {
+      "bytes_half_open": [
+        7001,
+        7514
+      ],
+      "sha256": "b267118bde49a09f7df9b5b8a9c39fe3c2831dce62175075334065f6973950eb",
+      "section": "sources",
+      "key": "map-camera-idle",
+      "target": "lisa:mobile:evidence:ui-sources-map-camera-idle"
+    },
+    {
+      "bytes_half_open": [
+        7514,
+        7976
+      ],
+      "sha256": "d4335cca66193f10cc576cb5e5012116f642b499315d5c66beb9db1b15653845",
+      "section": "sources",
+      "key": "map-scale-bitmap",
+      "target": "lisa:mobile:evidence:ui-sources-map-scale-bitmap"
+    },
+    {
+      "bytes_half_open": [
+        7976,
+        8512
+      ],
+      "sha256": "e835e4703aeb075d62bf4ff246e446675440cf03727dc1d34107a5c9eb3386ad",
+      "section": "sources",
+      "key": "map-click-actions",
+      "target": "lisa:mobile:evidence:ui-sources-map-click-actions"
+    },
+    {
+      "bytes_half_open": [
+        8512,
+        9118
+      ],
+      "sha256": "d43ea074dc5b2fcc31adc77a740b22d32d461350078ddd6f8d8133bb4e8a6b85",
+      "section": "sources",
+      "key": "map-locate",
+      "target": "lisa:mobile:evidence:ui-sources-map-locate"
+    },
+    {
+      "bytes_half_open": [
+        9118,
+        9661
+      ],
+      "sha256": "ed42d1c7169a21921387e76c7caf2a8483618de766446e682922d483489e68be",
+      "section": "sources",
+      "key": "map-locate-permission",
+      "target": "lisa:mobile:evidence:ui-sources-map-locate-permission"
+    },
+    {
+      "bytes_half_open": [
+        9661,
+        10266
+      ],
+      "sha256": "daa3c839a48080f88b611a8094d620df0dbaf3b449f096b57dc46c87ec441f80",
+      "section": "sources",
+      "key": "map-locate-fallback",
+      "target": "lisa:mobile:evidence:ui-sources-map-locate-fallback"
+    },
+    {
+      "bytes_half_open": [
+        10266,
+        10841
+      ],
+      "sha256": "f30831d8207012b5c23b291bb7df681b191ba9d83e569db6cfc79682f02be2cc",
+      "section": "sources",
+      "key": "map-rotation-toggle",
+      "target": "lisa:mobile:evidence:ui-sources-map-rotation-toggle"
+    },
+    {
+      "bytes_half_open": [
+        10841,
+        11365
+      ],
+      "sha256": "5c6283b5a4eb9b71dc396f132db0328355a7f69dcc25039597be5ed67953c13b",
+      "section": "sources",
+      "key": "map-rotation-gestures",
+      "target": "lisa:mobile:evidence:ui-sources-map-rotation-gestures"
+    },
+    {
+      "bytes_half_open": [
+        11365,
+        11958
+      ],
+      "sha256": "98c5e4466d43ef65c81f494875e83afad5940076a5b04ec4d011d1ce0e918c10",
+      "section": "sources",
+      "key": "map-persist-camera",
+      "target": "lisa:mobile:evidence:ui-sources-map-persist-camera"
+    },
+    {
+      "bytes_half_open": [
+        11958,
+        12639
+      ],
+      "sha256": "a299b2db9e75f45450508e6390bcc6ff476dc39a84d3d43f6939aaee20669eb9",
+      "section": "sources",
+      "key": "map-init-autopan",
+      "target": "lisa:mobile:evidence:ui-sources-map-init-autopan"
+    },
+    {
+      "bytes_half_open": [
+        12639,
+        13115
+      ],
+      "sha256": "a6cb818f8f14c7968fafd03ef8d9ff75548494f362306455ea7c07213b631baf",
+      "section": "sources",
+      "key": "map-point-pauses-autopan",
+      "target": "lisa:mobile:evidence:ui-sources-map-point-pauses-autopan"
+    },
+    {
+      "bytes_half_open": [
+        13115,
+        13745
+      ],
+      "sha256": "3bda03581a14670c2567e1b075222c96b4d908d0ce541afb4f4e0bd453f7b9f4",
+      "section": "sources",
+      "key": "overlay-autopan-policy",
+      "target": "lisa:mobile:evidence:ui-sources-overlay-autopan-policy"
+    },
+    {
+      "bytes_half_open": [
+        13745,
+        14397
+      ],
+      "sha256": "92dab2acf8bcc3cf8b0ab32cf5171592f24b3c3688c015148be5217de2f4f8bc",
+      "section": "sources",
+      "key": "overlay-autopan-transform",
+      "target": "lisa:mobile:evidence:ui-sources-overlay-autopan-transform"
+    },
+    {
+      "bytes_half_open": [
+        14397,
+        15051
+      ],
+      "sha256": "2cc95eedb5fd62780b80ac884c9ccae5c605000c12fa597c94f104abce3340d7",
+      "section": "sources",
+      "key": "map-device-fix",
+      "target": "lisa:mobile:evidence:ui-sources-map-device-fix"
+    },
+    {
+      "bytes_half_open": [
+        15051,
+        15510
+      ],
+      "sha256": "a5b9d26605eb2094f6adb6c06fcb421dd059742a381cf36731b4cc190d4548f5",
+      "section": "sources",
+      "key": "map-location-unavailable",
+      "target": "lisa:mobile:evidence:ui-sources-map-location-unavailable"
+    },
+    {
+      "bytes_half_open": [
+        15510,
+        16112
+      ],
+      "sha256": "0eb97ba53623be91e2a26350802821935bfc0b2e5193ec3a3b1da11cb9e325d9",
+      "section": "sources",
+      "key": "maplib-publish-location",
+      "target": "lisa:mobile:evidence:ui-sources-maplib-publish-location"
+    },
+    {
+      "bytes_half_open": [
+        16112,
+        16616
+      ],
+      "sha256": "5c771ceaa6e7cfec24d1a0976fbb3cce368ba55240c6bcc4aa6e6a5cfb53a745",
+      "section": "sources",
+      "key": "maplib-sector-visibility",
+      "target": "lisa:mobile:evidence:ui-sources-maplib-sector-visibility"
+    },
+    {
+      "bytes_half_open": [
+        16616,
+        17162
+      ],
+      "sha256": "d68774a4c183d25c77a058d7dc59485fcaa7d6c875a5db20043cce47f8054377",
+      "section": "sources",
+      "key": "device-true-heading",
+      "target": "lisa:mobile:evidence:ui-sources-device-true-heading"
+    },
+    {
+      "bytes_half_open": [
+        17162,
+        17689
+      ],
+      "sha256": "416d4faf8eed7856fa5a6b37fd2aeaf04520521fb7711e78dc1d536d82257616",
+      "section": "sources",
+      "key": "device-heading-declination",
+      "target": "lisa:mobile:evidence:ui-sources-device-heading-declination"
+    },
+    {
+      "bytes_half_open": [
+        17689,
+        18319
+      ],
+      "sha256": "7da8446bb9306e38a4af3cb1f8f008b2fd87e8368538d05066efbc58749e4100",
+      "section": "sources",
+      "key": "legacy-compass-value",
+      "target": "lisa:mobile:evidence:ui-sources-legacy-compass-value"
+    },
+    {
+      "bytes_half_open": [
+        18319,
+        18821
+      ],
+      "sha256": "a0d39d64f777a79c5ce718cb515051f5050a217e954423ab2ba5e004dcaf5396",
+      "section": "sources",
+      "key": "legacy-compass-prefs",
+      "target": "lisa:mobile:evidence:ui-sources-legacy-compass-prefs"
+    },
+    {
+      "bytes_half_open": [
+        18821,
+        19388
+      ],
+      "sha256": "e0224ca94703abe9281979175264f6295a979c2151a54d5be255fb9a31b03f8e",
+      "section": "sources",
+      "key": "map-stakeout-start",
+      "target": "lisa:mobile:evidence:ui-sources-map-stakeout-start"
+    },
+    {
+      "bytes_half_open": [
+        19388,
+        19970
+      ],
+      "sha256": "647d7b388147cd4f3f55de158ff77fd36356598304856d5e5acd1ebab22ee566",
+      "section": "sources",
+      "key": "stakeout-start",
+      "target": "lisa:mobile:evidence:ui-sources-stakeout-start"
+    },
+    {
+      "bytes_half_open": [
+        19970,
+        20597
+      ],
+      "sha256": "89547c3489ef54cd65d0d69908acf1ec928c307f81ba82cc94ac1681392c2634",
+      "section": "sources",
+      "key": "stakeout-geometry-calculate",
+      "target": "lisa:mobile:evidence:ui-sources-stakeout-geometry-calculate"
+    },
+    {
+      "bytes_half_open": [
+        20597,
+        21215
+      ],
+      "sha256": "b613691cadf5ee1ed20123c95662116873c6a8fafdd0ffcdce2c14789261ef45",
+      "section": "sources",
+      "key": "stakeout-fix",
+      "target": "lisa:mobile:evidence:ui-sources-stakeout-fix"
+    },
+    {
+      "bytes_half_open": [
+        21215,
+        21824
+      ],
+      "sha256": "b14a9b4714d095f567ba5cf6d014ff8b0182cc9a4a88a3f28a92820da53cf040",
+      "section": "sources",
+      "key": "stakeout-freshness",
+      "target": "lisa:mobile:evidence:ui-sources-stakeout-freshness"
+    },
+    {
+      "bytes_half_open": [
+        21824,
+        22498
+      ],
+      "sha256": "df7d5ec4d414edc838cdf4e8ede2390bcea4148c526f1d3bd61f52cee82a68de",
+      "section": "sources",
+      "key": "stakeout-publish",
+      "target": "lisa:mobile:evidence:ui-sources-stakeout-publish"
+    },
+    {
+      "bytes_half_open": [
+        22498,
+        23177
+      ],
+      "sha256": "459fe3a800f725c780e1153b756e42138c5642124f24629a3abc5067fbd3c7d7",
+      "section": "sources",
+      "key": "map-stakeout-widget",
+      "target": "lisa:mobile:evidence:ui-sources-map-stakeout-widget"
+    },
+    {
+      "bytes_half_open": [
+        23177,
+        23664
+      ],
+      "sha256": "3d7fd4c935e8b1881e0d7599a20a4c0b4c4b2f33937e241b35d37f17390adecf",
+      "section": "sources",
+      "key": "stakeout-mute",
+      "target": "lisa:mobile:evidence:ui-sources-stakeout-mute"
+    },
+    {
+      "bytes_half_open": [
+        23664,
+        24236
+      ],
+      "sha256": "89fd83ac5116fccb06e31dc8d4850abb2f04bf03916abf4b00175f12164d122d",
+      "section": "sources",
+      "key": "stakeout-release",
+      "target": "lisa:mobile:evidence:ui-sources-stakeout-release"
+    },
+    {
+      "bytes_half_open": [
+        24236,
+        24826
+      ],
+      "sha256": "7d638facb7138ff58563aaf94d825fe62cfaafb240cad2e5db7202ccc3f649ce",
+      "section": "sources",
+      "key": "azimuth-current-target",
+      "target": "lisa:mobile:evidence:ui-sources-azimuth-current-target"
+    },
+    {
+      "bytes_half_open": [
+        24826,
+        25376
+      ],
+      "sha256": "88b891904dd2187cd62e781a5b06fc20e89369595d1256f8c93fd88a8718b23c",
+      "section": "sources",
+      "key": "map-screen-wgs84",
+      "target": "lisa:mobile:evidence:ui-sources-map-screen-wgs84"
+    },
+    {
+      "bytes_half_open": [
+        25376,
+        25940
+      ],
+      "sha256": "7da74e335b0feb2fd4c8082069c9048cd11e0a71c7f6d6fb1c7b04b257d82e08",
+      "section": "sources",
+      "key": "azimuth-two-points",
+      "target": "lisa:mobile:evidence:ui-sources-azimuth-two-points"
+    },
+    {
+      "bytes_half_open": [
+        25940,
+        26615
+      ],
+      "sha256": "dda8a17f033e6bcb3cd4c8718b67e28736d19c564a5efd3d082b8f35c7095fbd",
+      "section": "sources",
+      "key": "azimuth-two-point-result",
+      "target": "lisa:mobile:evidence:ui-sources-azimuth-two-point-result"
+    },
+    {
+      "bytes_half_open": [
+        26615,
+        27235
+      ],
+      "sha256": "b80b53c9752b99749293c89f8de7fec03485923906dabd91225ee49cf0f1f657",
+      "section": "sources",
+      "key": "azimuth-magnetic-transform",
+      "target": "lisa:mobile:evidence:ui-sources-azimuth-magnetic-transform"
+    },
+    {
+      "bytes_half_open": [
+        27235,
+        27717
+      ],
+      "sha256": "fcff3ef6c48274e4f0cce0e0f917f79f43926045eea18deaa736a72c4a24cae8",
+      "section": "sources",
+      "key": "azimuth-correction-save",
+      "target": "lisa:mobile:evidence:ui-sources-azimuth-correction-save"
+    },
+    {
+      "bytes_half_open": [
+        27717,
+        28330
+      ],
+      "sha256": "f471cc27edbf499b19557d10231ce042940391822042356ff4291be1adbdbdfc",
+      "section": "sources",
+      "key": "gps-recording-fix",
+      "target": "lisa:mobile:evidence:ui-sources-gps-recording-fix"
+    },
+    {
+      "bytes_half_open": [
+        28330,
+        28885
+      ],
+      "sha256": "eda407c03e2e0fcca4d83cbd6a6a7c254a4cb9826e7ced5a614de37f6a0c3295",
+      "section": "sources",
+      "key": "gnss-accuracy-format",
+      "target": "lisa:mobile:evidence:ui-sources-gnss-accuracy-format"
+    },
+    {
+      "bytes_half_open": [
+        28885,
+        29501
+      ],
+      "sha256": "76754eeab683fa2a6f11611fb89ab4432fbd8aa3376c0208f154a0cfa8519034",
+      "section": "sources",
+      "key": "WF-PROJECT-CHOOSER",
+      "target": "lisa:mobile:evidence:ui-sources-wf-project-chooser"
+    },
+    {
+      "bytes_half_open": [
+        29501,
+        30086
+      ],
+      "sha256": "f02a9db161f31cd07df9bfd83162bc702d596770b1b61d97d32248e5189dd606",
+      "section": "sources",
+      "key": "WF-PROJECT-SWITCH",
+      "target": "lisa:mobile:evidence:ui-sources-wf-project-switch"
+    },
+    {
+      "bytes_half_open": [
+        30086,
+        30708
+      ],
+      "sha256": "c45a0daae483d634e917d38079c5b7691e5e3c61da285fe1598104615cd72cd2",
+      "section": "sources",
+      "key": "WF-PROJECT-ACTIVATE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-project-activate"
+    },
+    {
+      "bytes_half_open": [
+        30708,
+        31325
+      ],
+      "sha256": "c26305e2f75d0c1260c073e564abaa5a8fa1e4c3b7577294fc69595f7fcfc1bc",
+      "section": "sources",
+      "key": "WF-LAYER-ROW",
+      "target": "lisa:mobile:evidence:ui-sources-wf-layer-row"
+    },
+    {
+      "bytes_half_open": [
+        31325,
+        31747
+      ],
+      "sha256": "2ce0d6ceafa4a92458002bad8bcc1e2c97327f1b314de5aafe53af9726a9225c",
+      "section": "sources",
+      "key": "WF-LAYER-ORDER",
+      "target": "lisa:mobile:evidence:ui-sources-wf-layer-order"
+    },
+    {
+      "bytes_half_open": [
+        31747,
+        32384
+      ],
+      "sha256": "8ee0bd59655dd5aab335a9343dbfc1bf8856d1b45175f491786341c572354fc1",
+      "section": "sources",
+      "key": "WF-EDIT-POLICY",
+      "target": "lisa:mobile:evidence:ui-sources-wf-edit-policy"
+    },
+    {
+      "bytes_half_open": [
+        32384,
+        32854
+      ],
+      "sha256": "33efd921abd13ba94b0c2d1a218325c000c0d8bdaa0ee7e70a3b7291aae6024e",
+      "section": "sources",
+      "key": "WF-NGW-EDIT-POLICY",
+      "target": "lisa:mobile:evidence:ui-sources-wf-ngw-edit-policy"
+    },
+    {
+      "bytes_half_open": [
+        32854,
+        33381
+      ],
+      "sha256": "e18731ff01d1c98833f9608021fcea35da2e19ed5b1d67b773fa3ff4570d8e23",
+      "section": "sources",
+      "key": "WF-IDENTIFY-SELECT",
+      "target": "lisa:mobile:evidence:ui-sources-wf-identify-select"
+    },
+    {
+      "bytes_half_open": [
+        33381,
+        33919
+      ],
+      "sha256": "9c46c5f1527ec9201e24ac395a6b2df0cff4ce90e21ccef0747eb40a00feae54",
+      "section": "sources",
+      "key": "WF-IDENTIFY-NEXT",
+      "target": "lisa:mobile:evidence:ui-sources-wf-identify-next"
+    },
+    {
+      "bytes_half_open": [
+        33919,
+        34621
+      ],
+      "sha256": "45461317bd94d264904b4a616d31d9cbefa4bc6500dce9f196b01ad04e7f6cd3",
+      "section": "sources",
+      "key": "WF-IDENTIFY-TOOLBAR",
+      "target": "lisa:mobile:evidence:ui-sources-wf-identify-toolbar"
+    },
+    {
+      "bytes_half_open": [
+        34621,
+        35273
+      ],
+      "sha256": "a95a8830d0f83ea513f35f31116ce2ca6f2d65ac28bc5a78ed71ea0a26f58836",
+      "section": "sources",
+      "key": "WF-FORM-REQUIRED",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-required"
+    },
+    {
+      "bytes_half_open": [
+        35273,
+        35913
+      ],
+      "sha256": "a9b55019f0e6892b31687f4b54f44305f23721379d2efd6dbdfecd27ed6e15de",
+      "section": "sources",
+      "key": "WF-FORM-DRAFT",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-draft"
+    },
+    {
+      "bytes_half_open": [
+        35913,
+        36483
+      ],
+      "sha256": "0d4e7cc1d02c1fc4d7ba773b8f74bab0c374134c8a061a48eddc1c02f0bc78f8",
+      "section": "sources",
+      "key": "WF-FORM-DRAFT-STORE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-draft-store"
+    },
+    {
+      "bytes_half_open": [
+        36483,
+        37221
+      ],
+      "sha256": "5906408ae4edb342953205193a39437855b113c3a17d001832a955dfe65b1a6f",
+      "section": "sources",
+      "key": "WF-FORM-SAVE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-save"
+    },
+    {
+      "bytes_half_open": [
+        37221,
+        37784
+      ],
+      "sha256": "61a823a4c95216e93083e5ab9df45b4b0284b9924738c039cb20daf4796811b7",
+      "section": "sources",
+      "key": "WF-FORM-ABSENT-FIELD",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-absent-field"
+    },
+    {
+      "bytes_half_open": [
+        37784,
+        38529
+      ],
+      "sha256": "41bfd56b067ce6569d35f4c7641fc2517604ef63a8288a66286eedb61198562d",
+      "section": "sources",
+      "key": "WF-LOCAL-PARTIAL-UPDATE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-local-partial-update"
+    },
+    {
+      "bytes_half_open": [
+        38529,
+        39109
+      ],
+      "sha256": "5e45127d10f0128521a6cb1ddaa6e8f38b96c776779d1d42ddc0e6f0c7a85eff",
+      "section": "sources",
+      "key": "WF-SYNC-MANUAL",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-manual"
+    },
+    {
+      "bytes_half_open": [
+        39109,
+        39619
+      ],
+      "sha256": "806b29e3526856dffb9279313d4b37d2af460d875aff531455602c5c57eaf2b4",
+      "section": "sources",
+      "key": "WF-SYNC-RETRY",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-retry"
+    },
+    {
+      "bytes_half_open": [
+        39619,
+        40094
+      ],
+      "sha256": "6a8d00a2b5ec43e236d4410dce40b9ae0a48288a2202139371b8db2cbdbbe6ef",
+      "section": "sources",
+      "key": "WF-SYNC-CLOCK",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-clock"
+    },
+    {
+      "bytes_half_open": [
+        40094,
+        40870
+      ],
+      "sha256": "c3361f9643c5fa76c0c16783dc755d9a65bdca7b9b5d12310a74776e58c5b230",
+      "section": "sources",
+      "key": "WF-SYNC-CLOCK-STORE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-clock-store"
+    },
+    {
+      "bytes_half_open": [
+        40870,
+        41876
+      ],
+      "sha256": "4aeb9345b778eb7ba0d9eeb85cbb220a536cf6172b79dc0a9ed9507a742df25a",
+      "section": "sources",
+      "key": "WF-SYNC-RUN",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-run"
+    },
+    {
+      "bytes_half_open": [
+        41876,
+        42470
+      ],
+      "sha256": "b56d06889caa0eefe9c127ede36c344bf1d0f53f50728e7a05c716f68aee202c",
+      "section": "sources",
+      "key": "WF-SYNC-BADGE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-badge"
+    },
+    {
+      "bytes_half_open": [
+        42470,
+        42998
+      ],
+      "sha256": "4ce83002e2f55369d36e8f8da4de06d3593b5a88ef87e4de84cb18747b5991fc",
+      "section": "sources",
+      "key": "WF-TRACK-REGISTRATION",
+      "target": "lisa:mobile:evidence:ui-sources-wf-track-registration"
+    },
+    {
+      "bytes_half_open": [
+        42998,
+        43558
+      ],
+      "sha256": "95be59b2de46f4cf307c777cd37bd9caf8e81951074eefb073bd16431904d31a",
+      "section": "sources",
+      "key": "WF-TRACK-PANEL",
+      "target": "lisa:mobile:evidence:ui-sources-wf-track-panel"
+    },
+    {
+      "bytes_half_open": [
+        43558,
+        44223
+      ],
+      "sha256": "7900ad35143463105c0eb6c488b76b631e722dd54ba723edbd8b145d3c3ef185",
+      "section": "sources",
+      "key": "WF-TRACK-RENAME",
+      "target": "lisa:mobile:evidence:ui-sources-wf-track-rename"
+    },
+    {
+      "bytes_half_open": [
+        44223,
+        44823
+      ],
+      "sha256": "0dff194b67b5bc4d23d9859172413cc528e3701750316054b400440e908611dd",
+      "section": "sources",
+      "key": "WF-TRACK-DELETE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-track-delete"
+    },
+    {
+      "bytes_half_open": [
+        44823,
+        45372
+      ],
+      "sha256": "9b1c0a51e487d5ac28187cebae6f68739b48f82e2d2e05db7f2e2bfde1e2d86e",
+      "section": "sources",
+      "key": "WF-TRACK-UPDATE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-track-update"
+    },
+    {
+      "bytes_half_open": [
+        45372,
+        45768
+      ],
+      "sha256": "5dea01eb660fc4d513ad5053e40d01db2817ed6cf02f535cd304772b456d618a",
+      "section": "sources",
+      "key": "WF-TRACK-DATABASE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-track-database"
+    },
+    {
+      "bytes_half_open": [
+        45768,
+        46330
+      ],
+      "sha256": "e2c8e3d02ff9466ba1167acc6a31bb6c77628c70d52e1de61c692266783cb58f",
+      "section": "sources",
+      "key": "WF-NGW-FIELD-SCHEMA",
+      "target": "lisa:mobile:evidence:ui-sources-wf-ngw-field-schema"
+    },
+    {
+      "bytes_half_open": [
+        46330,
+        46810
+      ],
+      "sha256": "e284dad232ae30060736e88f4f30ecb8bf6d5513a15e70d16448a659710f35d8",
+      "section": "sources",
+      "key": "WF-MAP-STORAGE-MENU",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-menu"
+    },
+    {
+      "bytes_half_open": [
+        46810,
+        47290
+      ],
+      "sha256": "6ffe95d4a7fcdfa05af68f73fd6f71018879a741bb093f780e0f3c803f2022f8",
+      "section": "sources",
+      "key": "WF-MAP-STORAGE-SETTINGS-INTENT",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-settings-intent"
+    },
+    {
+      "bytes_half_open": [
+        47290,
+        47722
+      ],
+      "sha256": "9981052d1902be3214c42f8a6f091462b2257be6296e425a2edb0a406cfbec52",
+      "section": "sources",
+      "key": "WF-MAP-STORAGE-HEADER-FACTORY",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-header-factory"
+    },
+    {
+      "bytes_half_open": [
+        47722,
+        48213
+      ],
+      "sha256": "fbe42b92d6df53e78076c90278c9f5024a85547fc1d18062448a29560eaefdcd",
+      "section": "sources",
+      "key": "WF-MAP-STORAGE-HEADERS",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-headers"
+    },
+    {
+      "bytes_half_open": [
+        48213,
+        48708
+      ],
+      "sha256": "48c1f38d16d916144a49f5e6f0c9d6fab77ac35c0543377c88aaa47e09891fc6",
+      "section": "sources",
+      "key": "WF-MAP-STORAGE-SUBSCREEN",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-subscreen"
+    },
+    {
+      "bytes_half_open": [
+        48708,
+        49227
+      ],
+      "sha256": "391c69eddfefe602c62f49ee2a87323d4ca6d0d35556e5cf7c47a2d67a9e19b4",
+      "section": "sources",
+      "key": "WF-MAP-STORAGE-SUBSCREEN-BASE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-subscreen-base"
+    },
+    {
+      "bytes_half_open": [
+        49227,
+        49798
+      ],
+      "sha256": "a65925be1f1ffc88a142ec546f58badd90e2e762057ebd0a959f7ae927819fe8",
+      "section": "sources",
+      "key": "WF-MAP-STORAGE-FRAGMENT-BASE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-fragment-base"
+    },
+    {
+      "bytes_half_open": [
+        49798,
+        50280
+      ],
+      "sha256": "d93ef150020b502fe1db347b22e9125468a9b802586e049a96a2dd6c64f1b122",
+      "section": "sources",
+      "key": "WF-MAP-STORAGE-FRAGMENT-FACTORY",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-fragment-factory"
+    },
+    {
+      "bytes_half_open": [
+        50280,
+        50810
+      ],
+      "sha256": "5544b2e074da3c083241811dc830d6e1a4d8a2c45a8dbf8e67aeed1e5c1bd641",
+      "section": "sources",
+      "key": "WF-MAP-STORAGE-ACTION-ROOT",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-action-root"
+    },
+    {
+      "bytes_half_open": [
+        50810,
+        51463
+      ],
+      "sha256": "93067a81755442295c777bfd388d0af48db5ce93b7a3ef6217c3161d7909b6bf",
+      "section": "sources",
+      "key": "WF-MAP-STORAGE-MAP-PREFS",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-map-prefs"
+    },
+    {
+      "bytes_half_open": [
+        51463,
+        52027
+      ],
+      "sha256": "da3fcc52a435be656c6473d819bd74efb504307be3dc00b9035005a1a4d285b9",
+      "section": "sources",
+      "key": "WF-MAP-STORAGE-STORAGE-CHOOSER",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-storage-chooser"
+    },
+    {
+      "bytes_half_open": [
+        52027,
+        52438
+      ],
+      "sha256": "69bba5518ee33d02c13b066040a15f781765eee9170870f002cff2fcad0f9f76",
+      "section": "sources",
+      "key": "WF-MAP-STORAGE-PERSIST-TEXT",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-persist-text"
+    },
+    {
+      "bytes_half_open": [
+        52438,
+        53019
+      ],
+      "sha256": "412de27c9510574f6cc20173a1653c80260c2152d7179654f1b432946214cd80",
+      "section": "sources",
+      "key": "WF-MAP-STORAGE-CHANGE-LISTENER",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-change-listener"
+    },
+    {
+      "bytes_half_open": [
+        53019,
+        53474
+      ],
+      "sha256": "cede5c1f558fc54f6be68d24ec9fafcf66ebd4bed0a7313588a2347e6fb77480",
+      "section": "sources",
+      "key": "WF-MAP-STORAGE-MOVE-START",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-move-start"
+    },
+    {
+      "bytes_half_open": [
+        53474,
+        54168
+      ],
+      "sha256": "72792d205060a002124df60b1e22c11a8ba5f5c20c333f0cb804e2d4b3a70ad6",
+      "section": "sources",
+      "key": "WF-MAP-STORAGE-MOVE-WORKER",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-move-worker"
+    },
+    {
+      "bytes_half_open": [
+        54168,
+        54571
+      ],
+      "sha256": "05163c374f4cae4ccc95ff8cd06a1ea1646466ae9434edacc6869de1e883b21a",
+      "section": "sources",
+      "key": "WF-MAP-STORAGE-MOVE-FINISH",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-move-finish"
+    },
+    {
+      "bytes_half_open": [
+        54571,
+        55356
+      ],
+      "sha256": "c927d77e95c8e4bc6ee35fbc2a8a8b2dabc3ba4e2e7bf4e91aa18cfb6e470984",
+      "section": "sources",
+      "key": "WF-MAP-STORAGE-MOVE-MAP",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-move-map"
+    },
+    {
+      "bytes_half_open": [
+        55356,
+        55946
+      ],
+      "sha256": "b9c4d2cc9f7b9a6bfb723f6a01d23c7fea48bf8b4bf06865afbf6cf4c0628e69",
+      "section": "sources",
+      "key": "WF-MAP-STORAGE-MAP-OWNER",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-map-owner"
+    },
+    {
+      "bytes_half_open": [
+        55946,
+        56669
+      ],
+      "sha256": "61bfae6e1b010c4d77c12e819b6e27bc634623dbd6bef44ad7400ad1bd7ddb8e",
+      "section": "sources",
+      "key": "WF-SYNC-WIDGET-BINDING",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-widget-binding"
+    },
+    {
+      "bytes_half_open": [
+        56669,
+        57302
+      ],
+      "sha256": "828c24f557cb7850961ce4913e9bcf55c4fafeae02fd0d8a6648efb5c50bf7c4",
+      "section": "sources",
+      "key": "WF-SYNC-RING",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-ring"
+    },
+    {
+      "bytes_half_open": [
+        57302,
+        57738
+      ],
+      "sha256": "01888652c49f49bd0d9e5f3ecb83507ed43a801e461dd8bf45866d71b889d3c0",
+      "section": "sources",
+      "key": "WF-SYNC-ACTIVE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-active"
+    },
+    {
+      "bytes_half_open": [
+        57738,
+        58367
+      ],
+      "sha256": "071076ce73a91148efca06e1899c743af8cffecd74842732def8b5d831065ea0",
+      "section": "sources",
+      "key": "WF-SYNC-RECEIVER",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-receiver"
+    },
+    {
+      "bytes_half_open": [
+        58367,
+        58951
+      ],
+      "sha256": "e88530646fe5d1e7ecc8755aea2ac419f92bfff93ea6765dc62b286224be7098",
+      "section": "sources",
+      "key": "WF-SYNC-CLOCK-FORMAT",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-clock-format"
+    },
+    {
+      "bytes_half_open": [
+        58951,
+        59621
+      ],
+      "sha256": "f9e927132dc4be75afa0a12f0cac64582755d6a4a03b32954ac1175cd7e0a54b",
+      "section": "sources",
+      "key": "WF-SYNC-BADGE-COLLECT",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-badge-collect"
+    },
+    {
+      "bytes_half_open": [
+        59621,
+        60151
+      ],
+      "sha256": "dea06fc081b0636566aa3895f3ac4efe8633676943aeef03434021774eaf37d9",
+      "section": "sources",
+      "key": "WF-SYNC-PROGRESS-COMPUTE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-progress-compute"
+    },
+    {
+      "bytes_half_open": [
+        60151,
+        60650
+      ],
+      "sha256": "d4efb1bce0309530d5100d45bc46a98d471e0a6155f7253a1b417da4d3f86ecf",
+      "section": "sources",
+      "key": "WF-SYNC-PROGRESS-FINISH",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-progress-finish"
+    },
+    {
+      "bytes_half_open": [
+        60650,
+        61456
+      ],
+      "sha256": "ee8d6114fdccf227538c82338e9089c1f82b7fc14acf2969e639f4aa37f39210",
+      "section": "sources",
+      "key": "WF-MAP-STORAGE-ADMISSION",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-admission"
+    },
+    {
+      "bytes_half_open": [
+        61456,
+        61954
+      ],
+      "sha256": "e1a5ee81d1902d05815e79cbd4b7ae8fde75cadb924d6c5c573caabdb32306d0",
+      "section": "sources",
+      "key": "WF-MAP-STORAGE-RETIRE-OWNER",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-retire-owner"
+    },
+    {
+      "bytes_half_open": [
+        61954,
+        62450
+      ],
+      "sha256": "421df087a2a6a09d403e04698259c1fcbd1cf3a2aa599d2dc8adb2ee920a4d58",
+      "section": "sources",
+      "key": "WF-MAP-STORAGE-OWNER-PREDICATE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-owner-predicate"
+    },
+    {
+      "bytes_half_open": [
+        62450,
+        62991
+      ],
+      "sha256": "e36ea84893a4f1df505d1b9ef4fbb3546bded41421bc31dfcc5765f9c06835fa",
+      "section": "sources",
+      "key": "WF-MAP-STORAGE-OWNER-MATCH",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-owner-match"
+    },
+    {
+      "bytes_half_open": [
+        62991,
+        63520
+      ],
+      "sha256": "8cbca80f42b097412fa1e8dbdc10b04c73c4c169a8917766e5a4e41be7ef242c",
+      "section": "sources",
+      "key": "WF-MAP-STORAGE-ATOMIC-REBIND",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-atomic-rebind"
+    },
+    {
+      "bytes_half_open": [
+        63520,
+        64174
+      ],
+      "sha256": "aaa43c31ef87f84163b46886bc7f22f33fec6ee4bbe71a23748a8b1de8d5b0e3",
+      "section": "sources",
+      "key": "WF-MAP-STORAGE-TERMINAL",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-terminal"
+    },
+    {
+      "bytes_half_open": [
+        64174,
+        64601
+      ],
+      "sha256": "8126b00dd340eddad5712ec9c0c74d781b824d745e6b5205bd35f134412bcb9c",
+      "section": "sources",
+      "key": "WF-MAP-STORAGE-TASK-OWNER",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-task-owner"
+    },
+    {
+      "bytes_half_open": [
+        64601,
+        65128
+      ],
+      "sha256": "5fefa1499321b30036a3c411069ac7943dd574ffc473ea4881c446682e2451bd",
+      "section": "sources",
+      "key": "WF-MAP-STORAGE-REFRESH",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-refresh"
+    },
+    {
+      "bytes_half_open": [
+        65128,
+        65523
+      ],
+      "sha256": "b211d6ae5ed48bb366aa6292e733c38590c45e94fc62e7eaf2a1991a90fa65e6",
+      "section": "sources",
+      "key": "WF-MAP-STORAGE-CANCEL",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-cancel"
+    },
+    {
+      "bytes_half_open": [
+        65523,
+        65902
+      ],
+      "sha256": "97f32814cedcc39e78f307a23eae9c900228fca854d17b591c2ee782eeae3ba1",
+      "section": "sources",
+      "key": "WF-MAP-STORAGE-CANCEL-EMPTY",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-cancel-empty"
+    },
+    {
+      "bytes_half_open": [
+        65902,
+        66428
+      ],
+      "sha256": "c844e2ab2ef751d5f1e550836647296795ec34b648d047ab67d66b90803cd8ef",
+      "section": "sources",
+      "key": "WF-MAP-STORAGE-PRE-EXECUTE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-pre-execute"
+    },
+    {
+      "bytes_half_open": [
+        66428,
+        66879
+      ],
+      "sha256": "9545741b6c47700c794999a59c96c65398f0b524c24a4dfe491e3e11a33374d6",
+      "section": "sources",
+      "key": "WF-MAP-STORAGE-START-FAILURE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-start-failure"
+    },
+    {
+      "bytes_half_open": [
+        66879,
+        67385
+      ],
+      "sha256": "1a0765332b4ee4d9e8f09bd3dc4dc6c7fbd17f9f6102bef384420a637eb239f1",
+      "section": "sources",
+      "key": "WF-MAP-STORAGE-RELEASE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-release"
+    },
+    {
+      "bytes_half_open": [
+        67385,
+        67942
+      ],
+      "sha256": "33ba7acce3070612f835febe40852573fe6e3f53b172b745b5a2dccfbd05ac9e",
+      "section": "sources",
+      "key": "WF-MAP-STORAGE-WIDGET-RESULT",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-widget-result"
+    },
+    {
+      "bytes_half_open": [
+        67942,
+        68404
+      ],
+      "sha256": "af10a07c32dae7731ceee65f452da5da867ae72c2a660193f0d4315a5aa25422",
+      "section": "sources",
+      "key": "WF-MAP-STORAGE-CARD-NAME",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-card-name"
+    },
+    {
+      "bytes_half_open": [
+        68404,
+        68854
+      ],
+      "sha256": "013eab7918b43b8da117df4f60c51d4ab85adf5d937a9bf189ef072bdc06ea0b",
+      "section": "sources",
+      "key": "WF-MAP-STORAGE-CARD-SAVE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-card-save"
+    },
+    {
+      "bytes_half_open": [
+        68854,
+        69396
+      ],
+      "sha256": "05590e23ef87f1b32d12f324a672cff11d86ac8eb5da2777066cb5bae30465dc",
+      "section": "sources",
+      "key": "WF-MAP-STORAGE-RESULT-CONSUMER",
+      "target": "lisa:mobile:evidence:ui-sources-wf-map-storage-result-consumer"
+    },
+    {
+      "bytes_half_open": [
+        69396,
+        69955
+      ],
+      "sha256": "9d9f3fb3a4e167bd3db6575c353175be9159f70feadf8fcc02250cc26bab0a25",
+      "section": "sources",
+      "key": "WF-SETTINGS-RESET-CONFIRM",
+      "target": "lisa:mobile:evidence:ui-sources-wf-settings-reset-confirm"
+    },
+    {
+      "bytes_half_open": [
+        69955,
+        70378
+      ],
+      "sha256": "59ad1177a07e0dd9adc1e62b1d7734e58fa37c14cc30833275bb20c8e9d434a4",
+      "section": "sources",
+      "key": "WF-SETTINGS-RESET-START",
+      "target": "lisa:mobile:evidence:ui-sources-wf-settings-reset-start"
+    },
+    {
+      "bytes_half_open": [
+        70378,
+        71110
+      ],
+      "sha256": "0f772092eddbbd30dc9b881f361e18b8cee677bb32c3c99068dc55a9a96728d7",
+      "section": "sources",
+      "key": "WF-SETTINGS-RESET-PREFERENCES",
+      "target": "lisa:mobile:evidence:ui-sources-wf-settings-reset-preferences"
+    },
+    {
+      "bytes_half_open": [
+        71110,
+        71620
+      ],
+      "sha256": "7550af1a7452ef2a4b82c7597aa124d38b6a124a5b6feed0898cd44fad259ed4",
+      "section": "sources",
+      "key": "WF-SETTINGS-RESET-DELETE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-settings-reset-delete"
+    },
+    {
+      "bytes_half_open": [
+        71620,
+        72084
+      ],
+      "sha256": "77e2563c7bc0e0bbd01e5c3d3ee808743892dc86faa829678650727f82b2abb7",
+      "section": "sources",
+      "key": "WF-SETTINGS-RESET-DISTRICT",
+      "target": "lisa:mobile:evidence:ui-sources-wf-settings-reset-district"
+    },
+    {
+      "bytes_half_open": [
+        72084,
+        72828
+      ],
+      "sha256": "7c2b267f1eef01218d3778ae81dac319db60500708531cbc93acec28ae4dda67",
+      "section": "sources",
+      "key": "WF-FORM-TEXT-CONTROL-FACTORY",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-text-control-factory"
+    },
+    {
+      "bytes_half_open": [
+        72828,
+        73682
+      ],
+      "sha256": "b6c4c56a8681182c16c3e736afa6e404fa464c4b7d0ec32d7c8059eb797ba801",
+      "section": "sources",
+      "key": "WF-FORM-TEXT-CONTROL-BINDING",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-text-control-binding"
+    },
+    {
+      "bytes_half_open": [
+        73682,
+        74909
+      ],
+      "sha256": "7e48c3246292d9e434cfbaecadddf5c0d1d23f9d98a0a1192f09a076b9a873a4",
+      "section": "sources",
+      "key": "WF-FORM-TEXT-LINE-INITIALIZATION",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-text-line-initialization"
+    },
+    {
+      "bytes_half_open": [
+        74909,
+        75285
+      ],
+      "sha256": "6b102f485382d08aa1d7efc18475a48cc6ea1aeb6ff44c56d990b917d25f4c5b",
+      "section": "sources",
+      "key": "WF-FORM-TEXT-FIELD-IDENTITY",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-text-field-identity"
+    },
+    {
+      "bytes_half_open": [
+        75285,
+        75658
+      ],
+      "sha256": "566820d50e7757dc4e7d060ca2b70941a2e15ac8d22bf431b9633888454ba2f3",
+      "section": "sources",
+      "key": "WF-FORM-TEXT-VALUE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-text-value"
+    },
+    {
+      "bytes_half_open": [
+        75658,
+        76102
+      ],
+      "sha256": "63e3022a02864fed390c5e777e12207d90995e60cb8231aef13f101d62103e63",
+      "section": "sources",
+      "key": "WF-FORM-TEXT-STATE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-text-state"
+    },
+    {
+      "bytes_half_open": [
+        76102,
+        76815
+      ],
+      "sha256": "e2bdb1a07222a442dd68b2c1e68fc652a1e5fd033e16e4edd6851367e3b5c76a",
+      "section": "sources",
+      "key": "WF-STAKEOUT-TARGET-CONSTRUCT",
+      "target": "lisa:mobile:evidence:ui-sources-wf-stakeout-target-construct"
+    },
+    {
+      "bytes_half_open": [
+        76815,
+        77483
+      ],
+      "sha256": "4c086d90b14b720ca522967aedcc0d05e9f5de15fc750fe0d2b57e294b6af646",
+      "section": "sources",
+      "key": "WF-STAKEOUT-TARGET-INVERSE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-stakeout-target-inverse"
+    },
+    {
+      "bytes_half_open": [
+        77483,
+        78126
+      ],
+      "sha256": "6341f386c4804e07f5c00b3a2ea24f8267c36078492882b256a6453b481e8aca",
+      "section": "sources",
+      "key": "WF-STAKEOUT-TARGET-SPHERE-FALLBACK",
+      "target": "lisa:mobile:evidence:ui-sources-wf-stakeout-target-sphere-fallback"
+    },
+    {
+      "bytes_half_open": [
+        78126,
+        78565
+      ],
+      "sha256": "fc6583f13da6454998ae6633e36e5a40ce27ecce7b75327ee1ee46a67c2014f9",
+      "section": "sources",
+      "key": "WF-STAKEOUT-SELECTION-GEOMETRY",
+      "target": "lisa:mobile:evidence:ui-sources-wf-stakeout-selection-geometry"
+    },
+    {
+      "bytes_half_open": [
+        78565,
+        79015
+      ],
+      "sha256": "0df06def45a5f2c2d421e72cccc3784b89b2af5acd37dabea0a5326f64e238c7",
+      "section": "sources",
+      "key": "WF-STAKEOUT-FULL-GEOMETRY",
+      "target": "lisa:mobile:evidence:ui-sources-wf-stakeout-full-geometry"
+    },
+    {
+      "bytes_half_open": [
+        79015,
+        79564
+      ],
+      "sha256": "27b889f78dc74162c24df576fe8a5bee99f93c70f2c8b8559108ac011c37d945",
+      "section": "sources",
+      "key": "WF-STAKEOUT-SELECTION-SAVE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-stakeout-selection-save"
+    },
+    {
+      "bytes_half_open": [
+        79564,
+        80267
+      ],
+      "sha256": "afae421ce4366f590447ea44c21a306be27d66cca680a2f3730a4193e745fe85",
+      "section": "sources",
+      "key": "WF-STAKEOUT-SELECTION-RESTORE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-stakeout-selection-restore"
+    },
+    {
+      "bytes_half_open": [
+        80267,
+        80780
+      ],
+      "sha256": "356ad461203d2f9cd9ffdef9044e13c6a3cc80af1a3bef536da10c4ed1d02f2c",
+      "section": "sources",
+      "key": "WF-STAKEOUT-TARGET-STOP",
+      "target": "lisa:mobile:evidence:ui-sources-wf-stakeout-target-stop"
+    },
+    {
+      "bytes_half_open": [
+        80780,
+        81195
+      ],
+      "sha256": "6d9f8f1c16c7517dfa1c834ea60bf4984c428f9db0e6e9548f857626fb42d51e",
+      "section": "sources",
+      "key": "WF-SYNC-ERROR-OWNER-BEGIN",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-error-owner-begin"
+    },
+    {
+      "bytes_half_open": [
+        81195,
+        81728
+      ],
+      "sha256": "e55ef50a81fdd8c3d3593a2a3684335edaac9c40b69785a8c43aeafbdbb98268",
+      "section": "sources",
+      "key": "WF-SYNC-ERROR-SNAPSHOT",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-error-snapshot"
+    },
+    {
+      "bytes_half_open": [
+        81728,
+        82252
+      ],
+      "sha256": "2ecfbe63d632a1f9717f46056ced89e50d1b0045eacb005c72ecb361409965c5",
+      "section": "sources",
+      "key": "WF-SYNC-ERROR-EXPORT",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-error-export"
+    },
+    {
+      "bytes_half_open": [
+        82252,
+        82798
+      ],
+      "sha256": "f11cee37ae1639166606f260b5f1110bc8be3e126c0f5f7ccbace9e16a862477",
+      "section": "sources",
+      "key": "WF-SYNC-ERROR-READ",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-error-read"
+    },
+    {
+      "bytes_half_open": [
+        82798,
+        83488
+      ],
+      "sha256": "9148509bcbe8500a8b4ef46358054501b91347060297f454e14686cdae5cf214",
+      "section": "sources",
+      "key": "WF-SYNC-ERROR-ACCOUNT-CAPTURE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-error-account-capture"
+    },
+    {
+      "bytes_half_open": [
+        83488,
+        84057
+      ],
+      "sha256": "9592fc23dd35b591698f56bba31ddc4f732aae7e2627fdde3a82aab80f19b36c",
+      "section": "sources",
+      "key": "WF-SYNC-ERROR-COPY",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-error-copy"
+    },
+    {
+      "bytes_half_open": [
+        84057,
+        84707
+      ],
+      "sha256": "0b85cbe4f4e3181237161764842de02e855cf8447d52e104a5eedb9594d43f3b",
+      "section": "sources",
+      "key": "WF-SYNC-ERROR-NOTIFICATION",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-error-notification"
+    },
+    {
+      "bytes_half_open": [
+        84707,
+        85216
+      ],
+      "sha256": "97879075023291b5dd25bff7b99595e2edf7fe22d86ae13daa9d426cce740b23",
+      "section": "sources",
+      "key": "WF-SYNC-ERROR-RAW-API",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-error-raw-api"
+    },
+    {
+      "bytes_half_open": [
+        85216,
+        85885
+      ],
+      "sha256": "c734cb3d44967d787583c86309f1e99ad6bcea2c14b684dc83b6867824ceac92",
+      "section": "sources",
+      "key": "WF-SYNC-ERROR-ALERT",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-error-alert"
+    },
+    {
+      "bytes_half_open": [
+        85885,
+        86599
+      ],
+      "sha256": "73c19ced98fcc61370bd2d5ea9b05f76da7da4b2e62e983a4e73e5326b25fd82",
+      "section": "sources",
+      "key": "WF-SYNC-ERROR-LATE-OUTCOME",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-error-late-outcome"
+    },
+    {
+      "bytes_half_open": [
+        86599,
+        87079
+      ],
+      "sha256": "3a2e3f26b5e9d518a207c3592163aa7c4469365b49656bfb21d897dc5cc008b1",
+      "section": "sources",
+      "key": "WF-NGW-RESOURCE-CHILDREN-RESULT",
+      "target": "lisa:mobile:evidence:ui-sources-wf-ngw-resource-children-result"
+    },
+    {
+      "bytes_half_open": [
+        87079,
+        87548
+      ],
+      "sha256": "84a1e3a86d851d7254951330d7acf274e9021d3eb4f0c1e6ce4e52b9c2cb292b",
+      "section": "sources",
+      "key": "WF-NGW-RESOURCE-CONNECTION-RESULT",
+      "target": "lisa:mobile:evidence:ui-sources-wf-ngw-resource-connection-result"
+    },
+    {
+      "bytes_half_open": [
+        87548,
+        88108
+      ],
+      "sha256": "33646f7494825107f19e8e4c9c45b93fa365ce5f81e3857846bf0fc181f19d96",
+      "section": "sources",
+      "key": "WF-NGW-RESOURCE-ERROR-COPY",
+      "target": "lisa:mobile:evidence:ui-sources-wf-ngw-resource-error-copy"
+    },
+    {
+      "bytes_half_open": [
+        88108,
+        88628
+      ],
+      "sha256": "93d5112c42f8054880fd58533773d5e1fa3981a54b21507013e694e3618dbafe",
+      "section": "sources",
+      "key": "WF-NGW-RESOURCE-ERROR-ASYNC",
+      "target": "lisa:mobile:evidence:ui-sources-wf-ngw-resource-error-async"
+    },
+    {
+      "bytes_half_open": [
+        88628,
+        89153
+      ],
+      "sha256": "056c8485fa4fefbfc624ba004f6195623d7867629e21c087e653f9f558cf1257",
+      "section": "sources",
+      "key": "WF-NGW-RESOURCE-ERROR-DIALOG",
+      "target": "lisa:mobile:evidence:ui-sources-wf-ngw-resource-error-dialog"
+    },
+    {
+      "bytes_half_open": [
+        89153,
+        89809
+      ],
+      "sha256": "162dd51b78f399e7634eaaf2f4dd55fbcaea4e2dddd34be9fe4fe5e3ee33192d",
+      "section": "sources",
+      "key": "WF-LAYER-IMPORT-ERROR-COPY",
+      "target": "lisa:mobile:evidence:ui-sources-wf-layer-import-error-copy"
+    },
+    {
+      "bytes_half_open": [
+        89809,
+        90395
+      ],
+      "sha256": "14c4f420d79404de4278ff378233cec704cb9bf923d17f1783880d7e8fad115c",
+      "section": "sources",
+      "key": "WF-LAYER-IMPORT-NGW-ERROR",
+      "target": "lisa:mobile:evidence:ui-sources-wf-layer-import-ngw-error"
+    },
+    {
+      "bytes_half_open": [
+        90395,
+        90944
+      ],
+      "sha256": "f16f885b408380b6f85bfe4803f9717198abc773575254321cfcc159afcb7e00",
+      "section": "sources",
+      "key": "WF-FORM-LEGACY-LIST-FILL",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-legacy-list-fill"
+    },
+    {
+      "bytes_half_open": [
+        90944,
+        91401
+      ],
+      "sha256": "98354da669da52a3b092539c202dd1f4e654509ac40552094c045929125a82bc",
+      "section": "sources",
+      "key": "WF-FORM-LEGACY-LIST-ROW",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-legacy-list-row"
+    },
+    {
+      "bytes_half_open": [
+        91401,
+        91946
+      ],
+      "sha256": "b5df7a977f594cd0f4399cfd608a7db66ee32888bd2e0a83725b2040512a7332",
+      "section": "sources",
+      "key": "WF-NGW-HTTP-TRANSIENT-CLASSIFICATION",
+      "target": "lisa:mobile:evidence:ui-sources-wf-ngw-http-transient-classification"
+    },
+    {
+      "bytes_half_open": [
+        91946,
+        92528
+      ],
+      "sha256": "587032677c1e29a50aced537173e8f80df7762702faab14f9005d447ba85cac2",
+      "section": "sources",
+      "key": "WF-NGW-HTTP-SERVER-CLASSIFICATION",
+      "target": "lisa:mobile:evidence:ui-sources-wf-ngw-http-server-classification"
+    },
+    {
+      "bytes_half_open": [
+        92528,
+        93432
+      ],
+      "sha256": "b5ad854423efc313fbfeb1725f3d493a6b87305be169fe4e8848ab2232a46199",
+      "section": "sources",
+      "key": "WF-NGW-CHECKBOX-BIND",
+      "target": "lisa:mobile:evidence:ui-sources-wf-ngw-checkbox-bind"
+    },
+    {
+      "bytes_half_open": [
+        93432,
+        94208
+      ],
+      "sha256": "5a3f78b86045b4c895957543364f411250f2a4f14c417f24f68510e64bb30e74",
+      "section": "sources",
+      "key": "WF-NGW-RESOURCE-ROW-BIND",
+      "target": "lisa:mobile:evidence:ui-sources-wf-ngw-resource-row-bind"
+    },
+    {
+      "bytes_half_open": [
+        94208,
+        94864
+      ],
+      "sha256": "7a5b49e10202125e3084127726cc7516f90f22dc3d57e60f6d60516a28036e07",
+      "section": "sources",
+      "key": "WF-NGW-SELECTION-JSON-SAVE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-ngw-selection-json-save"
+    },
+    {
+      "bytes_half_open": [
+        94864,
+        95422
+      ],
+      "sha256": "9f0dc0ffefc749b3e1d1edfb87d065f1977dcbb642400e0804b5780189792275",
+      "section": "sources",
+      "key": "WF-NGW-SELECTION-JSON-IDENTITY",
+      "target": "lisa:mobile:evidence:ui-sources-wf-ngw-selection-json-identity"
+    },
+    {
+      "bytes_half_open": [
+        95422,
+        96290
+      ],
+      "sha256": "01b24154be9e7fa0e9ae8a864f486bec9c418d48de08a46fa2e0cd371ebb8a35",
+      "section": "sources",
+      "key": "WF-NGW-SELECTION-JSON-RESTORE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-ngw-selection-json-restore"
+    },
+    {
+      "bytes_half_open": [
+        96290,
+        97040
+      ],
+      "sha256": "abbf2beb55fb9316099a60b7ac853badb21547becee57932762c9c38173bf782",
+      "section": "sources",
+      "key": "WF-NGW-SELECTION-JSON-RESOLVE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-ngw-selection-json-resolve"
+    },
+    {
+      "bytes_half_open": [
+        97040,
+        97515
+      ],
+      "sha256": "63d3e472319e2fc91e75071fb3370e99d1202ffa61f32cf9b6325e84806c4fb8",
+      "section": "sources",
+      "key": "WF-NGW-SELECTION-ADAPTER-SAVE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-ngw-selection-adapter-save"
+    },
+    {
+      "bytes_half_open": [
+        97515,
+        98134
+      ],
+      "sha256": "b273e96b286d5668420627d15691098fcfadb8ed6b0c3aa1e157c47084a96c28",
+      "section": "sources",
+      "key": "WF-NGW-SELECTION-ADAPTER-RESTORE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-ngw-selection-adapter-restore"
+    },
+    {
+      "bytes_half_open": [
+        98134,
+        98778
+      ],
+      "sha256": "8482d97eef93de92b4f847a75f72a8e6e06e3c5316b4b0a8746b932b457622c8",
+      "section": "sources",
+      "key": "WF-NGW-SELECTION-ACTIVITY-IMPORT",
+      "target": "lisa:mobile:evidence:ui-sources-wf-ngw-selection-activity-import"
+    },
+    {
+      "bytes_half_open": [
+        98778,
+        99428
+      ],
+      "sha256": "86ce97622ef98028f9428ff8a502d1804b735ed752c2c57f780644e8589e17fb",
+      "section": "sources",
+      "key": "WF-NGW-SELECTION-DIALOG-IMPORT",
+      "target": "lisa:mobile:evidence:ui-sources-wf-ngw-selection-dialog-import"
+    },
+    {
+      "bytes_half_open": [
+        99428,
+        100024
+      ],
+      "sha256": "185e047d23f2ccbc96b53a86103265898db27b0389e1edf59c21d1e6348e3cff",
+      "section": "sources",
+      "key": "WF-NGW-SELECTION-ACTIVITY-RESTORE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-ngw-selection-activity-restore"
+    },
+    {
+      "bytes_half_open": [
+        100024,
+        100633
+      ],
+      "sha256": "d7fc641c1e1465339139734b37d74f0df6d65e2cfaf27fa909c759de7b78d74e",
+      "section": "sources",
+      "key": "WF-NGW-SELECTION-DIALOG-RESTORE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-ngw-selection-dialog-restore"
+    },
+    {
+      "bytes_half_open": [
+        100633,
+        101161
+      ],
+      "sha256": "1fe8419444c381ae8858971059df14b0eb8255dd8894f965c859c959182f26e4",
+      "section": "sources",
+      "key": "WF-NGW-SELECTION-ACTIVITY-SAVE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-ngw-selection-activity-save"
+    },
+    {
+      "bytes_half_open": [
+        101161,
+        101680
+      ],
+      "sha256": "b1aced64e03bff3a4d849124761d192e86d1c43287bd74cc1ac2bc43fdc4f92e",
+      "section": "sources",
+      "key": "WF-NGW-SELECTION-DIALOG-SAVE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-ngw-selection-dialog-save"
+    },
+    {
+      "bytes_half_open": [
+        101680,
+        102422
+      ],
+      "sha256": "ee2e6bab0eb72e31d08334c5691f2ae7fb3f79ec55b93f8d60e09de290aae528",
+      "section": "sources",
+      "key": "WF-NGW-ROW-REFLOW-MEASURE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-ngw-row-reflow-measure"
+    },
+    {
+      "bytes_half_open": [
+        102422,
+        103013
+      ],
+      "sha256": "f57efb65ef0cf49b4ee7970df3c3236b1839732228d0058e9e97381efc85b462",
+      "section": "sources",
+      "key": "WF-NGW-ROW-REFLOW-FRESH-TREE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-ngw-row-reflow-fresh-tree"
+    },
+    {
+      "bytes_half_open": [
+        103013,
+        103640
+      ],
+      "sha256": "b5535a83a2901b6f04862b49e51f90d71b41808a7cc017138b982797ea944d52",
+      "section": "sources",
+      "key": "WF-NGW-ROW-REFLOW-CLIPPING",
+      "target": "lisa:mobile:evidence:ui-sources-wf-ngw-row-reflow-clipping"
+    },
+    {
+      "bytes_half_open": [
+        103640,
+        104258
+      ],
+      "sha256": "16eb15b67666ced8543bcaf12d71a98aa9a0e026506fec3693f82d664256c58a",
+      "section": "sources",
+      "key": "WF-NGW-ROW-REFLOW-FULL-WIDTH",
+      "target": "lisa:mobile:evidence:ui-sources-wf-ngw-row-reflow-full-width"
+    },
+    {
+      "bytes_half_open": [
+        104258,
+        104922
+      ],
+      "sha256": "f873020cbc4e16f3e3f7f438c8744f399fa25f6882b5a5f7c310c889583a3c48",
+      "section": "sources",
+      "key": "WF-NGW-ROW-REFLOW-PLACE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-ngw-row-reflow-place"
+    },
+    {
+      "bytes_half_open": [
+        104922,
+        105631
+      ],
+      "sha256": "246e06ca0e643a405525df6aea78b9c00a15d2ea77601588e5055b2fd01b4da7",
+      "section": "sources",
+      "key": "WF-TRACK-MAP-SHARE-BINDING",
+      "target": "lisa:mobile:evidence:ui-sources-wf-track-map-share-binding"
+    },
+    {
+      "bytes_half_open": [
+        105631,
+        106316
+      ],
+      "sha256": "670189bd4217888b01150126caa2bc7dc880977730d2e1db5ba9fa0c10dda427",
+      "section": "sources",
+      "key": "WF-TRACK-PANEL-CONSTRUCTION",
+      "target": "lisa:mobile:evidence:ui-sources-wf-track-panel-construction"
+    },
+    {
+      "bytes_half_open": [
+        106316,
+        106907
+      ],
+      "sha256": "12023c4b0c9a789d958af9fd4adf7868ef245087caece8a8ca7cf9eed9f21ae6",
+      "section": "sources",
+      "key": "WF-TRACK-PANEL-WRAP",
+      "target": "lisa:mobile:evidence:ui-sources-wf-track-panel-wrap"
+    },
+    {
+      "bytes_half_open": [
+        106907,
+        107439
+      ],
+      "sha256": "68e8ff9fe351b4066a3a867348e3a4a7517a488ff5256dafdb2ae5045f848df7",
+      "section": "sources",
+      "key": "WF-TRACK-GPX-WORKER",
+      "target": "lisa:mobile:evidence:ui-sources-wf-track-gpx-worker"
+    },
+    {
+      "bytes_half_open": [
+        107439,
+        108019
+      ],
+      "sha256": "a47def479a88fe742f15cba9abc9271306051640665ef2f1d73a7f3ff6ba5a46",
+      "section": "sources",
+      "key": "WF-TRACK-GPX-XML-NAME",
+      "target": "lisa:mobile:evidence:ui-sources-wf-track-gpx-xml-name"
+    },
+    {
+      "bytes_half_open": [
+        108019,
+        108572
+      ],
+      "sha256": "f8306447083fdcd323cb646aee898e107531a549d4405fb385c4e4b9460eb951",
+      "section": "sources",
+      "key": "WF-TRACK-GPX-SEPARATE-NAME",
+      "target": "lisa:mobile:evidence:ui-sources-wf-track-gpx-separate-name"
+    },
+    {
+      "bytes_half_open": [
+        108572,
+        109088
+      ],
+      "sha256": "a2724e80e756670f831d05193facde0b3a82917c3a38becb3f1e69921dcbab90",
+      "section": "sources",
+      "key": "WF-TRACK-SHARE-ID-COPY",
+      "target": "lisa:mobile:evidence:ui-sources-wf-track-share-id-copy"
+    },
+    {
+      "bytes_half_open": [
+        109088,
+        109623
+      ],
+      "sha256": "61a7a8dace4ffe2c9c8fb20b1f89d88f994e240ff4e87f5c151ac3cbc9907d23",
+      "section": "sources",
+      "key": "WF-TRACK-GPX-PUBLISH",
+      "target": "lisa:mobile:evidence:ui-sources-wf-track-gpx-publish"
+    },
+    {
+      "bytes_half_open": [
+        109623,
+        110590
+      ],
+      "sha256": "cbb904e13861805a904aba12cdbdecd8af8870fefad95accc8facf545bc3531b",
+      "section": "sources",
+      "key": "WF-SYNC-CLOCK-PUBLISH",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-clock-publish"
+    },
+    {
+      "bytes_half_open": [
+        110590,
+        111205
+      ],
+      "sha256": "198033efa196b8cbb86dbc49ba7d30c864632376576ddd3e16aa4224cb04a7fe",
+      "section": "sources",
+      "key": "WF-DATE-STD-INIT",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-std-init"
+    },
+    {
+      "bytes_half_open": [
+        111205,
+        111558
+      ],
+      "sha256": "c3ab8bc62c25ad75fea7f22f60557b427fb79d860195126e7e2c31619ad52b49",
+      "section": "sources",
+      "key": "WF-DATE-STD-VALUE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-std-value"
+    },
+    {
+      "bytes_half_open": [
+        111558,
+        112020
+      ],
+      "sha256": "11743cff6aaa4dd19b8b21fd7bafbed20963c545d405b88323a439fb8046d3a7",
+      "section": "sources",
+      "key": "WF-DATE-STD-STATE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-std-state"
+    },
+    {
+      "bytes_half_open": [
+        112020,
+        112508
+      ],
+      "sha256": "a71f9f31febb1ee5138b92063ccc02e42990406586403df2043025528e97e9f3",
+      "section": "sources",
+      "key": "WF-DATE-STD-OPEN",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-std-open"
+    },
+    {
+      "bytes_half_open": [
+        112508,
+        113080
+      ],
+      "sha256": "5ea9cfbd293379fb0ab96d4197a183e6665bcef6dbbe914f68d044f5694e70ca",
+      "section": "sources",
+      "key": "WF-DATE-STD-DATE-CALLBACK",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-std-date-callback"
+    },
+    {
+      "bytes_half_open": [
+        113080,
+        113716
+      ],
+      "sha256": "c41cb822a981d26eef9f610030bded871df19d8c0f3e0cc0543e1377bcf6d1f1",
+      "section": "sources",
+      "key": "WF-DATE-STD-TIME-CALLBACK",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-std-time-callback"
+    },
+    {
+      "bytes_half_open": [
+        113716,
+        114854
+      ],
+      "sha256": "fda4b44598414a459a6d4939a2ae664a7eca253a1748f86797143f55462e3518",
+      "section": "sources",
+      "key": "WF-DATE-NGFP-INIT",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-ngfp-init"
+    },
+    {
+      "bytes_half_open": [
+        114854,
+        115256
+      ],
+      "sha256": "d947097da979b0162c9941b3502b1de66f3d19854586c0fe7b5d0a21b1b5dd5b",
+      "section": "sources",
+      "key": "WF-DATE-NGFP-VALUE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-ngfp-value"
+    },
+    {
+      "bytes_half_open": [
+        115256,
+        115723
+      ],
+      "sha256": "a82e89d8f2d2bdb2d6554cb51e1ad665d0c107ad61a44e2dd26a0bd85e61d351",
+      "section": "sources",
+      "key": "WF-DATE-NGFP-STATE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-ngfp-state"
+    },
+    {
+      "bytes_half_open": [
+        115723,
+        116216
+      ],
+      "sha256": "fce24a4a5374728fbce6ee8644492fea05542e776f40f7b3d6cf8fbbc197bf1c",
+      "section": "sources",
+      "key": "WF-DATE-NGFP-OPEN",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-ngfp-open"
+    },
+    {
+      "bytes_half_open": [
+        116216,
+        116793
+      ],
+      "sha256": "e0a1d523e800fc81b6deb2f3b0c2e6d22f0d79f30662955063e6983cd6ece10a",
+      "section": "sources",
+      "key": "WF-DATE-NGFP-DATE-CALLBACK",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-ngfp-date-callback"
+    },
+    {
+      "bytes_half_open": [
+        116793,
+        117434
+      ],
+      "sha256": "395f66494aabd61c4b92adc57e0ae34c3529fb20bc684d5bb8e8b1380dd3389c",
+      "section": "sources",
+      "key": "WF-DATE-NGFP-TIME-CALLBACK",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-ngfp-time-callback"
+    },
+    {
+      "bytes_half_open": [
+        117434,
+        117934
+      ],
+      "sha256": "b1185db30160b95d242f60730d74c1dfec3924210a91fe4097663bddc6674ff0",
+      "section": "sources",
+      "key": "WF-DATE-STD-SET-VALUE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-std-set-value"
+    },
+    {
+      "bytes_half_open": [
+        117934,
+        118601
+      ],
+      "sha256": "804fb423ad0d3e13dc278451f3b122b4846b9913302e35fb408d65863e2d3af5",
+      "section": "sources",
+      "key": "WF-DATE-NGFP-PARSE-DEFAULT",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-ngfp-parse-default"
+    },
+    {
+      "bytes_half_open": [
+        118601,
+        119137
+      ],
+      "sha256": "d3539cd902ec63f094ca843949003f887c5aed4eac298d2e58f724be854fe222",
+      "section": "sources",
+      "key": "WF-DATE-NGFP-LAST-VALUE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-ngfp-last-value"
+    },
+    {
+      "bytes_half_open": [
+        119137,
+        119822
+      ],
+      "sha256": "3d4821336cfacc149ceca0a9d87bf4a3411914f6e8a24cda1ac9722496d95f71",
+      "section": "sources",
+      "key": "WF-DATE-STD-BINDING",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-std-binding"
+    },
+    {
+      "bytes_half_open": [
+        119822,
+        120557
+      ],
+      "sha256": "aa7f63339c73bdde9421fa2d3d96b514ad739512492484b0a569352a75869a93",
+      "section": "sources",
+      "key": "WF-DATE-NGFP-FACTORY",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-ngfp-factory"
+    },
+    {
+      "bytes_half_open": [
+        120557,
+        121036
+      ],
+      "sha256": "ed68612ce15b9f9f46e73683b8f903da125716d4122941970d86e4130aa221bb",
+      "section": "sources",
+      "key": "WF-DATE-FIELD-NORMALIZATION",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-field-normalization"
+    },
+    {
+      "bytes_half_open": [
+        121036,
+        121559
+      ],
+      "sha256": "bfcd5bc34c389240c4d4dbc3bdf7e3fdd9f59ac84ae89e38d75f7a2d4995de51",
+      "section": "sources",
+      "key": "WF-DATE-CAPTURE-VALUES",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-capture-values"
+    },
+    {
+      "bytes_half_open": [
+        121559,
+        122131
+      ],
+      "sha256": "8579e62f370f5189dd384b1b06768a783cb04fcc866d28d04a8d52a3f189e30f",
+      "section": "sources",
+      "key": "WF-DATE-COPY-VALUES",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-copy-values"
+    },
+    {
+      "bytes_half_open": [
+        122131,
+        122730
+      ],
+      "sha256": "b628b6c6983ccacb669a60b655552f41353ea0f6647dc87e6f09cd6d2dc0f2c9",
+      "section": "sources",
+      "key": "WF-DATE-COPY-EMPTY",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-copy-empty"
+    },
+    {
+      "bytes_half_open": [
+        122730,
+        123400
+      ],
+      "sha256": "bcc392128b893f0610cc1ab0ef77ae747140351fada3fd75a73d9916ba388b32",
+      "section": "sources",
+      "key": "WF-DATE-SCRIPT-SNAPSHOT",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-script-snapshot"
+    },
+    {
+      "bytes_half_open": [
+        123400,
+        124675
+      ],
+      "sha256": "fb410ab9efed0c3327c1f8b4af48c0396da4c303d3cc11844aa514495488b6e2",
+      "section": "sources",
+      "key": "WF-CHECKBOX-NGFP-INIT",
+      "target": "lisa:mobile:evidence:ui-sources-wf-checkbox-ngfp-init"
+    },
+    {
+      "bytes_half_open": [
+        124675,
+        125050
+      ],
+      "sha256": "c7cc0acccfa4cc1b1ef8aa8f31d8f804eaeba6fb68101c6312aa76efc52607c2",
+      "section": "sources",
+      "key": "WF-CHECKBOX-NGFP-VALUE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-checkbox-ngfp-value"
+    },
+    {
+      "bytes_half_open": [
+        125050,
+        125489
+      ],
+      "sha256": "d61b25f6c947e99dde55a84bd931d1548850dff1b2893c06d8a0ab25e283b1a0",
+      "section": "sources",
+      "key": "WF-CHECKBOX-NGFP-STATE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-checkbox-ngfp-state"
+    },
+    {
+      "bytes_half_open": [
+        125489,
+        125931
+      ],
+      "sha256": "4b0d5644325c4353358363ae9334aad823570531102508042ce0d8669e9c5381",
+      "section": "sources",
+      "key": "WF-CHECKBOX-NGFP-LAST",
+      "target": "lisa:mobile:evidence:ui-sources-wf-checkbox-ngfp-last"
+    },
+    {
+      "bytes_half_open": [
+        125931,
+        126305
+      ],
+      "sha256": "187ad1e984cb41af89be176e2b46ced259b86dbd15bf7ec9d400916f61dba1fd",
+      "section": "sources",
+      "key": "WF-CHECKBOX-NGFP-SHOW-LAST",
+      "target": "lisa:mobile:evidence:ui-sources-wf-checkbox-ngfp-show-last"
+    },
+    {
+      "bytes_half_open": [
+        126305,
+        127024
+      ],
+      "sha256": "0945d84b608b9494ba0a08a5da47bf311891c21a723b1a4dc9c48c96ff1555b1",
+      "section": "sources",
+      "key": "WF-CHECKBOX-GENERIC-TEXT-INIT",
+      "target": "lisa:mobile:evidence:ui-sources-wf-checkbox-generic-text-init"
+    },
+    {
+      "bytes_half_open": [
+        127024,
+        127404
+      ],
+      "sha256": "91396fc849d8d66446284347721f33eb4a0f701c92efd675a6ff4344ccd95f0e",
+      "section": "sources",
+      "key": "WF-CHECKBOX-GENERIC-TEXT-VALUE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-checkbox-generic-text-value"
+    },
+    {
+      "bytes_half_open": [
+        127404,
+        128018
+      ],
+      "sha256": "0b964f470da692b463adece3118eb2d28d0cfa1c4911a9fa9ebd99ad747a083b",
+      "section": "sources",
+      "key": "WF-CHECKBOX-COPY-ADAPT",
+      "target": "lisa:mobile:evidence:ui-sources-wf-checkbox-copy-adapt"
+    },
+    {
+      "bytes_half_open": [
+        128018,
+        128553
+      ],
+      "sha256": "e6050d5168fa4b8a10aa3ce976b52f8431c49585fa60a4c44cc836df9a00fb89",
+      "section": "sources",
+      "key": "WF-CHECKBOX-COPY-BASELINE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-checkbox-copy-baseline"
+    },
+    {
+      "bytes_half_open": [
+        128553,
+        129059
+      ],
+      "sha256": "9524feda405345450b4771b1c2fdba7e46058c424986fff9b155b2145275dde9",
+      "section": "sources",
+      "key": "WF-CHECKBOX-LAST-DISPATCH",
+      "target": "lisa:mobile:evidence:ui-sources-wf-checkbox-last-dispatch"
+    },
+    {
+      "bytes_half_open": [
+        129059,
+        129641
+      ],
+      "sha256": "c1a5c3d5a460b1573c93bc5578c716f1f50803008f0273ba336607a98f82e600",
+      "section": "sources",
+      "key": "WF-CHECKBOX-LAST-WRAPPER",
+      "target": "lisa:mobile:evidence:ui-sources-wf-checkbox-last-wrapper"
+    },
+    {
+      "bytes_half_open": [
+        129641,
+        130277
+      ],
+      "sha256": "5b26541a44b64dc2c27f6ee5d85e29e704406542439425ae9bef0a850f30a44e",
+      "section": "sources",
+      "key": "WF-ATTACHMENT-FULL-START",
+      "target": "lisa:mobile:evidence:ui-sources-wf-attachment-full-start"
+    },
+    {
+      "bytes_half_open": [
+        130277,
+        130948
+      ],
+      "sha256": "83c9202bd27f5dee563b3292fccc36cb9f887e29c44183fcaecd0b79ab895cdc",
+      "section": "sources",
+      "key": "WF-ATTACHMENT-BIND-STATE",
+      "target": "lisa:mobile:evidence:ui-sources-wf-attachment-bind-state"
+    },
+    {
+      "bytes_half_open": [
+        130948,
+        131438
+      ],
+      "sha256": "311ded20f93e650e80a52b26323e2f47a2251d9007fd78a5cf249797fe3d4f19",
+      "section": "sources",
+      "key": "WF-ATTACHMENT-NOTIFY",
+      "target": "lisa:mobile:evidence:ui-sources-wf-attachment-notify"
+    },
+    {
+      "bytes_half_open": [
+        131438,
+        131900
+      ],
+      "sha256": "5783361a502215c525938ba5e164632a5e5db748580fc384ba896b1c57f94115",
+      "section": "sources",
+      "key": "WF-ATTACHMENT-URL-MATCH",
+      "target": "lisa:mobile:evidence:ui-sources-wf-attachment-url-match"
+    },
+    {
+      "bytes_half_open": [
+        131900,
+        132378
+      ],
+      "sha256": "504d39156b0ca7d99a0794ddbe19d89b4b30f915759dcb1568fbd8087a3711cf",
+      "section": "sources",
+      "key": "WF-ATTACHMENT-DRAFT-SELECTION",
+      "target": "lisa:mobile:evidence:ui-sources-wf-attachment-draft-selection"
+    },
+    {
+      "bytes_half_open": [
+        132378,
+        132866
+      ],
+      "sha256": "92e0bad32bf93d9082c3a2e8d8e9fab8f6cbfbe82a64a179180b88c97124af85",
+      "section": "sources",
+      "key": "WF-ATTACHMENT-HOLDER-BINDING",
+      "target": "lisa:mobile:evidence:ui-sources-wf-attachment-holder-binding"
+    },
+    {
+      "bytes_half_open": [
+        132866,
+        133297
+      ],
+      "sha256": "2eb1f6fc52a969dea412556f18b92702ceb3a9648687a9c6d4aae600116c7d14",
+      "section": "sources",
+      "key": "WF-ATTACHMENT-HOLDER-ACTION",
+      "target": "lisa:mobile:evidence:ui-sources-wf-attachment-holder-action"
+    },
+    {
+      "bytes_half_open": [
+        133297,
+        133967
+      ],
+      "sha256": "de37b0ec9322f06375dcbc44112e83e0c1f5b83fe2e9078a86dff4a2f56cba50",
+      "section": "sources",
+      "key": "WF-ATTACHMENT-SERVICE-INTENT",
+      "target": "lisa:mobile:evidence:ui-sources-wf-attachment-service-intent"
+    },
+    {
+      "bytes_half_open": [
+        133967,
+        134461
+      ],
+      "sha256": "70adebc0e3dedb6015c588f76097b06ee290c723f4f0d492e82608bfa599a79e",
+      "section": "sources",
+      "key": "WF-ATTACHMENT-SERVICE-PROGRESS",
+      "target": "lisa:mobile:evidence:ui-sources-wf-attachment-service-progress"
+    },
+    {
+      "bytes_half_open": [
+        134461,
+        135140
+      ],
+      "sha256": "d27710e7f0fff9aa7bf24f925779d608b5af6b654e60c5cb5b7899e64cfd58c6",
+      "section": "sources",
+      "key": "WF-ATTACHMENT-SERVICE-TERMINAL",
+      "target": "lisa:mobile:evidence:ui-sources-wf-attachment-service-terminal"
+    },
+    {
+      "bytes_half_open": [
+        135140,
+        135673
+      ],
+      "sha256": "896e06c5116833bab74aa61e73b2f7c774bd336c873c7406c30614db3ae25bdb",
+      "section": "sources",
+      "key": "WF-SYNC-OPTIONAL-META-FETCH",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-optional-meta-fetch"
+    },
+    {
+      "bytes_half_open": [
+        135673,
+        136780
+      ],
+      "sha256": "1f976196fc620b34bd6f5fa658e05bcaf39e80240f5c9f86bfdf29b9acfdd2ac",
+      "section": "sources",
+      "key": "WF-SYNC-RESULT-META-FETCH",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-result-meta-fetch"
+    },
+    {
+      "bytes_half_open": [
+        136780,
+        137264
+      ],
+      "sha256": "3a934219b4d68388a0af76e0d4b1a00a10a99a8635aff7fe0e758632b6094a9c",
+      "section": "sources",
+      "key": "WF-MOBILE-PROJECT-LOAD-MENU",
+      "target": "lisa:mobile:evidence:ui-sources-wf-mobile-project-load-menu"
+    },
+    {
+      "bytes_half_open": [
+        137264,
+        137709
+      ],
+      "sha256": "f0023a3356252bd6d5277fa62c19eb6250ef97f5a5dcb29f52989378209bfb33",
+      "section": "sources",
+      "key": "WF-MOBILE-PROJECT-LOAD-ENTRY",
+      "target": "lisa:mobile:evidence:ui-sources-wf-mobile-project-load-entry"
+    },
+    {
+      "bytes_half_open": [
+        137709,
+        138295
+      ],
+      "sha256": "7be5f40eb86865d0b8d2dfab5e58f80e7c97b9504cefad8ed68d9f0b91f59882",
+      "section": "sources",
+      "key": "WF-MOBILE-PROJECT-LOAD-ACCOUNT",
+      "target": "lisa:mobile:evidence:ui-sources-wf-mobile-project-load-account"
+    },
+    {
+      "bytes_half_open": [
+        138295,
+        138973
+      ],
+      "sha256": "2d89fdaaedd3cfc903369824eb3662408fa4121cc5a71af4ea355da78643558a",
+      "section": "sources",
+      "key": "WF-MOBILE-PROJECT-LOAD-LIST",
+      "target": "lisa:mobile:evidence:ui-sources-wf-mobile-project-load-list"
+    },
+    {
+      "bytes_half_open": [
+        138973,
+        139684
+      ],
+      "sha256": "0d9fba0c90f1a038541438e8d0c8d009ae7ba21e92556846e2a5485e20006e0d",
+      "section": "sources",
+      "key": "WF-MOBILE-PROJECT-LOAD-SELECT",
+      "target": "lisa:mobile:evidence:ui-sources-wf-mobile-project-load-select"
+    },
+    {
+      "bytes_half_open": [
+        139684,
+        140282
+      ],
+      "sha256": "e33605a883dbd073902b202162b47a0fa7f3a6ea797921603a2d291b89127b0d",
+      "section": "sources",
+      "key": "WF-MOBILE-PROJECT-LOAD-FETCH",
+      "target": "lisa:mobile:evidence:ui-sources-wf-mobile-project-load-fetch"
+    },
+    {
+      "bytes_half_open": [
+        140282,
+        141101
+      ],
+      "sha256": "489af6b632d8395cfcfc0d313e7a3fb2ce2bf157f8b7033f35e8c768bcb3a930",
+      "section": "sources",
+      "key": "WF-MOBILE-PROJECT-LOAD-ADMISSION",
+      "target": "lisa:mobile:evidence:ui-sources-wf-mobile-project-load-admission"
+    },
+    {
+      "bytes_half_open": [
+        141101,
+        141644
+      ],
+      "sha256": "54eadbf177e62ce247353793c3d4c5c83c6bc65b33e5971f96a138acd149ca61",
+      "section": "sources",
+      "key": "WF-MOBILE-PROJECT-LOAD-HTTP",
+      "target": "lisa:mobile:evidence:ui-sources-wf-mobile-project-load-http"
+    },
+    {
+      "bytes_half_open": [
+        141644,
+        142290
+      ],
+      "sha256": "86644d9ba9f7219bec8214b6ff539ec9905f0e82e36e05c7cecca2a3bb846756",
+      "section": "sources",
+      "key": "WF-MOBILE-PROJECT-LOAD-DISCOVERY",
+      "target": "lisa:mobile:evidence:ui-sources-wf-mobile-project-load-discovery"
+    },
+    {
+      "bytes_half_open": [
+        142290,
+        142848
+      ],
+      "sha256": "5a799b04717819a8bd214218090df09da16f5216282b08284c5ba4249ea65d32",
+      "section": "sources",
+      "key": "memory-warning-show",
+      "target": "lisa:mobile:evidence:ui-sources-memory-warning-show"
+    },
+    {
+      "bytes_half_open": [
+        142848,
+        143313
+      ],
+      "sha256": "d93c7d65e714180b608d1a7407e56bf4f3134303bf4ff6430c3461b29ddd52d0",
+      "section": "sources",
+      "key": "memory-warning-auto",
+      "target": "lisa:mobile:evidence:ui-sources-memory-warning-auto"
+    },
+    {
+      "bytes_half_open": [
+        143313,
+        143763
+      ],
+      "sha256": "5042c715a2f533688bf05146d5284ab893806411ff105acf499399ef9fc15977",
+      "section": "sources",
+      "key": "memory-warning-menu",
+      "target": "lisa:mobile:evidence:ui-sources-memory-warning-menu"
+    },
+    {
+      "bytes_half_open": [
+        143763,
+        144269
+      ],
+      "sha256": "32642204b865a07046a70810b35ff524f9d7533af4bc9e8a9d5066712e956509",
+      "section": "sources",
+      "key": "warning-dialog-layout",
+      "target": "lisa:mobile:evidence:ui-sources-warning-dialog-layout"
+    },
+    {
+      "bytes_half_open": [
+        144269,
+        144808
+      ],
+      "sha256": "0bcde7aee875aacd5f3c9ac4471a09d6aa3a44680705fac3d1aad0e9a32a60a4",
+      "section": "sources",
+      "key": "warning-dialog-measure",
+      "target": "lisa:mobile:evidence:ui-sources-warning-dialog-measure"
+    },
+    {
+      "bytes_half_open": [
+        144808,
+        145390
+      ],
+      "sha256": "3c841fca9388d15644ce9d5e1a7f0fb9b36afe6e2e5896d2a4ccb1ac8896db62",
+      "section": "sources",
+      "key": "maintenance-warning-age",
+      "target": "lisa:mobile:evidence:ui-sources-maintenance-warning-age"
+    },
+    {
+      "bytes_half_open": [
+        145390,
+        145785
+      ],
+      "sha256": "eecdbd807b732abcccca872c7ee453b84df8c3daa96442e0294e2f4e1c19b84c",
+      "section": "sources",
+      "key": "maintenance-warning-week",
+      "target": "lisa:mobile:evidence:ui-sources-maintenance-warning-week"
+    },
+    {
+      "bytes_half_open": [
+        145785,
+        146316
+      ],
+      "sha256": "1a40f9ca7098d8b3eb2331f913c941004d147b5d8b2d62f8aa7227dd856abdd4",
+      "section": "sources",
+      "key": "maintenance-warning-session",
+      "target": "lisa:mobile:evidence:ui-sources-maintenance-warning-session"
+    },
+    {
+      "bytes_half_open": [
+        146316,
+        146737
+      ],
+      "sha256": "aa7c329c74441047e3b25d22429aef4043053c03d45bdf569e9c18bf766f6016",
+      "section": "sources",
+      "key": "maintenance-warning-day",
+      "target": "lisa:mobile:evidence:ui-sources-maintenance-warning-day"
+    },
+    {
+      "bytes_half_open": [
+        146737,
+        147494
+      ],
+      "sha256": "fdbc132499ca60663798de8b4fdd787beab86345d8ece9235d06e9721b21b31b",
+      "section": "sources",
+      "key": "maintenance-warning-foreground",
+      "target": "lisa:mobile:evidence:ui-sources-maintenance-warning-foreground"
+    },
+    {
+      "bytes_half_open": [
+        147494,
+        148096
+      ],
+      "sha256": "8c94fd18a24af081c5945b0ecc22e48904b7f461e5e6722d80514af09b8e16ea",
+      "section": "sources",
+      "key": "underlay-transfer-start",
+      "target": "lisa:mobile:evidence:ui-sources-underlay-transfer-start"
+    },
+    {
+      "bytes_half_open": [
+        148096,
+        148603
+      ],
+      "sha256": "74eb8b9e0b05ecad4c305284583d7be79539937ea65125372a67eb4b7daa2f8d",
+      "section": "sources",
+      "key": "underlay-transfer-layout",
+      "target": "lisa:mobile:evidence:ui-sources-underlay-transfer-layout"
+    },
+    {
+      "bytes_half_open": [
+        148603,
+        149243
+      ],
+      "sha256": "734cd59aa0178580cebb537cec4a000e5b5b771035f58206581fa8fc26cf39d1",
+      "section": "sources",
+      "key": "underlay-transfer-progress",
+      "target": "lisa:mobile:evidence:ui-sources-underlay-transfer-progress"
+    },
+    {
+      "bytes_half_open": [
+        149243,
+        149787
+      ],
+      "sha256": "b01d9208995b967f151c1a3e1bd63029e6c0896077ce3ec067bd8a5d2aefd57c",
+      "section": "sources",
+      "key": "underlay-transfer-cancel",
+      "target": "lisa:mobile:evidence:ui-sources-underlay-transfer-cancel"
+    },
+    {
+      "bytes_half_open": [
+        149787,
+        150263
+      ],
+      "sha256": "7f4e05bd2dc9fbb511c57c6256b13cc8dba9596dbd861c26d30891590ce0bd80",
+      "section": "sources",
+      "key": "underlay-transfer-stream-finished",
+      "target": "lisa:mobile:evidence:ui-sources-underlay-transfer-stream-finished"
+    },
+    {
+      "bytes_half_open": [
+        150263,
+        150767
+      ],
+      "sha256": "aba160945caf1aa7636e798f26a9fb8e357edc887124338a4c3e82b0b7760bc6",
+      "section": "sources",
+      "key": "underlay-transfer-pulse",
+      "target": "lisa:mobile:evidence:ui-sources-underlay-transfer-pulse"
+    },
+    {
+      "bytes_half_open": [
+        150767,
+        151320
+      ],
+      "sha256": "94e7bdf1eac9bf5248dc6b9555c51910d5e23c0057a9972ab53489dedd4e7402",
+      "section": "sources",
+      "key": "underlay-transfer-descriptor",
+      "target": "lisa:mobile:evidence:ui-sources-underlay-transfer-descriptor"
+    },
+    {
+      "bytes_half_open": [
+        151320,
+        151827
+      ],
+      "sha256": "d9827808912f34df0fcc7457c98bca84d89d9d3ec9250f81d16caa4523b22137",
+      "section": "sources",
+      "key": "underlay-transfer-close",
+      "target": "lisa:mobile:evidence:ui-sources-underlay-transfer-close"
+    },
+    {
+      "bytes_half_open": [
+        151827,
+        152352
+      ],
+      "sha256": "29a645f94365b632730de8117d265ac8dfd0d09f42633cbfa27736751dfbf551",
+      "section": "sources",
+      "key": "underlay-transfer-text",
+      "target": "lisa:mobile:evidence:ui-sources-underlay-transfer-text"
+    },
+    {
+      "bytes_half_open": [
+        152352,
+        152832
+      ],
+      "sha256": "b2b67e25efede478f218c39d75cd004bd06b8b8367b5b5e7b827aba7750a4d4b",
+      "section": "sources",
+      "key": "visible-vector-identify",
+      "target": "lisa:mobile:evidence:ui-sources-visible-vector-identify"
+    },
+    {
+      "bytes_half_open": [
+        152832,
+        153287
+      ],
+      "sha256": "2d43c222f7353b339347bbf32a108aa1c47ebe76619a48b0420a8b321357b12b",
+      "section": "sources",
+      "key": "visible-vector-long-press",
+      "target": "lisa:mobile:evidence:ui-sources-visible-vector-long-press"
+    },
+    {
+      "bytes_half_open": [
+        153287,
+        153703
+      ],
+      "sha256": "2c0fb22ef9230e02e9f6e5354deb2156665de2fd4fdeb26efabb6546e01bbf3d",
+      "section": "sources",
+      "key": "visible-vector-canvas-tap",
+      "target": "lisa:mobile:evidence:ui-sources-visible-vector-canvas-tap"
+    },
+    {
+      "bytes_half_open": [
+        153703,
+        154136
+      ],
+      "sha256": "011a4c55c52fcca0b2ed05937e4f2abee164ac88a412b26a8fddaa63af38e902",
+      "section": "sources",
+      "key": "visible-vector-native-tap",
+      "target": "lisa:mobile:evidence:ui-sources-visible-vector-native-tap"
+    },
+    {
+      "bytes_half_open": [
+        154136,
+        154155
+      ],
+      "sha256": "832b631d5f48c3a5b76cea7800cb2f0f0cf6c039b29543a585778c9fb47091ee",
+      "section": "contracts",
+      "key": null,
+      "target": "lisa:mobile:metadata:ui-contracts-registry"
+    },
+    {
+      "bytes_half_open": [
+        154155,
+        156083
+      ],
+      "sha256": "79b7edb1d5778d79b9d7730274d1e8b46583dd1ac98717e5f07440f4bb29a51b",
+      "section": "contracts",
+      "key": "UI-MAP-STATUS-COORDINATES",
+      "target": "lisa:mobile:contract:ui-contracts-ui-map-status-coordinates"
+    },
+    {
+      "bytes_half_open": [
+        156083,
+        158235
+      ],
+      "sha256": "ec06c22ba9d4dd7d4396e74d1f746dbce7460d660873fb7f12013087fdaef2f0",
+      "section": "contracts",
+      "key": "UI-LOCATION-DISPLAY-FRESHNESS",
+      "target": "lisa:mobile:contract:ui-contracts-ui-location-display-freshness"
+    },
+    {
+      "bytes_half_open": [
+        158235,
+        159820
+      ],
+      "sha256": "50b78282d81d3f0f7d5d67c205b9ecf1fbf7628280b15508066c0f83e235a370",
+      "section": "contracts",
+      "key": "UI-LOCATION-DISPLAY-ACCURACY",
+      "target": "lisa:mobile:contract:ui-contracts-ui-location-display-accuracy"
+    },
+    {
+      "bytes_half_open": [
+        159820,
+        161590
+      ],
+      "sha256": "9333d4daeb9eba54bb087e7929857e3398d31f051ae962ed7557b5729ee5968d",
+      "section": "contracts",
+      "key": "UI-LOCATION-SOURCE-GNSS-HUD",
+      "target": "lisa:mobile:contract:ui-contracts-ui-location-source-gnss-hud"
+    },
+    {
+      "bytes_half_open": [
+        161590,
+        163206
+      ],
+      "sha256": "19e52b93abbf8125ab95eb689e237e6e4fdf6786f7f029933b439b464dd75716",
+      "section": "contracts",
+      "key": "UI-MAP-ZOOM",
+      "target": "lisa:mobile:contract:ui-contracts-ui-map-zoom"
+    },
+    {
+      "bytes_half_open": [
+        163206,
+        164893
+      ],
+      "sha256": "b87a537b11b446cdf0d5610ecce56c2583bcbf357067b6e924a3644b4a9c73ba",
+      "section": "contracts",
+      "key": "UI-MAP-SCALE-RULER",
+      "target": "lisa:mobile:contract:ui-contracts-ui-map-scale-ruler"
+    },
+    {
+      "bytes_half_open": [
+        164893,
+        166493
+      ],
+      "sha256": "0458a0633e4b895930402f0a0f66fdd2541adba158a0b1aefd4f2f3ea2f15d59",
+      "section": "contracts",
+      "key": "UI-MAP-LOCATE",
+      "target": "lisa:mobile:contract:ui-contracts-ui-map-locate"
+    },
+    {
+      "bytes_half_open": [
+        166493,
+        167949
+      ],
+      "sha256": "5a76abe4b4afd2bcccb46dca4338854bc14e36c9a586e9235301ac9c3eb78209",
+      "section": "contracts",
+      "key": "UI-MAP-LOCATE-FALLBACK",
+      "target": "lisa:mobile:contract:ui-contracts-ui-map-locate-fallback"
+    },
+    {
+      "bytes_half_open": [
+        167949,
+        169619
+      ],
+      "sha256": "c28bd847db43ed1b80a494e36c9f44fae76985e88406f7c0d77a847502c331ed",
+      "section": "contracts",
+      "key": "UI-MAP-CAMERA-ROTATION-STATE",
+      "target": "lisa:mobile:contract:ui-contracts-ui-map-camera-rotation-state"
+    },
+    {
+      "bytes_half_open": [
+        169619,
+        171439
+      ],
+      "sha256": "c515cc81e0e5acc113b14ba015ab7d94e9f3b7f49c51a5c31a28368c6b633fea",
+      "section": "contracts",
+      "key": "UI-MAP-CONDITIONAL-AUTOPAN",
+      "target": "lisa:mobile:contract:ui-contracts-ui-map-conditional-autopan"
+    },
+    {
+      "bytes_half_open": [
+        171439,
+        173376
+      ],
+      "sha256": "a6bca214d4d3e618f48a368299704ed96cc68dea5d74546b33ee8a4fc39e7915",
+      "section": "contracts",
+      "key": "UI-LOCATION-CURSOR-HEADING-SECTOR",
+      "target": "lisa:mobile:contract:ui-contracts-ui-location-cursor-heading-sector"
+    },
+    {
+      "bytes_half_open": [
+        173376,
+        175107
+      ],
+      "sha256": "55930d54153c1a8d434d476dd813648b5e84a3348d916fc572763198c4a6b3d9",
+      "section": "contracts",
+      "key": "UI-MAP-COMPASS",
+      "target": "lisa:mobile:contract:ui-contracts-ui-map-compass"
+    },
+    {
+      "bytes_half_open": [
+        175107,
+        180097
+      ],
+      "sha256": "e018e29caad417a7c32835b7796830c892d3bfbcea4a098017febba9cb44c298",
+      "section": "contracts",
+      "key": "UI-NAVIGATION-STAKEOUT-TARGET",
+      "target": "lisa:mobile:contract:ui-contracts-ui-navigation-stakeout-target"
+    },
+    {
+      "bytes_half_open": [
+        180097,
+        181909
+      ],
+      "sha256": "976d6d28e9fc2f8ab90fc0c5b92fa0b41b7f3cf07d2a1b831e2b2c81cf69e802",
+      "section": "contracts",
+      "key": "UI-NAVIGATION-STAKEOUT-FRESHNESS",
+      "target": "lisa:mobile:contract:ui-contracts-ui-navigation-stakeout-freshness"
+    },
+    {
+      "bytes_half_open": [
+        181909,
+        183768
+      ],
+      "sha256": "ebc2f8dd282e7bb9e35f449fd99af013a7c45a79792e05ca206e17a7c2a43260",
+      "section": "contracts",
+      "key": "UI-NAVIGATION-DIRECTION",
+      "target": "lisa:mobile:contract:ui-contracts-ui-navigation-direction"
+    },
+    {
+      "bytes_half_open": [
+        183768,
+        185343
+      ],
+      "sha256": "f4bf6a39866a41438007097dec6121d3e602962be68a5752197eb19f3d2819c4",
+      "section": "contracts",
+      "key": "UI-NAVIGATION-SOUND",
+      "target": "lisa:mobile:contract:ui-contracts-ui-navigation-sound"
+    },
+    {
+      "bytes_half_open": [
+        185343,
+        187225
+      ],
+      "sha256": "71647791a55ab7caedd89e9beaba865fd18a31a0ea07d350331a383e722bf898",
+      "section": "contracts",
+      "key": "UI-NAVIGATION-AZIMUTH-CURRENT",
+      "target": "lisa:mobile:contract:ui-contracts-ui-navigation-azimuth-current"
+    },
+    {
+      "bytes_half_open": [
+        187225,
+        189140
+      ],
+      "sha256": "56cde671cd6a41e16195c1441e2b1064a857d6688b59a894a35dbbbe2d04c20a",
+      "section": "contracts",
+      "key": "UI-NAVIGATION-AZIMUTH-TWO-POINTS",
+      "target": "lisa:mobile:contract:ui-contracts-ui-navigation-azimuth-two-points"
+    },
+    {
+      "bytes_half_open": [
+        189140,
+        191526
+      ],
+      "sha256": "edca4b33cfbdd01587d1109b8f8f257891dc714bd08ac56815f33f0404ca0595",
+      "section": "contracts",
+      "key": "UI-PROJECT-CHOOSER",
+      "target": "lisa:mobile:contract:ui-contracts-ui-project-chooser"
+    },
+    {
+      "bytes_half_open": [
+        191526,
+        193943
+      ],
+      "sha256": "97753b9a454308f0b563bdb0074505f22807a52347c5b2a5c573b1003e7acfb3",
+      "section": "contracts",
+      "key": "UI-PROJECT-SWITCH",
+      "target": "lisa:mobile:contract:ui-contracts-ui-project-switch"
+    },
+    {
+      "bytes_half_open": [
+        193943,
+        196274
+      ],
+      "sha256": "4117915c0b1b4102e1046d7cb8dbc39d8eb55f8e4254b0120f9c2b499fb86752",
+      "section": "contracts",
+      "key": "UI-LAYER-VISIBILITY",
+      "target": "lisa:mobile:contract:ui-contracts-ui-layer-visibility"
+    },
+    {
+      "bytes_half_open": [
+        196274,
+        198184
+      ],
+      "sha256": "dbb1f5fb9d669b5b8cd335f33946da12eed322f4799d7f39c376459d1e61875e",
+      "section": "contracts",
+      "key": "UI-LAYER-ORDER",
+      "target": "lisa:mobile:contract:ui-contracts-ui-layer-order"
+    },
+    {
+      "bytes_half_open": [
+        198184,
+        200888
+      ],
+      "sha256": "8d01792f12d693476949a243543684c3519f6de464ab8976479275c111ed40f2",
+      "section": "contracts",
+      "key": "UI-EDIT-PERMISSION",
+      "target": "lisa:mobile:contract:ui-contracts-ui-edit-permission"
+    },
+    {
+      "bytes_half_open": [
+        200888,
+        203114
+      ],
+      "sha256": "5e32b5b37126b10637187a53649419e7124689d9a8c3c89ea4690c94397b9b57",
+      "section": "contracts",
+      "key": "UI-IDENTIFY-NAVIGATION",
+      "target": "lisa:mobile:contract:ui-contracts-ui-identify-navigation"
+    },
+    {
+      "bytes_half_open": [
+        203114,
+        205423
+      ],
+      "sha256": "e2ee708f5631dacd2021c9d7026b429096f20a4936f67c9b8473926bfd8d1a3e",
+      "section": "contracts",
+      "key": "UI-IDENTIFY-ACTIONS",
+      "target": "lisa:mobile:contract:ui-contracts-ui-identify-actions"
+    },
+    {
+      "bytes_half_open": [
+        205423,
+        208032
+      ],
+      "sha256": "3e78b1df3b3eb0a79dc25cdede84284641b319887ffa0c82a3facb6a836fe8f2",
+      "section": "contracts",
+      "key": "UI-FORM-REQUIRED",
+      "target": "lisa:mobile:contract:ui-contracts-ui-form-required"
+    },
+    {
+      "bytes_half_open": [
+        208032,
+        210429
+      ],
+      "sha256": "8253a9241b467c208f8f84caecdeb27571a310d24ecfec0c75de275c0af747c8",
+      "section": "contracts",
+      "key": "UI-FORM-DRAFT",
+      "target": "lisa:mobile:contract:ui-contracts-ui-form-draft"
+    },
+    {
+      "bytes_half_open": [
+        210429,
+        212766
+      ],
+      "sha256": "2e56b00560d8028658cf8f97b2f238d4fab83ce5d35e62b31c96456ef1c1cc97",
+      "section": "contracts",
+      "key": "UI-FORM-SAVE",
+      "target": "lisa:mobile:contract:ui-contracts-ui-form-save"
+    },
+    {
+      "bytes_half_open": [
+        212766,
+        215228
+      ],
+      "sha256": "771f6c12ee0cc9a61c2a16384891d7eb91e17e677a3cbbd0df856b6bc2ff01bd",
+      "section": "contracts",
+      "key": "UI-FORM-UNBOUND-PRESERVATION",
+      "target": "lisa:mobile:contract:ui-contracts-ui-form-unbound-preservation"
+    },
+    {
+      "bytes_half_open": [
+        215228,
+        217483
+      ],
+      "sha256": "fbb1ed2b3ed2c3b10981a4b18dc5cab54e511f53e5b49f3291ce2ef313af3dc8",
+      "section": "contracts",
+      "key": "UI-OFFLINE-SYNC-RETRY",
+      "target": "lisa:mobile:contract:ui-contracts-ui-offline-sync-retry"
+    },
+    {
+      "bytes_half_open": [
+        217483,
+        221626
+      ],
+      "sha256": "86a9d407c4dd86b77e9e800fb6517ebeb8ba348afbaf8523dadb05b59f9b4c33",
+      "section": "contracts",
+      "key": "UI-MANUAL-SYNC",
+      "target": "lisa:mobile:contract:ui-contracts-ui-manual-sync"
+    },
+    {
+      "bytes_half_open": [
+        221626,
+        228293
+      ],
+      "sha256": "0f2ff5eb74a0698b0f616042fc8f070568e242a48ad760a7d5ce67ddccb6b26d",
+      "section": "contracts",
+      "key": "UI-SYNC-COMPLETION-CLOCK",
+      "target": "lisa:mobile:contract:ui-contracts-ui-sync-completion-clock"
+    },
+    {
+      "bytes_half_open": [
+        228293,
+        231344
+      ],
+      "sha256": "0669882a93360ff22139295bb4eb1ffa12c26108dfb878c23aab9fc0483db2eb",
+      "section": "contracts",
+      "key": "UI-SYNC-PENDING-BADGES",
+      "target": "lisa:mobile:contract:ui-contracts-ui-sync-pending-badges"
+    },
+    {
+      "bytes_half_open": [
+        231344,
+        241612
+      ],
+      "sha256": "1696a229f0bbf4c921162038f1d2a168da26b19c722cf6f5aae58369da113455",
+      "section": "contracts",
+      "key": "UI-TRACK-SELECTION-PANEL",
+      "target": "lisa:mobile:contract:ui-contracts-ui-track-selection-panel"
+    },
+    {
+      "bytes_half_open": [
+        241612,
+        244188
+      ],
+      "sha256": "07d9e5267e7de832c3f54ede41c9bf6417f0171158279905a8a7ba71c6d38beb",
+      "section": "contracts",
+      "key": "UI-TRACK-RENAME",
+      "target": "lisa:mobile:contract:ui-contracts-ui-track-rename"
+    },
+    {
+      "bytes_half_open": [
+        244188,
+        246930
+      ],
+      "sha256": "b74802272134947c1f258aba2f71deff03ead142c4c7008bf3b7ab648d72c9b7",
+      "section": "contracts",
+      "key": "UI-TRACK-DELETE-CONFIRM",
+      "target": "lisa:mobile:contract:ui-contracts-ui-track-delete-confirm"
+    },
+    {
+      "bytes_half_open": [
+        246930,
+        255711
+      ],
+      "sha256": "c38c16cf06d94c9fb5447953215192cc5c7bc7249bd6ddecc0ffc99c3a1b5f03",
+      "section": "contracts",
+      "key": "UI-SETTINGS-MAP-STORAGE-MOVE",
+      "target": "lisa:mobile:contract:ui-contracts-ui-settings-map-storage-move"
+    },
+    {
+      "bytes_half_open": [
+        255711,
+        261654
+      ],
+      "sha256": "826d61bb6e56ddc9229182a98c305fc104421b8d796fc52dfae4cb950b6f1627",
+      "section": "contracts",
+      "key": "UI-SETTINGS-RESET-WORKSPACE",
+      "target": "lisa:mobile:contract:ui-contracts-ui-settings-reset-workspace"
+    },
+    {
+      "bytes_half_open": [
+        261654,
+        266725
+      ],
+      "sha256": "8c697b4f1db62eabb9adf4c795cfce7d0cc3e523ec5b986046299a7c4cfb70a3",
+      "section": "contracts",
+      "key": "UI-FORM-TEXT-LINE-CAP",
+      "target": "lisa:mobile:contract:ui-contracts-ui-form-text-line-cap"
+    },
+    {
+      "bytes_half_open": [
+        266725,
+        271522
+      ],
+      "sha256": "caf89253640a2b1e3ecab1ff447403dc55325b7f544e61f7b53f1c24267ed1e3",
+      "section": "contracts",
+      "key": "UI-SYNC-FAILURE-MESSAGES",
+      "target": "lisa:mobile:contract:ui-contracts-ui-sync-failure-messages"
+    },
+    {
+      "bytes_half_open": [
+        271522,
+        274589
+      ],
+      "sha256": "5e22e76848a76eb6ae0e414578e6615e08f5ea7c5610954255fbbf1b370498fd",
+      "section": "contracts",
+      "key": "UI-NGW-RESOURCE-LOAD-ERRORS",
+      "target": "lisa:mobile:contract:ui-contracts-ui-ngw-resource-load-errors"
+    },
+    {
+      "bytes_half_open": [
+        274589,
+        277987
+      ],
+      "sha256": "ee160a3163afdfc1baeeed75fd2d51604d69532cab321ffb71cdc58c8ead8bfb",
+      "section": "contracts",
+      "key": "UI-LAYER-IMPORT-ERROR-MESSAGES",
+      "target": "lisa:mobile:contract:ui-contracts-ui-layer-import-error-messages"
+    },
+    {
+      "bytes_half_open": [
+        277987,
+        280127
+      ],
+      "sha256": "39b0aee22cce5f33e56061878b3ca5f486496bff9d01992aac4d4f95a861b28e",
+      "section": "contracts",
+      "key": "UI-FORM-LEGACY-LIST-ERRORS",
+      "target": "lisa:mobile:contract:ui-contracts-ui-form-legacy-list-errors"
+    },
+    {
+      "bytes_half_open": [
+        280127,
+        293370
+      ],
+      "sha256": "cf09eeeedb7dcca9660a998ea5025ce36a9df5156c07dc27dbd291463ff3c961",
+      "section": "contracts",
+      "key": "UI-NGW-RESOURCE-CHECKBOX-SELECTION",
+      "target": "lisa:mobile:contract:ui-contracts-ui-ngw-resource-checkbox-selection"
+    },
+    {
+      "bytes_half_open": [
+        293370,
+        298832
+      ],
+      "sha256": "7353f0ae4f0baa6c5dccb8ec40579be890a6ef11bb534d9ff474735e7f693e03",
+      "section": "contracts",
+      "key": "UI-FORM-DATE-STANDARD-VALUE",
+      "target": "lisa:mobile:contract:ui-contracts-ui-form-date-standard-value"
+    },
+    {
+      "bytes_half_open": [
+        298832,
+        304155
+      ],
+      "sha256": "7848bb09f4c4c8383f9ffd77b3395c98e58e75ebce1e598245c1c6cd428f9a31",
+      "section": "contracts",
+      "key": "UI-FORM-DATE-NGFP-VALUE",
+      "target": "lisa:mobile:contract:ui-contracts-ui-form-date-ngfp-value"
+    },
+    {
+      "bytes_half_open": [
+        304155,
+        311241
+      ],
+      "sha256": "00aae33f75de0f5e342bc684dd5cf931a04ea11d31466ec6cbe16f68d32c5021",
+      "section": "contracts",
+      "key": "UI-FORM-CHECKBOX-NGFP-VALUE",
+      "target": "lisa:mobile:contract:ui-contracts-ui-form-checkbox-ngfp-value"
+    },
+    {
+      "bytes_half_open": [
+        311241,
+        318112
+      ],
+      "sha256": "f83252f28670eb5ba01e6a2c3fe7174acca0b6f04116f57a570c3b0fc2bd0352",
+      "section": "contracts",
+      "key": "UI-ATTACHMENT-DOWNLOAD-STATE",
+      "target": "lisa:mobile:contract:ui-contracts-ui-attachment-download-state"
+    },
+    {
+      "bytes_half_open": [
+        318112,
+        323255
+      ],
+      "sha256": "72cf446ba15c489066ec4c59552eb36948306689435b5c8f0105fa0a0b29de9f",
+      "section": "contracts",
+      "key": "UI-MOBILE-PROJECT-LOAD",
+      "target": "lisa:mobile:contract:ui-contracts-ui-mobile-project-load"
+    },
+    {
+      "bytes_half_open": [
+        323255,
+        326014
+      ],
+      "sha256": "573a8b40ea820b7e4ef438ba70428ca40649f0d949b5c6b7bd488fd0bcd1f9e1",
+      "section": "contracts",
+      "key": "UI-RENDER-MEMORY-WARNING",
+      "target": "lisa:mobile:contract:ui-contracts-ui-render-memory-warning"
+    },
+    {
+      "bytes_half_open": [
+        326014,
+        329228
+      ],
+      "sha256": "0199967c3bf8cbe96b5532e52bf2565143cbd4ff5060565aaa4b74e09616710f",
+      "section": "contracts",
+      "key": "UI-MAINTENANCE-REMINDERS",
+      "target": "lisa:mobile:contract:ui-contracts-ui-maintenance-reminders"
+    },
+    {
+      "bytes_half_open": [
+        329228,
+        332631
+      ],
+      "sha256": "8f433c96d3913d074e5fbbf8995ef7e427abbd0b497f63ea1df1a000a1a4d3f9",
+      "section": "contracts",
+      "key": "UI-DEBUG-UNDERLAY-TRANSFER-PROGRESS",
+      "target": "lisa:mobile:contract:ui-contracts-ui-debug-underlay-transfer-progress"
+    },
+    {
+      "bytes_half_open": [
+        332631,
+        334574
+      ],
+      "sha256": "ff974b27bca92157daab6e06aaec2e4937fb55618997374fdee6dfb3bbda356d",
+      "section": "contracts",
+      "key": "UI-MAP-IDENTIFY-VISIBLE-VECTORS",
+      "target": "lisa:mobile:contract:ui-contracts-ui-map-identify-visible-vectors"
+    },
+    {
+      "bytes_half_open": [
+        334574,
+        334599
+      ],
+      "sha256": "5a1f42987aa40061ece4b0aa1ad722f835ed14cd09a821ebf0c58d1b9e6035db",
+      "section": "widget_evidence",
+      "key": null,
+      "target": "lisa:mobile:metadata:ui-contracts-registry"
+    },
+    {
+      "bytes_half_open": [
+        334599,
+        334818
+      ],
+      "sha256": "c294836abc6d86d964ddecb2f88bff03594f9b9a73a433913c747730a7563b20",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/layout/layout_azimuth_panel.xml",
+        "azimuth_panel"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-34f876d30d61ac84636ad152"
+    },
+    {
+      "bytes_half_open": [
+        334818,
+        335040
+      ],
+      "sha256": "c4f8b9e53e9dc09b0c9f7824ae7660f2fc3bfe6a1d9f4c44ff403397065f33b7",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/layout/layout_azimuth_panel.xml",
+        "azimuth_distance"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-a231ddf2d903608d08c9bb04"
+    },
+    {
+      "bytes_half_open": [
+        335040,
+        335261
+      ],
+      "sha256": "3c277f1ed56816ad3a497a59baaeba7e97f8eb547297f8144e022b7e5c5e49e4",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/layout/layout_azimuth_panel.xml",
+        "azimuth_bearing"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-563e61f7daa1768b1e936b29"
+    },
+    {
+      "bytes_half_open": [
+        335261,
+        335482
+      ],
+      "sha256": "908d06155fc36a71d2c7369efaa60d606911bde843eb2c903d46df6e7254c543",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/layout/layout_azimuth_panel.xml",
+        "azimuth_details"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-141f38edc29e0a55e36e2b0c"
+    },
+    {
+      "bytes_half_open": [
+        335482,
+        335713
+      ],
+      "sha256": "84f33cfecb412b310cfcb96c2bb719c562afe7bc5523b398ea4ed266ed44abc3",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/layout/layout_azimuth_panel.xml",
+        "stakeout_correction_value"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-9a269129944dac9af99fe059"
+    },
+    {
+      "bytes_half_open": [
+        335713,
+        335927
+      ],
+      "sha256": "7104d80ff32e6ddbae449b353ea4f3743155ccf47c638790004da8f644c32377",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/layout/layout_map_content.xml",
+        "fl_compass"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-a5fdbf687141dda10ecf22af"
+    },
+    {
+      "bytes_half_open": [
+        335927,
+        336139
+      ],
+      "sha256": "a7803338d8bdeef3834e7d712b8a3fc93ff087bbe9393255511573197887fa05",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/layout/layout_map_content.xml",
+        "gnss_hud"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-6f8b6e140605d1220166fd46"
+    },
+    {
+      "bytes_half_open": [
+        336139,
+        336359
+      ],
+      "sha256": "00e16f86212e5aaf0f447e3ca9a0f6a87fe239ec3cf058aee036a0d53f049d28",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/layout/layout_map_content.xml",
+        "gnss_hud_quality"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-cb5a68e96e6fc3190211fb7f"
+    },
+    {
+      "bytes_half_open": [
+        336359,
+        336578
+      ],
+      "sha256": "93fc577531e3ff620739adf70158942cb7e139bbde4488da369ff76cd22b3ebe",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/layout/layout_map_content.xml",
+        "gnss_hud_detail"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-2d67ac3991158a61723db72f"
+    },
+    {
+      "bytes_half_open": [
+        336578,
+        336796
+      ],
+      "sha256": "a06e77f0d44bf2c72e74b0ba8153781fcc40336ab8f82ada8cc0794c4bff1089",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/layout/layout_map_content.xml",
+        "action_zoom_in"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-fd36d08e9df6143415d3ab55"
+    },
+    {
+      "bytes_half_open": [
+        336796,
+        337015
+      ],
+      "sha256": "150059e03133b495935e1d9559cf15aa7ea5844920ef09440416225eb23a4857",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/layout/layout_map_content.xml",
+        "action_zoom_out"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-d99b75ab73a7eb055514fc09"
+    },
+    {
+      "bytes_half_open": [
+        337015,
+        337234
+      ],
+      "sha256": "a372f378b29c9416907c43feca160359eed3a8a15f2e39b152dd8c48bc4e3510",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/layout/layout_map_content.xml",
+        "fl_status_panel"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-98571da1ccbff2c2e2b6b197"
+    },
+    {
+      "bytes_half_open": [
+        337234,
+        337446
+      ],
+      "sha256": "5d05f2944b141e911fa6214c39e2393f01e73dc57873ddf4d7ca3e5fe744f230",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/layout/layout_map_content.xml",
+        "ll_ruler"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-e9e84324e750af0d38f581e6"
+    },
+    {
+      "bytes_half_open": [
+        337446,
+        337658
+      ],
+      "sha256": "7e5e7fd830b468a40b6b2ffbfeb063ad59818790b65078b3ba51a5b3b295a3e9",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/layout/layout_map_content.xml",
+        "iv_ruler"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-66c79f3e967dd6acd00503a9"
+    },
+    {
+      "bytes_half_open": [
+        337658,
+        337870
+      ],
+      "sha256": "ce5350923473a7a236c1ea59f22f4b8dc4cdef3574fb024829588b1451b5e7b4",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/layout/layout_map_content.xml",
+        "tv_ruler"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-ba4b8c17d3a78733c4eceecb"
+    },
+    {
+      "bytes_half_open": [
+        337870,
+        338091
+      ],
+      "sha256": "4ad4fc0172e4620324d60340c2608b4af26b60c06f69723f923ad7f5f44ed6c3",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/layout/layout_stakeout_panel.xml",
+        "stakeout_panel"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-ba2624c447b0a61117d7efc2"
+    },
+    {
+      "bytes_half_open": [
+        338091,
+        338316
+      ],
+      "sha256": "78081165f28c5aa24bdabfae02a2e676bf6402cdb7d543b7c57b4b1d50a91fe6",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/layout/layout_stakeout_panel.xml",
+        "stakeout_direction"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-5213b65ea82a19171f2b8421"
+    },
+    {
+      "bytes_half_open": [
+        338316,
+        338540
+      ],
+      "sha256": "eb7515e07d75a0c0474d31c7a859acb8a90fcf933eac3fccd88d9866ed0fb266",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/layout/layout_stakeout_panel.xml",
+        "stakeout_distance"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-2010c41852108abe59dddfea"
+    },
+    {
+      "bytes_half_open": [
+        338540,
+        338763
+      ],
+      "sha256": "8e9a7816dfe56c1698994618eba7770bef30b16dd66ed7da19dc8e4d30f77445",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/layout/layout_stakeout_panel.xml",
+        "stakeout_details"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-e6108d3b1452321711153618"
+    },
+    {
+      "bytes_half_open": [
+        338763,
+        338983
+      ],
+      "sha256": "3a7747d66b40d4b3825a4f0a4b03dc11bb4f15d8691ce49c6a88ba6ba81a63e2",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/layout/layout_stakeout_panel.xml",
+        "stakeout_stop"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-26617d0aae9949ac668fbbd2"
+    },
+    {
+      "bytes_half_open": [
+        338983,
+        339204
+      ],
+      "sha256": "41b6a9bdabbd5a8f4b721716e699b934637204b9ddd69b37cb9745e03a2c73d6",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/layout/layout_stakeout_panel.xml",
+        "stakeout_sound"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-352eff514445d3907618d894"
+    },
+    {
+      "bytes_half_open": [
+        339204,
+        339421
+      ],
+      "sha256": "f0bc4d19745b02c9faa9d812b75d16c3888354347c886fef243a8a823ec841bd",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/layout/status_panel_content.xml",
+        "tv_latitude"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-03b0c33849becc343d463148"
+    },
+    {
+      "bytes_half_open": [
+        339421,
+        339639
+      ],
+      "sha256": "9be2081cf0ee6ee5b68f5b1a0365ae382477bc657d7c8a13aec5533e0ebf16a6",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/layout/status_panel_content.xml",
+        "tv_longitude"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-4547cf7e914857cc08581a59"
+    },
+    {
+      "bytes_half_open": [
+        339639,
+        339852
+      ],
+      "sha256": "c665f606e97bc15ba44dad4568c36688e1ad54cad486b6c13f5eac85fa36b5ac",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/layout/status_panel_content.xml",
+        "tv_zoom"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-a0abec2eaa905e4de659bf6f"
+    },
+    {
+      "bytes_half_open": [
+        339852,
+        340067
+      ],
+      "sha256": "2160b116fd68005d842e2017d84a1b2b610bf1479a9e8db5ae0c98f90ee73127",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/layout/status_panel_content.xml",
+        "tv_source"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-5afa9e837112073ade806fb6"
+    },
+    {
+      "bytes_half_open": [
+        340067,
+        340284
+      ],
+      "sha256": "6aa32289c1f3e542a7089afd909c16ccebb6bcb21272536c85d892763a9dc5eb",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/layout/status_panel_content.xml",
+        "tv_accuracy"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-9c6c4eb36def8eb5d025b8aa"
+    },
+    {
+      "bytes_half_open": [
+        340284,
+        340489
+      ],
+      "sha256": "ff7d20193c7cc83bf472501c1b57853cc303582571373cd7779d8e70b73da16c",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/menu/main.xml",
+        "menu_map_rotation"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-691a0fd49c08f2840fa5a78c"
+    },
+    {
+      "bytes_half_open": [
+        340489,
+        340688
+      ],
+      "sha256": "fdd6ed768300dd158fc2ba06c79736bb334d093a132643ef9dc0a5d051e183a4",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/menu/main.xml",
+        "menu_locate"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-04d36974e4eef80b8c521efb"
+    },
+    {
+      "bytes_half_open": [
+        340688,
+        340916
+      ],
+      "sha256": "7f901d1759661ba429aecf7555cd98e3217096d90fb11897e2f2a215fa242e66",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/menu/menu_measurements.xml",
+        "measurement_azimuth_current"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-de74b4bb3eae97542bc0eee1"
+    },
+    {
+      "bytes_half_open": [
+        340916,
+        341143
+      ],
+      "sha256": "b6c220102d501e0df3fc4edffcba9c60526c96e4952d39abf9f14f7650456b55",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/menu/menu_measurements.xml",
+        "measurement_azimuth_points"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-f9cd60c41c42801cfe3692c0"
+    },
+    {
+      "bytes_half_open": [
+        341143,
+        341361
+      ],
+      "sha256": "098902b422afeabdfcb8e9351b8584148fc04e2fccb70e0b65c3c87e10a3d982",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/menu/select_action.xml",
+        "menu_feature_stakeout"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-7f1483162b6f35e06eb74d2d"
+    },
+    {
+      "bytes_half_open": [
+        341361,
+        341570
+      ],
+      "sha256": "352dfcb4d9bd6a8aace885c516387b8139caf7b3b676a45adb488c1b6df6ddcd",
+      "section": "widget_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/layout/fragment_compass.xml",
+        "azimuth"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-ea23fff0bd0fe834bb5f3421"
+    },
+    {
+      "bytes_half_open": [
+        341570,
+        341781
+      ],
+      "sha256": "ddb024fc650443930932758ff536f736c8a85d29fb298cbf70e96d3f35df8a5e",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/menu/main.xml",
+        "menu_collector_projects"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-ed10f810e8e4d74a43eda8e4"
+    },
+    {
+      "bytes_half_open": [
+        341781,
+        341982
+      ],
+      "sha256": "3679fea281226a8e9f72d4a9032fcdd430d15720a132328d31e50fc30fd89374",
+      "section": "widget_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/layout/row_layer.xml",
+        "btShow"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-2bfd1f9f72437f00c6e220a4"
+    },
+    {
+      "bytes_half_open": [
+        341982,
+        342188
+      ],
+      "sha256": "108a1aad99d30273f9612b96220ebe2a448e6c73d8bdc7fe46fc47149e1c8c44",
+      "section": "widget_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/layout/row_layer.xml",
+        "tvLayerName"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-5edcf771225e3129b6cc000b"
+    },
+    {
+      "bytes_half_open": [
+        342188,
+        342402
+      ],
+      "sha256": "cfc3879aa4245bffdc60fb63414894db7266c888e736cef9f99bbfa12760bd8b",
+      "section": "widget_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/layout/row_layer.xml",
+        "layer_pending_badge"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-14e02b82fd18f92408b07787"
+    },
+    {
+      "bytes_half_open": [
+        342402,
+        342605
+      ],
+      "sha256": "197a28fb96564150845bf307c0480ff163b16a457b65059e57b23489fec1c91f",
+      "section": "widget_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/layout/row_layer.xml",
+        "ivEdited"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-07fa2f5e4fca4fddb6386754"
+    },
+    {
+      "bytes_half_open": [
+        342605,
+        342809
+      ],
+      "sha256": "c8e308fcac6b880df5f3eb5ee1d6482ff55d0f283426ac0728226384d984e584",
+      "section": "widget_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/menu/layer_popup.xml",
+        "menu_edit"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-e0c41aa9e0f0d850e542c25e"
+    },
+    {
+      "bytes_half_open": [
+        342809,
+        343032
+      ],
+      "sha256": "ce954de36f50b57a5cdc8de54399e94f257ee3cad0290b0ddba877c151d94b76",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/menu/attributes_editable.xml",
+        "menu_edit_attributes"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-899d3ca007ecab71889a1905"
+    },
+    {
+      "bytes_half_open": [
+        343032,
+        343235
+      ],
+      "sha256": "d3c88c0150e52a0cd178e3718bca98ff4aef50b1e1969b8c9f19228b492a0389",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/menu/attributes.xml",
+        "menu_prev"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-31c020d1db1f3b316f096b0d"
+    },
+    {
+      "bytes_half_open": [
+        343235,
+        343438
+      ],
+      "sha256": "f204e87e57cb5f02dedada8e9bbd863d940e36751d8000d08ba3151ce0861525",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/menu/attributes.xml",
+        "menu_next"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-1d765f4f8ea67ff77d267bfb"
+    },
+    {
+      "bytes_half_open": [
+        343438,
+        343661
+      ],
+      "sha256": "a3e6cc619cc0cb87feacb01ecbe06e0c4561ee8ca9eadc86402ad6850792dc33",
+      "section": "widget_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/layout/activity_standard_attributes.xml",
+        "form_save"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-47731e7f7bacdba12065da1a"
+    },
+    {
+      "bytes_half_open": [
+        343661,
+        343888
+      ],
+      "sha256": "cb8a587709340666dd43ade4e36a043bd4e21c71a8813c94885a769a3a215fb4",
+      "section": "widget_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/layout/activity_standard_attributes.xml",
+        "controls_list"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-2aa0f1d7cbd20ef28d49f0b2"
+    },
+    {
+      "bytes_half_open": [
+        343888,
+        344093
+      ],
+      "sha256": "2bf8cc72d716c97674da81979c4dba6c666fcfa35e6995415acf04055e898792",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/layout/fragment_layers.xml",
+        "sync"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-c11cf5ef4d9b91c453a166ed"
+    },
+    {
+      "bytes_half_open": [
+        344093,
+        344298
+      ],
+      "sha256": "743163f20d64d45e12acd1b5755d3a8b97c851506c82080ffbcce8c5542f76eb",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/layout/fragment_layers.xml",
+        "info"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-3a0de8f56f08bb37ee9d2e40"
+    },
+    {
+      "bytes_half_open": [
+        344298,
+        344517
+      ],
+      "sha256": "eef508cd5eb56c7fbf3cfcb2988d5b48fbfa34f24f4e0985cb91b65718966390",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/layout/fragment_layers.xml",
+        "sync_pending_badge"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-a320dae3d08bf4c73b8c8ed1"
+    },
+    {
+      "bytes_half_open": [
+        344517,
+        344718
+      ],
+      "sha256": "f497ff9b1425aff0e251a6d602103c9a5cb071e021d83d4bd95fdc3e8d81ef9c",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/menu/main.xml",
+        "menu_settings"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-ac53c9b98167988d67fd6cc0"
+    },
+    {
+      "bytes_half_open": [
+        344718,
+        344937
+      ],
+      "sha256": "d72cad0392feef48b5ddf0b4ac1fbf69f1f0b31e6c6d060e636e25877194497c",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/layout/fragment_layers.xml",
+        "sync_progress_ring"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-4458c9e6d336436153732cee"
+    },
+    {
+      "bytes_half_open": [
+        344937,
+        345150
+      ],
+      "sha256": "49afdc0b0a2451e4b9e3c61cfd43ae5840041348362862453368501b67a8630d",
+      "section": "widget_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/layout/row_ngwlayer_check.xml",
+        "checkBox1"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-4da9e277330dde12c970c5bd"
+    },
+    {
+      "bytes_half_open": [
+        345150,
+        345359
+      ],
+      "sha256": "f77fc01d5a944984aa58b802b252b6a64584b3ac625ea4cae28b1d4358a7d66b",
+      "section": "widget_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/layout/row_ngwlayer_check.xml",
+        "type1"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-b8d4929eb7e072ba17393b13"
+    },
+    {
+      "bytes_half_open": [
+        345359,
+        345575
+      ],
+      "sha256": "deaa91cfce8d1699dc453d95f160fe6ccb30a504247974c25d59c00e105f10b1",
+      "section": "widget_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/layout/row_ngwlayer_check.xml",
+        "check_raster"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-b72ef4d02947027d5ae13e57"
+    },
+    {
+      "bytes_half_open": [
+        345575,
+        345794
+      ],
+      "sha256": "6020dc83f41b0936ccfce22c388ba497e0c88ee2871159a3d600d6a9daae712a",
+      "section": "widget_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/layout/row_ngwlayer_doublecheck.xml",
+        "checkBox1"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-e16ad021f7be92795417d84e"
+    },
+    {
+      "bytes_half_open": [
+        345794,
+        346013
+      ],
+      "sha256": "80b8b8c07e4431f2b74a0272b72126331c82035136877ae7b44911cd323f1c85",
+      "section": "widget_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/layout/row_ngwlayer_doublecheck.xml",
+        "checkBox2"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-13cc0f87cf438773bde4b543"
+    },
+    {
+      "bytes_half_open": [
+        346013,
+        346228
+      ],
+      "sha256": "05ab1a541b11d1fb429d7e6b34ef46a5b715657aa331f76eab761f89c6e777f8",
+      "section": "widget_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/layout/row_ngwlayer_doublecheck.xml",
+        "type1"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-c3cd2bbf7a08a8388dff3880"
+    },
+    {
+      "bytes_half_open": [
+        346228,
+        346443
+      ],
+      "sha256": "387152024b7d5e3b9340a4208b08edf9edae57b50aba5a0857f21bb08274b090",
+      "section": "widget_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/layout/row_ngwlayer_doublecheck.xml",
+        "type2"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-21d934c858d86fcbfe9cb78c"
+    },
+    {
+      "bytes_half_open": [
+        346443,
+        346665
+      ],
+      "sha256": "1adfb01b6d53a34b9ab1cbbf7dfa9b67bb03bf2b06f44edcecfb071b366ca9b5",
+      "section": "widget_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/layout/row_ngwlayer_doublecheck.xml",
+        "check_raster"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-ed7bf5ad86dd0ee8a5d68df1"
+    },
+    {
+      "bytes_half_open": [
+        346665,
+        346887
+      ],
+      "sha256": "8b76f99c745f9934da73efe3226289707bcf8a1b221e68a2fe50acfa53d715e6",
+      "section": "widget_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/layout/row_ngwlayer_doublecheck.xml",
+        "check_vector"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-2d38212bf7cd5b5df41a2480"
+    },
+    {
+      "bytes_half_open": [
+        346887,
+        347110
+      ],
+      "sha256": "2fc2fa55f9b6a63c714ed1e55657b3d0ba68c3def2eb63f37de3762b2d616f97",
+      "section": "widget_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/layout/row_ngwlayer_check.xml",
+        "ngw_resource_header"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-239e1e9425eb05ea1e65d6ae"
+    },
+    {
+      "bytes_half_open": [
+        347110,
+        347332
+      ],
+      "sha256": "b61d8136d57b7065d91c00c384cc6e99dc751bc1ba87591e5df985cbbccd23c3",
+      "section": "widget_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/layout/row_ngwlayer_check.xml",
+        "ngw_resource_modes"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-58f352afc9686af6679089d7"
+    },
+    {
+      "bytes_half_open": [
+        347332,
+        347542
+      ],
+      "sha256": "7ee62ec47cfe0adf857add05fda295a49a237d33c143d1e7ab725877332ccd3c",
+      "section": "widget_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/layout/row_ngwlayer_check.xml",
+        "tvName"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-1255d46764264e2557a83fc3"
+    },
+    {
+      "bytes_half_open": [
+        347542,
+        347771
+      ],
+      "sha256": "ab6642150b88cdff3b5e477d8f273ecd1df2d536f6b9535173d12fcf655f5313",
+      "section": "widget_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/layout/row_ngwlayer_doublecheck.xml",
+        "ngw_resource_header"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-064736d4805bc92d8aed6752"
+    },
+    {
+      "bytes_half_open": [
+        347771,
+        347999
+      ],
+      "sha256": "d259308ff207f6f968ccbbf96cd27212b0dd55a3453cc0ab14b5ce0c6d3a08bd",
+      "section": "widget_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/layout/row_ngwlayer_doublecheck.xml",
+        "ngw_resource_modes"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-5ab7d5dbdeb32d26b3f314ae"
+    },
+    {
+      "bytes_half_open": [
+        347999,
+        348215
+      ],
+      "sha256": "628c1d28842cf817b3ef24c575161cea23a0598f0b355aeade62992887705e50",
+      "section": "widget_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/layout/row_ngwlayer_doublecheck.xml",
+        "tvName"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-a685eeb6eb3b32acc8796d0f"
+    },
+    {
+      "bytes_half_open": [
+        348215,
+        348421
+      ],
+      "sha256": "9005a9532337f9dd92094c23499b7048941ab28b7f4326c3a7633e7578aa0fae",
+      "section": "widget_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/layout/layout_resources.xml",
+        "path"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-49fe7b6e2d18c20e230d0cb3"
+    },
+    {
+      "bytes_half_open": [
+        348421,
+        348656
+      ],
+      "sha256": "f580c313648a6fb9e9d63218eefb58d88c32cd0d519343b01e63e8298f8b4e52",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "easypicker/easypicker/src/main/res/layout/photo_item.xml",
+        "progressImageDownload"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-1eccf2f34dbf617d4fd7a7a7"
+    },
+    {
+      "bytes_half_open": [
+        348656,
+        348881
+      ],
+      "sha256": "dc370c226123f8869efbda6b47f5e89773181c63466950a45f7cd83c42ae4e01",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "easypicker/easypicker/src/main/res/layout/photo_item.xml",
+        "ib_download"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-7c699886676e204f09bf4129"
+    },
+    {
+      "bytes_half_open": [
+        348881,
+        349101
+      ],
+      "sha256": "ef243ad9a09305055d1206cc1ccce888f7ee3be96a434d5425c35c62ca817e63",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/menu/add_layer.xml",
+        "menu_load_collector_project"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-a697e5b153ed3c0519c925d0"
+    },
+    {
+      "bytes_half_open": [
+        349101,
+        349336
+      ],
+      "sha256": "11fae31e88ee61babe1ac82413778b1af14746c5b74287538e23abc81ef72815",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/layout/activity_underlay_catalog.xml",
+        "underlay_transfer_status"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-1255ed3e2a0bc47fab131d30"
+    },
+    {
+      "bytes_half_open": [
+        349336,
+        349571
+      ],
+      "sha256": "ae18a1b9cca20eaac592936c434af361f12ed6bef1f79051d4c115b2c71524b3",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/layout/activity_underlay_catalog.xml",
+        "underlay_transfer_scroll"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-7b2a077b1c4bee7f850f6cf2"
+    },
+    {
+      "bytes_half_open": [
+        349571,
+        349806
+      ],
+      "sha256": "009e6c718ff9cc5879dd3fc1d36c3afa0d97e5b7a8d6fd1de7f51829fb4c2b45",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/layout/activity_underlay_catalog.xml",
+        "underlay_transfer_cancel"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-04a830d782fca8e599775002"
+    },
+    {
+      "bytes_half_open": [
+        349806,
+        350027
+      ],
+      "sha256": "a96228736df4bdd820fdae3b4733f2d31c0b527bff5a3b514c3fc3309332434c",
+      "section": "widget_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/layout/layout_map_content.xml",
+        "mapViewMaplibre"
+      ],
+      "target": "lisa:mobile:evidence:ui-widget-evidence-e1f7de246ac087ba91c3ca2d"
+    },
+    {
+      "bytes_half_open": [
+        350027,
+        350045
+      ],
+      "sha256": "b1c95b400423dc846373e29ddca19fe1e8465b9748596036d77b89848e4accf5",
+      "section": "coverage",
+      "key": null,
+      "target": "lisa:mobile:metadata:ui-contracts-registry"
+    },
+    {
+      "bytes_half_open": [
+        350045,
+        350084
+      ],
+      "sha256": "1829b18272d6fc0616e61853667845638ca13403f54547e38b27b4861bdba583",
+      "section": "coverage",
+      "key": "status",
+      "target": "lisa:mobile:metadata:ui-coverage-status"
+    },
+    {
+      "bytes_half_open": [
+        350084,
+        350110
+      ],
+      "sha256": "e11e9d98117b22548aca03548b5d4dad682acefcdbc3d5b036080cd565d32252",
+      "section": "coverage",
+      "key": "runtime",
+      "target": "lisa:mobile:metadata:ui-coverage-runtime"
+    },
+    {
+      "bytes_half_open": [
+        350110,
+        350322
+      ],
+      "sha256": "4db8e08c68de601ac786afb545a3653fe83fe29447e93c832db75e7a5f9ec1bb",
+      "section": "coverage",
+      "key": "reviewed_groups",
+      "target": "lisa:mobile:metadata:ui-coverage-reviewed-groups"
+    },
+    {
+      "bytes_half_open": [
+        350322,
+        351103
+      ],
+      "sha256": "7cf3336a6b6123a55073e69174e5c3db223c507494ee523f4ba4652918d199f9",
+      "section": "coverage",
+      "key": "not_reviewed",
+      "target": "lisa:mobile:metadata:ui-coverage-not-reviewed"
+    },
+    {
+      "bytes_half_open": [
+        351103,
+        351525
+      ],
+      "sha256": "4e3f279c1f789841ec1753187fbf29b79ac0527f603e4128b1721e5f21d51176",
+      "section": "coverage",
+      "key": "source_context",
+      "target": "lisa:mobile:metadata:ui-coverage-source-context"
+    },
+    {
+      "bytes_half_open": [
+        351525,
+        352819
+      ],
+      "sha256": "b3a2d41f2ce9dfecfe6f15048f2d72b73514752ac931340be539841b6185e470",
+      "section": "coverage",
+      "key": "workspace_move_review",
+      "target": "lisa:mobile:metadata:ui-coverage-workspace-move-review"
+    },
+    {
+      "bytes_half_open": [
+        352819,
+        354120
+      ],
+      "sha256": "deedc668df45b4aa9fe19be62728fefcee455424bae43a9e0f68166712996951",
+      "section": "coverage",
+      "key": "ngfp_text_line_review",
+      "target": "lisa:mobile:metadata:ui-coverage-ngfp-text-line-review"
+    },
+    {
+      "bytes_half_open": [
+        354120,
+        354840
+      ],
+      "sha256": "3028e770251705143463ae87f0d48d5aa690c016110acd5b157c79f69e38ce60",
+      "section": "coverage",
+      "key": "stakeout_target_source_review",
+      "target": "lisa:mobile:metadata:ui-coverage-stakeout-target-source-review"
+    },
+    {
+      "bytes_half_open": [
+        354840,
+        367649
+      ],
+      "sha256": "d9278d88fb2531f9514da5d9de0713a102fb72151a06e3e15bf2a9d03a5a1854",
+      "section": "coverage",
+      "key": "user_message_source_review",
+      "target": "lisa:mobile:metadata:ui-coverage-user-message-source-review"
+    },
+    {
+      "bytes_half_open": [
+        367649,
+        371357
+      ],
+      "sha256": "871ab42cb06f49cea65cc4fec824263983a55278abb02df1773c9e03fc0bbb17",
+      "section": "coverage",
+      "key": "resource_checkbox_selection_review",
+      "target": "lisa:mobile:metadata:ui-coverage-resource-checkbox-selection-review"
+    },
+    {
+      "bytes_half_open": [
+        371357,
+        379026
+      ],
+      "sha256": "3bc75240b760d4001a76a8fbae224df87e3e9e53c277bf535ed396a7a895a835",
+      "section": "coverage",
+      "key": "resource_caption_layout_review",
+      "target": "lisa:mobile:metadata:ui-coverage-resource-caption-layout-review"
+    },
+    {
+      "bytes_half_open": [
+        379026,
+        383312
+      ],
+      "sha256": "c321292721b2fb8ba3e4c5bb22057bd061e8ef55987b62eb0dc1bbfbf8a2211d",
+      "section": "coverage",
+      "key": "track_share_delivery_review",
+      "target": "lisa:mobile:metadata:ui-coverage-track-share-delivery-review"
+    },
+    {
+      "bytes_half_open": [
+        383312,
+        398228
+      ],
+      "sha256": "8d6ec4af86f4411fdc6a48fc8eb69a19e0f2c1062b5340b56fc4e4fff246f1a8",
+      "section": "coverage",
+      "key": "project_sync_clock_delivery_review",
+      "target": "lisa:mobile:metadata:ui-coverage-project-sync-clock-delivery-review"
+    },
+    {
+      "bytes_half_open": [
+        398228,
+        402867
+      ],
+      "sha256": "81e028a4b63d90bc258e4f205517ba4ade02e162519ac79197133dfde3ab7ca4",
+      "section": "coverage",
+      "key": "date_widget_source_review_20261101",
+      "target": "lisa:mobile:metadata:ui-coverage-date-widget-source-review-20261101"
+    },
+    {
+      "bytes_half_open": [
+        402867,
+        407929
+      ],
+      "sha256": "1dd68301eba32931be2280c41ac3d740e2a1dd295f23cf0838c15bcfbf727f70",
+      "section": "coverage",
+      "key": "checkbox_widget_source_review_20261101",
+      "target": "lisa:mobile:metadata:ui-coverage-checkbox-widget-source-review-20261101"
+    },
+    {
+      "bytes_half_open": [
+        407929,
+        408445
+      ],
+      "sha256": "2c759cc66d5ddc438d67d5cf590cdeb845a514b4b89e7a495c302fb35539ca17",
+      "section": "coverage",
+      "key": "attachment_download_state_20261101",
+      "target": "lisa:mobile:metadata:ui-coverage-attachment-download-state-20261101"
+    },
+    {
+      "bytes_half_open": [
+        408445,
+        410536
+      ],
+      "sha256": "8f8d8369d99825fe61037a074eef159246b792ad6378c9e3e217b1420e5ec3c2",
+      "section": "coverage",
+      "key": "ngw_metadata_fetch_guard_scope_review_20261101",
+      "target": "lisa:mobile:metadata:ui-coverage-ngw-metadata-fetch-guard-scope-review-20261101"
+    },
+    {
+      "bytes_half_open": [
+        410536,
+        413529
+      ],
+      "sha256": "6d95d8defb60be970604bfce1866dc6b92fefc780de14a4b4558e5b96a055ea8",
+      "section": "coverage",
+      "key": "mobile_project_labels_review_20261101",
+      "target": "lisa:mobile:metadata:ui-coverage-mobile-project-labels-review-20261101"
+    },
+    {
+      "bytes_half_open": [
+        413529,
+        413917
+      ],
+      "sha256": "ed3a25a671a552f7b92d59329d1e54ec103bf368d5980f4956f6f6fc0b49a5a1",
+      "section": "coverage",
+      "key": "release_warning_layout_review_20261102",
+      "target": "lisa:mobile:metadata:ui-coverage-release-warning-layout-review-20261102"
+    },
+    {
+      "bytes_half_open": [
+        413917,
+        414584
+      ],
+      "sha256": "faaf74d49864bb919c369a2bb5677df844dfd76dfd082959933e280e272bec40",
+      "section": "coverage",
+      "key": "release_underlay_and_renderer_review_20261102",
+      "target": "lisa:mobile:metadata:ui-coverage-release-underlay-and-renderer-review-20261102"
+    },
+    {
+      "bytes_half_open": [
+        414584,
+        414613
+      ],
+      "sha256": "fc78d8ddbc0209c8be95d780547008e795ff1218d9c65686db630718582abd66",
+      "section": "non_method_evidence",
+      "key": null,
+      "target": "lisa:mobile:metadata:ui-contracts-registry"
+    },
+    {
+      "bytes_half_open": [
+        414613,
+        415261
+      ],
+      "sha256": "a2479e249c88923e108f4066c7e1ae103ad887f0d1ca9b321884da6c7538e467",
+      "section": "non_method_evidence",
+      "key": [
+        "root",
+        "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-cf6d88239faca089e51547bf"
+    },
+    {
+      "bytes_half_open": [
+        415261,
+        415668
+      ],
+      "sha256": "49c1ed85e021a591dd80af4bb309ce8e64c4a1373f339f04d8c92b22f4339f9e",
+      "section": "non_method_evidence",
+      "key": [
+        "maplib",
+        "src/main/java/com/nextgis/maplib/util/LocationFixPolicy.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-e08eeb3120cab6a8da57f62f"
+    },
+    {
+      "bytes_half_open": [
+        415668,
+        416143
+      ],
+      "sha256": "3ba5feb4cf932c3beb06eaefaeba6bd82d59be0f94e5845464d30584e2c0e09e",
+      "section": "non_method_evidence",
+      "key": [
+        "root",
+        "app/src/main/java/com/nextgis/mobile/stakeout/StakeoutController.kt"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-b9cfcef6f64d70de2e5b3847"
+    },
+    {
+      "bytes_half_open": [
+        416143,
+        416919
+      ],
+      "sha256": "ea96862c7921adfef3931bca819232cef28fe98d900682b6a5f9631418545d21",
+      "section": "non_method_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/xml/preferences_map.xml"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-ad24f03d1dfbc9186f3fc2ac"
+    },
+    {
+      "bytes_half_open": [
+        416919,
+        417437
+      ],
+      "sha256": "c06821814bf23f9651d9a1e280265e0f373f4f50bf02b132eefac757ba287129",
+      "section": "non_method_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/xml/preferences_location.xml"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-c2f8f30a258ae72b218df469"
+    },
+    {
+      "bytes_half_open": [
+        417437,
+        418427
+      ],
+      "sha256": "394668ad65a0777ef21e0520953c2cc4536372b97269f0a73371df7c0680851d",
+      "section": "non_method_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/values/strings.xml"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-20aaf5149bbb09a7f0f8ae10"
+    },
+    {
+      "bytes_half_open": [
+        418427,
+        419420
+      ],
+      "sha256": "add1dfdd9fe17c871752d32a27ec17db6d299c59a578d15052cc426421e0c146",
+      "section": "non_method_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/values-ru/strings.xml"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-0ed0ee2713f50e370bccb359"
+    },
+    {
+      "bytes_half_open": [
+        419420,
+        419796
+      ],
+      "sha256": "bab6f521383c0a796190413f4c648ffb574527f1e989b366df417cce2bd5deb3",
+      "section": "non_method_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/xml/preference_headers.xml"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-eb89fac967fd0ab3df00efdf"
+    },
+    {
+      "bytes_half_open": [
+        419796,
+        420288
+      ],
+      "sha256": "a576b2c1dba3b2c637f5c1d38d253bfa303785653d6dba6bd4a04854b61a0bb5",
+      "section": "non_method_evidence",
+      "key": [
+        "root",
+        "app/build.gradle"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-fb87c1c299a5598abcd742f1"
+    },
+    {
+      "bytes_half_open": [
+        420288,
+        420638
+      ],
+      "sha256": "6bfaf2044bb086c62cd56c5080593d6383ceff4055f16bcce05045a617c8b318",
+      "section": "non_method_evidence",
+      "key": [
+        "root",
+        "app/src/main/AndroidManifest.xml"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-0f2bde2988c58932bc54041c"
+    },
+    {
+      "bytes_half_open": [
+        420638,
+        421039
+      ],
+      "sha256": "8299951b4f2db19e363b2fb47307b5ef291a30055bc3ea577d8374070a0000ce",
+      "section": "non_method_evidence",
+      "key": [
+        "maplibui",
+        "src/main/java/com/nextgis/maplibui/util/SettingsConstantsUI.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-89c9f7051eb30c7d366fd9ac"
+    },
+    {
+      "bytes_half_open": [
+        421039,
+        421417
+      ],
+      "sha256": "71fcbf725b32bcd961c9f56944bad4938fe61fd271053031eed5da2d59c13d81",
+      "section": "non_method_evidence",
+      "key": [
+        "maplib",
+        "src/main/java/com/nextgis/maplib/util/SettingsConstants.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-0c4ec67009e0c1203ca4cfa5"
+    },
+    {
+      "bytes_half_open": [
+        421417,
+        421826
+      ],
+      "sha256": "740323349db8dfe1260622a4994317c840573f40f6d8e47b777e59ec4cc825c0",
+      "section": "non_method_evidence",
+      "key": [
+        "maplib",
+        "src/main/java/com/nextgis/maplib/util/NgwSyncProgress.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-19f48f661ab5529f558d301d"
+    },
+    {
+      "bytes_half_open": [
+        421826,
+        422216
+      ],
+      "sha256": "b2bf1e0113b8479d5801eff8aea6587fd054c066b5bacb7abbaf20a513071e32",
+      "section": "non_method_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/xml/preferences_general.xml"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-35ee898c245f227828c0176f"
+    },
+    {
+      "bytes_half_open": [
+        422216,
+        422711
+      ],
+      "sha256": "2b454251e5bcccc905b93b7b36b65d4be0da93ebdd8483e6cc7b30822975da15",
+      "section": "non_method_evidence",
+      "key": [
+        "maplibui",
+        "src/main/java/com/nextgis/maplibui/util/ConstantsUI.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-7f9bf54620fb0c440537b565"
+    },
+    {
+      "bytes_half_open": [
+        422711,
+        423150
+      ],
+      "sha256": "79a6742107e838cc54904c9721e5ecc4f367fb9e80e7e9803a2d006dfea1f306",
+      "section": "non_method_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/layout/formtemplate_edittext.xml"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-376af359b10b3fb4580bf78c"
+    },
+    {
+      "bytes_half_open": [
+        423150,
+        423616
+      ],
+      "sha256": "489ba58f109e128a1c0a351b70623366c0c05c921b4ee775689b0c6738e88386",
+      "section": "non_method_evidence",
+      "key": [
+        "maplibui",
+        "src/main/java/com/nextgis/maplibui/formcontrol/TextEdit.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-caf78080af31ea443e33df8a"
+    },
+    {
+      "bytes_half_open": [
+        423616,
+        424289
+      ],
+      "sha256": "bfcc3a67347cb937011067510faa1136b0baf08a3c608017e86dba3fb80fea16",
+      "section": "non_method_evidence",
+      "key": [
+        "maplib",
+        "src/main/java/com/nextgis/maplib/util/StakeoutGeometryTarget.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-df91880654f3508b3725a34e"
+    },
+    {
+      "bytes_half_open": [
+        424289,
+        424985
+      ],
+      "sha256": "0c623c5d5247859eb2ab4ff20a285715e0f4c990c848ea224237f1c32dbf7a66",
+      "section": "non_method_evidence",
+      "key": [
+        "maplib",
+        "build.gradle"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-66447f73f07d22eb763cd5f7"
+    },
+    {
+      "bytes_half_open": [
+        424985,
+        425496
+      ],
+      "sha256": "5d7f5dbfdc0285c501e7574abe3cd7bb432ab0c46324f797245970316589fbb2",
+      "section": "non_method_evidence",
+      "key": [
+        "maplib",
+        "src/main/java/com/nextgis/maplib/util/SyncResultUtil.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-0261cd2c158cd54fe3bc81f5"
+    },
+    {
+      "bytes_half_open": [
+        425496,
+        426012
+      ],
+      "sha256": "87ed3f9bf3f81300da993ab69512ad7981ffa7a431d944e0a833af950a150fa2",
+      "section": "non_method_evidence",
+      "key": [
+        "root",
+        "app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-9d20fde73f3242e79e354c9a"
+    },
+    {
+      "bytes_half_open": [
+        426012,
+        426513
+      ],
+      "sha256": "fb01b987f5c5c5537125a919f27592eabe6b04fcc7b97aec9df75f1ea6779ae3",
+      "section": "non_method_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/values/sync_recovery_strings.xml"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-ad65786f5c8dc1bb165ea348"
+    },
+    {
+      "bytes_half_open": [
+        426513,
+        427017
+      ],
+      "sha256": "238f0aeb146022a5d49a6b934b5c5957cf1a4dfd6ca3ecb0910396cc32e354be",
+      "section": "non_method_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/values-ru/sync_recovery_strings.xml"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-80fdf706924e32dcb0bf064b"
+    },
+    {
+      "bytes_half_open": [
+        427017,
+        427583
+      ],
+      "sha256": "994d423eaa1eb8fab73889f20e2f0e5ba2762abb8adf48a6037651268e57d80b",
+      "section": "non_method_evidence",
+      "key": [
+        "maplib",
+        "src/main/res/values/strings.xml"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-18344d7ff395391ab4e61ea5"
+    },
+    {
+      "bytes_half_open": [
+        427583,
+        428152
+      ],
+      "sha256": "99bf171fd6b4f5bc106d2be651d0a00f1d54b017a4c5208f29c564f2bdf36351",
+      "section": "non_method_evidence",
+      "key": [
+        "maplib",
+        "src/main/res/values-ru/strings.xml"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-705c242454129cf82487a07c"
+    },
+    {
+      "bytes_half_open": [
+        428152,
+        428675
+      ],
+      "sha256": "2e574912dc990dca85b1450ad02e752ab60e02a5697e5cdc4d6e171e8dc4b5c8",
+      "section": "non_method_evidence",
+      "key": [
+        "maplib",
+        "src/main/java/com/nextgis/maplib/datasource/ngw/ResourceGroup.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-dde987f97854e550aa0f8703"
+    },
+    {
+      "bytes_half_open": [
+        428675,
+        429203
+      ],
+      "sha256": "7d591900fabd42309fb9f28e598765fcde1ab3113abd36e236f9771365e281cb",
+      "section": "non_method_evidence",
+      "key": [
+        "maplibui",
+        "src/main/java/com/nextgis/maplibui/util/LayerFillErrorMessage.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-969b4b035cb010f7d1d14468"
+    },
+    {
+      "bytes_half_open": [
+        429203,
+        429729
+      ],
+      "sha256": "5c03aa95355315364279b3d1981bb46e777c5645f8d60c4bdf1cd289005acb48",
+      "section": "non_method_evidence",
+      "key": [
+        "maplibui",
+        "src/main/java/com/nextgis/maplibui/service/LayerFillService.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-7ba14f0c9d6c71b1093a02b2"
+    },
+    {
+      "bytes_half_open": [
+        429729,
+        430236
+      ],
+      "sha256": "81d907030ad4ad8dfe8fbb59946384ce0615e168073e3eafcddcae5c8953cf01",
+      "section": "non_method_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/values/legacy_form_error_strings.xml"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-ef325a7a8967f58bbf0cecda"
+    },
+    {
+      "bytes_half_open": [
+        430236,
+        430746
+      ],
+      "sha256": "341f30f2d620081ebae87fa89fd563306857ad7e3e9129281c929c9efb25173e",
+      "section": "non_method_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/values-ru/legacy_form_error_strings.xml"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-625fd05368009c58d0800534"
+    },
+    {
+      "bytes_half_open": [
+        430746,
+        431256
+      ],
+      "sha256": "b61d10091bf6d288b88b59924ecd89f22516324b2efac8547f6326475cde1a1f",
+      "section": "non_method_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/values/resource_list_error_strings.xml"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-e3a112046b12f1e0c03a8c46"
+    },
+    {
+      "bytes_half_open": [
+        431256,
+        431769
+      ],
+      "sha256": "82411f2724b894ade7dae9c4aae5cc2cf74d1de4e1b051f99017f90c42839ca9",
+      "section": "non_method_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/values-ru/resource_list_error_strings.xml"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-18d673b4d5bcda46f6f3aa1e"
+    },
+    {
+      "bytes_half_open": [
+        431769,
+        432279
+      ],
+      "sha256": "221757b5b5eca509c23f75821814e98c31539822d9639b97c20b88b8f2fef460",
+      "section": "non_method_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/values/layer_fill_error_strings.xml"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-392407bb0982618482e90e03"
+    },
+    {
+      "bytes_half_open": [
+        432279,
+        432792
+      ],
+      "sha256": "2701ff48129baf6a9480f9077ce06b9d7c72a21cbc4eb8ee619e84d8ff15bc3a",
+      "section": "non_method_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/values-ru/layer_fill_error_strings.xml"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-9490e1283d5de6249721b260"
+    },
+    {
+      "bytes_half_open": [
+        432792,
+        433354
+      ],
+      "sha256": "b106cb994be43b43cf93caac9607ace00303741e42d592e011ae7a8f1413daee",
+      "section": "non_method_evidence",
+      "key": [
+        "maplib",
+        "src/main/java/com/nextgis/maplib/util/NgwHttpException.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-0ea3e35478f87232d761add6"
+    },
+    {
+      "bytes_half_open": [
+        433354,
+        433924
+      ],
+      "sha256": "80773b2c17c35a9db1fe24a083c1e9094bf8fdaa45508e31b41e00755b75c371",
+      "section": "non_method_evidence",
+      "key": [
+        "maplib",
+        "src/main/java/com/nextgis/maplib/util/NgwHttpResponseException.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-cb3653ec2e006fd69e353b49"
+    },
+    {
+      "bytes_half_open": [
+        433924,
+        434519
+      ],
+      "sha256": "3d31a258d726493ae4fe6210e51510afe25af600c75431b20b539448724fb061",
+      "section": "non_method_evidence",
+      "key": [
+        "maplib",
+        "src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-4a8815f9c3c363b96babbbb1"
+    },
+    {
+      "bytes_half_open": [
+        434519,
+        435072
+      ],
+      "sha256": "2736346d3ae029c934f6676ff2c186a7c34264dccddaf59cf38ea4cfc18f28cc",
+      "section": "non_method_evidence",
+      "key": [
+        "maplib",
+        "src/main/java/com/nextgis/maplib/map/NGWLookupTable.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-0cc60473aa176e58e9cfd290"
+    },
+    {
+      "bytes_half_open": [
+        435072,
+        435514
+      ],
+      "sha256": "1974adf3e666de33337333afc3d50c8fdd3a8beae6f9736adb11e7947d62d765",
+      "section": "non_method_evidence",
+      "key": [
+        "maplibui",
+        "src/main/java/com/nextgis/maplibui/util/CheckState.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-8acd5e6e0e9493a05340584c"
+    },
+    {
+      "bytes_half_open": [
+        435514,
+        435947
+      ],
+      "sha256": "75b753c5406e588a8aa59d3f6b959bfa909abcae0b487f83c6e575b04ffa9758",
+      "section": "non_method_evidence",
+      "key": [
+        "maplib",
+        "src/main/java/com/nextgis/maplib/datasource/ngw/Resource.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-478ff9b899eccb9b6f9e413d"
+    },
+    {
+      "bytes_half_open": [
+        435947,
+        436378
+      ],
+      "sha256": "66193f029cb92d66e29bdb1c642488c14ad2a4766d43c1ba390ca8e5240fa422",
+      "section": "non_method_evidence",
+      "key": [
+        "maplib",
+        "src/main/java/com/nextgis/maplib/datasource/ngw/Connections.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-f2eefe9b018e6bae0947ed34"
+    },
+    {
+      "bytes_half_open": [
+        436378,
+        436797
+      ],
+      "sha256": "92cdd6d3a14792852b9c1d2cc40c7d96e683e549c877e9ecb536dde1bccb03d9",
+      "section": "non_method_evidence",
+      "key": [
+        "root",
+        "app/src/test/java/com/nextgis/maplibui/dialog/ResourceSelectionCheckboxTest.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-78bbe7e5a2cbb90867e6ca00"
+    },
+    {
+      "bytes_half_open": [
+        436797,
+        437228
+      ],
+      "sha256": "fef42659b3c610711870908e9133c14b687057f7817173609a2dcdda18b8cc15",
+      "section": "non_method_evidence",
+      "key": [
+        "root",
+        "app/src/test/java/com/nextgis/maplibui/util/NgwResourceSelectionDedupTest.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-9f83de21eab92ce6d94cb761"
+    },
+    {
+      "bytes_half_open": [
+        437228,
+        437666
+      ],
+      "sha256": "b538006d8be7e686b17767b3be4e2094acc470469a55e8e2c89dbffe144547ae",
+      "section": "non_method_evidence",
+      "key": [
+        "root",
+        "app/src/test/java/com/nextgis/maplibui/dialog/ResourceSelectionRowLayoutTest.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-127816fc4ccef7e3dd75edc2"
+    },
+    {
+      "bytes_half_open": [
+        437666,
+        438157
+      ],
+      "sha256": "a72cc4bc4e3488d3c5d5db0341878526bdda31974f83fc5817bf8f7ea714c010",
+      "section": "non_method_evidence",
+      "key": [
+        "maplibui",
+        "src/main/java/com/nextgis/maplibui/view/NgwResourceRowLayout.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-2c9142f0407e560f38a68be8"
+    },
+    {
+      "bytes_half_open": [
+        438157,
+        438620
+      ],
+      "sha256": "70a56dcce0d30a02876e03c3f5407803a5d51add0089dfb0a4a5064804565fd4",
+      "section": "non_method_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/values/ids.xml"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-55a83322dc216d2058c79733"
+    },
+    {
+      "bytes_half_open": [
+        438620,
+        439110
+      ],
+      "sha256": "4074968092566466e424fc2ffd48e4ece55e2d87df58dc59c8e6b610ad2ab7ad",
+      "section": "non_method_evidence",
+      "key": [
+        "maplibui",
+        "src/main/java/com/nextgis/maplibui/view/TrackSelectionPanel.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-114e6ccac2c30c4b39aa2c24"
+    },
+    {
+      "bytes_half_open": [
+        439110,
+        439708
+      ],
+      "sha256": "baa522596fdb05798a19e94dde244bd2b01042d39597ce27f051359cbbec3554",
+      "section": "non_method_evidence",
+      "key": [
+        "maplib",
+        "src/main/java/com/nextgis/maplib/util/ProjectSyncState.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-3db31b92c0f93b8f2c7b3148"
+    },
+    {
+      "bytes_half_open": [
+        439708,
+        440182
+      ],
+      "sha256": "c63b047babac9a5578440cdb4a11495ef240f427a696ecbcbb0e1c4ea2c7e598",
+      "section": "non_method_evidence",
+      "key": [
+        "maplibui",
+        "src/main/java/com/nextgis/maplibui/control/DateTime.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-107763d2a1ea23b0d368d483"
+    },
+    {
+      "bytes_half_open": [
+        440182,
+        440659
+      ],
+      "sha256": "c6a51fee0a9ac3dab24fd5f10c57013f603e3e76038cfe69cbd3e4bba4d35af8",
+      "section": "non_method_evidence",
+      "key": [
+        "maplibui",
+        "src/main/java/com/nextgis/maplibui/formcontrol/DateTime.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-23da708d6d3f13108bfc03c3"
+    },
+    {
+      "bytes_half_open": [
+        440659,
+        441077
+      ],
+      "sha256": "3905d1ae9a6c7ce983e669b22cbedc13fe7bc371e0149a48ea31d13a804a4c85",
+      "section": "non_method_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/layout/template_datetime.xml"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-562b8463bc0c540882d63372"
+    },
+    {
+      "bytes_half_open": [
+        441077,
+        441498
+      ],
+      "sha256": "b43f71a96dc846f20071f4dffbbdd189a63c9203f24f0b6049f465c437502694",
+      "section": "non_method_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/layout/formtemplate_datetime.xml"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-75cf6e9f32561b959bd34304"
+    },
+    {
+      "bytes_half_open": [
+        441498,
+        441949
+      ],
+      "sha256": "2d020170e3db6fb9e2b57d317e7e4d1d1d544e6df37f1a51cd15fa0975def3e7",
+      "section": "non_method_evidence",
+      "key": [
+        "maplibui",
+        "src/main/java/com/nextgis/maplibui/util/ControlHelper.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-b33b94847e2efaad6d9951b4"
+    },
+    {
+      "bytes_half_open": [
+        441949,
+        442369
+      ],
+      "sha256": "c746ceff2b6cb552d166fbbc4b6be71a3ab5b26f9481707a4b1cee99aeb92c8e",
+      "section": "non_method_evidence",
+      "key": [
+        "maplibui",
+        "src/main/java/com/nextgis/maplibui/formcontrol/Checkbox.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-b77498677b07f0159752c8f2"
+    },
+    {
+      "bytes_half_open": [
+        442369,
+        442725
+      ],
+      "sha256": "b4c5a2f30bcf7fb12b9c7b0fb23f6da4dcd3c15bd72d21bb966ba3aa7fe3df1c",
+      "section": "non_method_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/layout/formtemplate_checkbox.xml"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-10057810b4b4118f7ef7adf9"
+    },
+    {
+      "bytes_half_open": [
+        442725,
+        443137
+      ],
+      "sha256": "f179d746417456e8f8f8e521f1371975bf65b50ee6f562c2f6686857cd4c0bb5",
+      "section": "non_method_evidence",
+      "key": [
+        "maplibui",
+        "src/main/java/com/nextgis/maplibui/control/TextEdit.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-93f3a2fbb8b26a949c27b101"
+    },
+    {
+      "bytes_half_open": [
+        443137,
+        443518
+      ],
+      "sha256": "27006aab2bab2bfb0c082a4afebd2986b47cc68c102167f4d6e3e692752f9dee",
+      "section": "non_method_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/layout/template_textedit.xml"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-e71c50f324def5bdb86838be"
+    },
+    {
+      "bytes_half_open": [
+        443518,
+        443972
+      ],
+      "sha256": "9ff09faf785778e2d71c879c9769a124b074a5dcd76ae4eeb62decb0278957ce",
+      "section": "non_method_evidence",
+      "key": [
+        "root",
+        "easypicker/easypicker/src/main/java/com/keenfin/easypicker/PhotoPicker.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-4aa0f1c6148a8663b4182dc1"
+    },
+    {
+      "bytes_half_open": [
+        443972,
+        444392
+      ],
+      "sha256": "6c163ee6ce186dbbc4e3ebb6ab0310499004b989dc9947829b987b73a0ca3d2c",
+      "section": "non_method_evidence",
+      "key": [
+        "maplib",
+        "src/main/java/com/nextgis/maplib/util/LisaCatalog.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-355df785f588a90eaba2d5ce"
+    },
+    {
+      "bytes_half_open": [
+        444392,
+        444858
+      ],
+      "sha256": "75b2204f6865d962616c147ac43410a66a01e53d87e1c399a27514549bcdffcc",
+      "section": "non_method_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/values/strings.xml"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-8ed5ed3f294a909e81a0f10a"
+    },
+    {
+      "bytes_half_open": [
+        444858,
+        445346
+      ],
+      "sha256": "961132f13b62e94cdc83fae2d1620cb7aa15f6df0632bff9f8bd890d65091dfb",
+      "section": "non_method_evidence",
+      "key": [
+        "maplibui",
+        "src/main/res/values-ru/strings.xml"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-0458813e3ca84ebb708a0015"
+    },
+    {
+      "bytes_half_open": [
+        445346,
+        445770
+      ],
+      "sha256": "c2b2e65e5e6a5f301050ae84af8ff1ad9b61abcdf3a33ac3d5b59ea0fff7111a",
+      "section": "non_method_evidence",
+      "key": [
+        "root",
+        "app/src/main/java/com/nextgis/mobile/util/ScrollableAlertDialogs.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-f3fed7a5483de333173aaf7f"
+    },
+    {
+      "bytes_half_open": [
+        445770,
+        446136
+      ],
+      "sha256": "24ab3aed1f1115e9352dcaae43bb00795ae9cdc310fbbb017e739c0dfee6e2bf",
+      "section": "non_method_evidence",
+      "key": [
+        "root",
+        "app/src/main/java/com/nextgis/mobile/util/RenderMemoryNotice.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-45f058b35e8f577885593396"
+    },
+    {
+      "bytes_half_open": [
+        446136,
+        446541
+      ],
+      "sha256": "3e0110b7179d62a24f893a85d7ad50ce4afe13ce7c0285b5eb956efeef0cec77",
+      "section": "non_method_evidence",
+      "key": [
+        "root",
+        "app/src/main/java/com/nextgis/mobile/util/MaintenanceReminders.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-ad4efadea477c1a6312458a6"
+    },
+    {
+      "bytes_half_open": [
+        446541,
+        446934
+      ],
+      "sha256": "8e4dccf99df381375ff869be19d91f079dd4bc360edaef92acbdc9d63adc17fa",
+      "section": "non_method_evidence",
+      "key": [
+        "root",
+        "app/src/main/java/com/nextgis/mobile/util/StartupUpdateCheckScheduler.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-6d85f82729a98167e15e9a92"
+    },
+    {
+      "bytes_half_open": [
+        446934,
+        447279
+      ],
+      "sha256": "9973f43fa7422d56cb4ad3c575902f7fa951be4d2fee97131d2e2af37af4a22c",
+      "section": "non_method_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/values/render_memory.xml"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-1bf2228217e489ef6180b00b"
+    },
+    {
+      "bytes_half_open": [
+        447279,
+        447627
+      ],
+      "sha256": "603665a9854c7a1ce296a80052b994cd5f22683ad98efc00390837e5b0c38ea0",
+      "section": "non_method_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/values-ru/render_memory.xml"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-049c25cf2abf5cc747fb3443"
+    },
+    {
+      "bytes_half_open": [
+        447627,
+        447978
+      ],
+      "sha256": "8abc1f1dba102660387eac0f0d533f78dd2b3ca3b1c1ff2a747a75489acc3f87",
+      "section": "non_method_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/values/maintenance_strings.xml"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-f9027b73e82e12493b7fa687"
+    },
+    {
+      "bytes_half_open": [
+        447978,
+        448332
+      ],
+      "sha256": "6a1747ad368365eeea6c62bdaa75ea512f82a9dfd42320c9fc23b334706c09ee",
+      "section": "non_method_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/values-ru/maintenance_strings.xml"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-af6d445995f0c029ba103fac"
+    },
+    {
+      "bytes_half_open": [
+        448332,
+        448801
+      ],
+      "sha256": "3cb468f00436484bd973337e2f2393246eebde9113d06d69ef0a8a998e701b2e",
+      "section": "non_method_evidence",
+      "key": [
+        "root",
+        "app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-1e1318db05ea1be9ead3d111"
+    },
+    {
+      "bytes_half_open": [
+        448801,
+        449267
+      ],
+      "sha256": "353e537ee5b836a246b20bbb96b925c512e819fe474a3c4166b4313e99dd5cdd",
+      "section": "non_method_evidence",
+      "key": [
+        "root",
+        "app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayImporter.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-c280f2351997b59c2144ed7a"
+    },
+    {
+      "bytes_half_open": [
+        449267,
+        449737
+      ],
+      "sha256": "009ba8372964ee32cb014a6523ced118a4dc99fdf26fdb154b23ad20de0a7a96",
+      "section": "non_method_evidence",
+      "key": [
+        "root",
+        "app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayProgressText.java"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-d7bdc09b8724a9dd88f5ea82"
+    },
+    {
+      "bytes_half_open": [
+        449737,
+        450187
+      ],
+      "sha256": "1162f7d24fd17288d764d85a48b45160f8a785248897fa4b6e5b9243c296efe3",
+      "section": "non_method_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/layout/activity_underlay_catalog.xml"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-165bdf79ff2f4b0b6aa7c658"
+    },
+    {
+      "bytes_half_open": [
+        450187,
+        450621
+      ],
+      "sha256": "0050bb9d00063193bee1455ddc6d6b2e472b719278ae24191fe8d24b5ac6bd39",
+      "section": "non_method_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/values/underlays.xml"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-18eba4d937054f1cb8b33450"
+    },
+    {
+      "bytes_half_open": [
+        450621,
+        451059
+      ],
+      "sha256": "d7c777c55e7273794e17b1a060edfccabd228a1e2927ef991838cbc9d20bcb08",
+      "section": "non_method_evidence",
+      "key": [
+        "root",
+        "app/src/main/res/values-ru/underlays.xml"
+      ],
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-69e559b721cf0afd9c553c3a"
+    }
+  ],
+  "complete_render_matches_source_sha256": "b70df43752cec608c99cc9884ea6f12a6485633788a20a09d10876fcf3d73e94",
+  "source_backed_edges": 464
+}

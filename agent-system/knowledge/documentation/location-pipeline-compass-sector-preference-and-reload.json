@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:location-pipeline-compass-sector-preference-and-reload",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:location-pipeline"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/location-pipeline.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Сектор точности компаса по умолчанию скрыт. Чекбокс «Показывать сектор",
+        "точности компаса» в настройках местоположения сохраняет boolean",
+        "`show_compass_accuracy_sector` (XML и fallback false). MapFragment применяет",
+        "выбор при resume через `MapDrawable.setCompassAccuracySectorVisible`;",
+        "переключаются заливка и оба контура, в том числе при последующем reload.",
+        "Расчёты и стили сохранены; стрелка направления и круг GPS независимы",
+        "от выбора пользователя.",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:location-pipeline-cursor-native-source-order-and-heading-fallback",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:location-pipeline-compass-sector-preference-and-reload"
+    ]
+  }
+}

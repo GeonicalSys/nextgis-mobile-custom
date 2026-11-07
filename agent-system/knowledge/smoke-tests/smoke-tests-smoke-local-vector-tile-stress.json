@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-smoke-local-vector-tile-stress",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "SMOKE-LOCAL-VECTOR-TILE-STRESS"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "device",
+        "scope": [
+          "app",
+          "maplib"
+        ],
+        "steps": [
+          "Open a project with direct SQLite vector layers, including old local_vector_tiles metadata and multi-megabyte original geometry payloads",
+          "Repeatedly pan and zoom across tile boundaries, rotate the device, background/restore the map and trigger several style reloads for at least ten minutes",
+          "Run a synchronization while continuing to move the map and inspect heap plus HyperLog"
+        ],
+        "expected": "The app stays responsive and alive with complete visible IDs, labels and styles after pan/zoom/recreate. Shared native admission is bounded, obsolete provider generations reject late delivery and resource pressure never produces partial successful PBF. No loopback socket/server is opened. Native resource/performance acceptance remains separate from compile/JVM."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-smoke-local-vector-tile-stress"
+    ]
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:mobile-roadmap-discovery-ngfp-prefetch-20261030",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout",
+      "lisa:mobile:task:mobile-roadmap-dependency-discovery"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the pinned checkpoint and keep its results within the stated source and runtime bounds."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### Продолжение MOB-02: prefetch без расширения удаления — 30 октября2026",
+        "",
+        "По тому же поручению исправлять явные source-баги подготовлена отдельная maplibui",
+        "API для двух prefetch callers: nested/orientation bindings и per-call dedup. Старые17",
+        "строк public reader и весь deletion file сохранены; account cast ждёт backup/owner policy.",
+        "Новые карточки maplibui-20261030-ngfp-lookup-prefetch и android-20261030-ngfp-lookup-prefetch-regression",
+        "разделяют user behavior и12 technical JVM. Baseline3FAIL/9PASS →12GREEN2.149с/49с,",
+        "Belka0/41с; classifier/sequence NOT_PASS и postproof/fail-fast recovery явно сохранены,",
+        "allgatesPASS нет. Старые9/19/22/21/desktop1117/1192 не перезапускались. UI39/142/19/F61",
+        "и parent UI E66 сохранены; library Merge Commit до App pointer, без APK/device stage.",
+        "Новые metadata official validators после C-интеграции NOT_RUN; shared-cache/hash",
+        "retry/durability/account safety остаются в единой Root очереди.",
+        "",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:mobile-roadmap-discovery-ngfp-prefetch-20261030"
+    ]
+  }
+}

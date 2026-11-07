@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:location-pipeline-september-13-walk-delay-gpx-evidence",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:location-pipeline"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/location-pipeline.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Регрессия задержки и проверка 2026-09-13",
+        "",
+        "В новой присланной прогулке GPX содержит 39 точек за 382 секунды, первый разрыв",
+        "между точками — 210 секунд. Одновременно журнал показывает GNSS около 1 Гц,",
+        "accuracy 6–11 м, активный wake lock и отсутствие перезапуска подписки. Причина",
+        "связана с подтверждением движения, а не подтверждённой потерей фонового GNSS.",
+        "GPX и экранные координаты уже отфильтрованы: восстановить из них отсутствующие",
+        "сырые измерения и считать такую реконструкцию полным replay нельзя.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Filtered GPX and one GPS health frame cannot reconstruct missing raw input."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:location-pipeline-september-13-walk-delay-gpx-evidence"
+    ]
+  }
+}

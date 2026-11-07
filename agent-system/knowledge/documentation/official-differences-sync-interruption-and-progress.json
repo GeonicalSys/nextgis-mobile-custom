@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-sync-interruption-and-progress",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Во время активной синхронизации форк предупреждает перед сменой проекта,",
+        "созданием/переименованием/удалением проекта, загрузкой слоя или подложки и",
+        "предлагает явно остановить sync. Зависшее чтение закрывается сразу, локальный",
+        "tracked apply откатывается общей транзакцией, а уже отправленный server write",
+        "завершается до однозначного результата; после освобождения рабочего lease",
+        "продолжается выбранное действие. Это сохраняет целостность workspace при плохом",
+        "соединении и не оставляет пользователя перед безусловным запретом действия.",
+        "Вокруг крутящейся иконки sync форк показывает кольцо без процентов: прогресс",
+        "сессии взвешивает слои по известным локальным правкам и текущей фазе",
+        "(отправка, скачивание, apply), а не по наивному шагу «слой закончился».",
+        "Официальный клиент оставляет только вращение иконки и indeterminate",
+        "уведомление.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-sync-interruption-and-progress"
+    ]
+  }
+}

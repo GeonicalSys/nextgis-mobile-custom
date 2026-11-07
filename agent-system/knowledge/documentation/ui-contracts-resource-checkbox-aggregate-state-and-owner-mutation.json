@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ui-contracts-resource-checkbox-aggregate-state-and-owner-mutation",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:ui-contracts"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ui-contracts.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Источник флажка — ANY положительный requested flag у совпавшего process-local",
+        "`CheckState.id`, не последний элемент списка и не remote NGW ID. Bind снимает",
+        "старый listener, один раз устанавливает полное состояние (пустой/несовпавший",
+        "список даёт false), затем возвращает listener; сам bind не меняет список выбора.",
+        "При false callback очищает requested mode у ВСЕХ записей того же localID и",
+        "удаляет только ставшие bothfalse. При true существующий положительный mode",
+        "не размножается; иначе меняется первая matching запись либо создаётся одна.",
+        "Other mode/IDs/order/object identity остаются. Это не общая canonicalization",
+        "внешнего setter/legacy parcel списка: положительные дубликаты могут сохраняться,",
+        "а оба import loops по-прежнему обходят записи отдельно; generic import dedup",
+        "этим исправлением не обещан. PostGIS login guard не изменён.",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:ui-contracts-resource-checkbox-mode-and-view-recycling",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ui-contracts-resource-checkbox-aggregate-state-and-owner-mutation"
+    ]
+  }
+}

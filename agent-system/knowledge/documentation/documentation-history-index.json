@@ -1,0 +1,86 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:documentation-history-index",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/history/README.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the published navigation address and its pinned original. Dated reports have individual retention decisions."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/history/README.md"
+    },
+    "frontmatter": {
+      "role": "markdown_frontmatter_lines",
+      "value": [
+        "title: Исторические отчёты",
+        "type: index",
+        "last_verified: 2026-10-07",
+        "related_code:",
+        "  - docs/history/upstream",
+        "  - WHATS_NEW.md"
+      ]
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "",
+        "# Исторические отчёты",
+        "",
+        "История объясняет, что произошло в конкретном cycle, но не является текущим",
+        "контрактом. Долгоживущие решения переносятся в architecture/registry.",
+        "",
+        "- [upstream/](upstream/README.md) — завершённые циклы синхронизации и исторические сверки;",
+        "- [Общая синхронизация и NGFP, 2026-10-07](project-sync-verification-2026-10-07.md) —",
+        "  матрица Draft PR, результаты тестов и ограничения локального APK;",
+        "- [`../../WHATS_NEW.md`](../../WHATS_NEW.md) — пользовательские releases;",
+        "- [`../reference/fork-customizations.md`](../reference/fork-customizations.md) — действующий",
+        "  тематический индекс решений форка.",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:documentation-upstream-history-index",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:fork-customizations",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:documentation-history-index"
+    ]
+  }
+}

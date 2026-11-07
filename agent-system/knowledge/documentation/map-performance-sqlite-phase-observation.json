@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:map-performance-sqlite-phase-observation",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-performance",
+      "lisa:mobile:resource:map-rendering-sqlite-phase-observation"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the performance subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-performance.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Для reported3–10s до полного кадра около12.1z на T40 Plus_ROW/API30 добавлены",
+        "локальные typed phase timings `LISA-SqlitePhase`. На планшете фактически открыт",
+        "Collector1403 (`collector_1403_f97c303e`), поэтому телефонные замеры787 не",
+        "подтверждают его скорость. Фазы различают IO queue, layer lock/gate/cache,",
+        "RTree, attributes/BLOB/full decode, style/clip/labels, PBF и Main dispatch;",
+        "счётчики показывают candidates, reads, BLOB/PBF bytes, labels, hits/misses и",
+        "retries без повторного чтения данных. Лог ограничен10s/слой,16 scopes и32",
+        "summaries, observation loss и недоступные timings явны.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:map-performance-sqlite-phase-observation"
+    ]
+  }
+}

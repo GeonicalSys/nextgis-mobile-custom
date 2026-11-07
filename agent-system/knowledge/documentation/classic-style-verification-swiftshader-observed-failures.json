@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:classic-style-verification-swiftshader-observed-failures",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:classic-style-verification"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original measurement or checkpoint and its acceptance limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/classic-style-verification.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Исторические GPU runs не являются разрешением запускать host GPU сейчас:",
+        "после host hangs разрешён только отдельно согласованный software-only emulator,",
+        "а GitHub Actions запрещены владельцем ради лимитов. На SwiftShader наблюдались",
+        "pixel/label FAIL при правильных feature props, camera, visibility и zoom limits.",
+        "Это незакрытые native результаты, не доказанная общая причина и не основание",
+        "менять ожидаемые pixels. Все16 rendering cases остаются обязательными, включая",
+        "zoom12/19 и отсутствие за category max на21; actual graphics identity сохраняется",
+        "штатным runner."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:classic-style-verification-swiftshader-observed-failures"
+    ]
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-smoke-location-cursor-top",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "SMOKE-LOCATION-CURSOR-TOP"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "device",
+        "scope": [
+          "app",
+          "maplib"
+        ],
+        "steps": [
+          "On an isolated Debug API 36 emulator with working EGL (-gpu host), grant the Debug package GPS, GET_ACCOUNTS and notification permissions before explicitly running com.nextgis.mobile.rendering.LocationOrbitTest; the SwiftShader reliability CI package does not run this graphics smoke",
+          "Open a map containing overlapping saved and active tracks plus vector layers; repeat on a light street map, dense thematic polygons and a textured aerial or forest basemap",
+          "Place a smaller point symbol (14 dp) exactly at the current fix, verify it through the ring opening, and rotate the phone in place",
+          "Cover or disturb the compass, then uncover it; freeze GPS while rotating",
+          "Disable or omit the rotation-vector sensor and move with a valid GPS course, including north at 0 degrees; then stop",
+          "Freeze rotation-vector events for more than 500 ms without a new GPS event, then resume the sensor",
+          "Zoom in and out and rotate the map while watching the sector and the fix anchor",
+          "Perform a lite reload or hot layer update"
+        ],
+        "expected": "The Orbit location cursor remains fully visible above tracks and every other MapLibre object before and after reload. Its transparent 21 dp opening, 6 dp blue centre and thicker blue rim (outer radius 13 dp), white halo, dark outer edge and larger outlined triangle remain distinct from the blue track and basemap detail. A smaller point beneath the cursor is visible around the blue centre with its original colour, including inside the compass sector; neither service fill tints the opening. The sector has a separate white halo and blue boundary above its translucent fill. The heading cone stays between the accuracy circle and the puck, turns with the phone, widens when heading is uncertain or the compass is disturbed, narrows after the field settles, and disappears without hiding the circle when the compass is unavailable, unreliable, missing or stale. The triangle follows the compass even at rest, immediately switches to a moving fix's valid course when compass readings expire, and disappears only when neither direction is available. Restored compass takes priority again. Its sector remains about 56 logical map pixels long across zoom; GPS accuracy remains metric and movement course alone never creates a compass sector. The ring never shifts on rotation.\n"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-smoke-location-cursor-top"
+    ]
+  }
+}

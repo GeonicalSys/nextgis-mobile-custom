@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:fork-customizations-preferences-underlays-upstream-and-delivery-routes",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:fork-customizations"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the App architecture or upstream workflow topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/fork-customizations.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "| Настройки, базовые слои, треки и immutable-local `.ngrc` | [settings-and-config.md](settings-and-config.md), [map-rendering.md](../architecture/map-rendering.md) | `Constants`, preferences XML, `TrackerService`, `TMSLayer`, `LocalTMSLayer` |",
+        "| Raster MBTiles и перенос старых Debug-подложек в Geonical | [map-rendering.md](../architecture/map-rendering.md), [shared-underlays.md](../architecture/shared-underlays.md), [flavors-and-versioning.md](flavors-and-versioning.md) | `MbTilesInfo`, `LegacyUnderlayProvider`, `LegacyUnderlayImporter` |",
+        "| Стабильность, lifecycle и диагностика | module packs и [change checklist](../guides/change-checklist.md) | `MainApplication`, `GISApplication`, сервисы и фрагменты |",
+        "| Upstream merges и конфликтные зоны | [upstream-fork-model.md](../architecture/upstream-fork-model.md), [upstream-sync.md](../runbooks/upstream-sync.md) | четыре git-репозитория |",
+        "| История upstream sync | [upstream history](../history/upstream/README.md) | исторические отчёты по циклам |",
+        "| Фото с координатной плашкой | [settings-and-config.md](settings-and-config.md) | map preferences и photo attachment flow |",
+        "| Self-hosted APK updates | [release-apk.md](../runbooks/release-apk.md) | updater/publisher, flavor metadata, подпись APK |",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:fork-customizations-preferences-underlays-upstream-and-delivery-routes"
+    ]
+  }
+}

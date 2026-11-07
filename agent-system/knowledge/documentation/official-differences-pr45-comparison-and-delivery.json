@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:official-differences-pr45-comparison-and-delivery",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the dated comparison or verification at its original source span."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Immediate editable selection, density-aware tap tolerance, width-bounded rail,",
+        "AndroidX Back, guarded URL launch и service timeout fixes описаны в",
+        "[отчёте](mobile-reliability-audit.md). Это проверка затронутых путей по текущим",
+        "heads, не новый полный upstream merge и не утверждение уникальности всех",
+        "AndroidX/timeout решений. Production исходники подготовлены для3.1.2.27/221,",
+        "Debug подготовлен для3.1.2.23/218. Library PR38/26 слиты; root закрепляет fetched",
+        "remote merge commits1b1f4e8/159f0bcf. Проверенные official heads совпали с",
+        "перечисленными в основе сравнения; нового upstream merge здесь не выполнялось.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:official-differences-pr45-comparison-and-delivery"
+    ]
+  }
+}

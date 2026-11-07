@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:incident-and-rollback-backup-limits-and-dated-native-scope",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:incident-and-rollback"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/incident-and-rollback.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "ZIP не содержит полного schema/config/forms/assets проекта и не является готовым",
+        "архивом автоматического восстановления. Универсального import/restore UI или",
+        "скрипта в этом изменении нет. Native suite проверила чтение backup rows/photo и",
+        "уникальность ZIP; описанная ручная процедура целиком ещё не выполнена. Черновики",
+        "форм, walkedit_temp и pending-track-points дополнительно сохраняются из workspace,",
+        "если они нужны для инцидента; повреждённые checkpoint не удаляются молча.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "The paragraph contains both archive/draft constraints and prior native verification scope. The full manual procedure retains its independent gate."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:incident-and-rollback-backup-limits-and-dated-native-scope"
+    ]
+  }
+}

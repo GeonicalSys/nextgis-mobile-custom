@@ -1,0 +1,51 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-auto-ui-source-contracts",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "AUTO-UI-SOURCE-CONTRACTS"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "automatic",
+        "scope": [
+          "app",
+          "maplib",
+          "maplibui"
+        ],
+        "command": "py -3.13 -B docs/scripts/check_ui_contracts.py",
+        "expected": "Bounded UI catalogue has explicit producers/actions/conditions/expectations/gaps and reviewed method fingerprints; missing/mutated bindings fail. Unit mutations cover wrong camera/device source even after a hash update, comments masking missing producers, missing/duplicate methods/references, confined paths and false native PASS. This is source-only, never Android execution or complete semantic coverage."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-auto-ui-source-contracts"
+    ]
+  }
+}

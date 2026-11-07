@@ -1,0 +1,142 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:feature-copy-transform",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/architecture/feature-copy-transform.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the App feature editing subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/feature-copy-transform.md"
+    },
+    "frontmatter": {
+      "role": "markdown_frontmatter_lines",
+      "value": [
+        "title: Копирование, сдвиг и поворот объектов",
+        "type: architecture",
+        "last_verified: 2026-10-23",
+        "related_code:",
+        "  - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/FeatureCopyPolicy.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/GeometryTransform.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/GeometryTransformGesture.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/util/FeatureCopyDefaults.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/fragment/BottomToolbar.java"
+      ]
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "",
+        "# Копирование, сдвиг и поворот объектов",
+        "",
+        "## Копирование в другой слой",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:feature-copy-transform-source-read-and-destination-eligibility",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:feature-copy-transform-destination-type-and-new-row-save",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:feature-copy-transform-exact-field-types-and-destination-defaults",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:feature-copy-transform-typed-controls-null-and-form-checkpoint",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:feature-copy-transform-source-identity-and-destination-revalidation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:feature-copy-transform-dialog-recreation-and-int64",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:feature-copy-transform-translation-rotation-and-stationary-camera",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:feature-copy-transform-crs-journal-undo-and-exact-cancel",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:feature-copy-transform-toolbar-fitting-and-accessibility",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:feature-copy-transform-related-and-full-runner-boundaries",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:feature-copy-transform-copy-and-multipart-transform-test-oracles",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:feature-copy-transform-phone-and-source-verification-20261023",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:feature-copy-transform-emulator-boot-and-bcd-20261023",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:feature-copy-transform-historical-pr-59-43-77-integration",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:feature-copy-transform"
+    ]
+  }
+}

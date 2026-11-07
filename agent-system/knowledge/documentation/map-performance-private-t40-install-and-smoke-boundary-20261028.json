@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:map-performance-private-t40-install-and-smoke-boundary-20261028",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-performance",
+      "lisa:mobile:resource:map-performance-private-profiler-aggregation"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original measurement or checkpoint and its acceptance limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-performance.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Установка и короткий read-only diagnostic smoke выполняются только на выбранном",
+        "T40, с сохранением его проектов и очередей, после проверки отсутствия редактора",
+        "и записи трека. Это не Full и не новая style/OOM/physical2GiB приёмка. Full и",
+        "публикация APK по предыдущему поручению остаются отложены. Установка/первый запуск,",
+        "реальные SDK counters и native/CPU sample coverage подтверждаются отдельными",
+        "receipts; до них состояние — подготовлено, не принято. Никакие кеши, геометрии,",
+        "правила, схемы или бизнес-данные этим сборщиком не оптимизируются и не меняются.",
+        "",
+        "Инструкция: [ручной сбор ресурсов](../runbooks/manual-resource-profiling.md).",
+        "Карточки: android-20261028-private-render-resource-profiler,",
+        "android-20261028-resource-profiler-tools и maplib-20261028-resource-profiler.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:map-performance-private-t40-install-and-smoke-boundary-20261028"
+    ]
+  }
+}

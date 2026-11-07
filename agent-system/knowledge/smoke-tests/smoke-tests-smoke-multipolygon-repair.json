@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-smoke-multipolygon-repair",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "SMOKE-MULTIPOLYGON-REPAIR"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "device",
+        "scope": [
+          "app",
+          "maplib",
+          "maplibui"
+        ],
+        "steps": [
+          "In an editable GTMultiPolygon layer draw a bow-tie outer ring by walk or vertices",
+          "Repeat the manual self-crossing edit with both a minimal bow-tie and additional vertices",
+          "Press Save and inspect the repaired geometry before completing the single attribute form",
+          "Save attributes, reopen the feature and synchronize it",
+          "Repeat with overlapping multi-polygon parts and with a valid hole",
+          "Start a new GTMultiPolygon, leave only its initial centre node and press Save",
+          "Repeat a self-crossing shape in GTPolygon and a line layer"
+        ],
+        "expected": "Invalid multi-polygon topology becomes one valid GeoMultiPolygon feature with all resulting parts, original CRS and valid holes; exactly one form owns the attributes and every repair started from the MapLibre editor retains Web Mercator CRS; the feature survives reopen and sync. An unrecoverable result stays in geometry editing without a partial insert. A one-node MultiPolygon stays in editing and reports insufficient points, never repair failure. Simple Polygon and line layers are not auto-repaired.\n"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-smoke-multipolygon-repair"
+    ]
+  }
+}

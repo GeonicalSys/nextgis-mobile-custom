@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:automated-tests-instrumentation-start-timeout-and-package-reset",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Каждая instrumentation команда должна сообщить test-start marker за60s.",
+        "Отсутствие маркера завершает только принадлежащий команде ADB client, сохраняет",
+        "startup-timeout receipt и оставляет FAIL. После начала тестов сохраняется общий",
+        "900s limit. Очистка выполняется до следующего сценария: оба точных verification",
+        "package завершаются перед independent reset и при финализации. Controlled",
+        "cross-process/diagnostic phases с reset=False сохраняют свой workspace.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:automated-tests-instrumentation-start-timeout-and-package-reset"
+    ]
+  }
+}

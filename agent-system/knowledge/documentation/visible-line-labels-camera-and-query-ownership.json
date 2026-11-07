@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:visible-line-labels-camera-and-query-ownership",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:visible-line-labels"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the style or label subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/visible-line-labels.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Расчёт",
+        "",
+        "VisibleLineLabelController привязан к конкретным MapDrawable/MapLibreMap/MapView.",
+        "После остановки камеры/native idle новый SQLite route получает из RTree только",
+        "viewport candidates и посещает по одному full unclipped DB original на IO worker.",
+        "List всех видимых полных линий не создаётся. Label candidates хранят только",
+        "Point anchor, props/id; geometry/Feature они не удерживают. ID/dedup metadata",
+        "остаётся до завершения запроса. Compatibility route берёт прежний загруженный",
+        "Java snapshot/native fragments, его List API не удалён. Камера и четыре угла",
+        "MapView фиксируются в том же поколении. Geometry clipping и",
+        "направление вычисляются в общем background worker; новые движения камеры",
+        "отменяют устаревший расчёт. Старый стиль, карта или View не получают результат.",
+        "Пересчёта на каждом frame нет; GPS/track и собственный label source его не",
+        "запускают. После применения point source повторный native idle не создаёт цикл.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:visible-line-labels-camera-and-query-ownership"
+    ]
+  }
+}

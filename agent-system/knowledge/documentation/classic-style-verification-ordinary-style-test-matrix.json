@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:classic-style-verification-ordinary-style-test-matrix",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:classic-style-verification"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the style or label subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/classic-style-verification.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "| Область | Покрытие |",
+        "|---|---|",
+        "| Категории | trim/case, совпадение, NULL/прочие, renderer fallback, все шесть обычных геометрий |",
+        "| Подписи | поле/шаблон, русский текст, цвет/размер, halo, font, justify/transform, spacing/line height, padding/max width, overlap/optional/upright, max angle, placement/rotation, zoom limits, category zoom curves |",
+        "| Наследование | Все LabelAttributes наследуются из «Прочие», только отсутствующие настройки; explicit false/default/empty сохраняются после JSON reload |",
+        "| Точки | встроенные формы, цвет/размер/opacity, 8 направлений подписи, asset icon и его size/rotate/offset/anchor/collision flags, собственная category zoom curve и explicit scale=false |",
+        "| Линии | cap/join/miter, blur/offset/gap/outline multiplier, dash presets/custom array, fill/stroke opacity |",
+        "| Полигоны | fill on/off, fill/stroke opacity, translate, все bundled patterns |",
+        "| Реальный результат | snapshot pixel checks для zoom, opacity, layer opacity, marker sizes/shapes и polygon fill |",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:classic-style-verification-ordinary-style-test-matrix"
+    ]
+  }
+}

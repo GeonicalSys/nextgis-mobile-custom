@@ -1,0 +1,70 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ngw-sync-and-storage-workspace-source-review-and-open-witnesses",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original source frame, dated result and acceptance limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### Независимые ожидания и открытые ветви",
+        "",
+        "Существующие `SyncWorkspaceIsolationTest` и `ProjectSyncRunnerTest` содержат",
+        "witnesses для одинаковых layer/group IDs в A/B, tagged provider update только B,",
+        "expired token без fallback, rejected/discarded children, сохранности active map",
+        "и draft, отмены с удерживаемым child, per-project clock и реального background",
+        "fill. Здесь прочитаны исходники этих тестов; их наличие не является выполнением.",
+        "",
+        "`SMOKE-SYNC-OWNER-ACK-BOUNDARY` закрепляет адресную будущую проверку. Новые ветви",
+        "имеют NOT_RUN. Открытые вопросы хранятся в реестре LISA",
+        "`agent-system/knowledge/audit-registry-layout/questions.json`.",
+        "",
+        "- `AUDIT-TODO-SYNC-ACK-RECOVERY`: process death/cleanup failure между pair ACK",
+        "  и full clock, реальный retry и commit-false memory/disk divergence; определить",
+        "  политику финализации без повторного подтверждения уже ACKed данных по догадке.",
+        "- `AUDIT-TODO-SYNC-CLAIMED-LIVENESS`: claimed child, который не возвращает",
+        "  управление; определить наблюдение/восстановление без раннего закрытия БД.",
+        "- `AUDIT-TODO-WORKSPACE-KEY-MIGRATION`: перенос directory/mapName и судьба всех",
+        "  независимых persisted keys, включая legacy journals и draft owner.",
+        "",
+        "Непроверенные внешние async callsites, effective tenant/server/device варианты",
+        "и native lifecycle остаются UNKNOWN. Исходный ACK source-аудит не менял product bytes,",
+        "очереди, схемы, серверные данные, настройки или миграцию и не возобновляет",
+        "приостановленные runtime этапы.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:ngw-sync-and-storage-workspace-source-review-and-open-witnesses"
+    ]
+  }
+}

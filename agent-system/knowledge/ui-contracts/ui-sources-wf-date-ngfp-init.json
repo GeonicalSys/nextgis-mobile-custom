@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-wf-date-ngfp-init",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "WF-DATE-NGFP-INIT"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "WF-DATE-NGFP-INIT",
+        "repository": "maplibui",
+        "path": "src/main/java/com/nextgis/maplibui/formcontrol/DateTime.java",
+        "marker": "public void init(\n            JSONObject element,\n            List<Field> fields,\n            Bundle savedState,\n            Cursor featureCursor,\n            SharedPreferences preferences,\n            Map<String, Map<String, String>> translations,\n            final ModifyAttributesActivity modifyAttributesActivity)\n            throws JSONException",
+        "requires": [
+          "ControlHelper.hasKey(savedState, mFieldName)",
+          "featureCursor.getLong(column)",
+          "setOnClickListener(getDateUpdateWatcher(mPickerType))",
+          "ControlHelper.getFieldName(attributes.getString(JSON_FIELD_NAME_KEY))",
+          "mPickerType = attributes.getInt(JSON_DATE_TYPE_KEY)",
+          "timestamp = parseDateTime(defaultValue, mPickerType)",
+          "preferences.getLong(mFieldName, timestamp)",
+          "mCalendar.setTimeInMillis(timestamp)"
+        ],
+        "forbids": [],
+        "sha256": "8d564e5bfc0904159f3139012c8c9e09ab664f7ce26ad430d639aa4396257d9d"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-wf-date-ngfp-init"
+    ]
+  }
+}

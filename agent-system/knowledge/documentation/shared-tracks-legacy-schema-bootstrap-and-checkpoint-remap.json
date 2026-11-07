@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:shared-tracks-legacy-schema-bootstrap-and-checkpoint-remap",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:shared-tracks"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/shared-tracks.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Схема до v3 конвертирует WGS84 в Web Mercator; отсутствующие sent/segment получают",
+        "исторические defaults 1/0. Bootstrap standalone -> initial local регистрирует",
+        "происхождение копии и не дублирует историю. tracks_temp.track_uri/track_map меняются",
+        "после commit миграции; неудачный preferences commit безопасно повторяется.",
+        "Миграционная ошибка сообщается пользователю без технических подробностей.",
+        "Карта остаётся доступной; запись/отправка повторяют prepare и не принимают",
+        "неполный перенос за успешный.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:shared-tracks-legacy-schema-bootstrap-and-checkpoint-remap"
+    ]
+  }
+}

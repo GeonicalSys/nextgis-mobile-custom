@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-large-font-map-layout",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Форк поддерживает общую адаптацию к крупным font/display scales: перенос",
+        "полных названий и подписей, растущие по тексту кнопки, локальное вписывание",
+        "панелей с корректными touch transforms и адаптивный заголовок toolbar.",
+        "Native LargeTextLayoutTest проверяет текст и реальные границы в обеих темах,",
+        "portrait/landscape и при совместном увеличении шрифта и display size.",
+        "GitHub API 2026-10-13: official app",
+        "`04d57c9fd843db6745c170147d6a2863da807352`, maplibui",
+        "`29390d0331b9ef7cebcfadbc59d084c4de1e326c`;",
+        "официальная row_layer.xml сохраняет фиксированную listPreferredItemHeight,",
+        "maxLines=2 и ellipsize=end. App закрепляет fetched Merge Commit maplibui #37",
+        "`ac19458c3fffa8d99fc820b4b6a729ae33b48856`, включающий #36",
+        "`d5313944b9ca776819cfc3a28f99e5a691fe4a09`; дерево равно проверенному `5bab1d9f`.",
+        "Контракт форка:",
+        "[крупный интерфейс](../architecture/ui-accessibility.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-large-font-map-layout"
+    ]
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:location-pipeline-automatic-foreground-and-service-owner-leases",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:location-pipeline"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/location-pipeline.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Автоматическое получение и сетевое положение",
+        "",
+        "`BackgroundLocationController` запускает location foreground service при открытии",
+        "приложения с разрешённым местоположением. `background_gps_enabled=true` по умолчанию.",
+        "Контроллер держит отдельный lease `GpsEventSource`, пока виден любой экран",
+        "приложения: формы и снятие map listener не отключают GPS/Network даже при",
+        "выключенном фоне. Сервис владеет своим background lease для работы при гашении",
+        "экрана и вне приложения; оба lease используют общий partial wake lock."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:location-pipeline-automatic-foreground-and-service-owner-leases"
+    ]
+  }
+}

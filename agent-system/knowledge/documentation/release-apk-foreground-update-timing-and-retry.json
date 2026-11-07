@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:release-apk-foreground-update-timing-and-retry",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:release-apk"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/release-apk.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Автопроверка запускается в resumed главном окне с фокусом через 2,5 секунды.",
+        "`StartupUpdateCheckScheduler` сохраняет незавершённую попытку при отсутствии",
+        "сети, ошибке запроса, busy/pending установке, companion UI и потере фокуса.",
+        "Повтор после сетевой ошибки: 10, 30, 120, затем максимум один раз в 300 секунд;",
+        "изменение default network или Resume приближает попытку до 2,5 секунды.",
+        "Пауза/закрытие окна снимает timers и network callback. После process death",
+        "восстановленный Bundle не отключает новую проверку; успешный результат или",
+        "показанное предложение сохраняется только при пересоздании в том же процессе.",
+        "Pending установка остаётся приоритетной отдельной процедурой."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:release-apk-foreground-update-timing-and-retry"
+    ]
+  }
+}

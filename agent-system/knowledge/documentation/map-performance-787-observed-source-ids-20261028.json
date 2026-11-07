@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:map-performance-787-observed-source-ids-20261028",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-performance",
+      "lisa:mobile:resource:map-performance-direct-sqlite-render-pipeline"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original measurement or checkpoint and its acceptance limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-performance.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "В исходной конфигурации787 —11 видимых ordinary vectors,3 скрытых vectors и2",
+        "видимых LocalTMS растра. Source gate направляет поддерживаемые ordinary layers",
+        "в SQLite; первый журнал прямо подтвердил7 native ID и3 line-label overlays,",
+        "но не перечислил четыре main source ID. Полнота всех объектов/подписей не",
+        "следует из этих counters или снимков. Legacy «classic fallback» remote729/733",
+        "печатается до SQLite apply и не является свидетельством полной GeoJSON копии.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:map-performance-787-observed-source-ids-20261028"
+    ]
+  }
+}

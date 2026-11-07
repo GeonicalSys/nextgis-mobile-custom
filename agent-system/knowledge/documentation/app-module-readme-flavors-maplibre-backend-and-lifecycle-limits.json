@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-flavors-maplibre-backend-and-lifecycle-limits",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "- `lisa` и `belka` — отдельные product flavors.",
+        "- `app`, `maplibui` и `maplib` должны разрешать один MapLibre backend:",
+        "  `org.maplibre.gl:android-sdk-opengl:13.7.1`; generic `android-sdk` версии 13",
+        "  использует Vulkan и возвращать его в production нельзя.",
+        "- `MapFragment` должен реализовывать актуальный `MaplibreMapInteraction`.",
+        "- Каждый созданный MapLibre `MapView` должен получить согласованную пару",
+        "  `onCreate/onStart/onResume` и `onPause/onStop/onDestroy`; старый view нельзя",
+        "  оставлять привязанным к `MapDrawable` после `onDestroyView`.",
+        "  `maplibre_renderTextureMode=false` на всех API; на API 26–28 tile prefetch",
+        "  выключен. Потолок FPS и постоянный `CONTINUOUS` на Android 8–9 не",
+        "  используются."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-flavors-maplibre-backend-and-lifecycle-limits"
+    ]
+  }
+}

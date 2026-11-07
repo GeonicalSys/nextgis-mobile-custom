@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-outbox-and-track-indicators",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Правила проекта и чтение истории",
+        "",
+        "Жёлтая точка в строке слоя и на кнопке синхронизации строятся из одного",
+        "фонового снимка `isChanges()` для текущей карты. Проверяются все векторные слои,",
+        "в том числе скрытые; группа отмечается при изменениях в дочернем слое.",
+        "Outbox учитывает удалённые объекты и изменения вложений, даже когда объектов",
+        "в слое уже нет. `LayersListAdapter` получает только набор layer ID и не читает",
+        "SQLite при отрисовке. Для TrackLayer снимок проверяет sent=0 через owning layer",
+        "только при track_send=true и подтверждённой регистрации текущей пары сервер/UID;",
+        "общий sync доступен и без векторных аккаунтов, когда",
+        "включена отправка трека. ContentObserver trackpoints и preference listener обновляют",
+        "отметки после новых точек, подтверждения/отзыва регистрации, смены сервера,",
+        "успешного ACK и opt-out без открытия настроек. Stale guard повторно проверяет",
+        "оба условия перед применением фонового снимка.",
+        "Изменения слоя, возврат на экран и завершение/отмена sync",
+        "обновляют снимок; lifecycle generation и owning map отбрасывают устаревший ответ.",
+        "Переработанная строка всегда устанавливает/снимает точку для нового слоя.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-outbox-and-track-indicators"
+    ]
+  }
+}

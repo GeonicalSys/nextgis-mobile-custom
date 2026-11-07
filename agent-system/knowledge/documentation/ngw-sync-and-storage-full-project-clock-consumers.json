@@ -1,0 +1,66 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-full-project-clock-consumers",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "`ProjectSyncState` предназначен для подтверждённого full-sync clock по canonical map path",
+        "в full-project-sync-state и используется [недельным напоминанием](maintenance-reminders.md) только для",
+        "активных онлайн-проектов. Локальные карты исключены; проверка manifest updater",
+        "имеет собственные часы и не подтверждает синхронизацию данных.",
+        "",
+        "`ProjectSyncRunner` пытается сохранить его после всех account",
+        "проходов текущего проекта, ожидания children, проверки отсутствия готовых",
+        "local edits и успешной очистки session. Отказ до этого gate, отмена, layer-only",
+        "запуск, другая account и track-only обмен не запускают запись project clock.",
+        "Неуспешный commit имеет отдельный memory/disk исход, разобранный выше. Для проекта с",
+        "несколькими account полный запуск должен охватить их все. Успех другого проекта",
+        "может быть сохранён независимо от ошибки одного проекта общей очереди.",
+        "",
+        "`LayersFragment` читает MapBase.getActiveInstance и только clock видимой карты,",
+        "включая вызов внутри фонового SyncWorkspaceSession на UI thread; до первого подтверждённого",
+        "полного прохода показывает «Полная синхронизация ещё не выполнена». Старый global",
+        "last_sync_timestamp не мигрируется: он мог означать чужой account или только трек.",
+        "Быстрые local/track uploads часы не пишут. Tracked NGW pull также использует",
+        "owning project clock; неизвестный clock даёт since=0, не watermark чужой карты.",
+        "Account summary сохраняет отдельный legacy account clock после полной очереди.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-full-project-clock-consumers"
+    ]
+  }
+}

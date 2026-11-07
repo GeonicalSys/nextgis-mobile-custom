@@ -1,0 +1,81 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:decision:guarded-report-hook-installation",
+  "kind": "decision",
+  "owner": "android_projects/android_gisapp",
+  "topic": "instruction-policy-review",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "."
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "complete",
+    "implementation": "not_applicable",
+    "source_verification": "PASS",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original question and conflicting instruction spans as source evidence."
+  },
+  "facets": {
+    "title": {
+      "role": "decision",
+      "value": "Inspect the report hook and use the ordinary installer for a missing hookup"
+    },
+    "resolution": {
+      "role": "reviewed_source_resolution",
+      "value": {
+        "inspect_existing_hook_at_task_start": true,
+        "allowed_installer_when_missing": "py -3.13 tools/check_update_reports.py --install-hook",
+        "declared_dependency_file_if_needed": "tools/requirements-update-reports.txt",
+        "preserve_existing_hook_configuration": true,
+        "allow_unrelated_git_configuration_change": false,
+        "allow_hook_bypass": false
+      }
+    },
+    "reason": {
+      "role": "source_backed_rationale",
+      "value": "The generic Cursor protection for Git configuration remains the default. The owning AGENTS names the narrow missing-hook installation procedure and requires preservation of existing configuration."
+    },
+    "authority": {
+      "role": "current_execution_authority_external",
+      "value": "Existing clients retain their current entry sources. The authored resolution provides the rule for the reviewed generated adapters."
+    }
+  },
+  "relations": [
+    {
+      "type": "supersedes",
+      "target": "lisa:mobile:question:instruction-hook-config-wording",
+      "status": "source_backed"
+    },
+    {
+      "type": "view_of",
+      "target": "lisa:mobile:instruction:cursor-git-workflow.no-config-change-source",
+      "status": "source_backed"
+    },
+    {
+      "type": "view_of",
+      "target": "lisa:mobile:instruction:workspace.report-hook-admission",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/migration/instruction-reconciliation.json",
+    "scopes": [
+      "instruction-hook-config-wording"
+    ]
+  }
+}

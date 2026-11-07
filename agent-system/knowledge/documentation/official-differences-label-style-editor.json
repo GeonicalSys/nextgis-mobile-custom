@@ -1,0 +1,61 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-label-style-editor",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "**Что добавляет форк — подписи.** Помимо одного поля — шаблон `${поле}` из",
+        "нескольких атрибутов (`LabelTemplate`). Текст: размер, цвет, прозрачность,",
+        "`text-halo-color` / `text-halo-width` / `text-halo-blur`, шрифт (`text-font`),",
+        "выравнивание (`text-justify`), регистр (`text-transform`: none/uppercase/",
+        "lowercase), межбуквенный интервал, высота строки, максимальная ширина переноса.",
+        "Для точек — `text-anchor`. Управление коллизиями: `text-allow-overlap`,",
+        "`text-optional`, `text-padding`, `text-keep-upright`, `text-max-angle`. Для",
+        "линий — повтор подписи вдоль геометрии (`symbol-placement: line` vs",
+        "`line-center`, `symbol-spacing`) и режим «горизонтально» vs «вдоль линии»",
+        "(`text-rotation-alignment`). Собственный диапазон видимости подписи",
+        "(`label_min_zoom` / `label_max_zoom`), независимый от zoom слоя: в простом",
+        "рендерере — через `minzoom`/`maxzoom` SymbolLayer; в «По правилу» — через",
+        "per-feature props и data-driven `text-opacity` (разные категории могут иметь",
+        "разные диапазоны). Масштабирование размера текста по zoom с пользовательскими",
+        "остановками; по умолчанию — плавная кривая 0.35×…2.2× между zoom 6 и 22.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-label-style-editor"
+    ]
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-30-49da04090423",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-30 — Согласованное подтверждение recovery journal",
+        "",
+        "Исправлен переход failed pair ACK → следующий successful write: принятый",
+        "project/account план внутри процесса больше не берётся из rejected cache.",
+        "Весь typed queue/legacy cohort подтверждается вместе у точного preferences owner;",
+        "unknown keys, прежние identities/manual/interrupt и ошибка записи сохранены.",
+        "Физический файл, restart, post-ACK cleanup и full clock проверяются отдельно.",
+        "Actual-body JVM/compile результаты: android-20261030-sync-journal-confirmation; устройство и выпуск NOT_RUN.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-30",
+        "heading": "2026-10-30 — Согласованное подтверждение recovery journal",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-30-49da04090423"
+    ]
+  }
+}

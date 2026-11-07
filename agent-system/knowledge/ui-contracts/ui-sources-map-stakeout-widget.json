@@ -1,0 +1,61 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-map-stakeout-widget",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "map-stakeout-widget"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "map-stakeout-widget",
+        "repository": "root",
+        "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+        "marker": "private fun updateStakeoutWidget(state: StakeoutController.UiState)",
+        "requires": [
+          "state.waitingForFix || state.distanceMeters == null",
+          "mStakeoutDistance?.setText(R.string.stakeout_waiting_for_gps)",
+          "if (state.distanceMeters < 10.0) 2 else 1",
+          "state.absoluteBearingDegrees -",
+          "cameraPosition?.bearing",
+          "state.relativeBearingDegrees"
+        ],
+        "forbids": [],
+        "sha256": "4f84a94d192639419e3449456587945a641ba2c5f7d5048213fa38ffa6d7f32b"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-map-stakeout-widget"
+    ]
+  }
+}

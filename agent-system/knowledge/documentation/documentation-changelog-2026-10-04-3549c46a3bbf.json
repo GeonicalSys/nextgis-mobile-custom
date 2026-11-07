@@ -1,0 +1,71 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-04-3549c46a3bbf",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-04",
+        "",
+        "- По разрешению пользователя завершены Merge Commit maplib37 (`1d81e8a`) и",
+        "  maplibui25 (`675c16b1`), app45 закрепляет fetched remote merge commits.",
+        "  Git ancestry и совпадение trees подтверждают включение всех predecessors;",
+        "  иных требующих включения PR/codex heads в пяти Android owners нет. Official",
+        "  upstream heads проверены повторно и не изменились. Linux CI f580bd8 прошла",
+        "  574 unit и28 native tests; перед release matrix остаётся app Squash/fetch.",
+        "- По полевым логам Pigo найден отсутствующий write channel; официальный",
+        "  PiSatel подтверждает service 3A20 / write 3A21 / notify 3A22. Добавлена",
+        "  адресная BLE-поддержка и additive BESTPOSB для тихого приёмника; частота",
+        "  живого потока, УКВ/поправки/сохранённые настройки не меняются.",
+        "- Исправлены GATT subscription/write failure paths, последовательность",
+        "  фрагментов, timeout, stale callbacks и expiry качества. Локально прошли",
+        "  574 unit и 28 native API36 tests; обе production source sets компилируются.",
+        "  Холодный физический Pigo/PiRat smoke ещё не выполнен; release APK pending closure.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-04",
+        "heading": "2026-10-04",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-04-3549c46a3bbf"
+    ]
+  }
+}

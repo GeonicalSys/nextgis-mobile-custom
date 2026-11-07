@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:stakeout-azimuth-controls-and-independent-sound-choice",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:stakeout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/stakeout.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "`layout_azimuth_panel` содержит инструкцию/расстояние, магнитный азимут до 0,1°,",
+        "эффективное склонение D+C, сохраняемую коррекцию C и свой Close. Стрелка,",
+        "точность GPS и кнопка звука отсутствуют в обоих режимах измерения. Live-измерение",
+        "использует общий controller с enableSound=false; оно не меняет сохранённый выбор",
+        "звука выноса. Панели взаимоисключающие при переходах и обновлениях GPS.",
+        "Обе сохраняют WrappingLabel/FittedPanelLayout для увеличенного шрифта и экрана.",
+        "Кнопка «Измерения» предлагает линейку или один из двух азимутных режимов.",
+        "Точность выноса берётся непосредственно из Location.accuracy, не HDOP/vendor extras.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:stakeout-azimuth-controls-and-independent-sound-choice"
+    ]
+  }
+}

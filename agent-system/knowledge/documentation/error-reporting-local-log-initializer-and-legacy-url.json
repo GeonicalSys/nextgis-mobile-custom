@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:error-reporting-local-log-initializer-and-legacy-url",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:error-reporting"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/error-reporting.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Все точки запуска HyperLog используют один process-wide `LocalLogInitializer`.",
+        "Перед первым initialize удаляется только устаревший `HyperLog/URL`: фиктивный",
+        "loopback endpoint вызывал синхронную подготовку всего журнала к отправке даже",
+        "при повторном initialize. У закреплённой версии библиотеки пустой URL прекращает",
+        "push до чтения backlog. Файлы/SQLite журнала, семидневное хранение, пользовательский",
+        "формат и crash handler сохраняются. Повторный вызов базового GISApplication не",
+        "заменяет app-формат и не запускает initialize ещё раз.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:error-reporting-local-log-initializer-and-legacy-url"
+    ]
+  }
+}

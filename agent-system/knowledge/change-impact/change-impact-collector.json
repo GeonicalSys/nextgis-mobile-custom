@@ -1,0 +1,119 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:change-impact-collector",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "change-impact",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "definition": {
+      "role": "complete_change_impact_definition",
+      "value": {
+        "id": "COLLECTOR",
+        "paths": [
+          "maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java",
+          "maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorProjectItem.java",
+          "maplib/src/main/java/com/nextgis/maplib/map/CollectorProjectMetadata.java",
+          "maplib/src/main/java/com/nextgis/maplib/map/NGWRasterLayer.java",
+          "maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorResource.java",
+          "maplib/src/main/java/com/nextgis/maplib/datasource/ngw/CollectorProjectCompositionSync.java",
+          "maplib/src/main/java/com/nextgis/maplib/util/LayerFormHashUtil.java",
+          "maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureGeometryValidator.java",
+          "maplib/src/main/java/com/nextgis/maplib/util/DatabaseContext.java",
+          "maplib/src/main/java/com/nextgis/maplib/map/MapContentProviderHelper.java",
+          "maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java",
+          "maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java",
+          "maplib/src/main/java/com/nextgis/maplib/util/DistrictFilterUtil.java",
+          "maplib/src/main/java/com/nextgis/maplib/util/NGWUtil.java",
+          "maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureCountParser.java",
+          "maplib/src/main/java/com/nextgis/maplib/util/NgwSyncNoneReloadDecision.java",
+          "maplib/src/main/java/com/nextgis/maplib/util/LisaCatalog.java",
+          "maplib/src/main/java/com/nextgis/maplib/util/LisaCatalogLookup.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/activity/SelectNGWResourceActivity.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/dialog/SelectNGWResourceDialog.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/util/ProjectOperationCoordinator.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/util/SchemaRebuildRetryGuard.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/util/CollectorImportJournal.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/util/LayerFillStaging.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/util/CollectorFormFileTransaction.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectImportHelper.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/util/LoadLisaCollectorProject.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/util/CollectorRasterLayerHelper.java",
+          "app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt",
+          "app/src/main/res/menu/add_layer.xml",
+          "app/src/main/java/com/nextgis/mobile/activity/ProjectSettingsActivity.kt",
+          "app/src/main/java/com/nextgis/mobile/activity/ProjectChooserDialog.kt"
+        ],
+        "owners": [
+          "maplib",
+          "maplibui",
+          "app"
+        ],
+        "read": [
+          "docs/architecture/collector-projects.md"
+        ],
+        "invariants": [
+          "INV-COLLECTOR-RESOURCE",
+          "INV-COLLECTOR-LAYER-IDENTITY",
+          "INV-COLLECTOR-RASTER-STYLES",
+          "INV-COLLECTOR-ISOLATION",
+          "INV-COLLECTOR-EDITABILITY",
+          "INV-COLLECTOR-RESUMABLE",
+          "INV-COLLECTOR-FORM-ATOMIC",
+          "INV-PROJECT-OPERATION-EXCLUSION",
+          "INV-BACKUP-BEFORE-DESTRUCTION"
+        ],
+        "must_update_docs": [
+          "docs/architecture/collector-projects.md",
+          "docs/architecture/map-rendering.md",
+          "docs/reference/official-differences.md",
+          "docs/registry/config-keys.yaml",
+          "maplib/docs/manifest.yaml",
+          "maplibui/docs/manifest.yaml",
+          "app/docs/README.md",
+          "app/docs/manifest.yaml"
+        ],
+        "verify": [
+          "AUTO-MAPLIB-UNIT",
+          "AUTO-MAPLIBUI-ASSEMBLE",
+          "SMOKE-COLLECTOR-IMPORT",
+          "SMOKE-COLLECTOR-IDENTITY",
+          "SMOKE-COLLECTOR-RESUME",
+          "SMOKE-COLLECTOR-INCOMPLETE",
+          "SMOKE-FORM-ROLLBACK",
+          "SMOKE-COLLECTOR-SWITCH",
+          "SMOKE-BACKUP-GATE"
+        ],
+        "strict_docs": false
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/change-impact.json",
+    "scopes": [
+      "lisa:mobile:contract:change-impact-collector"
+    ]
+  }
+}

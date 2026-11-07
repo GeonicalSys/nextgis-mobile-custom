@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-system-scale-adaptation-and-real-touch",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Назначение",
+        "",
+        "Общие панели и подписи адаптируются к крупному системному шрифту и display size:",
+        "перенос, понятное сокращение, затем локальное уменьшение при переполнении.",
+        "Азимут/вынос сохраняют X внутри доступной области, GPS-статус переносит значения,",
+        "а длинное название обхода — строку действий. Полный native Layout и реальные",
+        "touch targets проверяет `LargeTextLayoutTest`. Контракт:",
+        "[крупный интерфейс](../../docs/architecture/ui-accessibility.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:ui-accessibility",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-system-scale-adaptation-and-real-touch"
+    ]
+  }
+}

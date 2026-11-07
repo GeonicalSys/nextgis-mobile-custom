@@ -1,0 +1,64 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:crash-recovery-project-account-sync-recovery",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:crash-recovery"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/crash-recovery.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Project sync recovery",
+        "",
+        "ProjectSyncRunner persists every planned project/account pair before starting.",
+        "Successful pairs are acknowledged independently after all scoped async children",
+        "and service deliveries finish. Recovery matches the registry identity even when",
+        "another map is open; an extra never supplies a trusted database path.",
+        "Collector import journals are partitioned by canonical project path and migrate",
+        "the legacy marker only to its matching UID. Cancellation retains pending work",
+        "and does not close a database with an unresolved write or queued child.",
+        "",
+        "See [sync/storage](ngw-sync-and-storage.md) and the",
+        "[user guide](../guides/project-synchronization-user-guide.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-recovery-pair-journal",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:crash-recovery-project-account-sync-recovery"
+    ]
+  }
+}

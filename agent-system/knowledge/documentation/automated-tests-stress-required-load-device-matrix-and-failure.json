@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:automated-tests-stress-required-load-device-matrix-and-failure",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Stress отдельно подтверждает6480technical polygons,2настоящих MVT sources,",
+        "90s workload, минимум50реальных pan/15pinch изменений native camera,2recreate,",
+        "не менее300heading updates и peak PSS/RSS/Java/native observations. Publication",
+        "checker требует свежие phone/tablet/emulator stress rows и физическийSM-X115.",
+        "Эта model matrix сама не доказывает фактические2GiB: RAM и приёмку такого",
+        "физического устройства фиксируют отдельно. Unit/build, visible_feature>0,",
+        "позднее восстановление или сниженныйRSS не превращают неполный/failed native",
+        "run в PASS. Full продолжает независимые cases после содержательного FAIL,",
+        "сохраняет ошибки в receipt и в конце остаётся FAIL; setup/transport ошибки",
+        "прерывают запуск. Прежние software/fullFAIL и незавершённые прогоны сохраняются.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:automated-tests-stress-required-load-device-matrix-and-failure"
+    ]
+  }
+}

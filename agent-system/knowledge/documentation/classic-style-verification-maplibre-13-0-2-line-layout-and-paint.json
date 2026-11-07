@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:classic-style-verification-maplibre-13-0-2-line-layout-and-paint",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:classic-style-verification",
+      "lisa:mobile:resource:classic-style-verification-native-geometry-layout-groups-and-picking"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original measurement or checkpoint and its acceptance limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/classic-style-verification.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Pinned Android MapLibre 13.0.2 also rejects feature expressions for line-cap and",
+        "line-miter-limit. Ordinary line constants use filtered rendering children; native",
+        "rule dash layers are grouped by the effective array and layout, including custom",
+        "arrays. Changing dashed to solid explicitly clears the old native dash property.",
+        "Copied properties retain PaintPropertyValue/LayoutPropertyValue routing in the",
+        "Android SDK, so child text/geometry paints and opacity are applied to the proper",
+        "native property namespace. Native snapshots and category picking verify this.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:classic-style-verification-maplibre-13-0-2-line-layout-and-paint"
+    ]
+  }
+}

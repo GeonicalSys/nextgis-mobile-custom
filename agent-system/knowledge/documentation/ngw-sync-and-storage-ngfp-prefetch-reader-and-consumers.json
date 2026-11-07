@@ -1,0 +1,72 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-ngfp-prefetch-reader-and-consumers",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## NGFP lookup prefetch: отдельный reader — 30 октября2026",
+        "",
+        "Только два maplibui callers — GISApplication.fillMissingLookupTablesForCollectorForm (Collector",
+        "form-only update) и LayerFillService.UnzipForm.execute (connected initial form) —",
+        "переведены на LayerUtil.fillLookupTableIdsForPrefetch(File). Typed walker читает",
+        "combobox.attributes.ngw_id: root array; рекурсивные type=tabs pages[].elements;",
+        "root object tabs[] через оба declared album_elements/portrait_elements. input_search",
+        "не меняет resource binding. Android getLong, malformed-present error и sentinel -1",
+        "сохранены; Long.toString и LinkedHashSet дают normalized first-seen dedup одного",
+        "вызова. Numeric options/defaults/field names/metadata не являются новыми NGW IDs.",
+        "",
+        "Старые17 строк public fillLookupTableIds и весь NGWVectorLayerUI, включая два",
+        "legacy destructive reader вызова, побайтово прежние. Новый walker нельзя применять",
+        "к удалению shared lookup без отдельной политики. Далее кеш ищется по account+remote",
+        "ID, Combobox/AutoTextEdit читают уже локальный lookup. Helper test не доказывает actual",
+        "import/cache availability. UnzipForm.execute обычно пишет numbered form; старое удаление",
+        "читает unprefixed legacy form, а its otherIds loop rereads own form. Эти границы не исправлены.",
+        "",
+        "AUDIT-TODO-NGFP-LOOKUP-PREFETCH остаётся открыт: same-hash installed missing-cache repair,",
+        "form/hash publication, partial retry/межзадачные дубли, numbered/shared GC, malformed",
+        "inactive layouts/native form lifecycle. Per-form dedup не global cache uniqueness.",
+        "AUDIT-TODO-NGW-LOOKUP-CACHE-PERSISTENCE и AUDIT-TODO-NGW-PARTIAL-SNAPSHOT сохранены.",
+        "Account Table→Layer cast и целостный backup/exclusive owner gate не исправлены:",
+        "AUDIT-TODO-NGW-ACCOUNT-REMOVAL-BACKUP. Valid form draft/Walk reservation может оставить",
+        "слой при delete=false; это не доказывает безопасное account removal. Реальные",
+        "user/tenant/network/SQLite/native в этом срезе не использовались.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-ngfp-prefetch-reader-and-consumers"
+    ]
+  }
+}

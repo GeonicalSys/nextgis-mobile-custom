@@ -1,0 +1,121 @@
+---
+id: android-20261104-collector-knowledge
+area: Мобильное приложение
+kind: internal
+at: 2026-11-04T14:19:38+04:00
+title: Мобильные проекты WebGIS из записей App
+why: Разделить правила владения, восстановление импорта и будущие задачи
+covers:
+  - agent-system/README.md
+  - agent-system/knowledge/documentation/collector-project-setup-architecture-and-roadmap-navigation.json
+  - agent-system/knowledge/documentation/collector-project-setup-district-key-and-feature-list.json
+  - agent-system/knowledge/documentation/collector-project-setup-layer-config-and-project-editability.json
+  - agent-system/knowledge/documentation/collector-project-setup-legacy-render-metadata-and-form-binding.json
+  - agent-system/knowledge/documentation/collector-project-setup-lisa-catalog-and-server-layer-order.json
+  - agent-system/knowledge/documentation/collector-project-setup-manual-layer-composition-exclusion.json
+  - agent-system/knowledge/documentation/collector-project-setup-offline-underlay-and-account-resource-identity.json
+  - agent-system/knowledge/documentation/collector-project-setup-one-resource-per-workspace.json
+  - agent-system/knowledge/documentation/collector-project-setup-post-import-configuration-backup-and-native-rendering.json
+  - agent-system/knowledge/documentation/collector-project-setup-post-import-owner-and-permission-oracles.json
+  - agent-system/knowledge/documentation/collector-project-setup-project-and-layer-origin-metadata.json
+  - agent-system/knowledge/documentation/collector-project-setup-resource-picker-mode-and-restored-identity.json
+  - agent-system/knowledge/documentation/collector-project-setup.json
+  - agent-system/knowledge/documentation/collector-projects-active-account-sync-after-switch.json
+  - agent-system/knowledge/documentation/collector-projects-active-track-switch-and-preparation-guards.json
+  - agent-system/knowledge/documentation/collector-projects-ambiguous-layer-match-and-addition-deferral.json
+  - agent-system/knowledge/documentation/collector-projects-atomic-layer-directory-and-batch-rollback.json
+  - agent-system/knowledge/documentation/collector-projects-backup-duplicate-and-rebuild-test-oracles.json
+  - agent-system/knowledge/documentation/collector-projects-backup-retention-and-local-attachment-files.json
+  - agent-system/knowledge/documentation/collector-projects-canonical-form-hash-and-snapshot-check.json
+  - agent-system/knowledge/documentation/collector-projects-closed-project-sync-owning-map-and-journal.json
+  - agent-system/knowledge/documentation/collector-projects-complete-remote-snapshot-and-layer-identity.json
+  - agent-system/knowledge/documentation/collector-projects-composition-heavy-fill-and-journal-test-oracles.json
+  - agent-system/knowledge/documentation/collector-projects-composition-snapshot-and-backup-boundary.json
+  - agent-system/knowledge/documentation/collector-projects-composition-stack-osm-and-track-positions.json
+  - agent-system/knowledge/documentation/collector-projects-database-owner-and-project-scoped-repair.json
+  - agent-system/knowledge/documentation/collector-projects-debug-bridge-and-source-map-test-oracles.json
+  - agent-system/knowledge/documentation/collector-projects-debug-framed-stream-and-idempotent-asset-import.json
+  - agent-system/knowledge/documentation/collector-projects-debug-transfer-cancel-and-lease-release.json
+  - agent-system/knowledge/documentation/collector-projects-debug-transfer-observability-20261102.json
+  - agent-system/knowledge/documentation/collector-projects-debug-underlay-grant-and-signature.json
+  - agent-system/knowledge/documentation/collector-projects-default-map-migration-and-rollback-copy.json
+  - agent-system/knowledge/documentation/collector-projects-district-key-and-subset.json
+  - agent-system/knowledge/documentation/collector-projects-district-style-order-and-editability-test-oracles.json
+  - agent-system/knowledge/documentation/collector-projects-duplicate-repair-same-owner-backup-and-map-commit.json
+  - agent-system/knowledge/documentation/collector-projects-durable-batch-journal-and-repair-resume.json
+  - agent-system/knowledge/documentation/collector-projects-editable-vector-and-postgis-support.json
+  - agent-system/knowledge/documentation/collector-projects-exporter-source-preservation-and-progress.json
+  - agent-system/knowledge/documentation/collector-projects-fill-resume-and-geometry-safety-test-oracles.json
+  - agent-system/knowledge/documentation/collector-projects-fill-target-group-and-staged-replacement.json
+  - agent-system/knowledge/documentation/collector-projects-historical-project-track-db-test-wording.json
+  - agent-system/knowledge/documentation/collector-projects-http-404-and-composition-only-removal.json
+  - agent-system/knowledge/documentation/collector-projects-immutable-local-underlay-provenance.json
+  - agent-system/knowledge/documentation/collector-projects-import-owner-flow.json
+  - agent-system/knowledge/documentation/collector-projects-initial-local-project-and-map-startup.json
+  - agent-system/knowledge/documentation/collector-projects-invalid-geometry-vs-object-error-and-retention.json
+  - agent-system/knowledge/documentation/collector-projects-jts-validity-and-feature-cost.json
+  - agent-system/knowledge/documentation/collector-projects-lisa-catalog-entry-and-manual-import.json
+  - agent-system/knowledge/documentation/collector-projects-local-delete-backup-tombstone-and-fallback.json
+  - agent-system/knowledge/documentation/collector-projects-managed-item-and-manual-write-policy.json
+  - agent-system/knowledge/documentation/collector-projects-managed-layer-identity-and-config-recovery.json
+  - agent-system/knowledge/documentation/collector-projects-manual-layer-and-save-before-switch.json
+  - agent-system/knowledge/documentation/collector-projects-manual-target-selection-before-debug-import.json
+  - agent-system/knowledge/documentation/collector-projects-mapnik-archive-import-and-exporter-detection.json
+  - agent-system/knowledge/documentation/collector-projects-multipolygon-wkt-parts-and-failure-diagnostics.json
+  - agent-system/knowledge/documentation/collector-projects-operation-lease-drain-and-scheduled-fill.json
+  - agent-system/knowledge/documentation/collector-projects-paired-form-file-transaction-and-rollback.json
+  - agent-system/knowledge/documentation/collector-projects-partial-marker-and-cleanup-ownership.json
+  - agent-system/knowledge/documentation/collector-projects-pre-registry-debug-project-identity.json
+  - agent-system/knowledge/documentation/collector-projects-project-identity-registry-and-sidecar.json
+  - agent-system/knowledge/documentation/collector-projects-project-script-ownership-and-form-pin.json
+  - agent-system/knowledge/documentation/collector-projects-project-settings-and-picker-data.json
+  - agent-system/knowledge/documentation/collector-projects-properties-spinner-and-restored-direction.json
+  - agent-system/knowledge/documentation/collector-projects-registry-sidecar-and-workspace-recovery.json
+  - agent-system/knowledge/documentation/collector-projects-required-metadata-independent-of-form-hash.json
+  - agent-system/knowledge/documentation/collector-projects-resource-picker-identity-recovery.json
+  - agent-system/knowledge/documentation/collector-projects-schema-refill-and-single-replacement-swap.json
+  - agent-system/knowledge/documentation/collector-projects-setup-and-roadmap-navigation.json
+  - agent-system/knowledge/documentation/collector-projects-shared-picker-and-raster-import-helper.json
+  - agent-system/knowledge/documentation/collector-projects-shared-track-resolver-and-delete-gate.json
+  - agent-system/knowledge/documentation/collector-projects-shared-underlay-asset-and-closed-project-unlink.json
+  - agent-system/knowledge/documentation/collector-projects-shared-underlay-redirect-and-link-properties.json
+  - agent-system/knowledge/documentation/collector-projects-staged-import-and-upgrade-test-oracles.json
+  - agent-system/knowledge/documentation/collector-projects-style-identity-extent-and-editability.json
+  - agent-system/knowledge/documentation/collector-projects-sync-none-config-and-positive-count-reload.json
+  - agent-system/knowledge/documentation/collector-projects-toolbar-back-and-resource-tree-parent.json
+  - agent-system/knowledge/documentation/collector-projects-visible-line-labels-and-baked-raster-labels.json
+  - agent-system/knowledge/documentation/collector-projects-workspace-db-and-shared-tracks.json
+  - agent-system/knowledge/documentation/collector-projects-workspace-lease-and-project-ui-test-oracles.json
+  - agent-system/knowledge/documentation/collector-projects-workspace-preparation-lease-transfer.json
+  - agent-system/knowledge/documentation/collector-projects.json
+  - agent-system/knowledge/documentation/collector-roadmap-composition-apply-and-idempotency.json
+  - agent-system/knowledge/documentation/collector-roadmap-config-hash-and-change-classification.json
+  - agent-system/knowledge/documentation/collector-roadmap-dated-composition-implementation.json
+  - agent-system/knowledge/documentation/collector-roadmap-dated-immutable-underlay-implementation.json
+  - agent-system/knowledge/documentation/collector-roadmap-dated-local-vector-tile-foundation.json
+  - agent-system/knowledge/documentation/collector-roadmap-dated-project-switch-registry-and-filter.json
+  - agent-system/knowledge/documentation/collector-roadmap-dated-resumable-import-implementation.json
+  - agent-system/knowledge/documentation/collector-roadmap-dated-status-table-layout.json
+  - agent-system/knowledge/documentation/collector-roadmap-dated-workspace-archive-and-delete-scope.json
+  - agent-system/knowledge/documentation/collector-roadmap-end-to-end-form-replacement-and-removal.json
+  - agent-system/knowledge/documentation/collector-roadmap-fault-injection-rollout.json
+  - agent-system/knowledge/documentation/collector-roadmap-local-vector-tile-production-acceptance.json
+  - agent-system/knowledge/documentation/collector-roadmap-metadata-and-legacy-compatibility.json
+  - agent-system/knowledge/documentation/collector-roadmap-multi-account-device-soak.json
+  - agent-system/knowledge/documentation/collector-roadmap-project-search-diagnostics-and-archive.json
+  - agent-system/knowledge/documentation/collector-roadmap-real-attachment-backup-recovery.json
+  - agent-system/knowledge/documentation/collector-roadmap-recovery-and-destructive-operation-gates.json
+  - agent-system/knowledge/documentation/collector-roadmap-safety-defaults-managed-authority-and-snapshot.json
+  - agent-system/knowledge/documentation/collector-roadmap-underlay-server-specification.json
+  - agent-system/knowledge/documentation/collector-roadmap-upcoming-tasks-layout.json
+  - agent-system/knowledge/documentation/collector-roadmap-workspace-deletion-policy-and-recovery.json
+  - agent-system/knowledge/documentation/collector-roadmap.json
+  - agent-system/knowledge/documentation/documentation-maintenance.json
+  - agent-system/provenance/documentation.json
+  - agent-system/source-dispositions.json
+  - docs/changelog.md
+  - docs/guides/documentation-maintenance.md
+---
+
+MOB-DEV-02. Три штатные проекции сохраняют исходный Markdown.
+Границы записи, история и задачи дорожной карты редактируются отдельно.

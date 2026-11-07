@@ -103,12 +103,37 @@ def changed_files(workspace: Path, comparison: Comparison) -> list[str]:
                                  base, comparison.head, "--").split("\0")))
 
 
+def local_changed_files(workspace: Path, base: str) -> list[str]:
+    """Net local task changes, preserving parent pins but not child checkouts."""
+    common = git(workspace, "merge-base", base, "HEAD").strip()
+    paths = set(filter(None, git(workspace, "diff", "--name-only", "--no-renames", "-z",
+                                 "--ignore-submodules=all", common, "--").split("\0")))
+    # The parent index (including committed pins) is independent of the child
+    # checkout. A real staged/committed gitlink must still trigger docs review.
+    paths.update(filter(None, git(workspace, "diff", "--cached", "--name-only",
+                                  "--no-renames", "-z", common, "--").split("\0")))
+    paths.update(filter(None, git(workspace, "ls-files", "--others", "--exclude-standard",
+                                  "-z").split("\0")))
+    return sorted(paths)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--workspace-root", type=Path, default=Path.cwd())
+    parser.add_argument("--local-paths", action="store_true",
+                        help="Return local task paths as JSON without accessing GitHub")
+    parser.add_argument("--base", help="Fetched comparison ref for --local-paths")
     args = parser.parse_args()
     workspace = args.workspace_root.resolve()
     try:
+        if args.local_paths:
+            if not args.base:
+                raise ValueError("Local changed paths require an explicit fetched base")
+            # ASCII JSON is decoded by PowerShell without native code-page loss.
+            print(json.dumps(local_changed_files(workspace, args.base)))
+            return 0
+        if args.base:
+            raise ValueError("--base is only supported with --local-paths")
         event = json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text(encoding="utf-8"))
         ranges = comparisons(os.environ["GITHUB_EVENT_NAME"], event,
                              os.environ["GITHUB_REF"], os.environ["GITHUB_SHA"])
@@ -118,10 +143,9 @@ def main() -> int:
             print(f"Documentation impact: {comparison.label}, {len(paths)} changed path(s)", flush=True)
             if paths:
                 command = [sys.executable, str(Path(__file__).with_name("validate_docs.py")),
-                           "--workspace-root", str(workspace), "--enforce-diff"]
-                for path in paths:
-                    command.extend(("--changed-file", path))
-                if subprocess.call(command, cwd=workspace) != 0:
+                           "--workspace-root", str(workspace), "--enforce-diff", "--changed-files-stdin"]
+                completed = subprocess.run(command, cwd=workspace, input=json.dumps(paths).encode("ascii"))
+                if completed.returncode != 0:
                     result = 1
         return result
     except (OSError, ValueError, KeyError, RuntimeError, subprocess.CalledProcessError) as exc:

@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-cascades-and-null-clearing",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "NGFP может содержать декларативный блок",
+        "[`meta.json.lisa_form_dependencies`](cascading-form-lists.md). Он задаёт общие",
+        "таблицы и несколько родителей поля; фильтрация выполняется нативно без запросов",
+        "при выборе. Значения существующих STRING-полей и схема NGW не меняются.",
+        "Смена родителя очищает всех потомков явным SQL NULL, включая второе поле",
+        "`double_combobox`. Общий Save после правил проекта проверяет допустимость новых",
+        "сочетаний и затем обязательность, до записи объекта и вложений. Исходные",
+        "исторические значения разрешены при неизменных предках. Определение и ключи",
+        "выбора закреплены за открытой формой и её черновиком; обновление NGFP влияет",
+        "на новые формы.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-cascades-and-null-clearing"
+    ]
+  }
+}

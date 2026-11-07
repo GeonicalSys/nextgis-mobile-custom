@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:release-apk-retained-failure-and-owned-cleanup-gate",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:release-apk"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/release-apk.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Full продолжает независимые native проверки после JUnit сбоя, сохраняя failed",
+        "attempt в receipt. Любая такая попытка блокирует итоговый PASS и gate, даже",
+        "если тот же case успешно выполнен повторно. Ошибки подготовки/транспорта и",
+        "ручная блокировка устройства по-прежнему прерывают запуск.",
+        "Успешный receipt/gate появляется после owned-resource cleanup. Сбой восстановления",
+        "или остановки оставляет FAIL. Явно согласованный metadata-only policy fixture",
+        "фиксируется как источник, а не как загруженный production проект устройства.",
+        "Подробности: [автотесты](automated-tests.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:release-apk-retained-failure-and-owned-cleanup-gate"
+    ]
+  }
+}

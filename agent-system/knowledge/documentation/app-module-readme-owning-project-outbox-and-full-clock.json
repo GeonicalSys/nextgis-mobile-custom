@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-owning-project-outbox-and-full-clock",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Немедленная отправка и часы открытого проекта",
+        "",
+        "MainApplication восстанавливает LocalChangesWorker всех downloaded workspaces.",
+        "Отдельный worker отправляет saved edits/outbox без полного sync и без изменения",
+        "его времени. ProjectSyncRunner подтверждает clock только после полного успеха",
+        "owning project со всеми account/children и пустой готовой очередью. LayersFragment",
+        "показывает ProjectSyncState активной карты и явное отсутствие подтверждения;",
+        "не использует старый общий timestamp. См. project-synchronization-user-guide.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-owning-project-outbox-and-full-clock"
+    ]
+  }
+}

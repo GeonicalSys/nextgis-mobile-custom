@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:project-scripts-zip-heap-binder-query-and-message-budgets",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:project-scripts"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the NGFP or project-rule subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/project-scripts.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "| Ресурс | Лимит |",
+        "|---|---:|",
+        "| ZIP / распакованное содержимое | 2 MiB / 4 MiB |",
+        "| Файл / файлов / степень сжатия | 512 KiB / 32 / 100× |",
+        "| VM heap / stack | 16 MiB / 512 KiB |",
+        "| JS interrupt / process watchdog | 2 с / 4 с |",
+        "| Host calls / query rows / все rows | 32 / 200 / 1000 |",
+        "| Фильтры / SQL cancellation / host budget | 16 / 500 мс / 2 с |",
+        "| Вход или ответ Binder | 128 KiB |",
+        "| Сообщений одного запуска / длина текста | 16 / 1000 символов |",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:project-scripts-zip-heap-binder-query-and-message-budgets"
+    ]
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:location-pipeline-monotonic-fix-freshness-and-display-snapshot",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:location-pipeline"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/location-pipeline.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Свежесть определяется временем измерения `elapsedRealtimeNanos`, которое",
+        "учитывает выключенный экран, а не временем прихода callback и не часами UTC.",
+        "После 8 секунд GPS перестаёт считаться свежим. Маркер и круг скрываются, если",
+        "нет допустимой сетевой display estimate; последняя отображённая Network-точка",
+        "остаётся с исходной accuracy, временем измерения и видимым возрастом. Свежий GPS",
+        "всегда выбран при живой сети; Network появляется как запас. На resume и после загрузки style",
+        "экран получает текущий snapshot. Координата камеры и прежний `mCurrentCenter`",
+        "не являются запасным местоположением.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:location-pipeline-monotonic-fix-freshness-and-display-snapshot"
+    ]
+  }
+}

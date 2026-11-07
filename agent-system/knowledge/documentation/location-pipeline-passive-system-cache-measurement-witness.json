@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:location-pipeline-passive-system-cache-measurement-witness",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:location-pipeline"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/location-pipeline.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Пассивное свидетельство времени GPS — 29 октября 2026",
+        "",
+        "Snapshot schema4 добавляет время измерения текущего rawGps отдельно от возраста",
+        "его доставки. Это существующее измерение может включать cache seed; поле не",
+        "равно времени вызова listener. При уже отправляемом classified report app один",
+        "раз читает время fix из системного GPS cache и сравнивает monotonic milliseconds.",
+        "На обычном500ms tick/no-fix probe не запускается. API не запрашивает новый fix,",
+        "а полученный объект не подаётся обратно в поток, фильтр или запись.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:location-pipeline-passive-system-cache-measurement-witness"
+    ]
+  }
+}
