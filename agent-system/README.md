@@ -1,8 +1,8 @@
 # Application-owned agent knowledge
 
-This is one owner of the active, unfinished six-repository knowledge migration.
-Editable typed Git records are the source; the shared LISA compiler derives local
-SQLite outside Git. This owner does not copy the compiler or create a second index.
+App maintains its own typed Git records in the six-repository knowledge system.
+The shared LISA compiler builds a local SQLite generation outside Git.
+Start the scoped read from the LISA root and follow both page streams to completion.
 
 Edit this guide and the two compatibility pages in the App
 [documentation records](knowledge/documentation/). Run the ordinary prose
@@ -220,7 +220,7 @@ and seal the YAML with
 `python -B docs/scripts/structured_view_proof.py --write --module easypicker-module`.
 App checkouts with earlier EasyPicker pins read the module's checked-in YAML.
 
-AGENTS/Cursor and hooks still serve their existing clients.
+The [working entrance](../AGENTS.md) and Cursor use the shared scoped reader.
 Original Git object retention before future squash/branch deletion needs its
 own durable reachability decision.
 
@@ -228,10 +228,8 @@ From the LISA root use `py -3.13 -B -m tools.agent_system check-policy-migration
 with this owned working repository included in the declared source frame when
 required. Default committed-owner reads cannot certify uncommitted records.
 Library Merge Commit and fetched merged pins precede application Squash and
-publisher Squash. Keep all three App pins bound to the verified owner frame
-until authorized adoption.
+publisher Squash. App records the three verified library merge commits.
 
-The full goal also requires maplib/maplibui, remaining root instructions, all
-contracts/resources/scenarios, whole task/roadmap lifecycle, defects, risks,
-questions, decisions/notes/history/evidence, actual clients and individually
-proved cleanup. This document and source checks are not completion or a release.
+Whole migration acceptance also requires ordinary maintenance across six owners,
+independent replay, separate Wiki reconciliation and an individual decision
+for each former source path. Product verification and release have separate gates.

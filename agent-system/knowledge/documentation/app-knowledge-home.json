@@ -43,9 +43,9 @@
       "value": [
         "# Application-owned agent knowledge",
         "",
-        "This is one owner of the active, unfinished six-repository knowledge migration.",
-        "Editable typed Git records are the source; the shared LISA compiler derives local",
-        "SQLite outside Git. This owner does not copy the compiler or create a second index.",
+        "App maintains its own typed Git records in the six-repository knowledge system.",
+        "The shared LISA compiler builds a local SQLite generation outside Git.",
+        "Start the scoped read from the LISA root and follow both page streams to completion.",
         "",
         "Edit this guide and the two compatibility pages in the App",
         "[documentation records](knowledge/documentation/). Run the ordinary prose",
