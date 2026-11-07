@@ -2153,7 +2153,8 @@
           "review": "Disk/retry stays unaccepted; preserve coercion/deletion/pins/UI and legacy versus generic error semantics without promising new network retry.",
           "record_sha256": "67fc048b76be9896f6e43d30d906a4826602e297dd60352b15adaf36793fe2a6"
         }
-      ]
+      ],
+      "retired": true
     },
     {
       "path": ".cursor/rules/android-development-contracts.mdc",
@@ -2284,7 +2285,8 @@
           "review": "All named flavor/order/hot-add/Collector/backup/flag constraints and owning smoke destination remain attached.",
           "record_sha256": "66be6b817fab4b5d17d8e2953fa0aa996f1247acbd45b05fa67c719beeb79c29"
         }
-      ]
+      ],
+      "retired": true
     },
     {
       "path": ".cursor/rules/docs-maintenance.mdc",
@@ -2406,7 +2408,8 @@
           "review": "Preserve the exact pure source documentation-validation invocation.",
           "record_sha256": "208485db4054c21861dd457f1875e8e3755d8f492eba3664127df97da52a72b4"
         }
-      ]
+      ],
+      "retired": true
     },
     {
       "path": ".cursor/rules/git-workflow.mdc",
@@ -2521,7 +2524,8 @@
           "review": "Parent gitlink changes need a verified dependency pointer and related central documentation; an unmerged library pin is not accepted delivery.",
           "record_sha256": "4cd1ef0a1ac2d5013e612edae9536717e73abc19aed403df3a65659eb5650a26"
         }
-      ]
+      ],
+      "retired": true
     },
     {
       "path": ".cursor/rules/upstream-sync.mdc",
@@ -2595,7 +2599,8 @@
           "review": "Full owner inspection, workflow-authorized backup tags, overlap decisions, cycle docs and exact integration order remain attached.",
           "record_sha256": "7eb256a5626a903e180c3bcd220dd6863f624dfb2617731d7f78f13e2d8b5edd"
         }
-      ]
+      ],
+      "retired": true
     }
   ]
 }

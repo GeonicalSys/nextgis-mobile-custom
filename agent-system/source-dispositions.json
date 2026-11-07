@@ -3,7 +3,7 @@
   "entries": [
     {
       "path": "agent-system/policy-migration.json",
-      "sha256": "14592ea5641c6354755fffa07f7af4387a06d777d9f1eaf237d5adde4c55d8be",
+      "sha256": "dee9cda4abd97da24610640cd674b15063576bb1c07e83d56b671b7dbfb016d1",
       "sha256_scope": "utf8_lf",
       "category": "retained_evidence",
       "applies_to": [

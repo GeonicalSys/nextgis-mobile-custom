@@ -36,9 +36,9 @@
         "",
         "| Изменение | Проект-владелец | Дополнительный контекст |",
         "|---|---|---|",
-        "| launcher, QGIS runtime, role, brand profile | `standart_profiles` | его `AGENTS.md` и `docs/START-HERE.md` |",
+        "| launcher, QGIS runtime, role, brand profile | `standart_profiles` | применимые правила для `standart_profiles` и `docs/START-HERE.md` |",
         "| исходник QGIS-плагина или WebGIS publisher | `C:\\dev\\lisa\\plugins` | root `AGENTS.md`, `geonical-docs/START-HERE.md`, pack плагина |",
-        "| Android import, Collector, sync, storage, updater | этот workspace | root/module `AGENTS.md`, Android registries |",
+        "| Android import, Collector, sync, storage, updater | этот workspace | `AGENTS.md` владельца, правила по путям изменения и Android registries |",
         "| общий NGW resource contract | publisher и consumer | docs/registry обоих владельцев + end-to-end smoke |",
         "| offline basemap для Android | QGIS plugin + Android importer | qtiles pack, app rendering/storage docs и import smoke |",
         ""

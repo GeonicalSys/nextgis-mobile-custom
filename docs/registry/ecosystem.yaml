@@ -85,7 +85,7 @@ contracts:
   - app
   local_docs:
   - AGENTS.md
-  - app/AGENTS.md
+  - agent-system/knowledge/policy/application.required-entry.json
   - docs/architecture/lisa-ecosystem.md
   - docs/architecture/ngw-sync-and-storage.md
   - docs/guides/change-checklist.md

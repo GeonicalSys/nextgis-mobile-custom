@@ -84,8 +84,7 @@ Git. That does not authorize deleting those files from disk.
 1. Из `C:\dev\lisa` выполни `tools\workspace-preflight.ps1 -Fetch`.
 2. [`docs/START-HERE.md`](docs/START-HERE.md) — ментальная модель и маршрутизация.
 3. [`docs/guides/change-checklist.md`](docs/guides/change-checklist.md).
-4. Локальные `AGENTS.md`, `docs/README.md` и `docs/manifest.yaml` затронутых
-   модулей.
+4. Открой применимые правила затронутых модулей через общий читатель. Прочитай их `docs/README.md` и `docs/manifest.yaml`. У отдельного репозитория есть собственный `AGENTS.md`.
 5. [`docs/registry/change-impact.yaml`](docs/registry/change-impact.yaml) —
    blast radius, обязательные документы и проверки.
 6. [`docs/registry/invariants.yaml`](docs/registry/invariants.yaml) и, для

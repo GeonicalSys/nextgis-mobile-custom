@@ -33,7 +33,7 @@
   "facets": {
     "body": {
       "role": "permanent_rule",
-      "value": "Перед code change прочитай root и ближайший `AGENTS.md`, локальный docs pack,\n`docs/guides/change-checklist.md`, `docs/registry/change-impact.yaml` и\nотносящиеся invariant IDs.\n"
+      "value": "Перед правкой кода прочитай `AGENTS.md` владельца, применимые правила и комплект документации модуля,\n`docs/guides/change-checklist.md`, `docs/registry/change-impact.yaml` и\nотносящиеся invariant IDs.\n"
     },
     "classification": {
       "role": "reviewed_knowledge_class",

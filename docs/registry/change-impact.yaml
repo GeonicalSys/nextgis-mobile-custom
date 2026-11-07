@@ -2811,7 +2811,7 @@ triggers:
   - INV-SHARED-TRACKS
   - INV-UI-VISIBLE-BOUNDS
   must_update_docs:
-  - app/AGENTS.md
+  - agent-system/knowledge/policy/application.selected-track-share.json
   - maplibui/AGENTS.md
   - app/docs/README.md
   - maplibui/docs/README.md

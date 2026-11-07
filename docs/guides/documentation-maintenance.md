@@ -197,7 +197,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\docs-scaffold.ps1 
   -ModuleId maplib
 ```
 
-Шаблоны App редактируются в записях `scaffold-*-template.json`.
+Scaffold создаёт README и manifest модуля. Вход `AGENTS.md` относится к физическому репозиторию. Отдельная папка документации может создать такой вход для независимого владельца. В репозитории с зарегистрированными правилами вход генерирует общий читатель. Шаблоны App редактируются в записях `scaffold-*-template.json`.
 Команда `python -B docs/scripts/prose_knowledge.py --write` обновляет три
 файла для отдельной папки `docs` по прежним адресам.
 

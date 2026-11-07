@@ -47,9 +47,9 @@ def portable_pack_root(workspace: Path, raw: object) -> Path:
     return candidate
 
 
-def load_templates(docs_root: Path) -> dict[str, str]:
+def load_templates(docs_root: Path, names: set[str]) -> dict[str, str]:
     prose = runpy.run_path(str(Path(__file__).with_name("prose_knowledge.py")))
-    paths = prose["APP_SCAFFOLD_TEMPLATES"]
+    paths = {name: path for name, path in prose["APP_SCAFFOLD_TEMPLATES"].items() if name in names}
     owner = docs_root.parent
     markers = (owner / prose["MANIFEST"], owner / prose["DIRECTORY"], owner / "agent-system/README.md")
     if docs_root.name == "docs" and any(path.exists() or path.is_symlink() for path in markers):
@@ -106,7 +106,8 @@ def main() -> int:
             "change it to 'required' before scaffolding"
         )
     repository_id = module.get("repository")
-    if repository_id not in repositories:
+    repository = repositories.get(repository_id)
+    if not isinstance(repository, dict):
         return fail(f"unknown repository {repository_id!r}")
     try:
         pack_root = portable_pack_root(workspace, module.get("pack_root"))
@@ -114,13 +115,16 @@ def main() -> int:
         return fail(str(exc))
 
     targets = {
-        "AGENTS.md": pack_root / "AGENTS.md",
         "README.md": pack_root / "docs" / "README.md",
         "manifest.yaml": pack_root / "docs" / "manifest.yaml",
     }
+    if pack_root.relative_to(workspace).as_posix() == repository.get("path"):
+        targets = {"AGENTS.md": pack_root / "AGENTS.md", **targets}
     missing = {name: path for name, path in targets.items() if not path.exists()}
     if not missing:
         return fail(f"documentation pack already exists for {args.module_id}")
+    if "AGENTS.md" in missing and (pack_root / "agent-system" / "policy-migration.json").exists():
+        return fail("restore the generated owner entrance through the shared policy reader")
 
     entrypoints = module.get("entrypoints")
     if not isinstance(entrypoints, list) or not entrypoints:
@@ -153,7 +157,8 @@ def main() -> int:
         "first_entrypoint": entrypoints[0],
     }
     try:
-        rendered = {name: Template(text).substitute(values) for name, text in load_templates(docs_root).items()}
+        rendered = {name: Template(text).substitute(values)
+                    for name, text in load_templates(docs_root, set(missing)).items()}
     except (OSError, ValueError, KeyError, TypeError) as exc:
         return fail(f"cannot render scaffold templates: {exc}")
 

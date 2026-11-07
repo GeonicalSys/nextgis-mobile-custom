@@ -139,7 +139,7 @@ class DocumentationToolsTest(unittest.TestCase):
                 str(DOCS_ROOT),
             )
             self.assertEqual(created.returncode, 0, created.stdout + created.stderr)
-            self.assertTrue((workspace / "app" / "AGENTS.md").is_file())
+            self.assertFalse((workspace / "app" / "AGENTS.md").exists())
             self.assertTrue((workspace / "app" / "docs" / "README.md").is_file())
             self.assertTrue((workspace / "app" / "docs" / "manifest.yaml").is_file())
 
@@ -153,6 +153,25 @@ class DocumentationToolsTest(unittest.TestCase):
             )
             self.assertNotEqual(repeated.returncode, 0)
             self.assertIn("already exists", repeated.stderr)
+
+    def test_scaffold_keeps_the_independent_repository_entrance(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            workspace = Path(temporary)
+            owner = workspace / "maplib"
+            owner.mkdir()
+            arguments = ("maplib", "--workspace-root", str(workspace), "--docs-root", str(DOCS_ROOT))
+            policy = owner / "agent-system"
+            policy.mkdir()
+            marker = policy / "policy-migration.json"
+            marker.write_text("{}", encoding="utf-8")
+            refused = self.run_tool(SCAFFOLD, *arguments)
+            self.assertNotEqual(refused.returncode, 0)
+            self.assertFalse((owner / "docs").exists())
+            marker.unlink()
+            standalone = self.run_tool(SCAFFOLD, *arguments)
+            self.assertEqual(standalone.returncode, 0, standalone.stdout + standalone.stderr)
+            self.assertTrue((owner / "AGENTS.md").is_file())
+            self.assertTrue((owner / "docs" / "manifest.yaml").is_file())
 
     def test_scaffold_reads_owner_templates_and_refuses_missing_records(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

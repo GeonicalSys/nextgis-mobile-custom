@@ -858,6 +858,7 @@ def validate_manifest(
 
 def validate_module_packs(
     modules: Mapping[str, Any],
+    repos: Mapping[str, Any],
     config_ids: set[str],
     invariant_ids: set[str],
     smoke_ids: set[str],
@@ -885,10 +886,12 @@ def validate_module_packs(
         if pack_root_value is None:
             continue
         pack_root = workspace / pack_root_value
-        agents = pack_root / "AGENTS.md"
         readme = pack_root / "docs" / "README.md"
         manifest = pack_root / "docs" / "manifest.yaml"
-        paths = (agents, readme, manifest)
+        expected_repo = str(module.get("repository"))
+        paths = (readme, manifest)
+        if pack_root_value == as_mapping(repos.get(expected_repo)).get("path"):
+            paths = (pack_root / "AGENTS.md", *paths)
         existing = [path.is_file() for path in paths]
         policy = module.get("docs_policy")
         if not any(existing):
@@ -901,7 +904,6 @@ def validate_module_packs(
             missing = [path.relative_to(workspace).as_posix() for path, present in zip(paths, existing) if not present]
             validation.error(f"module:{module_id}", f"partial documentation pack; missing {missing}")
             continue
-        expected_repo = str(module.get("repository"))
         readme_text = module_readmes.get(readme) if module_readmes is not None else None
         manifest_data = None
         if owned_app_pack and module_id == "app":
@@ -1110,6 +1112,7 @@ def main(argv: Iterable[str] | None = None) -> int:
             validation.error("agent-system/provenance/structured-views.json", str(error))
     validate_module_packs(
         modules,
+        repos,
         config_ids,
         invariant_ids,
         smoke_ids,

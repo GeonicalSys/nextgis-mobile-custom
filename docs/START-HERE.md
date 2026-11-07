@@ -93,7 +93,7 @@ Root, `maplib`, `maplibui` и `easypicker` — разные git-репозито
 
 1. Из `C:\dev\lisa` выполни `tools\workspace-preflight.ps1 -Fetch` и определи
    репозитории/модули в scope.
-2. Открой ближайшие `AGENTS.md` и manifests.
+2. Открой `AGENTS.md` владельца, применимые правила по путям изменения и manifests модулей.
 3. Найди trigger в `change-impact.yaml`.
 4. Проверь invariant IDs и upstream hotspots.
 5. Измени код, выполни автоматические и ручные проверки.

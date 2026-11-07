@@ -33,7 +33,7 @@
   "facets": {
     "body": {
       "role": "permanent_rule",
-      "value": "Перед изменением кода прочитай:\n\n1. Из `C:\\dev\\lisa` выполни `tools\\workspace-preflight.ps1 -Fetch`.\n2. [`docs/START-HERE.md`](docs/START-HERE.md) — ментальная модель и маршрутизация.\n3. [`docs/guides/change-checklist.md`](docs/guides/change-checklist.md).\n4. Локальные `AGENTS.md`, `docs/README.md` и `docs/manifest.yaml` затронутых\n   модулей.\n5. [`docs/registry/change-impact.yaml`](docs/registry/change-impact.yaml) —\n   blast radius, обязательные документы и проверки.\n6. [`docs/registry/invariants.yaml`](docs/registry/invariants.yaml) и, для\n   upstream-задач,\n   [`docs/registry/upstream-overlaps.yaml`](docs/registry/upstream-overlaps.yaml).\n"
+      "value": "Перед изменением кода прочитай:\n\n1. Из `C:\\dev\\lisa` выполни `tools\\workspace-preflight.ps1 -Fetch`.\n2. [`docs/START-HERE.md`](docs/START-HERE.md) — ментальная модель и маршрутизация.\n3. [`docs/guides/change-checklist.md`](docs/guides/change-checklist.md).\n4. Открой применимые правила затронутых модулей через общий читатель. Прочитай их `docs/README.md` и `docs/manifest.yaml`. У отдельного репозитория есть собственный `AGENTS.md`.\n5. [`docs/registry/change-impact.yaml`](docs/registry/change-impact.yaml) —\n   blast radius, обязательные документы и проверки.\n6. [`docs/registry/invariants.yaml`](docs/registry/invariants.yaml) и, для\n   upstream-задач,\n   [`docs/registry/upstream-overlaps.yaml`](docs/registry/upstream-overlaps.yaml).\n"
     },
     "classification": {
       "role": "reviewed_knowledge_class",
