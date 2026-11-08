@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-10-fd7e4bd37abd",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-10 — Offline сообщение и продолжение обхода после GPS gap",
+        "",
+        "- Без активной сети ручной sync сообщает об отсутствии интернета до запуска очереди.",
+        "- Фоновые account/track jobs ждут сеть; повторная проверка перед отправкой сохраняет",
+        "  recovery queue и track outbox без offline HTTP/notification/diagnostic noise.",
+        "- GPS loss, timestamp gap и sticky restart больше не включают паузу обхода;",
+        "  явная ручная пауза, geometry persistence, point locks и Finish fence сохранены.",
+        "- Обновлены app/maplibui packs, location/sync/recovery contracts и проверки.",
+        "- Поставка: Merge Commit maplibui → app pin на remote merge commit → app Squash;",
+        "  новые library dependency и Draft PR не означают готовность выпуска APK.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-10",
+        "heading": "2026-10-10 — Offline сообщение и продолжение обхода после GPS gap",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-10-fd7e4bd37abd"
+    ]
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:automated-tests-small-blob-window-red-green-and-api-proof",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Small-BLOB window — отдельный RED/GREEN и API gate",
+        "",
+        "До small-window реализации source/PFD baseline сохранил RED34tests/2expected",
+        "failures:65small originals дали65PFD вместо0, full-byte boundary набор",
+        "1/16383/16384/16385/3MiB дал5PFD вместо2; остальные32PASS. Сохранять также",
+        "RED01 test-compilation failure, не называть его expected RED. Focused команда",
+        "проверяет Reader/Provider/Bridge/Spatial/Diagnostics; отдельные API26/27 методы",
+        "не открывают geometry cursor, API30 real SQLite проверяет nestedCASE и отсутствие",
+        "large/TEXT/NULL payload в small-column. Отдельны cancel между queries,",
+        "mid-window fallback без повторной доставки, exact length/ID/order/cardinality",
+        "и three-resource cleanup; ошибки SQLite/resources не должны дать PFD success.",
+        "GREEN01 PASS71/0fail/error/skip за1m58s (Reader26/Provider9/Bridge13/Spatial4/",
+        "Diagnostics19); исходный RED34 и все5GREEN XML сохранены отдельно. Sourcefp",
+        "62de8740ff56ee0abd76b880000a6049f2825d0bfe9d118f8c94e975c659ec91."
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "The compile failure, expected RED cases and five GREEN reports have separate statuses within this source result."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:automated-tests-small-blob-window-red-green-and-api-proof"
+    ]
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-project-chooser",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-PROJECT-CHOOSER"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-PROJECT-CHOOSER",
+        "group": "project",
+        "title": "Выбор проекта по строке",
+        "surface": "Диалог выбора проекта",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [],
+        "meaning": "Строка показывает имя проекта; выбор строки ещё не переключает рабочую область.",
+        "value_origin": "ProjectInfo.name и isActive(context); callback получает выбранный ProjectInfo, а не имя.",
+        "units": "Нет физических единиц; одна выбранная строка.",
+        "updates": [
+          "При открытии отмечается активный проект.",
+          "Нажатие строки переносит radio selection; подтверждение передаёт выбранный индекс."
+        ],
+        "actions": [
+          "Выбрать строку",
+          "Открыть",
+          "Отмена"
+        ],
+        "conditions": [
+          "Пустой список обрабатывается вызывающим экраном.",
+          "Один shared main source set; отдельных flavor-веток этого метода нет."
+        ],
+        "saved_state": "Выбор живёт в открытом диалоге; активная project identity меняется отдельной операцией.",
+        "source_ids": [
+          "WF-PROJECT-CHOOSER"
+        ],
+        "expectations": [
+          "Oracle: два разных ProjectInfo с одинаковым name должны открывать именно выбранную identity; отмена не меняет активный проект.",
+          "Контрпример: выбор по совпадению имени или автоматическая активация при простом нажатии строки нарушают контракт."
+        ],
+        "unknowns": [
+          "Строки создаются динамически без собственного R.id; устойчивого widget ID для каждой строки в этом методе нет.",
+          "Поведение radio/диалога после Android recreation требует отдельной native-проверки."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-project-chooser",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-project-chooser"
+    ]
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:error-reporting-first-tablet-capture-saturation-limit",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:error-reporting"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/error-reporting.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Известная граница первого tablet capture: слой, у которого все scopes попали",
+        "под cap16 до первого наблюдения, может остаться с `last=null`; тогда его",
+        "счётчики ещё не публикуются. `layer_totals` — сумма только опубликованных",
+        "слоёв, не глобальный denominator процесса. В cold capture3 native terminal",
+        "snapshots не показывают всю работу. Граница сохранена в evidence; исправление",
+        "диагностики требует отдельного scoped изменения. Duration уже наблюдённого",
+        "scope остаётся фактом, но отсутствие записи не означает отсутствие работы.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "The first cold tablet capture describes a reporting limit and an incomplete denominator."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:error-reporting-first-tablet-capture-saturation-limit"
+    ]
+  }
+}

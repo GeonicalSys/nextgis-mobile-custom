@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:track-controls-share-panel-targets-and-jvm-limits",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:track-controls"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/track-controls.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Панель распределяет пять действий по `floor(available/48dp)` колонкам, от одной",
+        "до пяти, перед внешним fitting. Это ограничение горизонтального unscaled target,",
+        "а не обещание вписать весь map stack: очень узкий header title/Close и scaling",
+        "короткого окна требуют отдельной проверки. Адресные JVM проверки различают",
+        "actual binding, exporter и CPU-font widget layout; device/touch/OEM/receiver и",
+        "установленный APK не принимаются по этим моделям.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:track-controls-share-panel-targets-and-jvm-limits"
+    ]
+  }
+}

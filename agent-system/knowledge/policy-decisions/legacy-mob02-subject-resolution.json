@@ -1,0 +1,81 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:decision:legacy-mob02-subject-resolution",
+  "kind": "decision",
+  "owner": "android_projects/android_gisapp",
+  "topic": "instruction-policy-review",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "."
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "complete",
+    "implementation": "not_applicable",
+    "source_verification": "PASS",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original question and conflicting instruction spans as source evidence."
+  },
+  "facets": {
+    "title": {
+      "role": "decision",
+      "value": "Resolve the old MOB-02 alias by source heading and subject"
+    },
+    "resolution": {
+      "role": "reviewed_source_resolution",
+      "value": {
+        "legacy_alias": "MOB-02",
+        "process_exit_224": "lisa:mobile:task:mobile-roadmap-process-exit-224",
+        "source_dependency_discovery": "lisa:mobile:task:mobile-roadmap-dependency-discovery",
+        "legacy_heading_lookup_requires_subject": true,
+        "lifecycle_is_independent": true,
+        "preserve_both_markdown_headings": true
+      }
+    },
+    "reason": {
+      "role": "source_backed_rationale",
+      "value": "The accepted roadmap layout preserves both legacy headings. Its two stable task records carry independent goals, source, merge, runtime and release states."
+    },
+    "authority": {
+      "role": "current_execution_authority_external",
+      "value": "Existing clients retain their current entry sources. The authored resolution provides the rule for the reviewed generated adapters."
+    }
+  },
+  "relations": [
+    {
+      "type": "supersedes",
+      "target": "lisa:mobile:question:roadmap-mob02-distinct-subjects",
+      "status": "source_backed"
+    },
+    {
+      "type": "view_of",
+      "target": "lisa:mobile:task:mobile-roadmap-process-exit-224",
+      "status": "source_backed"
+    },
+    {
+      "type": "view_of",
+      "target": "lisa:mobile:task:mobile-roadmap-dependency-discovery",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/migration/instruction-reconciliation.json",
+    "scopes": [
+      "roadmap-mob02-distinct-subjects"
+    ]
+  }
+}

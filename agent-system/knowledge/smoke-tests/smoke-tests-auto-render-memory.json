@@ -1,0 +1,50 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-auto-render-memory",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "AUTO-RENDER-MEMORY"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "automatic",
+        "scope": [
+          "app",
+          "maplib"
+        ],
+        "command": "tools\\verify-mobile-tests.ps1 -Scope Related -Area render-memory",
+        "expected": "In the isolated verification APK, RenderMemorySafetyTest checks independently expected129SQLitepolygonIDs and65coordinates in both rich and actual compact inputs, complete native IDs and unchanged whole-row hashes. First automatic production notice arrives without a manual host callback, later callbacks/recreation/another layer do not repeat it, and manual status passes eight bounded Russian component profiles. Render stress also requires real pan/pinch camera changes, heading updates and peak counters. Explicit software-only emulator admission or selected stationary verification-phone scope is required; these fixtures do not emulate real low RAM or replace Full/device acceptance."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-auto-render-memory"
+    ]
+  }
+}

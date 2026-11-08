@@ -1,0 +1,66 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-url-resource-import",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Импорт ресурса по URL",
+        "",
+        "`NGWResourceUrl` принимает HTTP(S)-адрес вида `<server-path>/resource/<id>`,",
+        "отбрасывает credentials/fragment/лишний path и возвращает нормализованный server",
+        "URL, account name и positive remote ID. Это поддерживает как `*.nextgis.com`, так",
+        "и self-hosted NGW с портом или path prefix.",
+        "",
+        "`Connection.connect(guest, remoteId)` и `ResourceGroup.loadTargetResource()`",
+        "получают только целевой ресурс. URL QGIS vector/raster style разрешается до",
+        "родительского слоя. UI сначала использует существующий аккаунт с тем же server",
+        "URL; guest account создаётся только после успешного ответа и проверки ресурса.",
+        "",
+        "`NGWResourceImportHelper` отправляет vector в существующий `LayerFillService`, а",
+        "raster добавляет через `LayerGroup` и запрашивает стандартный map reload. Наличие",
+        "`data.read` обязательно. При отсутствии `data.write` vector сохраняется как",
+        "read-only и с направлением sync только server-to-device. Это правило действует и",
+        "для обычного ручного выбора NGW-ресурса, если permission payload был загружен.",
+        "",
+        "ID контракта: `INV-NGW-URL-IMPORT`. Пункт меню «Добавить слой NGW по URL» скрыт;",
+        "код разбора URL и импорта сохранён.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-url-resource-import"
+    ]
+  }
+}

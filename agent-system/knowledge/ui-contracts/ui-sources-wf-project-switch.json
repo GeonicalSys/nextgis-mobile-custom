@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-wf-project-switch",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "WF-PROJECT-SWITCH"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "WF-PROJECT-SWITCH",
+        "repository": "root",
+        "path": "app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt",
+        "marker": "private fun switchCollectorProject(project: CollectorProjectRegistry.ProjectInfo)",
+        "requires": [
+          "TrackerService.isTrackerServiceRunning(this)",
+          "mapFragment?.isEditMode == true",
+          "CollectorProjectRegistry.activateProject(this, project.projectUid)",
+          "recreate()"
+        ],
+        "forbids": [],
+        "sha256": "57b44422ba81a6f166053110fc8d39a575a2d00b70cddf72710656c6d373221f"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-wf-project-switch"
+    ]
+  }
+}

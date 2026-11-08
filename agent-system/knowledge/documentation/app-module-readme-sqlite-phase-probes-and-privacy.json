@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-sqlite-phase-probes-and-privacy",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Локальные SQLite phase timings — MOB-04, 2026-10-28",
+        "",
+        "Ordinary app использует maplib `MapRuntimeDiagnostics.SqliteScope` и локальный",
+        "logcat `LISA-SqlitePhase`; нового app sender, preference, permission или UI нет.",
+        "Scope охватывает очередь IO, lock/gate/cache, SQLite attributes/BLOB/full",
+        "decode, style/clip/labels, PBF и Main dispatch без дополнительных reads.",
+        "Максимум16 active scopes/32 layer summaries,10s/слой и bounded writer; dropped",
+        "наблюдения, cancellation и недоступное timing явны. Только числовые",
+        "layer/source/content IDs и counts, без URI/координат/полей. SDK return означает",
+        "только Java provider return. Независимый tablet content-ready замер обязателен;",
+        "телефон787 не принимает фактический Collector1403 планшета.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-sqlite-phase-probes-and-privacy"
+    ]
+  }
+}

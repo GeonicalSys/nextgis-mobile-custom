@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ui-accessibility-real-window-profiles-and-form-appearance",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:ui-accessibility"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ui-accessibility.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "В CI отдельно проверяются настоящие окна при font scale 2.0 и density 620:",
+        "тест явно задаёт и проверяет portrait/landscape, закрывает панель реальным",
+        "нажатием, проверяет отсутствие перекрытия кнопок карты и доступность действий",
+        "native/AppCompat диалога с закрытой клавиатурой, включая реальное нажатие",
+        "нижней кнопки отмены. Формы проходят native FormAppearanceTest."
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "The real-window assertions retain their original CI wording. The current automated test runbook governs execution."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ui-accessibility-real-window-profiles-and-form-appearance"
+    ]
+  }
+}

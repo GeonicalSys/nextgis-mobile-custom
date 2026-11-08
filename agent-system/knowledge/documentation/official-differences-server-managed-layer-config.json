@@ -1,0 +1,83 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-server-managed-layer-config",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### Управляемая сервером конфигурация слоя",
+        "",
+        "**Что это.** Администратор Web GIS может задать для NGW-слоя не только данные на",
+        "сервере, но и то, как этот слой будет выглядеть и вести себя в мобильном",
+        "приложении. Настройки хранятся в поле **Description** ресурса слоя в NextGIS Web",
+        "в виде JSON. При импорте и при каждой синхронизации приложение скачивает этот",
+        "текст, сравнивает с уже применённой версией и при необходимости обновляет",
+        "локальный слой.",
+        "",
+        "В официальном NextGIS Mobile описание ресурса почти не участвует в повседневной",
+        "работе: стиль и форму пользователь обычно настраивает на устройстве вручную, и",
+        "эти правки живут только локально. В форке серверный JSON — **источник правды** для",
+        "управляемых слоёв: изменил администратор описание на Web GIS — после синхронизации",
+        "полевая команда увидит новое оформление, новые поля формы или другие правила",
+        "без переустановки приложения.",
+        "",
+        "**Для чего.** Централизованное управление полевой картой и формами ввода:",
+        "",
+        "- единый стиль объектов для всей команды;",
+        "- согласованные подписи полей и видимость атрибутов;",
+        "- включение или отключение редактирования и синхронизации данных с сервера;",
+        "- ускоренный режим отрисовки для тяжёлых read-only слоёв.",
+        "",
+        "Полевому сотруднику не нужно знать про JSON и Description: он просто открывает",
+        "проект, а приложение само подтягивает актуальные настройки в фоне.",
+        "",
+        "**Что именно можно задать на сервере.** Конфигурация в Description — это",
+        "«паспорт» слоя для мобильного клиента. Типичные параметры:",
+        "",
+        "| Область | Что задаёт администратор | Что меняется на устройстве |",
+        "|--------|--------------------------|----------------------------|",
+        "| Отображение | цвета, толщина, rule-based стили, прозрачность, min/max zoom, видимость | вид объектов на карте |",
+        "| Схема данных | список полей, типы, псевдонимы (alias) | структура локальной таблицы и подписи в форме |",
+        "| Идентификация | `feature_label_field` | одинаковое имя объекта в списке совпадений, верхней панели и таблице атрибутов |",
+        "| Редактирование | `is_editable`; для project-managed слоя — галочка `editable` элемента Collector | можно ли создавать и менять объекты |",
+        "| Синхронизация | `sync_type`, направление, фильтр `server_where` | загрузка и отправка данных |",
+        "| Производительность | `mobile_render_mode` | обычная отрисовка или ускоренный режим для больших read-only полигонов и простых точек |",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-server-managed-layer-config"
+    ]
+  }
+}

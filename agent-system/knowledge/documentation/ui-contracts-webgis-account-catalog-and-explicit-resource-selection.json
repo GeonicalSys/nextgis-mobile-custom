@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ui-contracts-webgis-account-catalog-and-explicit-resource-selection",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:ui-contracts"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ui-contracts.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "После проверки прерывания синхронизации выбирается подключение WebGIS. При",
+        "отсутствии аккаунта предлагается собственный `NGWLoginActivity`; единственный",
+        "аккаунт используется сразу, несколько требуют выбора. Этот маршрут ищет",
+        "серверный каталог с keyname `lisa`, а не произвольный каталог заказчика.",
+        "Список строится из прочитанных дочерних ресурсов с ограниченным обходом групп;",
+        "он не подтверждает полноту всего WebGIS. Пользователь выбирает строку, затем",
+        "нажимает **«Загрузить»**. До выбора кнопка выключена, выбор строки сам импорт",
+        "не начинает. Обрабатывается выбранный `LisaCatalog.Ref.remoteId`, а не поиск",
+        "по отображаемому имени. Это другой сценарий, чем `UI-PROJECT-CHOOSER` для уже",
+        "сохранённых рабочих областей; прежний контракт chooser/switch сохранён.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ui-contracts-webgis-account-catalog-and-explicit-resource-selection"
+    ]
+  }
+}

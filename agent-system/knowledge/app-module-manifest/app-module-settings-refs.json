@@ -1,0 +1,340 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-settings-refs",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "app-module-manifest",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:metadata:app-module-manifest"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed module definition and its pinned source provenance."
+  },
+  "facets": {
+    "manifest-field": {
+      "role": "module_manifest_section",
+      "value": "settings_refs"
+    },
+    "definition": {
+      "role": "module_manifest_ordered_value",
+      "value": [
+        "show_compass_accuracy_sector",
+        "fieldVerificationChecks",
+        "map-runtime-diagnostics",
+        "show_sync",
+        "track_send",
+        "track_send_default_enabled_v1",
+        "io.sentry.auto-init",
+        "diagnosticDeliveryChecks",
+        "diagnostic-reports",
+        "sync_all_projects",
+        "track_recording_mode",
+        "feature_label_field",
+        "map_show_loc",
+        "map_show_compass",
+        "map_rotation_enabled",
+        "map_bearing",
+        "photo_overlay_enabled",
+        "photo_overlay_use_object_coords",
+        "photo_overlay_defaults_enabled_v1",
+        "keep_screen_on",
+        "keep_screen_on_default_enabled_v1",
+        "stakeout_sound_enabled",
+        "stakeout_far_distance",
+        "stakeout_medium_distance",
+        "stakeout_near_distance",
+        "stakeout_reached_distance",
+        "stakeout_declination_correction",
+        "background_recording_sound",
+        "permission_requested_marker",
+        "check_updates",
+        "sw_track_service",
+        "apk_version_update",
+        "updater-pending-install",
+        "updater-ready",
+        "updater-background",
+        "updater-startup-session",
+        "sync_recovery_journal",
+        "com.nextgis.mobile.PREFS_UNDERLAYS",
+        "debug_companion_install",
+        "shared_underlay_migration",
+        "provider_auth",
+        "nextgis_accounts_auth",
+        "nextgis_accounts_auth_type",
+        "com.nextgis.mobile.UPDATE_FLAVOR",
+        "io.sentry.traces.user-interaction.enable",
+        "io.sentry.attach-screenshot",
+        "io.sentry.attach-view-hierarchy",
+        "io.sentry.traces.sample-rate",
+        "io.sentry.traces.profiling.sample-rate"
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-preferences-show-compass-accuracy-sector",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-build-inputs-fieldverificationchecks",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-storage-map-runtime-diagnostics",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-preferences-show-sync",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-preferences-track-send",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-preferences-track-send-default-enabled-v1",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-manifest-metadata-io-sentry-auto-init",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-build-inputs-diagnosticdeliverychecks",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-storage-diagnostic-reports",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-preferences-sync-all-projects",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-preferences-track-recording-mode",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-layer-json-feature-label-field",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-preferences-map-show-loc",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-preferences-map-show-compass",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-preferences-map-rotation-enabled",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-preferences-map-bearing",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-preferences-photo-overlay-enabled",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-preferences-photo-overlay-use-object-coords",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-preferences-photo-overlay-defaults-enabled-v1",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-preferences-keep-screen-on",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-preferences-keep-screen-on-default-enabled-v1",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-preferences-stakeout-sound-enabled",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-preferences-stakeout-far-distance",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-preferences-stakeout-medium-distance",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-preferences-stakeout-near-distance",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-preferences-stakeout-reached-distance",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-preferences-stakeout-declination-correction",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-preferences-background-recording-sound",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-preferences-permission-requested-marker",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-preferences-check-updates",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-preferences-sw-track-service",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-runtime-constants-apk-version-update",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-storage-updater-pending-install",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-storage-updater-ready",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-storage-updater-background",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-storage-updater-startup-session",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-preferences-sync-recovery-journal",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-preferences-com-nextgis-mobile-prefs-underlays",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-preferences-debug-companion-install",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-preferences-shared-underlay-migration",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-variant-resources-provider-auth",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-variant-resources-nextgis-accounts-auth",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-variant-resources-nextgis-accounts-auth-type",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-manifest-metadata-com-nextgis-mobile-update-flavor",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-manifest-metadata-io-sentry-traces-user-interaction-enable",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-manifest-metadata-io-sentry-attach-screenshot",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-manifest-metadata-io-sentry-attach-view-hierarchy",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-manifest-metadata-io-sentry-traces-sample-rate",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-manifest-metadata-io-sentry-traces-profiling-sample-rate",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/app-module-manifest.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-settings-refs"
+    ]
+  }
+}

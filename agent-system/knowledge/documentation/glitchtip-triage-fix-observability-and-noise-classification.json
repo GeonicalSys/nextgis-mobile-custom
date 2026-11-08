@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:glitchtip-triage-fix-observability-and-noise-classification",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:glitchtip-triage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/glitchtip-triage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "3. Разделить доказанное исправление, усиление диагностики и штатный шум.",
+        "   Не глушить неизвестный ANR/native crash или реальную ошибку записи только",
+        "   потому, что воспроизведения нет. Сетевой offline/cancel, отсутствие спутникового",
+        "   решения и явно подтверждённые защитные отказы могут оставаться только локально.",
+        "4. Изменить код и добавить адресные регрессии, docs и новые карточки. Создать",
+        "   reviewable commits/PR. Для неизвестной причины описать новые поля, которые",
+        "   помогут следующему разбору; не объявлять причину установленной."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:glitchtip-triage-fix-observability-and-noise-classification"
+    ]
+  }
+}

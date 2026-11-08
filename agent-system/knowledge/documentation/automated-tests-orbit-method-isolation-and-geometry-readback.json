@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:automated-tests-orbit-method-isolation-and-geometry-readback",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Методы LocationOrbitTest запускаются отдельно с очисткой verification workspace,",
+        "как остальные независимые графические fixtures. Orbit smoke пересоздаёт Activity,",
+        "меняет камеру и оставляет MapDrawable в Application; следующий тест точности не",
+        "должен получить прежний renderer/style до готовности нового экрана. Все методы,",
+        "проверки пикселей, native circle и исходного Location остаются обязательными.",
+        "Ожидание переключения сектора проверяет также radius native source geometry",
+        "56 dp (прежний допуск 1,5 dp). При выключении layers исчезают раньше завершения",
+        "setGeoJson, поэтому пустая rendered query сама по себе не означает готовность",
+        "скрытой геометрии. Утверждения о сохранности geometry и видимости не ослаблены.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:automated-tests-orbit-method-isolation-and-geometry-readback"
+    ]
+  }
+}

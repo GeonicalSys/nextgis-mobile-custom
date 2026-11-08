@@ -1,0 +1,128 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:feature-type-creation",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/architecture/feature-type-creation.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the App feature editing subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/feature-type-creation.md"
+    },
+    "frontmatter": {
+      "role": "markdown_frontmatter_lines",
+      "value": [
+        "title: Выбор типа нового объекта по стилю",
+        "type: architecture",
+        "last_verified: 2026-10-23",
+        "related_code:",
+        "  - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/dialog/ChooseFeatureTypeDialog.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/util/FeatureTypeDefaults.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/forms/CascadingLists.java"
+      ]
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "",
+        "# Выбор типа нового объекта по стилю",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:feature-type-creation-destination-category-and-copy-identity",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:feature-type-creation-creation-mode-and-local-style-catalog",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:feature-type-creation-scrollable-picker-and-unavailable-category",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:feature-type-creation-gps-geometry-camera-and-cancel",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:feature-type-creation-default-form-meta-and-legacy-parent",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:feature-type-creation-cascade-candidate-keys-and-and-filters",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:feature-type-creation-typed-defaults-cascade-pin-and-draft-recovery",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:feature-type-creation-point-lock-form-checkpoint-and-save-precedence",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:feature-type-creation-historical-integration-and-build-221",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:feature-type-creation-category-and-durable-creation-test-oracles",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:feature-type-creation-standard-category-fixture-and-boundaries",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:feature-type-creation-device-smoke-and-isolated-suite",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:feature-type-creation"
+    ]
+  }
+}

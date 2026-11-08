@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-wf-ngw-selection-json-resolve",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "WF-NGW-SELECTION-JSON-RESOLVE"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "WF-NGW-SELECTION-JSON-RESOLVE",
+        "repository": "maplibui",
+        "path": "src/main/java/com/nextgis/maplibui/util/NgwResourceSelectionState.java",
+        "marker": "private static INGWResource resolve(Connections connections, JSONObject identity,\n                                         boolean skipSubLoad, boolean loadCurrent)\n            throws JSONException, IOException",
+        "requires": [
+          "NgwSyncIo.checkInterrupted()",
+          "findAccount(connections, identity)",
+          "account.connect(",
+          "candidate).getRemoteId() == id",
+          "if (found == null) throw new IOException"
+        ],
+        "forbids": [],
+        "sha256": "2e1278a6210531433001a781a9229a551ee91019c1938e26e17f834b4b5cd758"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-wf-ngw-selection-json-resolve"
+    ]
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:location-pipeline-ble-and-classic-rssi-producer-and-identity",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:location-pipeline"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/location-pipeline.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "BLE получает RSSI из `ScanResult`, Classic — из `ACTION_FOUND/EXTRA_RSSI`",
+        "для уже сопряжённых устройств. До измерения и при недоступном значении",
+        "показывается «Сигнал не измерен». Один поиск длится до 12 секунд; повторный",
+        "поиск сбрасывает предыдущие измерения. Устройство идентифицируется по",
+        "transport/address, поэтому два PiGo Lite с одинаковым именем не объединяются.",
+        "Обновления сигнала сохраняют порядок строк. Выбор сохраняет прежние id/name,",
+        "без RSSI; USB/TCP не получают вымышленный уровень сигнала.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:location-pipeline-ble-and-classic-rssi-producer-and-identity"
+    ]
+  }
+}

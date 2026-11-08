@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:collector-projects-durable-batch-journal-and-repair-resume",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:collector-projects"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the App mobile project topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/collector-projects.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Незавершённый импорт и обновление приложения",
+        "",
+        "Полное описание текущей партии (`remote_id`, имя, form/config, порядок и число",
+        "оставшихся repair-попыток) хранит `CollectorImportJournal` в app-private storage.",
+        "Эти данные и сами workspaces переживают обычное обновление APK. Если Android",
+        "убил процесс во время загрузки, следующий запуск проверяет уже созданные",
+        "локальные таблицы и повторно ставит в очередь только отсутствующие или",
+        "повреждённые слои. Успешно загруженные тяжёлые слои повторно не скачиваются.",
+        "Если durable journal нельзя записать, новая партия или repair-wave не запускается:",
+        "существующие слои остаются на месте, а операция может быть безопасно повторена позже.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:collector-projects-durable-batch-journal-and-repair-resume"
+    ]
+  }
+}

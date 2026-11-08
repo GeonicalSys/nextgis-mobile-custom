@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:crash-recovery-uuid-lost-reply-and-cross-store-save",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:crash-recovery"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/crash-recovery.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "The form Save worker checkpoints before database work and after assigning a new id.",
+        "Its UUID resolves through `FeatureSaveJournal`; retry after a lost reply returns the",
+        "same row. A failed photo or edited signature keeps the form and checkpoint, including",
+        "the assigned id. SQLite rows/outbox are atomic; database and filesystem are a",
+        "recoverable workflow, not one cross-store transaction. Backup and all destructive",
+        "layer actions reserve form/walk owners. Back uses AndroidX callbacks and preserves",
+        "Save/Discard confirmation; an in-flight Save blocks another Save or Back. A destroyed/finishing Activity refuses",
+        "old-worker UI capture or terminal draft clearing; its UUID checkpoint stays recoverable.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:crash-recovery-uuid-lost-reply-and-cross-store-save"
+    ]
+  }
+}

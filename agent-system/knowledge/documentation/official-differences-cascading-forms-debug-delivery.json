@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:official-differences-cascading-forms-debug-delivery",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the dated comparison or verification at its original source span."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Сборка Debug без изменения версии закрепляет удалённые Merge Commits",
+        "maplib #42 `b4334744bde553dcdb3391a0621de469e54a921d` и maplibui #30",
+        "`5a3db1a1926c4548b722401841a43c79fb350197`. Их деревья совпадают с проверенными",
+        "исходниками каскадов, закреплённых вкладок и условной обязательности; предыдущие",
+        "исправления индикатора слоя включены. Официальные HEAD повторно сверены",
+        "7 октября 2026 года и совпали с указанными ниже; upstream merge не выполнялся.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:official-differences-cascading-forms-debug-delivery"
+    ]
+  }
+}

@@ -1,0 +1,265 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:lisa-ecosystem",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/architecture/lisa-ecosystem.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/lisa-ecosystem.md"
+    },
+    "frontmatter": {
+      "role": "markdown_frontmatter_lines",
+      "value": [
+        "title: Экосистема ЛИСА — desktop, плагины и Android",
+        "type: architecture",
+        "last_verified: 2026-11-02",
+        "related_code:",
+        "  - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt",
+        "  - app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/ResourceGroup.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/SyncAdapter.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/util/NGWResourceImportHelper.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/LisaCatalogLookup.java"
+      ]
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "",
+        "# Экосистема ЛИСА — desktop, плагины и Android",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-dependency-discovery-and-two-way-semantic-closure",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-one-local-graph-and-no-apk-index-dependency",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-actual-owner-root-and-read-only-plan",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-full-eligible-input-digest-and-new-consumer",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-graph-write-and-explicit-live-owner-frame",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-mobile-submodule-and-provisional-source-context",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-ordinary-precommit-graph-check",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-graph-readback-and-retained-foreign-observations",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-persist-proven-links-and-reevaluate-changed-scope",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-alternate-source-root-and-uncovered-owner",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-desktop-and-mobile-reverse-scope-and-runtime-boundary",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-shared-source-registry-owners-and-roles",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-shared-resource-family-and-protected-state-matrix",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-resource-unknowns-and-independent-proof-boundary",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-app-usage-versus-feature-sync",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-app-owned-updater-and-user-install",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-desktop-plugin-and-mobile-source-ownership",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-profile-plugin-mirrors-and-source-delivery",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-ngfp-rule-pins-and-user-upgrade-order",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-ecosystem-producer-consumer-diagram",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-ngw-and-portable-artifacts-versus-desktop-path",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-interproject-contracts-heading",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-ngw-resource-identity-schema-and-mobile-catalogue",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-publisher-idqgs-readonly-contract",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-ngw-authoritative-schema-and-atomic-refill",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-transient-ngw-pull-and-outbox-protection",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-desktop-publisher-contract-change-and-android-smoke",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-qtiles-replace-after-success",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-explicit-raster-mbtiles-transfer-and-android-import",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-credential-and-identity-owner-boundaries",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-independent-apk-release-and-server-compatibility",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-android-legacy-certificate-source-and-hash-check",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-task-owner-routing-matrix",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-desktop-local-and-web-documentation-entrances",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-cross-owner-change-and-check-order",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-project-script-package-and-runtime-ownership",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-direct-sqlite-vector-producer-and-consumer-identity",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:lisa-ecosystem-debug-raster-uri-transfer-independent-of-vector-http",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:lisa-ecosystem-november-2-discovery-and-foreign-root-receipt",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:lisa-ecosystem"
+    ]
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:invariants-inv-conditional-required",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "invariants",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "INV-CONDITIONAL-REQUIRED"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "title": "Pinned visibility and requirements preserve values and validate visible fields",
+        "owners": [
+          "maplib",
+          "maplibui",
+          "app"
+        ],
+        "statement": "Native bounded NGFP conditions read owning scalar values only; markers and final Save use the same immutable pinned rules. V2 visibility hides complete field/element containers and their descendant validation, preserving every value and the original layer required flag; visible static required is never relaxed. Unknown or duplicate targets and unavailable/corrupt rules block Save before writes, and draft pins/values survive updates and recovery. Tab navigation never discards control state or consumes signature/photo/text child gestures.",
+        "related_code": [
+          "maplib/src/main/java/com/nextgis/maplib/forms/ConditionalRequiredRules.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/util/ConditionalRequiredController.java"
+        ],
+        "verify_smoke": [
+          "SMOKE-CONDITIONAL-REQUIRED",
+          "SMOKE-FORM-NAVIGATION",
+          "SMOKE-REQUIRED-FIELDS"
+        ],
+        "must_update_docs": [
+          "docs/architecture/conditional-form-rules.md",
+          "docs/guides/form-behavior-user-guide.md"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:invariants-inv-conditional-required"
+    ]
+  }
+}

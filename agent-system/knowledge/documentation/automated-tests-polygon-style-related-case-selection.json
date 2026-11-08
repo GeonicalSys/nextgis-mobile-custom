@@ -1,0 +1,49 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:automated-tests-polygon-style-related-case-selection",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Новые стили полигонов",
+        "",
+        "Для полного адресного покрытия стилей: Related -Area styles. Быстрый пакет polygon-styles включает три новых класса с шестью методами. Явные -PhoneSerial и -PhoneOnly используют только отдельный verification APK. Текущую сборку проверять до -SkipBuild; runner сохраняет fingerprint всех владельцев. Full не запускается при обычной сборке и остаётся обязательным перед публикацией. Контракт: [настройки полигонов](../architecture/polygon-style-controls.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:automated-tests-polygon-style-related-case-selection"
+    ]
+  }
+}

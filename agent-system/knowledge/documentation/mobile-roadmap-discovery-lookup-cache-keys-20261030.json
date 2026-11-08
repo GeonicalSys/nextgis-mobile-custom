@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:mobile-roadmap-discovery-lookup-cache-keys-20261030",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout",
+      "lisa:mobile:task:mobile-roadmap-dependency-discovery"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the pinned checkpoint and keep its results within the stated source and runtime bounds."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### Продолжение MOB-02: ключи lookup-кеша и источник цели — 2026-10-30",
+        "",
+        "В собственном maplib устранён NPE при равном числе пар с другим набором ключей;",
+        "новая внутренняя App карточка android-20261030-lookup-cache-regression сохраняет",
+        "9 actual-body JVM и точную offline recipe, библиотечная user-карточка",
+        "maplib-20261030-lookup-cache-keys объясняет поведение. GREEN9 и BelkaRelease37с",
+        "относятся к live8ca, не к поставке с committed App F61. Clock19/journal22/storage21",
+        "не перезапускались; native/NGW/restart и savefalse policy не приняты.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:mobile-roadmap-discovery-lookup-cache-keys-20261030"
+    ]
+  }
+}

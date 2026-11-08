@@ -1,0 +1,48 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:conditional-form-rules-e66-source-anchor-ngfp-field-11",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:conditional-form-rules",
+      "lisa:mobile:resource:conditional-form-rules-form-values-and-common-save-gate"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original measurement or checkpoint and its acceptance limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/conditional-form-rules.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "| `NGFP-FIELD-11` | Control values → Required gate and provider Save | `FormBuilderModifyAttributesActivity.java:775-793,839-841; ModifyAttributesActivity.java:984-1003,1011-1062,1293-1321; RequiredFieldUi.java:22-29; RequiredFieldValidation.java:13-23; ConditionalRequiredController.java:46-55` |",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:conditional-form-rules-e66-source-anchor-ngfp-field-11"
+    ]
+  }
+}

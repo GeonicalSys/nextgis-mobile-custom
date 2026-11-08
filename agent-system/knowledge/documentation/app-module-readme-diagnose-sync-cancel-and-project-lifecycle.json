@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-diagnose-sync-cancel-and-project-lifecycle",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "- Переключение, загрузка слоя или подложки во время sync: проверить",
+        "  предупреждение `ProjectSyncInterruption`, отмену foreground/manual sync,",
+        "  освобождение lease и продолжение исходного действия только после остановки",
+        "  worker. Запросы во время fill/rebuild должны оставаться отложенными.",
+        "- Импорт Collector во время sync показывает предупреждение с возможностью",
+        "  прервать sync; до освобождения lease новая запись проекта не создаётся.",
+        "- Удалённый проект исчез, но показана ошибка: fallback-карта не должна повторно",
+        "  открываться executor-потоком удаления; переход на `MainActivity` открывает её",
+        "  в UI-потоке после успешного результата.",
+        "- Вылет `notify_insert → GeoEnvelope.width/GeometryRTree`: это регрессия bulk",
+        "  incremental pull; проверить единственную итоговую cache rebuild и отсутствие",
+        "  `LinkedTreeMap` ошибок при обновлении style.",
+        "- Удаление проекта затронуло Web GIS: это регрессия — штатный путь удаляет только",
+        "  active workspace после backup gate и не вызывает remote delete/account API."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-diagnose-sync-cancel-and-project-lifecycle"
+    ]
+  }
+}

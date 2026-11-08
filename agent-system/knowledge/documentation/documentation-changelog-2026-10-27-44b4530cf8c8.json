@@ -1,0 +1,66 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-27-44b4530cf8c8",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-27 — Наблюдение жизненного цикла и завершения native UI",
+        "",
+        "Full11 принят на смартфоне, Full12 отменён, Full13 остановлен до native на ADB,",
+        "Full14 завершён с тремя неуспешными native runs. В AndroidTest добавлены main-thread",
+        "Stage probe, согласованная app/native camera и ожидание OnDismiss с подтверждением",
+        "единственного Cancel DOWN/UP. Ui.tap повторно измеряет цель только после",
+        "отказа Android до доставки DOWN. Production код,254 метода и функциональные допуски",
+        "сохранены. Related20:27 emulator+11 tablet PASS, runner61 PASS; новый Full обоих",
+        "устройств ещё обязателен. Контроллер ограничивает startup60s, сохраняет runtime",
+        "900s, очищает оба verification packages и прекращает прогон после setup timeout.",
+        "[Квитанция и границы результата](reference/mobile-release-fixes-2026-10-26.md).",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-27",
+        "heading": "2026-10-27 — Наблюдение жизненного цикла и завершения native UI",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-27-44b4530cf8c8"
+    ]
+  }
+}

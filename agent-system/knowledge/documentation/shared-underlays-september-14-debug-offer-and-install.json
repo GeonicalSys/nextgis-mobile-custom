@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:shared-underlays-september-14-debug-offer-and-install",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:shared-underlays"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/shared-underlays.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Со старым Debug `3.0.3.5/183` подтверждены отсутствие реальной export Activity",
+        "и предложение обновления при запуске и из хранилища подложек. Серверный",
+        "`3.1.2.17/212` скачан и проверен приложением; пользователь подтвердил успешное",
+        "обновление Debug. После этого кнопка ведёт к штатному подтверждению переноса.",
+        "Полный перенос пользовательских подложек в этой QA не запускался.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Companion installation was verified. The whole user transfer was not exercised."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:shared-underlays-september-14-debug-offer-and-install"
+    ]
+  }
+}

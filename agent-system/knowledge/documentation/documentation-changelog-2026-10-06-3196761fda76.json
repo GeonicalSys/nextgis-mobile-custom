@@ -1,0 +1,101 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-06-3196761fda76",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-06",
+        "",
+        "- После полевых логов Release/Debug добавлен контроль Battery Saver: отдельная",
+        "  проверка screen-off GPS policy до Start, переход в настройки батареи,",
+        "  динамическое предупреждение foreground-уведомления и повторная проверка Resume.",
+        "  Doze exemption не подменяет эту проверку; native external GNSS исключён.",
+        "  GPS health дополнен фактической политикой питания. Добавлен native сценарий",
+        "  LocationManager → screen-off → Battery Saver → SQLite без прямой инъекции",
+        "  в callback сервиса. Версии APK не менялись.",
+        "  В CI устранена гонка настройки питания эмулятора: test fixture ждёт,",
+        "  пока PowerManager подтвердит unplugged/Battery Saver, вместо предположения,",
+        "  что последовательные shell-команды уже применены. Рабочая логика не менялась.",
+        "",
+        "- По запросу пользователя подготовлен debug-only выпуск `3.1.2.23` / `218`:",
+        "  app/maplib debug constants и независимый oracle APK matrix обновлены;",
+        "  production остаётся `3.1.2.27` / `221`. Публикуется только канал debug.",
+        "  План и проверка включения всех изменений: `reference/debug-3.1.2.23-delivery.md`.",
+        "  По явному разрешению объединены maplib38 (`1b1f4e8`) и maplibui26 (`159f0bcf`),",
+        "  ancestry/tree проверены, app закрепляет fetched remote merge commits.",
+        "  CI выявил гонку native track fixture с реальными GPS callback эмулятора:",
+        "  fixture отключает системный источник до Start через внешний GNSS без endpoint",
+        "  и задаёт времена точек внутри main-thread injection; проверки числа точек,",
+        "  сегментов и автомобильных скоростей сохранены.",
+        "",
+        "- В ту же задачу добавлен Bluetooth RSSI при выборе внешнего GNSS: BLE и",
+        "  discovery сопряжённых Classic, отдельные строки одинаковых имён, явный",
+        "  неизвестный сигнал и освобождение поиска при закрытии/смене транспорта.",
+        "  Обновлены app/maplib packs, location pipeline, official differences,",
+        "  dependencies и физический smoke. RSSI не меняет id/name и не хранится в prefs.",
+        "",
+        "- Добавлены два режима кнопки трека, сохранение режима при восстановлении и",
+        "  track-only порог 30 км/ч с разрывом сегмента. Обновлены GNSS/recovery/storage",
+        "  contracts, config/invariants/smoke registry и локальные packs app/maplibui/maplib.",
+        "  Активный значок — оранжевый человек с увеличенной красной точкой.",
+        "  Official app/maplib/maplibui heads повторно проверены и не изменились.",
+        "  Release-сборка и публикация требуют закрытия связанных library PRs и repin",
+        "  их удалённых merge commits; текущая задача готовит Draft PRs без выпуска.",
+        "- Проверки: JDK 21 / Gradle 9.3.1, 583 unit tests (455 maplib, 87 maplibui,",
+        "  41 app), 7 native API 36/WHPX tests, debug APK, maplibui assembleDebug,",
+        "  Lisa/Belka Release Kotlin/Java compilation и docs validator + 7 tests прошли.",
+        "  На read-only эмуляторе проверены dropdown, запуск пешеходного режима,",
+        "  активная иконка, восстановление режима после force-stop/relaunch и Stop одним",
+        "  нажатием. Native-тесты проверяют разные RSSI одинаковых имён и recycling строк",
+        "  Bluetooth/USB. Debug использует зелёный primary; production primary остаётся",
+        "  оранжевым. Физический маршрут/фон, два PiGo/Bluetooth Classic, планшет, GPX и",
+        "  обе release APK ещё не проверены.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-06",
+        "heading": "2026-10-06",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-06-3196761fda76"
+    ]
+  }
+}

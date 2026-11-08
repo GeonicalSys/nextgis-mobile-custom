@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:stakeout-volatile-measurement-overlay-and-dragging",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:stakeout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/stakeout.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "- Временные точки и линия хранятся только в памяти и рисуются отдельным",
+        "  `azimuth-measurement-*` source/layer над пользовательскими слоями, но под",
+        "  курсором местоположения. Они не создают feature, не меняют проект и очищаются",
+        "  при закрытии либо пересоздании экрана. В режиме A→B обе точки можно",
+        "  перетаскивать для корректировки; в live-режиме перетаскивается только цель,",
+        "  потому что начало линии всегда определяется свежим GPS fix.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:stakeout-volatile-measurement-overlay-and-dragging"
+    ]
+  }
+}

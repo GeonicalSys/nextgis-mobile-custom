@@ -1,0 +1,73 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:change-impact-geometry-edit-history",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "change-impact",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "definition": {
+      "role": "complete_change_impact_definition",
+      "value": {
+        "id": "GEOMETRY-EDIT-HISTORY",
+        "paths": [
+          "maplibui/src/main/java/com/nextgis/maplibui/overlay/UndoRedoOverlay.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/overlay/RulerOverlay.java",
+          "maplibui/src/test/java/com/nextgis/maplibui/overlay/UndoRedoOverlayTest.java",
+          "maplibui/src/main/res/menu/ruler_measurement.xml"
+        ],
+        "owners": [
+          "maplibui",
+          "app"
+        ],
+        "read": [
+          "docs/architecture/map-rendering.md",
+          "docs/reference/official-differences.md",
+          "docs/runbooks/device-smoke-tests.md"
+        ],
+        "invariants": [
+          "INV-GEOMETRY-SKETCH-WORKFLOW"
+        ],
+        "must_update_docs": [
+          "docs/architecture/map-rendering.md",
+          "docs/reference/official-differences.md",
+          "docs/runbooks/device-smoke-tests.md",
+          "maplibui/docs/README.md",
+          "maplibui/docs/manifest.yaml",
+          "app/docs/README.md"
+        ],
+        "verify": [
+          "AUTO-MAPLIBUI-UNIT",
+          "AUTO-MAPLIBUI-ASSEMBLE",
+          "AUTO-APP-RELEASES",
+          "SMOKE-GEOMETRY-SKETCH-WORKFLOW"
+        ],
+        "strict_docs": true
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/change-impact.json",
+    "scopes": [
+      "lisa:mobile:contract:change-impact-geometry-edit-history"
+    ]
+  }
+}

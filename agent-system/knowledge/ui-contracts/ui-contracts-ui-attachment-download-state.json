@@ -1,0 +1,151 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-attachment-download-state",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-ATTACHMENT-DOWNLOAD-STATE"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-ATTACHMENT-DOWNLOAD-STATE",
+        "group": "forms",
+        "title": "Загрузка вложения: ожидание, локальный кеш и повтор",
+        "surface": "PhotoPicker online AttachInfo → PhotoAdapter/PhotoViewHolder; progressImageDownload и ib_download в photo_item.xml. Обычная загрузка и preview — отдельные запросы.",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [
+          "progressImageDownload",
+          "ib_download"
+        ],
+        "meaning": "Индикатор означает членство URL в локальном списке ожидания picker. Кнопка повторной загрузки зависит от этого списка и положительного размера конечного cache file; это не server authorization, sync ACK или доказательство целостности bytes.",
+        "value_origin": "AttachInfo.url/storePath/getFilenameForUse задают запрос и cache path. Full action добавляет URL в picker list и static service list перед startService; preview использует отдельный URL с size, сохраняя urlId исходного вложения. Service terminal broadcast несёт urlId/type/httpcode/preview; owning consumer updateStatus удаляет совпавший URL и уведомляет adapter.",
+        "units": "Длина cache file — bytes, проверка >0. HTTP status — исходный код либо -1 для исключения. START/END и Boolean preview — события и режим запроса; они не project/account completion, row/FID/resource ID или счётчик активных workers.",
+        "updates": [
+          "Bind: положительный final скрывает ib_download; без него кнопка скрыта при inProgress и видна иначе. progressImageDownload видим только при local inProgress. Положительный preview может дать изображение, но не скрывает full-download кнопку как конечный файл.",
+          "Full END404 вызывает существующее уведомление об отсутствии изображения; END удаляет matching URL из local list. Service END также удаляет matching static marker. Наличие metadata/URI не подтверждает наличие/актуальность bytes.",
+          "PhotoPicker содержит два одноимённых updateStatus; внешний consumer и ib_download ветвь защищены whole-file evidence, а не неоднозначным методом marker. Каждый другой guard остаётся method-specific."
+        ],
+        "actions": [
+          "PhotoViewHolder передаёт настоящий view и adapter position. Ветвь ib_download выбирает online AttachInfo и вызывает full start; offline entry не становится сетевой загрузкой.",
+          "Повтор после terminal failure должен снова быть доступен без прежнего work marker. Это не изменение роли/ACL и не разрешение повторять произвольную мутацию NGW."
+        ],
+        "conditions": [
+          "Applicable при реальном использовании shared PhotoPicker/online AttachInfo; actual private form/project/fleet не наблюдались.",
+          "Имеющийся App gitlink55aad сам по себе не включает исправление producer: старый service может оставить marker после404 и positive-size partial. Исправленный producer находится в отдельной library delivery; App adoption требует library merge и последующего pointer update.",
+          "Library fix пишет request-owned .part и публикует конечное имя только после завершённого200/закрытия output через atomic move; unsupported move — failed attempt без copy fallback. Этот pending producer contract не объявляет old App исправленным.",
+          "Required/draft/Save/owner/provider и NGW permissions остаются отдельными gates. У service нет нового lease/task-counter/cancel API; concurrent same-URL/shared preview-state policy не расширяется."
+        ],
+        "saved_state": "Generic AttachInfo Parcel содержит metadata/paths/URL, но PhotoPicker saved-state selection сохраняет только non-null offline entries. Online list/cache/terminal readiness этим Bundle не доказываются; actual online reconstruction принадлежит form attributes producer.",
+        "source_ids": [
+          "WF-ATTACHMENT-FULL-START",
+          "WF-ATTACHMENT-BIND-STATE",
+          "WF-ATTACHMENT-NOTIFY",
+          "WF-ATTACHMENT-URL-MATCH",
+          "WF-ATTACHMENT-DRAFT-SELECTION",
+          "WF-ATTACHMENT-HOLDER-BINDING",
+          "WF-ATTACHMENT-HOLDER-ACTION",
+          "WF-ATTACHMENT-SERVICE-INTENT",
+          "WF-ATTACHMENT-SERVICE-PROGRESS",
+          "WF-ATTACHMENT-SERVICE-TERMINAL"
+        ],
+        "expectations": [
+          "Различать static service list, picker local list, final bytes, preview bytes, URI и metadata. END404 сохраняет404, снимает matching work state и не выдаёт200/READY.",
+          "Незавершённая передача не должна занимать конечное имя. Ошибка передачи/close/publication сохраняет старый валидный final и соседние entries; request stage убирается отдельно.",
+          "Реальный adapter после failure без final показывает download и скрывает spinner. JVM HTTP-boundary regression не заменяет device/GUI/recipient acceptance."
+        ],
+        "unknowns": [
+          "Текущий tenant/server/fleet, реальные media/EXIF/bytes, FileProvider recipient acceptance и native UI lifecycle не проверялись.",
+          "Legacy positive-size corrupt cache, silent-truncated200 integrity и concurrent preview/same-final ownership остаются отдельными UNKNOWN; исправление не является checksum/Content-Length verification.",
+          "Source guards start/progress/sendBroadcast и UI bindings неизменны на old/new library. Changed transfer methods проверяются owning-library regression; этот App catalogue не подменяет pending library merge/adoption."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-attachment-full-start",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-attachment-bind-state",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-attachment-notify",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-attachment-url-match",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-attachment-draft-selection",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-attachment-holder-binding",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-attachment-holder-action",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-attachment-service-intent",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-attachment-service-progress",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-attachment-service-terminal",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-attachment-download-state"
+    ]
+  }
+}

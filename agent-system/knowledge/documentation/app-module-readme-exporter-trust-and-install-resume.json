@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-exporter-trust-and-install-resume",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Проверка старого Debug запрашивает реальный exporter у `PackageManager`,",
+        "включая enabled/exported состояние; явное имя Activity в Intent не доказывает",
+        "её наличие. На старой доверенной сборке кнопка «Импортировать из старого приложения»",
+        "в хранилище подложек должна открывать предложение обновления. Отдельно проверяется пригодность опубликованного APK:",
+        "старый серверный канал сам по себе не гарантирует доступность exporter.",
+        "Busy сохраняется до перехода от проверки к следующему окну. Видимый диалог",
+        "блокирует повторное продолжение по focus, а возврат из Android Settings и",
+        "Package Installer явно маршрутизируется из `onActivityResult` MainActivity и",
+        "хранилища подложек.",
+        "Smoke должен пройти выдачу разрешения и установку без повторного permission",
+        "диалога и без новой ручной проверки обновления.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-exporter-trust-and-install-resume"
+    ]
+  }
+}

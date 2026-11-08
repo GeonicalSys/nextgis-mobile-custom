@@ -1,0 +1,87 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:mobile-roadmap-field-measurement-baseline",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "planned",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "planned",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "UNKNOWN",
+    "release": "unknown",
+    "retention": "Preserve the named measurements and avoid aggregating incomparable scenes or devices."
+  },
+  "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The agreed real project and device baseline is still required before general acceleration claims.",
+        "implementation": "The map-performance and diagnostic receipts give scoped examples. The combined sync, map, memory, disk and energy baseline remains a proposal.",
+        "source_verification": "Keep exact source, APK, project, device, network, configuration and sample provenance. Existing scenes each have narrower oracles.",
+        "merge": "Measure the baseline on its declared source frame before selecting a candidate optimization.",
+        "runtime_verification": "Collect the agreed cold/warm and change-volume matrix on authorized real data. Separate synthetic technical load and physical measurements.",
+        "release": "Measured budgets are an acceptance input rather than a product release.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/architecture/map-performance.md"
+          }
+        ]
+      }
+    },
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## PERF-01 Единый набор полевых замеров",
+        "",
+        "Приоритет P1, обязателен до заявления об ускорении. Состояние: Предложена; требуется выбрать набор проектов. Владельцы — app/maplib/maplibui и технический ответственный PostgreSQL.",
+        "",
+        "Синхронизация: без изменений; единичная правка; около 1% и 10% изменений; удаления; фото; фильтрованные слои; повтор после обрыва. Измерять p50/p95 общего времени и стадий, HTTP запросы/байты, RAM, временный диск, время блокировки SQLite и задержки карты/GPS.",
+        "",
+        "Карта: cold/warm start, cache hit/miss, тяжёлые реальные полигоны/точки, ориентиры 5–10 тысяч и около 50 тысяч объектов при наличии таких данных, отдельные крупные геометрии, подписи, быстрое перемещение, screen off/on. Измерять первую пригодную карту, p50/p95 тайла, Java/native heap, очередь и ошибки перегрузки.",
+        "",
+        "Фиксировать устройство, Android, APK/commit, настройки, характеристики и происхождение данных, сеть и батарею. Численные бюджеты скорости, памяти и энергии утвердить по этому baseline; проценты ускорения заранее не обещать.",
+        "",
+        "Синтетические технические сбои и настоящие рабочие данные учитывать раздельно. Обычная style matrix не подтверждает local-vector-tile путь. Существующая основа: [map-performance.md](https://github.com/GeonicalSys/nextgis-mobile-custom/blob/8cc630ad2abd04d49470ea54715f7f69f9d32618/docs/architecture/map-performance.md).",
+        ""
+      ]
+    },
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "PERF-01"
+    },
+    "priority": {
+      "role": "priority_at_pinned_roadmap_basis",
+      "value": "P1"
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "The project and device roster and measured baseline still need agreement."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-field-measurement-baseline"
+    ]
+  }
+}

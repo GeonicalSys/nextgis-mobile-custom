@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:mobile-roadmap-styles-tracks-phone-tablet-and-release-checkpoint",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout",
+      "lisa:mobile:task:mobile-roadmap-styles-and-tracks"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the pinned checkpoint and keep its results within the stated source and runtime bounds."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "После app merge769629c первый Full10 остановился до native: локальный docs",
+        "wrapper передал --enforce-diff без изменённых путей на уже чистой target ветке.",
+        "Исправление этого helper и адресная clean/dirty regression слиты в PR79/d60a768.",
+        "После этого Full11 смартфон+AVD прошёл254/254. Tablet Full12 отменён до native,",
+        "Full13 остановлен на host ADB, Full14 завершён с тремя native-fixture failures.",
+        "27 октября MOB-01/REL-03 продолжаются test-only follow-up: main-thread lifecycle",
+        "Stage, согласованная camera и OnDismiss/input witnesses. Набор254 и production",
+        "поведение сохраняются. Related20 прошёл27 emulator/11 tablet, после чистой",
+        "установки verification Related22/23 прошли ещё9 tablet cases. Full21 остановлен",
+        "на Android process attach, Full24 незавершён.27 октября пользователь разрешил",
+        "выпуск ЛИСЫ224 без зелёного планшета. Рабочий код равен зелёному Phone Full11,",
+        "но текущий автоматический fingerprint gate не пройден. Общая политика следующих",
+        "выпусков не ослаблена; полные ограничения и доставка находятся в квитанции.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:mobile-roadmap-styles-tracks-phone-tablet-and-release-checkpoint"
+    ]
+  }
+}

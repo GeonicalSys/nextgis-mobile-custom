@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:mobile-roadmap-map-memory-guard-and-cache-policy",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the published Markdown address and pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Реализованный первый этап: компактные native свойства отдельно от rich editor",
+        "features, полный geometry/ID/unknown/style contract, точный повторяющийся мотив",
+        "штриховки, полный MVT на диске32/128MiB, два builder/один при малом свободном остатке,",
+        "отмена ненужных jobs и cache trim. Ни прореживания объектов, ни упрощения геометрии,",
+        "ни отключения слоёв. SQLite/draft/sync/outbox/model visibility не меняются.",
+        "По уточнению владельца28 октября warning/замедление/cache economy определяются",
+        "ТОЛЬКО свободным остатком системной памяти/Java heap и системным low-memory",
+        "сигналом. RSS/native used и номинальные2/8/12GiB не являются такими триггерами.",
+        "Один автоматический диалог на процесс; ручной статус остаётся доступным.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:mobile-roadmap-map-memory-guard-and-cache-policy"
+    ]
+  }
+}

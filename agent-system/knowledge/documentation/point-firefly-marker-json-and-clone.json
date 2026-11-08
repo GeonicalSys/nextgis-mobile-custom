@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:point-firefly-marker-json-and-clone",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:point-firefly"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the style or label subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/point-firefly.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Формат и отрисовка",
+        "",
+        "`SimpleMarkerStyle.type=9` — новый самостоятельный тип. Номера 1–8 и существующий",
+        "`circle_blur` обычных точек сохраняются. Для ядра используются прежние",
+        "`color`, `size`, inner alpha, для ореола — `out_color`, `width`, outer alpha;",
+        "`circle_blur` задаёт мягкость только для нового типа. Дополнительной миграции",
+        "JSON нет. Clone, category resolver и renderer JSON сохраняют тип и параметры.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:point-firefly-marker-json-and-clone"
+    ]
+  }
+}

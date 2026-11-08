@@ -1,0 +1,51 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:config-keys-storage-collector-initial-local-project",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "config-keys",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_registry_section",
+      "value": "storage"
+    },
+    "registry-key": {
+      "role": "incumbent_mapping_or_list_key",
+      "value": "collector-initial-local-project"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "owner": "maplibui",
+        "location_name": "collector_initial_local_project_created_v1 SharedPreferences plus stable initial local workspace identity",
+        "source": "maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java",
+        "purpose": "One-time creation of the initial local project and non-destructive adoption of a legacy standalone map before the first MapDrawable opens"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/sectioned-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:config-keys-storage-collector-initial-local-project"
+    ]
+  }
+}

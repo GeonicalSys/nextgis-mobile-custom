@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-compass-sector-resume-and-regression",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Настройка сектора точности компаса",
+        "",
+        "В «Настройки → Местоположение» есть чекбокс «Показывать сектор точности",
+        "компаса» (`show_compass_accuracy_sector`, default false). Выбор сохраняется;",
+        "MapFragment применяет его при возврате на карту через",
+        "`MapDrawable.setCompassAccuracySectorVisible(boolean)`. Заливка и оба",
+        "контура переключаются вместе, выбранная видимость сохраняется при reload.",
+        "Расчёт и стили сектора сохранены для доработки. Стрелка направления, круг GPS",
+        "и синяя точка 5 dp с белой каймой 2 dp независимы от чекбокса.",
+        "Related `cursor` проверяет default off, включение/выключение после resume,",
+        "hot-add/lite reload, реальные rendered features и русскую подпись чекбокса",
+        "в обеих темах при крупном интерфейсе.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-compass-sector-resume-and-regression"
+    ]
+  }
+}

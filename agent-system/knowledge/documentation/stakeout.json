@@ -1,0 +1,236 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:stakeout",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/architecture/stakeout.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/stakeout.md"
+    },
+    "frontmatter": {
+      "role": "markdown_frontmatter_lines",
+      "value": [
+        "title: Магнитный азимут, расстояние и вынос координат",
+        "type: architecture",
+        "last_verified: 2026-10-30",
+        "related_code:",
+        "  - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+        "  - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutController.kt",
+        "  - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutForegroundService.kt",
+        "  - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutHeadingProvider.kt",
+        "  - app/src/main/java/com/nextgis/mobile/stakeout/MagneticAzimuthCalculator.kt",
+        "  - app/src/main/java/com/nextgis/mobile/stakeout/WorldMagneticModel2025.java",
+        "  - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutAudioCue.kt",
+        "  - app/src/main/java/com/nextgis/mobile/stakeout/StakeoutSettings.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/StakeoutGeometryTarget.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/StakeoutGuidancePolicy.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java"
+      ]
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "",
+        "# Магнитный азимут, расстояние и вынос координат",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:stakeout-automatic-background-gps-versus-navigation-owner",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:stakeout-screen-off-power-policy-and-track-only-warning",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:stakeout-three-user-entries-one-geodesic-contract",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:stakeout-app-maplib-and-maplibui-ownership",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:stakeout-recording-snapshot-and-fast-gps-callback",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:stakeout-target-geometry-types-crs-and-boundaries",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:stakeout-private-index-projected-nearest-and-wgs84-inverse",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:stakeout-static-live-and-coincident-point-meaning",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:stakeout-volatile-measurement-overlay-and-dragging",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:stakeout-separate-stakeout-panel-controls",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:stakeout-azimuth-controls-and-independent-sound-choice",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:stakeout-magnetic-azimuth-sign-and-declination-correction",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:stakeout-wmm2025-point-height-time-and-cache",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:stakeout-magnetic-heading-versus-map-bearing",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:stakeout-magnetic-interference-and-unknown-vendor-heading",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:stakeout-audio-zone-thresholds-and-default-profile",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:stakeout-pcm-cue-monotonic-scheduler-and-android-channel",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:stakeout-audio-eligible-provider-fix-confirmation-and-hysteresis",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:stakeout-owner-based-raw-gps-lease",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:stakeout-foreground-service-background-and-sensor-restoration",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:stakeout-location-only-fgs-and-start-failure-cleanup",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:stakeout-session-identity-and-stale-foreground-intent",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:stakeout-explicit-stop-and-fix-freshness",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:stakeout-static-two-point-mode-without-gps-service",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:stakeout-survey-receiver-wgs84-and-datum-prerequisites",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:stakeout-mock-location-privacy-and-accuracy-limit",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:stakeout-independent-unit-permission-and-device-oracles",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:stakeout-navigation-ux-and-magnetic-model-references",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:stakeout-raw-fix-versus-pedestrian-recording-smoothing",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:stakeout-selected-overlay-geometry-and-db-fallback",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:stakeout-layer-lock-versus-sync-and-restored-target",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:stakeout-target-source-review-and-native-limits",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:stakeout"
+    ]
+  }
+}

@@ -1,0 +1,175 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:mobile-roadmap-dependency-discovery",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "implemented",
+    "source_verification": "PASS",
+    "merge": "merged",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the two MOB-02 identities, original conditions and dated follow-up witnesses. The shared audit questions keep their owner."
+  },
+  "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The App discovery entrance is delivered. It keeps independent analysis and the shared unresolved dependency questions in scope.",
+        "implementation": "App 83 routes changes to the LISA whole-source planner. Follow-up storage, journal, lookup, prefetch and failure-message evidence has its own scope.",
+        "source_verification": "The merged entry and its source/documentation receipt verify the procedure. Dated fix and audit checks keep their exact inputs and separate UNKNOWN or NOT_RUN outcomes.",
+        "merge": "App 83 merged at bf16ea71. Later App and library deliveries follow the individual task receipts and adopted pins.",
+        "runtime_verification": "The entry is a source workflow. Disk restart, loss recovery, native device and tenant outcomes require their own evidence.",
+        "release": "There is no release stage for the discovery entrance.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "bf16ea7154624939e33f26c2d35d620bf7b1eb27",
+            "path": "update-reports/entries/android-20261027-dependency-discovery-bridge.md"
+          },
+          {
+            "repository": ".",
+            "revision": "071eea24e02cf793a4e96e66077fe815f0cd8286",
+            "path": "plugins/geonical-docs/guides/scenario-dependencies.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "57fb5dbabbc17afa136ec8ada1bbf927a600499a",
+            "path": "docs/roadmap/mobile.md"
+          }
+        ]
+      }
+    },
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## MOB-02 Самостоятельное обнаружение и сохранение зависимостей",
+        "",
+        "Приоритет P1. Состояние: исходный entry bridge слит29.10 в PR83; shared LISA",
+        "PR270 также слит. MOB-UI-01 принят в Android PR85 и LISA PR275; его runtime",
+        "пилоты остаются NOT_RUN. Следующий source/docs шаг29.10 — глубокий разбор",
+        "workspace/sync ownership, сохранённых ключей, pair ACK/full clock и cancellation",
+        "drain в прежнем MOB-02, по новой команде владельца продолжать аудит до остановки.",
+        "Изменения продуктовой очереди и возобновления native этапов нет.",
+        "Основание — поручение пользователя27 октября: агент пропустил зависимый ресурс;",
+        "пользователь не должен перечислять связи или отдельно просить сохранить найденное.",
+        "Владелец — Android root для входных инструкций; общий source index/процедура",
+        "принадлежат LISA tooling и geonical-docs, локальные контракты — их владельцам.",
+        "",
+        "Объём: обязательный самостоятельный discovery всего доступного desktop/mobile",
+        "контура до изменения поведения/API/данных/ресурсов/config; реестры и известные",
+        "примеры только начальная точка. Все новые подтверждённые связи автоматически",
+        "сохраняются в той же задаче; ambiguous/dynamic refs — с source/UNKNOWN/next step.",
+        "Общая процедура и индекс единственные, Android не получает их дубликат.",
+        "",
+        "Зависимости: общий механизм LISA в PR #270, доступные исходники владельцев и",
+        "их точные root/revision; для отдельного checkout отсутствие/несовпадение внешних",
+        "исходников остаётся UNKNOWN. Порядок доставки: shared tooling/contracts LISA,",
+        "затем этот Android entry bridge; это не изменение runtime-контракта APK.",
+        "Техническая документация выполняется параллельно MOB-01 и не меняет приоритет",
+        "продуктовых задач. Product-код, Gradle, server data, native проверки и выпуск",
+        "в этот объём не входят; локальные packs сабмодулей здесь не изменяются.",
+        "",
+        "Приёмка: root и app ведут к discovery без предварительного угадывания границы;",
+        "источники и направления влияния сверяются самостоятельно; новые связи и",
+        "неопределённости сохраняются без отдельной команды; перед source commit индекс",
+        "проверяется на свежесть. Недоступные owners/другой worktree не скрываются за",
+        "чужим индексом или словом PASS. Проверки — source-only docs/report validators;",
+        "доставка и фактические результаты фиксируются в PR отдельно от device/release.",
+        ""
+      ]
+    },
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "MOB-02"
+    },
+    "priority": {
+      "role": "priority_at_pinned_roadmap_basis",
+      "value": "P1"
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "Implementation and merge here refer to the App entry bridge and shared discovery procedure. Continued mapping and fixes have their own source, merge and runtime witnesses. The roadmap preserves the historical continuation order."
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-discovery-workspace-ack-source-checkpoint",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-discovery-post-ack-clock-risk-checkpoint",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-discovery-storage-move-20261029",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-discovery-journal-confirmation-20261030",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-discovery-ngfp-form-values-20261030",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-discovery-lookup-cache-keys-20261030",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-discovery-stakeout-target-20261030",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-discovery-ngfp-prefetch-20261030",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-discovery-full-pull-and-save-signal-20261030",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-discovery-ui-error-messages-20261030",
+      "status": "source_backed"
+    },
+    {
+      "type": "related_unknown",
+      "target": "lisa:mobile:question:roadmap-mob02-distinct-subjects",
+      "status": "unknown"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-dependency-discovery"
+    ]
+  }
+}

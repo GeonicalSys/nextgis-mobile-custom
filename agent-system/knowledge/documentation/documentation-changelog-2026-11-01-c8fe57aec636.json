@@ -1,0 +1,76 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-11-01-c8fe57aec636",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-11-01 — Состояние вложения и отдельная доставка mobile fixes",
+        "",
+        "Добавлен `UI-ATTACHMENT-DOWNLOAD-STATE`: реальные `progressImageDownload`/",
+        "`ib_download`, URL markers, END/404, preview и положительный размер cache",
+        "отделены от metadata/URI, целостности bytes и полного sync ACK. Сохранены все",
+        "прежние47 UI contracts; новые method/XML/file guards относятся к неизменным",
+        "consumer interfaces и совместимы с App gitlink55aad.",
+        "",
+        "Прежний whole-file witness `NGWLayerSchemaCompat` для typed HTTP metadata",
+        "перенесён целиком в явную history; active guards закрепляют два неизменных",
+        "`fetchResourceMetaJson` overload. Исторические source inputs, требования UI",
+        "и checker сохранены. Class predicate repair и attachment staging/404 fix",
+        "доставляются отдельными библиотеками; App87 со старыми gitlinks ещё не",
+        "содержит эти исправления. Порядок записан в `MOB-SYNC-01`.",
+        "",
+        "Адресные JVM-проверки: attachment7 RED→GREEN и class metadata14 GREEN",
+        "(11 новых +3 прежних). Это технические source-path проверки без устройства,",
+        "NGW/customer API, реальных фото/БД и native/GUI acceptance. Legacy corrupt",
+        "cache, silent-truncated200 integrity и concurrent preview policy не закрыты.",
+        "",
+        "",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-11-01",
+        "heading": "2026-11-01 — Состояние вложения и отдельная доставка mobile fixes",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-11-01-c8fe57aec636"
+    ]
+  }
+}

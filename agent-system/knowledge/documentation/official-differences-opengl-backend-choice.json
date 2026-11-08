@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-opengl-backend-choice",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### OpenGL backend для совместимости устройств",
+        "",
+        "Начиная с MapLibre Android 13 generic artifact `org.maplibre.gl:android-sdk`",
+        "использует Vulkan. Официальный NextGIS Mobile `3.1.2` подключает именно его.",
+        "Форк использует MapLibre `13.7.1` и во всех consuming-модулях",
+        "явно выбирает `org.maplibre.gl:android-sdk-opengl`.",
+        "",
+        "Решение принято после воспроизводимого завершения процесса с сообщением",
+        "`No Vulkan compatible GPU found` на планшете Samsung с Android 9. Тот же",
+        "release-код, собранный с OpenGL artifact, прошёл авторизацию, открыл карту и",
+        "повторно запустился на этом устройстве. Форматы карт, слоёв и локальных данных",
+        "не меняются; отличие относится только к native rendering backend. Возможное",
+        "преимущество Vulkan по производительности сознательно уступает совместимости",
+        "всего целевого парка устройств.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-opengl-backend-choice"
+    ]
+  }
+}

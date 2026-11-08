@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-smoke-layer-sync-settings",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "SMOKE-LAYER-SYNC-SETTINGS"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "device",
+        "scope": [
+          "app",
+          "maplib",
+          "maplibui"
+        ],
+        "steps": [
+          "Choose a Collector-managed vector whose project item is editable, generic mobile is_editable is false and synchronization direction is both",
+          "Open layer properties, visit Synchronization, Fields and General, then leave without changing anything",
+          "Reopen properties and verify the direction is still both and the layer remains available for creating or editing objects",
+          "Select server-to-device only, close and reopen properties, then return the same layer to both directions"
+        ],
+        "expected": "A no-op settings visit never mutates the stored direction; the Collector owning policy keeps the direction control available independently of generic is_editable, and an accidentally server-only layer becomes editable again after selecting both without deleting or reimporting it."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-smoke-layer-sync-settings"
+    ]
+  }
+}

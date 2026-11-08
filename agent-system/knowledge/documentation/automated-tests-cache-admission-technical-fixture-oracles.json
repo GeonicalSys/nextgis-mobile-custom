@@ -1,0 +1,50 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:automated-tests-cache-admission-technical-fixture-oracles",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Для MOB-04 cache/queue follow-up28октября — адресный source batch",
+        "`AUTO-LOCAL-TILE-CACHE-ADMISSION`: реальные временные Q filesystem fixtures,",
+        "25 cache и7 новых admission cases плюс прежние provider/lifecycle/gate/full-PBF",
+        "ожидания. Canceled waiter, noncooperative unwind, blocked Main и predispatch",
+        "cancel проверяются без SDK/устройства. Это не географическая/нативная приёмка."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:automated-tests-cache-admission-technical-fixture-oracles"
+    ]
+  }
+}

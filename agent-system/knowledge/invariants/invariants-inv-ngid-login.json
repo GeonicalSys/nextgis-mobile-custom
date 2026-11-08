@@ -1,0 +1,61 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:invariants-inv-ngid-login",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "invariants",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "INV-NGID-LOGIN"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "title": "NextGIS ID accepts normalized email or username without changing password",
+        "owners": [
+          "maplibui"
+        ],
+        "statement": "NGID login screens request email or username, avoid keyboard capitalization and submit the trimmed identifier in Locale.ROOT lowercase. Password is passed unchanged. Web GIS account input keeps its separate existing rules.\n",
+        "related_code": [
+          "maplibui/src/main/java/com/nextgis/maplibui/util/NGIDLoginName.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/util/NGIDUtils.java"
+        ],
+        "verify_smoke": [
+          "AUTO-MAPLIBUI-UNIT",
+          "AUTO-RELIABILITY-NATIVE",
+          "SMOKE-NGID-AND-RESOURCE-ICONS"
+        ],
+        "must_update_docs": [
+          "maplibui/docs/README.md",
+          "docs/reference/official-differences.md"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:invariants-inv-ngid-login"
+    ]
+  }
+}

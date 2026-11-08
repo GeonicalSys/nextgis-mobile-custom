@@ -1,0 +1,106 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-map-user-location-overlay",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "#### Курсор местоположения (`user-location-layer`)",
+        "",
+        "Курсор — служебный MapLibre `SymbolLayer`, **не** элемент `LayerGroup`.",
+        "`MapDrawable.ensureUserLocationLayerOnTop()` после cold load, lite reload, hot",
+        "style update и batch reload проверяет, что `user-location-layer` — последний",
+        "layer в style (MapLibre рисует снизу вверх). У слоя включены",
+        "`iconAllowOverlap` и `iconIgnorePlacement`, чтобы collision detection не прятал",
+        "значок под треками и плотными векторами. Источник `user-location-source`",
+        "обновляется из свежего GPS/network snapshot. «Орбита» использует центрированные",
+        "векторные ресурсы «Орбиты-кольца»: прозрачное окно диаметром 21 dp, синюю",
+        "центральную точку 5 dp с белой обводкой 2 dp и синий обод с внешним радиусом 13 dp. Обод утолщён",
+        "на 1 dp наружу за счёт белого обода; сохранены внешний радиус 15.2 dp, тёмная кромка и",
+        "треугольник 16 × 14 dp с двойной обводкой. Общий центр canvas 72 dp совпадает",
+        "с координатой фикса. `has_direction`",
+        "выбирает ресурс; bearing — истинный компасный heading, а при недоступном,",
+        "отсутствующем, UNRELIABLE или старше 500 мс компасе — валидный курс движения.",
+        "Компас приоритетен даже на месте; без обоих направлений треугольник скрывается.",
+        "Legacy type=stand/go остаётся свойством feature. Круг точности — геодезическая заливка `user-location-accuracy`",
+        "(`role=accuracy`). Сектор направления — `user-location-heading` (`role=heading`)",
+        "между кругом и символом: ось — истинный курс телефона, ширина — оценка",
+        "неопределённости heading (не константа `values[4]`/SENSOR_STATUS), длина — 56",
+        "логических пикселей карты при текущем масштабе. Поверх полупрозрачной",
+        "заливки сектор имеет отдельные белый halo и синий outline, читаемые на светлой",
+        "карте и текстурном снимке. GPS bearing не создаёт сектор. Отверстие в accuracy",
+        "имеет радиус 10.5 логических пикселей, внутренний радиус сектора — 13 пикселей:",
+        "его halo скрыт под непрозрачным ободом. Малый accuracy, помещающийся в окно,",
+        "не рисуется; наружная метрическая граница GPS сохранена. Заливки не подкрашивают",
+        "меньший точечный объект, лежащий под курсором. Legacy overload геометрии без",
+        "масштаба сохраняют полный круг и сектор.",
+        "Таймер активно переключает маркер на движение, если компас замолк; смена камеры",
+        "пересчитывает длину сектора. Свежесть позиции",
+        "проверяется по времени измерения; устаревшие Point и Polygon очищаются, а",
+        "отсутствие heading скрывает сектор и оставляет курс движения, если он доступен.",
+        "",
+        "Сверено через GitHub API 2026-10-11: official maplib master",
+        "[`b8f3e3e6bf4bad56f8ce910c885ea6af1b898998`](https://github.com/nextgis/android_maplib/commit/b8f3e3e6bf4bad56f8ce910c885ea6af1b898998)",
+        "по-прежнему выбирает standing/moving ресурсы и GPS-bearing; official app master",
+        "[`f11d38f77e4caf1b569526c5f620b2ec513c5f9d`](https://github.com/nextgis/nextgis_mobile_android/commit/f11d38f77e4caf1b569526c5f620b2ec513c5f9d).",
+        "«Орбита», сектор неопределённости и приоритет компаса — локальный контракт",
+        "maplib + app, который нужно сохранить при upstream sync.",
+        "Consumer pin обновлён после Merge Commit maplib #48:",
+        "`f2c676a6ea0e35dfb97f539ee3b5a9b653b273ab`. Merge содержит прежний #47 и",
+        "контрастное оформление; дерево совпадает с протестированным `f548831`.",
+        "Повторная проверка official master через GitHub API 2026-10-11 подтвердила",
+        "оба SHA выше; пользовательские отличия сохраняются. App #57 закрепляет fetched",
+        "remote merge-коммит библиотеки перед своей release-сборкой.",
+        "",
+        "«Орбита-кольцо» и production maplib 3.1.2.28 вошли через Merge Commit #49",
+        "`4abe395e01a97bdc91c79c8f54223c39d13e68ee`; дерево равно tested head `0be3058`.",
+        "App #58 закрепляет fetched merge SHA и поднимает обе production flavors до",
+        "3.1.2.28 / 222. Debug сохраняет 3.1.2.23 / 218 и не публикуется.",
+        "",
+        "Локальный графический smoke `com.nextgis.mobile.rendering.LocationOrbitTest`",
+        "проверяет реальные пиксели синей точки 5 dp и её белой обводки, прозрачного окна и утолщённого",
+        "обода, видимость красного символа 14 dp под всеми служебными слоями без",
+        "подкрашивания GPS/компасом, anchor, включение/выключение сектора настройкой при сохранённой геометрии и резервный курс на отдельном",
+        "Debug API 36 эмуляторе с работающим EGL (`-gpu host`). Он запускается явно,",
+        "отдельно от headless CI package `reliability`: использованный SwiftShader не",
+        "выводил также контрольные bitmap icons. Обычный reliability CI не подтверждает",
+        "визуальную проверку «Орбиты» и не заменяет её проверку на физическом устройстве.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-map-user-location-overlay"
+    ]
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:official-differences-full14-native-verification",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the dated comparison or verification at its original source span."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Native verification после Full14 — 2026-10-27",
+        "",
+        "Только AndroidTest: Home/Back lifecycle наблюдается через main-thread Stage,",
+        "Orbit fixture согласует app/native camera, а Cancel layout ждёт реальный dismiss",
+        "и подтверждает один DOWN/UP. Системный window driver повторно измеряет цель",
+        "только после UID-rejected DOWN до доставки; принятый жест не повторяется.",
+        "Production поведение и254 метода не меняются.",
+        "Full11 PASS и три неуспешных runs Full14 учитываются отдельно; новая финальная",
+        "приёмка обязательна. [Разбор](mobile-release-fixes-2026-10-26.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:official-differences-full14-native-verification"
+    ]
+  }
+}

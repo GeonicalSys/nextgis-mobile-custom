@@ -1,0 +1,107 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-08-15-62790305f81d",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-08-15",
+        "",
+        "- Belka получила новую artwork launcher-иконки в `ic_launcher_belka`",
+        "  (`mdpi`–`xxxhdpi`); идентификаторы ресурсов, Lisa-брендинг и номер версии",
+        "  не менялись.",
+        "- Версия форка поднята до `3.1.2.9`: Lisa/Belka Release `versionCode` 202,",
+        "  Lisa Debug `versionCode` 203; maplib `VERSION_NAME` синхронизирован с",
+        "  приложением для debug и release.",
+        "- Lisa и Belka получили обновлённые отдельные launcher-иконки для",
+        "  `mdpi`–`xxxhdpi`; flavor-ссылка `app_launcher_icon` использует их также на",
+        "  intro/about, а Belka больше не наследует общий launcher из `app/src/main`.",
+        "- Версия форка поднята до `3.1.2.8`: Lisa/Belka Release `versionCode` 200,",
+        "  Lisa Debug `versionCode` 201; maplib `VERSION_NAME` синхронизирован с приложением",
+        "  для debug и release. Пользовательский раздел «В разработке» оформлен как",
+        "  release notes `3.1.2.8`.",
+        "- Добавлен контракт `INV-MAP-CAMERA-CONTROLS` и полевой",
+        "  `SMOKE-MAP-CAMERA-CONTROLS`: вращение карты по умолчанию запрещено и включается",
+        "  отдельной кнопкой; запрет и геолокация возвращают север вверх, геолокация",
+        "  поднимает zoom минимум до `12`, а без координаты открывает охват первого",
+        "  пригодного слоя, центрируется по нему и ставит zoom `12` независимо от размера",
+        "  охвата. Для выноса без компаса стрелка учитывает bearing карты, сохраняя",
+        "  абсолютную текстовую сторону света.",
+        "- Зафиксировано разделение прав редактирования и видимости: выключенный допустимый",
+        "  векторный слой остаётся в выборе для нового объекта, а после выбора автоматически",
+        "  включается и сохраняет видимость до запуска редактора.",
+        "- Добавлены `INV-LOCAL-VECTOR-LAYERS`, `LOCAL-VECTOR-LAYERS` и",
+        "  `SMOKE-LOCAL-VECTOR-LAYERS`: ручные/локальные vector layers редактируемы по",
+        "  умолчанию, а импорт GeoJSON принимает неявный WGS 84, CRS84 и распространённые",
+        "  записи EPSG:4326/3857 при сохранении отказа для других систем координат.",
+        "  Зафиксирован Android 16-контракт: bulk-write PRAGMA выполняются только до",
+        "  начала SQLite-транзакции.",
+        "- Контракт локальных слоёв расширен упрощённым импортом KML/GPX: потоковый parser",
+        "  сохраняет порядок всех валидных WGS 84 координат как отдельные точки одного",
+        "  редактируемого слоя, переносит доступные name/time/elevation, блокирует DTD и",
+        "  не обещает сохранение исходной геометрии, стиля или структуры маршрута.",
+        "- Зафиксирован lifecycle-контракт ошибок выбора NGW-ресурсов: сетевой сбой",
+        "  сообщает об ошибке через живую Activity, а закрытый экран не получает новый",
+        "  диалог; добавлен отдельный smoke для ответа `5xx` и выхода во время запроса.",
+        "- Зафиксирован контракт foreground-выноса координат: ближайшая точка/граница,",
+        "  WGS84-расстояние и азимут, временный частый GPS, видимая reported accuracy,",
+        "  дистанционные звуковые зоны для GPS/mock fix и компас телефона без GNSS course. Lifecycle не",
+        "  прерывает GPS и звук при выключенном экране: foreground service, постоянное уведомление и",
+        "  partial wake lock живут до явной остановки; полевой smoke охватывает RTK-приёмник,",
+        "  Bluetooth/audio mode, фоновую работу и резерв по сторонам света.",
+        "- Добавлены дефолты и одноразовая migration для `photo_overlay_enabled=true` и",
+        "  `photo_overlay_use_object_coords=true`; после migration прямой выбор пользователя не перезаписывается.",
+        "- Высокий тон выноса заменён на затухающий низкий PCM-щелчок с дополнительным цифровым",
+        "  усилением `×3` и ограничением на полной шкале;",
+        "  диагностическая запись координат и полей mock `Location` отключена.",
+        "- В registry добавлены `INV-STAKEOUT-GUIDANCE`, `STAKEOUT-GUIDANCE`, пять",
+        "  preference-ключей, `AUTO-APP-DEBUG` и `SMOKE-STAKEOUT`; обновлены module packs",
+        "  `app` и `maplib` и каталог отличий от официального приложения.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-08-15",
+        "heading": "2026-08-15",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-08-15-62790305f81d"
+    ]
+  }
+}

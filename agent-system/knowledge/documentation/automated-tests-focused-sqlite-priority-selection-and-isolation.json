@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:automated-tests-focused-sqlite-priority-selection-and-isolation",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Область выбирает только",
+        "`NativeSqliteVectorRenderingTest#sqliteFieldLinesAndWholePointGroupsStayAboveSavedAndCurrentTracks`;",
+        "не передавать весь класс, который содержит другие независимые методы. Case также",
+        "входит в `track-candidates`. Нужна свежая fingerprint-bound app/test APK пара",
+        "после изменения source; `SkipBuild` не является способом принять старую пару.",
+        "Мутации и reset ограничены `com.nextgis.mobile.verification.debug` и его test",
+        "package, provider/storage/техническими fixture rows. Production приложение,",
+        "его проекты и accounts не очищаются. Full-only read-only metadata проекта1403",
+        "этому методу не требуется; radio/font/density системные настройки не меняются.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:automated-tests-focused-sqlite-priority-selection-and-isolation"
+    ]
+  }
+}

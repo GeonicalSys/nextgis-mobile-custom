@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:collector-projects-workspace-preparation-lease-transfer",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:collector-projects"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the App mobile project topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/collector-projects.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Подготовка workspace сначала получает lease переключения и лишь затем вызывает",
+        "`ensureProject()`. Если текущий проект синхронизируется, загружает слой или",
+        "перестраивает схему, импорт не создаёт запись в registry и показывает отдельное",
+        "модальное сообщение с просьбой дождаться завершения фоновой операции. Проверка",
+        "активной sync повторяется непосредственно перед подготовкой workspace, поэтому",
+        "синхронизация, начавшаяся пока пользователь выбирал ресурс, получает то же",
+        "предупреждение и безопасное прерывание. Успешный lease подготовки атомарно",
+        "переходит из `PROJECT_SWITCH` в `LAYER_FILL` и передаётся foreground service:",
+        "между записью registry/metadata и началом fill нет окна для нового sync.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:collector-projects-workspace-preparation-lease-transfer"
+    ]
+  }
+}

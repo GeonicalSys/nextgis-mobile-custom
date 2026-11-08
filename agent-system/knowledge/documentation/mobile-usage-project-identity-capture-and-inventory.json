@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:mobile-usage-project-identity-capture-and-inventory",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-usage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/mobile-usage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "`project_open` относится к активному project UID в момент UI-события.",
+        "Переход фиксирует UID и timestamp перед IO-очередью; worker не подставляет",
+        "текущий проект вместо исторического владельца. Снимок `inventory` читает только",
+        "`CollectorProjectRegistry` и разрешённые app accounts, без GIS feature DB,",
+        "геометрии, атрибутов, фото или паролей. Аккаунты нормализованы по server URL",
+        "без userinfo/query/fragment и login; проекты — server+remote resource ID,",
+        "локальные — installation+UID. Удалённая/недоступная учётная запись не мешает",
+        "учёту остальных проектов. FileObserver следит за атомарной записью реестра;",
+        "UI-события, account callbacks и upload worker также сверяют состав.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:mobile-usage-project-identity-capture-and-inventory"
+    ]
+  }
+}

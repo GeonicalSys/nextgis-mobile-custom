@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:official-differences-initial-comparison-refs",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the dated comparison or verification at its original source span."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "- GeonicalSystem fork base — [`f6daceb`](https://github.com/GeonicalSys/nextgis-mobile-custom/commit/f6dacebcfa2aed2cea329e6d16aaff33acee012b);",
+        "- NextGIS Mobile — [`e098196`](https://github.com/nextgis/nextgis_mobile_android/commit/e0981966c4a5146372e7880d158a95b75305da63);",
+        "- Android MapLib — [`21578af`](https://github.com/nextgis/android_maplib/commit/21578af6bfc54bbb3e064c6772a2d596083716de);",
+        "- Android MapLib UI — [`a426e0a`](https://github.com/nextgis/android_maplibui/commit/a426e0acfc8d111982918e04236e2e8f896674de);",
+        "- EasyPicker — [`36ba558`](https://github.com/nextgis/easypicker/commit/36ba558ba0d1eaadcb7dc6ba46ab9286d7eedaa1).",
+        "",
+        "Все четыре official HEAD повторно проверены 14 сентября 2026 года через",
+        "канонические GitHub repositories. Release tag и feature-коммиты MBTiles",
+        "рассматриваются отдельно от приведённых baseline hashes форка.",
+        "22 сентября повторно проверены HEAD официального приложения `482f26f` и",
+        "`android_maplibui` `8b89a9a` перед изменением foreground-записи и проверки",
+        "разрешений; это исправление не меняет перечисленные базовые отличия форка.",
+        "Проверка разрешений на входе не включает уведомления: их запрос остаётся",
+        "контекстным при включении функции в настройках.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:official-differences-initial-comparison-refs"
+    ]
+  }
+}

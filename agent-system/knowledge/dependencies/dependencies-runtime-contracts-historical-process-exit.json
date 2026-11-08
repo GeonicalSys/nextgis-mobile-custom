@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:dependencies-runtime-contracts-historical-process-exit",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "dependencies",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_registry_section",
+      "value": "runtime_contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_mapping_or_list_key",
+      "value": "historical-process-exit"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "owner": "app",
+        "defined_in": "app/src/main/java/com/nextgis/mobile/util/DiagnosticsProcessExitReporter.java",
+        "implementers": [
+          "app"
+        ],
+        "callers": [
+          "app"
+        ],
+        "contract": "AppDiagnostics invokes Reporter then TracePolicy and bounded NativeTrace; process_exit metadata goes through existing sanitize/cache/replay/transport. API30 SIGNALED may contain an earlier recovered ANR trace, explicitly may_precede_exit, and never proves OOM or final-exit cause."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/sectioned-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:dependencies-runtime-contracts-historical-process-exit"
+    ]
+  }
+}

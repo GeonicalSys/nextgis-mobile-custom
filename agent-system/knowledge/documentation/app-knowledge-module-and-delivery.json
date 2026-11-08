@@ -1,0 +1,83 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-knowledge-module-and-delivery",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          ".",
+          "docs/README.md",
+          "docs/registry/README.md",
+          "docs/guides/documentation-maintenance.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the established App documentation address and original Git range."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "agent-system/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "The App module README uses the same prose projector as the central documents.",
+        "Its module pack validator checks the generated Markdown at the original address.",
+        "",
+        "The App module manifest uses separate ordered component and reference records.",
+        "Refresh the YAML with `python -B docs/scripts/prose_knowledge.py --write`.",
+        "The original Git blob and complete byte spans are pinned in its provenance.",
+        "",
+        "The EasyPicker reader verifies both README views and the module manifest from",
+        "EasyPicker's owner records when its generated pack is present. From the App",
+        "root, refresh the views with",
+        "`python -B docs/scripts/prose_knowledge.py --write --module easypicker-module`",
+        "and seal the YAML with",
+        "`python -B docs/scripts/structured_view_proof.py --write --module easypicker-module`.",
+        "App checkouts with earlier EasyPicker pins read the module's checked-in YAML.",
+        "",
+        "The [working entrance](../AGENTS.md) and Cursor use the shared scoped reader.",
+        "Original Git object retention before future squash/branch deletion needs its",
+        "own durable reachability decision.",
+        "",
+        "From the LISA root use `py -3.13 -B -m tools.agent_system check-policy-migration`",
+        "with this owned working repository included in the declared source frame when",
+        "required. Default committed-owner reads cannot certify uncommitted records.",
+        "Library Merge Commit and fetched merged pins precede application Squash and",
+        "publisher Squash. App records the three verified library merge commits.",
+        "",
+        "Whole migration acceptance also requires ordinary maintenance across six owners,",
+        "independent replay, separate Wiki reconciliation and an individual decision",
+        "for each former source path. Product verification and release have separate gates.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-knowledge-module-and-delivery"
+    ]
+  }
+}

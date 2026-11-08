@@ -1,0 +1,68 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:invariants-inv-mobile-publication-acceptance",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "invariants",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "INV-MOBILE-PUBLICATION-ACCEPTANCE"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "title": "Publication requires current complete phone and emulator acceptance",
+        "owners": [
+          "app",
+          "maplibui",
+          "maplib"
+        ],
+        "statement": "Run local Related after ordinary work and local Full plus Check-Publication after dependency closure and final code/version before publication. Every native case, unit/docs/version gate, 36 chooser profiles and 6 real-window profiles at density620/font200% must pass for the current content, including real_window_matrix. Cloud workflows are manual-only by separate user request. Full preserves every failed attempt; a successful repeat cannot hide it. Setup/transport/locked-device failures abort. Only the separate verification APK is reset on a phone. Missing permitted project requires asking the user.",
+        "build_identity": "A successful known verification assemble must bind the unchanged source fingerprint to the exact app/test APK hashes and fixed recipe. Related SkipBuild only reuses that basis and fails before device access for missing, stale or mixed binaries. Recheck the pair around installs and completion; Full/publication receipts require the basis. This does not attest installed bytes or production release-candidate provenance.",
+        "related_code": [
+          "tools/run_mobile_tests.py",
+          "tools/mobile_build_identity.py",
+          "tools/mobile_test_support.py",
+          "tools/mobile_test_project.py",
+          "tools/mobile-test-plan.json",
+          "tools/tests/test_mobile_build_identity.py",
+          "app/src/androidTest/java/com/nextgis/mobile/util/VerificationEnvironment.java"
+        ],
+        "verify_smoke": [
+          "AUTO-MOBILE-FULL",
+          "AUTO-MOBILE-PUBLICATION-GATE"
+        ],
+        "must_update_docs": [
+          "docs/runbooks/automated-tests.md",
+          "docs/runbooks/release-apk.md"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:invariants-inv-mobile-publication-acceptance"
+    ]
+  }
+}

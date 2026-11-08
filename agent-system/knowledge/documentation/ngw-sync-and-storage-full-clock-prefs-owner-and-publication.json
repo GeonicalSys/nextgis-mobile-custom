@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-full-clock-prefs-owner-and-publication",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "`ProjectSyncState.lastComplete` проверяет `owner.clocks` до raw `getLong` и",
+        "повторно после него. Для точного объекта SharedPreferences и canonical project key",
+        "shield устанавливается до editor/put/commit observers. `markComplete` сериализует",
+        "писателей одного prefs owner отдельным monitor; читатели API его не берут.",
+        "Подтверждение обновляется только после `commit() == true`, по последней успешной",
+        "invocation, а не по максимальному timestamp или порядку возврата callbacks.",
+        "False/throwing попытка не публикует собственное новое значение через API того же",
+        "owner; вложенная успешная попытка и позднейшая успешная меньшая положительная дата",
+        "остаются допустимыми. Getter не переносит этот shield в другой owner/process:",
+        "первое чтение без shield доверяет raw preferences неизвестной disk provenance.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-full-clock-prefs-owner-and-publication"
+    ]
+  }
+}

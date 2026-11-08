@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:collector-projects-canonical-form-hash-and-snapshot-check",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:collector-projects"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the App mobile project topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/collector-projects.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "`LayerFormHashUtil` вычисляет MD5 по каноническому JSON обеих частей NGFP: ключи",
+        "объектов рекурсивно упорядочены, пробелы не влияют на результат. Порядок массивов,",
+        "значения, `lisa_id`, правила и справочники сохраняются; только верхний",
+        "`meta.ngw_connection` исключается, как и раньше. NGW legacy export собирает",
+        "attributes из set и разные server workers могут выдавать иной порядок ключей.",
+        "Это не должно ломать сравнение snapshot/download/staged files. Реальное изменение",
+        "формы между запросами по-прежнему отклоняется до установки. Старый byte-based hash",
+        "может вызвать однократное безопасное обновление формы после upgrade.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:collector-projects-canonical-form-hash-and-snapshot-check"
+    ]
+  }
+}

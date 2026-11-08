@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-single-parcel-mvt-label",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Одна подпись квартала в локальных MVT — 2026-10-15",
+        "",
+        "Форк вычисляет одну внутреннюю точку исходного Polygon/MultiPolygon до clipping,",
+        "с учётом отверстий и наибольшей пригодной части. Служебная Point запись с ID",
+        "исходного объекта хранится в том же `features` source-layer только одного",
+        "тайла; полигональные фрагменты остаются без текста. Сохраняются один",
+        "VectorSource и прежние FillLayer/LineLayer/SymbolLayer; отдельного объектного",
+        "слоя и полной коллекции точек нет. Непредставимая внутри полигона после MVT",
+        "округления точка пропускается на данном зуме.",
+        "Тайлы, целиком лежащие внутри квартала, передаются отсечению без legacy",
+        "boundary-only проверки: заливка и подпись сохраняются при увеличении масштаба.",
+        "GitHub API 2026-10-15: official",
+        "maplib HEAD `fcddbd2c03574a9c897eb45f30dbfb2befaa5cc4`, файл",
+        "Прямой `SqliteVectorTileProvider` — renderer форка; прежний HTTP provider удалён2ноября.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-single-parcel-mvt-label"
+    ]
+  }
+}

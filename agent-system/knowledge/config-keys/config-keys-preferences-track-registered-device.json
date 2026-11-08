@@ -1,0 +1,51 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:config-keys-preferences-track-registered-device",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "config-keys",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_registry_section",
+      "value": "preferences"
+    },
+    "registry-key": {
+      "role": "incumbent_mapping_or_list_key",
+      "value": "track_registered_device"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "owner": "maplibui",
+        "type": "string",
+        "source": "maplibui/src/main/java/com/nextgis/maplibui/mapui/TrackRegistrationState.java",
+        "purpose": "SHA-256 fingerprint of the exact server and UID after registered=true; absent or mismatched identity hides track badges, registered=false revokes matching confirmation, transport failure preserves known registration. Independent of upload intent and packet ACK."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/sectioned-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:config-keys-preferences-track-registered-device"
+    ]
+  }
+}

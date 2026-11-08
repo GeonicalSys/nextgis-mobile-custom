@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:mobile-roadmap-styles-tracks-publication-follow-up-20261026",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout",
+      "lisa:mobile:task:mobile-roadmap-styles-and-tracks"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the pinned checkpoint and keep its results within the stated source and runtime bounds."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "26 октября пользователь поручил устранить эти ошибки и довести пакет до",
+        "публикации ЛИСЫ. Работа продолжается в тех же PR: исправление API30 проверок,",
+        "разбор переноса инструкции азимута и TrackUpload CI, восстановление локальных",
+        "тайлов без сети (MVT-01/REL-03/UX-03). Перед выпуском обязательны закрытие",
+        "зависимостей и новый Full на окончательном коде смартфона и планшета.",
+        "Смартфон пользователь подключит позже; пока разрешены планшет и owned AVD.",
+        "Публикация БЕЛКИ и отдельная переделка загрузки/тайлов сюда не входят.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:mobile-roadmap-styles-tracks-publication-follow-up-20261026"
+    ]
+  }
+}

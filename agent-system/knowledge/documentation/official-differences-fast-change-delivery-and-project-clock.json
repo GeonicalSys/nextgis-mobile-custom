@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-fast-change-delivery-and-project-clock",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Быстрая доставка и время полного проекта",
+        "",
+        "В fork сохранённые правки NGW отправляются отдельным LocalChangesWorker сразу",
+        "после commit при доступной сети, независимо от расписания полного account sync.",
+        "Offline/HTTP ошибки сохраняют очередь, TEMP/NOT_SYNC ждут Save. Время списка",
+        "слоёв принадлежит открытому проекту и подтверждается только полной успешной",
+        "очередью этого проекта; чужие accounts и быстрые local/track uploads его не пишут.",
+        "Это consumer-only изменение, без нового NGW/Collector wire format.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-fast-change-delivery-and-project-clock"
+    ]
+  }
+}

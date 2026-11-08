@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-smoke-tool-tap",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "SMOKE-TOOL-TAP"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "device",
+        "scope": [
+          "app",
+          "maplib"
+        ],
+        "steps": [
+          "In drawing all editable geometry types, ruler and both azimuth modes, tap with small drift on several screen densities.",
+          "Drag beyond threshold then return, long press, cancel and pinch; compare normal camera pan and endpoint/vertex drag.",
+          "Select editable and read-only objects from different layers; clear by empty-map tap, toolbar and Back.",
+          "Activate overflow actions on phone, tablet, landscape, split screen and increased display/font sizes."
+        ],
+        "expected": "One short micro-drift tap creates one point without camera shift; deliberate gestures create none; actions are immediate only for editable selection and clear with selection."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-smoke-tool-tap"
+    ]
+  }
+}

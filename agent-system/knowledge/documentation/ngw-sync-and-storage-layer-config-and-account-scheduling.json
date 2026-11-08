@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-layer-config-and-account-scheduling",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Изменение sync",
+        "",
+        "Открытие или перелистывание свойств NGW-слоя без пользовательского изменения",
+        "не записывает новое направление синхронизации. Начальный callback списка",
+        "направлений является no-op. Для project-managed слоя доступность этого списка",
+        "определяется Collector editable policy, поэтому текущий server-only режим или",
+        "generic mobile `is_editable=false` не блокируют возврат в двусторонний режим.",
+        "",
+        "Планировщик хранит период каждого account отдельно, восстанавливает удалённые",
+        "Android `PeriodicSync` registrations при старте и поддерживает интервалы короче",
+        "15 минут через самоперезапускаемую WorkManager-задачу. Включение sync из любого",
+        "экрана одновременно включает account и ставит ближайший запуск; отключение",
+        "отменяет его unique work.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-layer-config-and-account-scheduling"
+    ]
+  }
+}

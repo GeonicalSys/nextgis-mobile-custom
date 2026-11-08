@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:mobile-roadmap-release-225-library-git-delivery-20261029",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout",
+      "lisa:mobile:task:mobile-roadmap-release-225"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the pinned checkpoint and keep its results within the stated source and runtime bounds."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "29 октября, Git-доставка по прямому поручению владельца: библиотека maplib",
+        "слита Merge Commit f61ba783 (PR62), документационный bridge — bf16ea71 (PR83).",
+        "Приложение в PR84 закреплено exact fetched library merge, runtime-tree библиотеки",
+        "равен проверенному13887f34. Исходные функции не меняются при закреплении;",
+        "исторические native/device/Full пробелы не закрываются Git-слиянием. Это новое",
+        "поручение снимает прежнее ожидание merge, но не разрешает установку/публикацию APK.",
+        "",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:mobile-roadmap-release-225-library-git-delivery-20261029"
+    ]
+  }
+}

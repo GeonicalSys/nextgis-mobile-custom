@@ -3,7 +3,7 @@
 Этот файл сохранён как совместимый путь для старых чатов и закладок. Вручную
 вставлять его в новый чат больше не требуется.
 
-ИИ-агент автоматически начинает с [`AGENTS.md`](AGENTS.md), затем использует:
+Для задач App используйте [`AGENTS.md`](AGENTS.md) и связанные материалы.
 
 1. [`docs/START-HERE.md`](docs/START-HERE.md) — модель проекта и маршрутизация;
 2. [`docs/registry/change-impact.yaml`](docs/registry/change-impact.yaml) —
@@ -28,4 +28,4 @@
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\docs-check.ps1 -RunTests
 ```
 
-Последняя миграция контекста: 2026-07-19.
+В прежней редакции указан перенос контекста от 19 июля 2026 года.

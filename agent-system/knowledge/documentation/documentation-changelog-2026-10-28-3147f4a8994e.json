@@ -1,0 +1,70 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-28-3147f4a8994e",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-28 — Direct SQLite native источники и lifecycle",
+        "",
+        "Ordinary Simple/Field Rule слои всех шести geometry types переведены в source",
+        "на SQLite/RTree→полные MVT8192→CustomVectorSource13.7.1 без HTTP и общего",
+        "startup GeoJSON. Добавлены source/model/content/style generations, один DB",
+        "original для редактора, разделение polygon/anchor ролей и preclose lifecycle",
+        "контракты. Invariants/dependencies/change-impact/module manifests фиксируют",
+        "новые связи. Техническая native приёмка сохраняет каждый raw hit и failure",
+        "артефакты; первоначальные FAIL не заменены зелёной сборкой. Новый source tip",
+        "ещё не выпущен, Full/2GiB/787 benchmarks остаются отдельными gates.",
+        "Выявлен SDK13.7.1 same-ID custom source loader cache defect: actual native ID",
+        "теперь уникален на поколение, business layer path остаётся прежним. Смена стиля",
+        "проверяется независимыми backend/native paint ожиданиями. Для SIGNALED OS exit",
+        "разрешено bounded AUTO чтение native/прежнего ANR trace с явной неопределённой",
+        "связью с финальным выходом; reason2/status6 не объявляется OOM.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-28",
+        "heading": "2026-10-28 — Direct SQLite native источники и lifecycle",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-28-3147f4a8994e"
+    ]
+  }
+}

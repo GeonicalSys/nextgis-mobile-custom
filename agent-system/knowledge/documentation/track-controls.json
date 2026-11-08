@@ -1,0 +1,198 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:track-controls",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/architecture/track-controls.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/track-controls.md"
+    },
+    "frontmatter": {
+      "role": "markdown_frontmatter_lines",
+      "value": [
+        "title: Управление треками и приоритет точечных слоёв",
+        "type: architecture",
+        "last_verified: 2026-10-29",
+        "related_code:",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/TrackColorPalette.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/TrackMapStyle.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/util/TrackActions.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/view/TrackSelectionPanel.java",
+        "  - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+        "  - app/src/androidTest/java/com/nextgis/mobile/rendering/TrackControlsTest.java",
+        "  - app/src/androidTest/java/com/nextgis/mobile/rendering/NativeSqliteVectorRenderingTest.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/LayerDisplayPriority.java"
+      ]
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "",
+        "# Треки на карте и в списке",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:track-controls-rename-preserves-shared-identity",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:track-controls-mixed-hit-testing-and-selection",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:track-controls-hidden-selection-and-history-delete",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:track-controls-current-session-delete-and-retry",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:track-controls-stop-confirmation-and-session-uuid",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:track-controls-color-assignment-and-preserved-values",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:track-controls-desktop-palette-deferral",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:track-controls-native-glow-selection-and-core",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:track-controls-october-25-color-decision-and-test-scope",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:track-controls-layer-stack-and-geometry-classification",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:track-controls-idempotent-stack-restoration",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:track-controls-sqlite-alias-order-and-wrapper-ownership",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:track-controls-order-repair-and-track-only-refresh",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:track-controls-track-controls-regression-matrix",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:track-controls-stop-regression-and-receipt-link",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:track-controls-october-29-sqlite-priority-verification",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:track-controls-field-line-role-and-order",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:track-controls-october-25-mixed-selection-verification",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:track-controls-stop-dialog-dismiss-oracle",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:track-controls-stop-tap-window-and-uid-delivery",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:track-controls-share-selected-track-and-durable-history",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:track-controls-gpx-launch-guards-naming-and-grants",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:track-controls-share-panel-targets-and-jvm-limits",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:track-controls-gpx-async-and-snapshot-unknown",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:track-controls-october-31-panel-and-belka-compile-receipt",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:track-controls"
+    ]
+  }
+}

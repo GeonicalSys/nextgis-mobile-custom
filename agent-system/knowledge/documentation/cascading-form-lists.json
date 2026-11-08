@@ -1,0 +1,177 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:cascading-form-lists",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/architecture/cascading-form-lists.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the NGFP or project-rule subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/cascading-form-lists.md"
+    },
+    "frontmatter": {
+      "role": "markdown_frontmatter_lines",
+      "value": [
+        "title: Зависимые списки NGFP",
+        "type: architecture",
+        "last_verified: 2026-10-30",
+        "related_code:",
+        "  - maplib/src/main/java/com/nextgis/maplib/forms/CascadingLists.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/util/CascadingFormController.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/activity/FormBuilderModifyAttributesActivity.java"
+      ]
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "",
+        "# Зависимые списки NGFP",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:cascading-form-lists-tabs-and-pinned-cascade-recreate",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:cascading-form-lists-gesture-fixture-stability",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:cascading-form-lists-short-viewport-and-form-layout-fixture",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:cascading-form-lists-fitted-picker-and-key-callback",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:cascading-form-lists-legacy-pair-conversion",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:cascading-form-lists-feature-type-selection-before-create",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:cascading-form-lists-ngfp-v1-layout-and-example",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:cascading-form-lists-stable-key-stored-value-and-filter-join",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:cascading-form-lists-validation-graph-and-resource-limits",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:cascading-form-lists-initial-choice-and-descendant-reset",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:cascading-form-lists-metadata-pin-and-draft-recovery",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:cascading-form-lists-common-save-checkpoint-membership-and-null",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:cascading-form-lists-legacy-value-retention-and-name-ambiguity",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:cascading-form-lists-access-lookup-producer-and-parser-ownership",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:cascading-form-lists-ngw-legacy-format-and-round-trip",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:cascading-form-lists-desktop-clone-and-local-identity",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:cascading-form-lists-historical-pr-order-and-version-218",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:cascading-form-lists-deep-cascade-bundle-and-stale-pin-oracles",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:cascading-form-lists-matched-form-meta-and-legacy-pins",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:cascading-form-lists-blank-area-gesture-fixture",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:cascading-form-lists-canonical-legacy-pair-without-graph",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:cascading-form-lists-prefetch-identity-boundary",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:cascading-form-lists"
+    ]
+  }
+}

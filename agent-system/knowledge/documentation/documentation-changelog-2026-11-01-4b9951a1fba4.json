@@ -1,0 +1,67 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-11-01-4b9951a1fba4",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-11-01 — Checkbox и обычное целочисленное поле",
+        "",
+        "MOB-UI-01 продолжает source-карту формы отдельным",
+        "UI-FORM-CHECKBOX-NGFP-VALUE: actual NGFP factory/layout, init_value,",
+        "Boolean Bundle/prefs и Integer0/1 getter отделены от generic FTInteger",
+        "TextEdit/String. NULL и absent control не приравнены к unchecked;",
+        "copy-retention описан в границах выбранного присутствующего Checkbox.",
+        "Один новый контракт/11method/4file guards добавлены с переиспользованием",
+        "11старых guards; прежние Date entries и source expectations целы.",
+        "Actual schema/domain/cursor/native/currentvalues и remote outcome UNKNOWN.",
+        "Баги не классифицированы, product fixes и ranking отложены; source/docs",
+        "checks и Git delivery фиксируются по actual receipts/PR. APK/merge NOT_RUN.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-11-01",
+        "heading": "2026-11-01 — Checkbox и обычное целочисленное поле",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-11-01-4b9951a1fba4"
+    ]
+  }
+}

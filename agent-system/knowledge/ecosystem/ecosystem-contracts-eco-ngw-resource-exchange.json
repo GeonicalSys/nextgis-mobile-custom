@@ -1,0 +1,90 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ecosystem-contracts-eco-ngw-resource-exchange",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ecosystem",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_registry_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_mapping_or_list_key",
+      "value": "ECO-NGW-RESOURCE-EXCHANGE"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "id": "ECO-NGW-RESOURCE-EXCHANGE",
+        "from": "qgis-plugins",
+        "to": "mobile-app",
+        "type": "server_resource_contract",
+        "transport": "NextGIS Web API and Collector resources",
+        "statement": "QGIS publishers and the Android consumer preserve resource identity, type, schema, permissions, style/form composition and sync semantics; the Web GIS field-project catalog is the resource_group with keyname lisa for both Lisa and Belka apps; Collector resmeta.items.district is a single Latin district key that must match a token in the comma-separated feature district field (not exact string equality); SYNC_NONE layers compare the filtered server feature count and reload a full snapshot when it differs unless the server reports zero; export-only idqgs in a vector_only feature schema is included in mobile fields as LONG so the local schema matches NGW, but it does not make the layer Android-editable; Android verifies authoritative NGW class/geometry/fields against serialized config and physical SQLite, repairs serialized field or vector/PostGIS class drift without refill, and uses backup-gated atomic replacement only for physical/geometry mismatch; transient NGW or external-database availability never mutates resource identity or local data, and Android retries only failed pull layers without repeating successful ones. Published kvartal/vydel/vertexfeature_recent mobile configs may still carry local_vector_tiles; the current mobile preserves it as inert origin metadata, selects direct SQLite tiles for supported ordinary renderers and excludes hidden vectors from map identify. Schema, authoritative geometry/FID, editability and sync policy remain separately authoritative. The producer configs are unchanged; exact clean-source bytes/hashes are regression inputs, not business data. Canonical LISA scenario/resource references to the removed LocalVectorTileProvider require owner follow-up before end-to-end closure.",
+        "owners": [
+          "app",
+          "maplib",
+          "maplibui"
+        ],
+        "local_docs": [
+          "docs/architecture/lisa-ecosystem.md",
+          "docs/architecture/ngw-sync-and-storage.md",
+          "docs/architecture/collector-projects.md"
+        ],
+        "external_docs": [
+          {
+            "system": "qgis-plugins",
+            "path": "geonical-docs/architecture/mobile-client.md"
+          },
+          {
+            "system": "qgis-plugins",
+            "path": "geonical-docs/runbooks/06-ngw-webgis-deploy.md"
+          },
+          {
+            "system": "qgis-plugins",
+            "path": "stand_project/ngw_standard/Общий для всех/mobile_configs/kvartal.json"
+          },
+          {
+            "system": "qgis-plugins",
+            "path": "stand_project/ngw_standard/Общий для всех/mobile_configs/vydel.json"
+          },
+          {
+            "system": "qgis-plugins",
+            "path": "stand_project/ngw_standard/Общий для всех/mobile_configs/vertexfeature_recent.json"
+          }
+        ],
+        "verify": [
+          "SMOKE-NGW-URL-IMPORT",
+          "SMOKE-COLLECTOR-IMPORT",
+          "SMOKE-MULTI-ACCOUNT-SYNC"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/sectioned-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:ecosystem-contracts-eco-ngw-resource-exchange"
+    ]
+  }
+}

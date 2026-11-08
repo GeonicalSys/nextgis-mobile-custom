@@ -1,0 +1,145 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-mobile-project-load",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-MOBILE-PROJECT-LOAD"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-MOBILE-PROJECT-LOAD",
+        "group": "project",
+        "title": "Загрузка мобильного проекта из WebGIS",
+        "surface": "Меню добавления слоя → Загрузить проект",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [
+          "menu_load_collector_project"
+        ],
+        "meaning": "Действие читает выбранный серверный мобильный проект и начинает его внутренний импорт в наше приложение; оно не запускает отдельное приложение Collector.",
+        "value_origin": "LayersFragment → MainActivity.loadCollectorProject → LoadLisaCollectorProject; выбранные Connection и LisaCatalog.Ref.remoteId → NGW GET → CollectorResource → owning workspace/import batch.",
+        "units": "Нет физических единиц. Account, remote resource ID, project UID и локальный workspace имеют разные роли.",
+        "updates": [
+          "Без аккаунта предлагается собственный NGWLoginActivity; один аккаунт используется сразу, несколько выбираются пользователем.",
+          "Каталог keyname lisa и список прочитанных проектов разрешаются по выбранному Connection. Выбор строки только меняет radio state; импорт начинается по кнопке Загрузить."
+        ],
+        "actions": [
+          "Загрузить проект",
+          "Выбрать аккаунт и строку проекта",
+          "Отмена"
+        ],
+        "conditions": [
+          "Существующий ProjectSyncInterruption gate действует на входе и перед импортом.",
+          "Load выключен до выбора индекса; используется именно projects.get(selected[0]), а не поиск по имени.",
+          "Это dedicated Lisa-catalog route, а не UI-PROJECT-CHOOSER для сохранённых рабочих областей и не arbitrary customer-root selector.",
+          "Неполный snapshot или отсутствие поддерживаемых items останавливает импорт. Registry workspace/lease admission и batch failure сохраняют прежние ограничения.",
+          "Серверный collector_project и классы исходников сохраняют имена протокола. User-facing названия говорят мобильный проект."
+        ],
+        "saved_state": "Registry готовит owning workspace под operation lease. Принятие batch и workspace.save не являются полным download/sync ACK. Эта copy-правка не меняет project/remote IDs, форматы, очереди, разрешения или сохранённые данные.",
+        "source_ids": [
+          "WF-MOBILE-PROJECT-LOAD-MENU",
+          "WF-MOBILE-PROJECT-LOAD-ENTRY",
+          "WF-MOBILE-PROJECT-LOAD-ACCOUNT",
+          "WF-MOBILE-PROJECT-LOAD-LIST",
+          "WF-MOBILE-PROJECT-LOAD-SELECT",
+          "WF-MOBILE-PROJECT-LOAD-FETCH",
+          "WF-MOBILE-PROJECT-LOAD-ADMISSION",
+          "WF-MOBILE-PROJECT-LOAD-HTTP",
+          "WF-MOBILE-PROJECT-LOAD-DISCOVERY"
+        ],
+        "expectations": [
+          "Oracle: две строки с одинаковым displayName, но разными remoteId загружают именно выбранный Ref только после нажатия Загрузить; Cancel не запускает importProject.",
+          "Oracle: при отсутствии аккаунта предлагается диалог входа; его положительная кнопка открывает собственный NGWLoginActivity, а отмена не начинает импорт. Выбранный проект читается через NGW API и обрабатывается нашим workspace/fill, без запуска отдельного Collector APK.",
+          "Контрпример: row tap сразу импортирует, displayName подменяет remoteId или успешная постановка batch объявляется полным завершением проекта."
+        ],
+        "unknowns": [
+          "Native dialog/window/font/rotation/effective flavor-locale resource merge и установленное приложение здесь не исполнялись.",
+          "Ограниченный обход и пропущенные failed child reads не доказывают полный список WebGIS; remote/custom catalog accessibility и фактический network outcome требуют отдельной приёмки.",
+          "Подписи не доказывают завершение импорта, scripts adoption, server authorization или scope ownership."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-mobile-project-load-menu",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-mobile-project-load-entry",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-mobile-project-load-account",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-mobile-project-load-list",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-mobile-project-load-select",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-mobile-project-load-fetch",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-mobile-project-load-admission",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-mobile-project-load-http",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-mobile-project-load-discovery",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-mobile-project-load"
+    ]
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:track-controls-stop-regression-and-receipt-link",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:track-controls"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/track-controls.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Related track-followup добавляет Stop/Cancel/Back во всех ручных входах,",
+        "stale notification/dialog, split, 24 профиля Stop и native SQLite upgrade.",
+        "Разбор сегодняшнего журнала и фактические проверки:",
+        "[квитанция доработки](../reference/track-followup-2026-10-25.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:track-controls-stop-regression-and-receipt-link"
+    ]
+  }
+}

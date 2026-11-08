@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:shared-underlays-focus-race-local-install-receipt",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:shared-underlays"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/shared-underlays.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Последующее исправление focus race отдельно проверено с локальным проверенным",
+        "APK `3.1.2.18/213` в cache: 20 focus events оставляют ровно один permission",
+        "диалог и phase ready; после завершения диагностического процесса продолжение",
+        "восстанавливается. Выдача Android-разрешения автоматически открывает один",
+        "Package Installer. Контрольная установка отменена; Debug остаётся на 212.",
+        "Локальный тестовый manifest не публиковался и не выдаётся за серверную версию.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "The cached 213 APK and permission/install transition are separate from public 212 and retained data."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:shared-underlays-focus-race-local-install-receipt"
+    ]
+  }
+}

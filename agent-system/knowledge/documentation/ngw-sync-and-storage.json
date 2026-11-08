@@ -1,0 +1,582 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:documentation-ngw-sync-and-storage",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/architecture/ngw-sync-and-storage.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the published Markdown address and pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "frontmatter": {
+      "role": "markdown_frontmatter_lines",
+      "value": [
+        "title: NGW sync, локальное хранение и восстановление",
+        "type: architecture",
+        "last_verified: 2026-10-30",
+        "related_code:",
+        "  - app/src/test/java/com/nextgis/mobile/fragment/SettingsWorkspaceMoveTest.java",
+        "  - app/src/main/java/com/nextgis/mobile/util/SelectMapPathPreference.java",
+        "  - app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/MapContentProviderHelper.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/Table.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/DatabaseContext.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureGeometryValidator.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureCountParser.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/NgwSyncNoneReloadDecision.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/service/NGWSyncService.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/NgwSyncIo.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/NgwSyncProgress.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/SyncAdapter.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/NGWResourceUrl.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/ResourceGroup.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/mapui/SyncAccountWorker.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/util/NGWResourceImportHelper.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/util/LayerBackupManager.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/util/LayerFillStaging.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/util/ProjectOperationCoordinator.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/util/SchemaRebuildRetryGuard.java",
+        "  - maplibui/src/main/res/xml/authenticator.xml",
+        "  - app/build.gradle",
+        "  - app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java",
+        "  - app/src/main/java/com/nextgis/mobile/datasource/SyncService.java",
+        "  - app/src/main/java/com/nextgis/mobile/util/OfflineSyncIntentService.java",
+        "  - app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java",
+        "  - app/src/main/java/com/nextgis/mobile/util/SyncRecoveryJournal.java",
+        "  - app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java",
+        "  - app/src/main/java/com/nextgis/mobile/MainApplication.java",
+        "  - app/src/main/java/com/nextgis/mobile/util/MaintenanceReminders.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/SyncWorkspaceSession.java",
+        "  - app/src/main/java/com/nextgis/mobile/util/SyncJournalCommit.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/MapBase.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/ProjectSyncState.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/util/CollectorImportJournal.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/mapui/LocalChangesWorker.java",
+        "  - app/src/androidTest/java/com/nextgis/mobile/util/ProjectSyncRunnerTest.java",
+        "  - app/src/test/java/com/nextgis/mobile/util/SyncRecoveryJournalTest.java",
+        "  - app/src/androidTest/java/com/nextgis/mobile/util/SyncRecoveryJournalNativeTest.java",
+        "  - maplib/src/test/java/com/nextgis/maplib/util/ProjectSyncStateTest.java",
+        "  - app/src/test/java/com/nextgis/mobile/util/SyncJournalCommitTest.java",
+        "  - maplib/src/test/java/com/nextgis/maplib/reliability/SyncWorkspaceIsolationTest.java",
+        "  - app/src/main/res/xml/syncadapter.xml"
+      ]
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "",
+        "# NGW sync, локальное хранение и восстановление",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-workspace-ownership-intro",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-workspace-identities",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-queue-and-child-admission",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-provider-uris-and-notifications",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-account-ack-and-project-clock",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-post-pair-ack-recovery-and-retries",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ngw-sync-and-storage-failed-clock-commit-f61",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-cancellation-and-child-drain",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ngw-sync-and-storage-workspace-source-review-and-open-witnesses",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-storage-move-reset-admission",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-storage-move-retire-and-actual-path",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-storage-terminal-refresh-and-reset-effects",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-storage-cancellation-and-release",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ngw-sync-and-storage-storage-move-source-verification",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ngw-sync-and-storage-storage-clock-pin-f61",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-rtree-buffered-legacy-read",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-shared-history-database-resolution",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-local-edit-commit-admission",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-local-outbox-worker-scheduling",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-full-project-clock-consumers",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-sync-regression-scope",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-offline-admission-and-retries",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-new-feature-type-save",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-required-fields-metadata-and-save",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ngw-sync-and-storage-required-fields-october-verification",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-gps-power-saving-segment-gap",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-track-mode-storage",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ngw-sync-and-storage-september-device-anr-and-snapshot-comparison",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-library-and-app-responsibilities",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-url-resource-import",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-resource-selector-recovery",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-account-identity-and-variants",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ngw-sync-and-storage-production-221-account-frame",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-account-authentication-readback",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-destructive-mutation-backup-gate",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-backup-content-and-local-attachments",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-attachment-hydration",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-backup-quota-and-read-only-layer",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-local-attachment-retention-after-push",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-layer-config-and-account-scheduling",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-full-sync-workspace-scope-and-leases",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-pre-sync-integrity-repair-and-diagnostics",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-recovery-pair-journal",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-collector-composition-recovery-journal",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-foreground-service-and-notifications",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-service-cancellation-and-workspace-reservation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-sync-activity-and-progress",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-remote-retry-and-push-before-pull",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-incremental-pull-and-spatial-index",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-untracked-streamed-snapshot",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-sync-none-and-config-refresh",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-sync-timeouts-and-cancellation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-sqlite-durability-gates",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-explained-snapshot-gap-checkpoint",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-safe-sync-tracing",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-authoritative-schema-rebuild-decision",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-staged-layer-replacement",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-multipolygon-import-validation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-owning-layer-fill-and-recovery",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-sync-and-rebuild-regression-scope",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-local-crud-and-outbox-transaction",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-backup-format-and-removal",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-attachment-removal-and-id-ack",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-credentials-and-normalization",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-track-send-setting-and-registration",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-shared-track-batch-ack",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-outbox-and-track-indicators",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-cascades-and-null-clearing",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-project-form-metadata-and-rules",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-queue-diagnostics",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-verification-account-isolation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-interrupt-safe-journal-commit",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ngw-sync-and-storage-interrupted-journal-native-regressions",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ngw-sync-and-storage-journal-process-view-defect-witness",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-journal-process-view-and-owner-state",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ngw-sync-and-storage-journal-process-view-verification",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ngw-sync-and-storage-historical-lookup-key-set-replacement",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-ngfp-prefetch-reader-and-consumers",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ngw-sync-and-storage-ngfp-prefetch-source-and-delivery-basis",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ngw-sync-and-storage-lookup-and-snapshot-draft-basis",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ngw-sync-and-storage-desktop-producer-and-ngw-id-source-frame",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-streamed-snapshot-http-206-admission",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-lookup-save-errors-and-ack-gates",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ngw-sync-and-storage-lookup-and-snapshot-source-verification",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-typed-error-causes-and-user-messages",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ngw-sync-and-storage-error-message-regression-and-controls",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-resource-selector-compact-state",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-vector-spatial-cache-recovery",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ngw-sync-and-storage-vector-cache-device-witness-and-source-verification",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ngw-sync-and-storage-full-clock-pr86-delivery-and-f61-supersession",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-full-clock-prefs-owner-and-publication",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-full-clock-api-keys-and-disk-limits",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-full-clock-writer-and-readers",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ngw-sync-and-storage-full-clock-source-verification-and-replay",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ]
+  }
+}

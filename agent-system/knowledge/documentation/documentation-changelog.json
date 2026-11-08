@@ -1,0 +1,1167 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:documentation-changelog",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/changelog.md",
+          "agent-system/knowledge/documentation/documentation-changelog.json"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the published documentation changelog and the pinned source layouts for independent replay."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "frontmatter": {
+      "role": "markdown_frontmatter_lines",
+      "value": [
+        "title: История документационной системы",
+        "type: changelog",
+        "last_verified: 2026-11-07",
+        "related_code:",
+        "  - docs"
+      ]
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "",
+        "# История документационной системы",
+        ""
+      ]
+    },
+    "original-editions": {
+      "role": "pinned_prior_changelog_frames",
+      "value": {
+        "draft": {
+          "revision": "b372c8611f981b367f1088b1c1fd626c706f5b9d",
+          "blob": "e1294e2523c6f59ff68b6f15503b445bbb944a19",
+          "sha256": "1b39fecfcc6f56aee5eb36e8b9b7a8b4ddd31e0c20852bb888e74b0522c50dc2",
+          "bytes": 220498,
+          "frontmatter_lines": [
+            "title: История документационной системы",
+            "type: changelog",
+            "last_verified: 2026-11-05",
+            "related_code:",
+            "  - docs"
+          ],
+          "dated_entries": 205,
+          "top_level_count": 202
+        },
+        "default": {
+          "revision": "68bef7d199c4b83ac0ea4b0a9df263ca622d1bc4",
+          "blob": "d03d325e01a2e5d045b7061e4612e5292b3752b0",
+          "sha256": "1ada27954bf93a0a84d7035ca19cb96f12ac0691ad2e690a76e75c414a201e2a",
+          "bytes": 204469,
+          "frontmatter_lines": [
+            "title: История документационной системы",
+            "type: changelog",
+            "last_verified: 2026-11-02",
+            "related_code:",
+            "  - docs"
+          ],
+          "dated_entries": 164,
+          "top_level_count": 161
+        },
+        "draft_only_prefix_entries": 41
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:documentation-changelog-authoring",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-07-app-knowledge-cutover",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-06-library-entrances",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-06-app-entrances",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-06-release-notes",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-06-history-indexes",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-06-owner-journal",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-06-0283e24006c4",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-05-ebc61cecfe1e",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-925d2b035f1e",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-9385f62649f7",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-5b6da42c289d",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-b69bf76ecd0f",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-255f33402472",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-a0e7cb3c8110",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-60744316136f",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-095e8d5b654e",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-0f0d1d62a61d",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-b14d205b8537",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-b2fd35929dc9",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-5a10d7264213",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-fdb995e80d18",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-d45b7297894b",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-c5b7c1e0ce35",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-ac5e6dff3ff5",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-3668b068ee5b",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-209ec87478a2",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-c13258a6dfbf",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-6d084d8d28c1",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-70ec269af70e",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-87c265536fed",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-58d26960184a",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-6047fd7e8827",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-fef61992161a",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-bb08ae94ed2e",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-3d4ed2a9ce0a",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-2ab144daae4f",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-caa083a1ead0",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-92e4618d56ff",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-d8c04ec71fc3",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-687c8ad4467c",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-6267a9a6e9d5",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-2214c4ad0027",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-14928069984c",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-e7be227f31ac",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-04-a52353907bfc",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-03-dcbd78214933",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-03-54f21352af73",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-01-ea5600860952",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-01-7f36765d730e",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-01-b8204dc84558",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-01-c8fe57aec636",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-01-4b9951a1fba4",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-01-a21a454598a2",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-30-c671f678c400",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-30-5c18b5e20b65",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-30-49da04090423",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-29-7ff581c6824b",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-29-0c4ba73e9db7",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-29-f2810376ec11",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-29-4c7e9884c643",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-28-0a0299d29bb7",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-28-1d24dcb1f467",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-28-829416987c8d",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-28-005cc769e758",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-27-3b5b8c329280",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-28-2e6bc34f9b1a",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-28-0fd7fb35e724",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-28-cdffa4ce67e0",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-28-2d7ef86999d7",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-28-ea3f5114f4a3",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-28-a00a6f73e60c",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-28-3147f4a8994e",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-28-204ed51cf4bb",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-27-db6624f8c4b1",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-27-6cb86e63fc55",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-27-738da2c40b3f",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-27-85f3256f0ab8",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-27-57bff9eeb9a4",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-27-44b4530cf8c8",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-26-cb6e00ac4269",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-26-8efa39b6da75",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-26-0f1fdc6111b9",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-26-0971e8e34e46",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-26-b5507dfcc4bb",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-26-026f25f629e9",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-26-bfc610f63911",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-26-00f70e6cc186",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-26-d06f0598bf90",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-26-df6130f5f104",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-26-6f150db3a0c0",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-26-0ea924581638",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-25-a30a281159a7",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-25-a772bbca6e3c",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-25-557a2d355802",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-25-fd0a589583b6",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-25-085dc441b200",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-25-bedc7dee6d93",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-25-6cae8c0aa0ba",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-25-22dba900f8bf",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-25-3075ba39e4cd",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-24-2a65b60a4dff",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-24-d9dae2020603",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-24-6384ecd95d6a",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-24-7d10936a58a8",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-24-6758134d11e6",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-23-46def6124264",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-23-53033efaf45a",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-23-d2bfeca83978",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-23-6f283a679668",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-23-1e63f092b2cc",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-17-b7b76d4c8527",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-17-f30be30ec50e",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-17-c19aff9e4595",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-17-fa57acc22b89",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-17-eb0ad3c0ecfa",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-17-bcd5d91d3711",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-17-1c4ce23e5a86",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-17-049c3c35c743",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-17-46d94b3d5367",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-17-79b7be78e791",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-17-be0758fc0019",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-16-1a7d3b367c04",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-15-be6bc8729e47",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-15-4fa2d3314b83",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-15-9da46ce9446d",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-15-01d2a565b9ff",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-15-a497af3f42d2",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-15-19ba18d5f07a",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-14-d49cd81d6136",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-14-8f5ded9f387b",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-14-a0d46b64382e",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-14-130142927e8a",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-13-c9d004fe85c5",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-13-0f9554dc523f",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-13-766effbeeb3c",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-13-5bcf7f4109e8",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-13-364335b4d5b5",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-13-d5b6352a5d70",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-12-a82ae8e23695",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-12-3b2e8a2ca255",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-11-26142f54fd1f",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-11-592b1b223fb8",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-11-f5d99695325e",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-11-1f7baae72eae",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-11-98f16c4abca8",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-10-7e29eb7c7937",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-10-7af2037be0bf",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-10-84a2fc959609",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-10-fd7e4bd37abd",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-10-c93e1dbf5df9",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-10-733c8b33f72f",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-10-2b98ca750ded",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-10-c49c85392359",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-09-c886cf2519ae",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-09-c3e7dce22159",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-09-001aba9f081e",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-09-96ccdb136058",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-09-641db26402f4",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-09-c43216b7ee27",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-08-023b501e92a2",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-08-012cb8ccd29e",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-08-b770135f56f5",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-08-b38dd614e2bd",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-08-c536255d2cf2",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-08-4ba9fd418ed6",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-07-903952e394cd",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-06-3196761fda76",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-04-3549c46a3bbf",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-03-56c7709c9d5d",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-09-23-e39095f3e051",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-09-22-6843c6d7c901",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-09-21-36eba6c30dda",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-09-20-82834e611c7a",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-09-18-cbdbacf80be9",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-09-17-5bc56dcf4ed5",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-09-16-135a65c2272a",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-09-15-9499aee670fe",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-09-14-d089821d330a",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-09-13-92135a0bf009",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-09-12-97348e418543",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-09-11-d31fac478f87",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-09-08-f82a5829a918",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-08-27-cde101dfb802",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-08-26-10aaa1ebeacb",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-08-25-43833086dcba",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-08-24-7bc9976065df",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-08-23-ebaf4b33e75f",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-08-22-035e2bef524a",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-08-21-a914b436b741",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-08-20-414302dbf5ea",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-08-16-d6b7e2c69d2d",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-08-15-62790305f81d",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-08-14-1e96549e3956",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-08-12-a91021723893",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-08-01-cf60422aa0bf",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-07-30-6e50aca66f87",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-07-29-fc53f1ce7f15",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-07-25-d1de38123286",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-07-24-5c20e4f57ac9",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-07-23-cad4de6a528d",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-07-20-2bacd6e5d1a9",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-07-19-bc0d01481292",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-25-f032879008de",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-25-824e49dfda35",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-28-bec8886bdde6",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-30-4fc458e2dbde",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-30-c316f373915c",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-30-347e01c7dcf2",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-30-a054ed2fa1a4",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-10-31-da21c189f817",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-02-df41c1af3c6e",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:documentation-documentation-maintenance",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:documentation-changelog"
+    ]
+  }
+}

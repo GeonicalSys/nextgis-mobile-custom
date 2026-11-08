@@ -1,0 +1,62 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-25-6cae8c0aa0ba",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-25 — Новый локальный APK с треками и цельными подписями",
+        "",
+        "Зафиксированы [результаты и разбор Stop](reference/track-followup-2026-10-25.md),",
+        "контракт подписей видимой части и [квитанция Release `caed88b`](history/lisa-local-release-tracks-labels-2026-10-25.md).",
+        "Полная version matrix и подпись проверены; 887 unit и 11 финальных адресных",
+        "native PASS. Указаны прежние неуспешные batches, частичная phone проверка и",
+        "ограничения. Первый APK сохранён отдельно; merges и публикации не выполнялись.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-25",
+        "heading": "2026-10-25 — Новый локальный APK с треками и цельными подписями",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-25-6cae8c0aa0ba"
+    ]
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-wf-attachment-bind-state",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "WF-ATTACHMENT-BIND-STATE"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "WF-ATTACHMENT-BIND-STATE",
+        "repository": "root",
+        "path": "easypicker/easypicker/src/main/java/com/keenfin/easypicker/PhotoPicker.java",
+        "marker": "public void onBindViewHolder(final PhotoViewHolder holder, final int position)",
+        "requires": [
+          "fileInCache.exists() && fileInCache.length() > 0",
+          "previewFile.exists() && previewFile.length() > 0",
+          "holder.mPhotoDownload.setVisibility(inProgress? GONE : VISIBLE)",
+          "holder.progressBar.setVisibility(inProgress? VISIBLE : GONE)"
+        ],
+        "forbids": [],
+        "sha256": "2438b951e1c7be7a176fa2d4ac8875579bac17e2ee7d8fd4ea6dad42f5047dd6"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-wf-attachment-bind-state"
+    ]
+  }
+}

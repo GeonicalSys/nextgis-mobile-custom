@@ -1,0 +1,80 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-knowledge-prose-authoring",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          ".",
+          "docs/README.md",
+          "docs/registry/README.md",
+          "docs/guides/documentation-maintenance.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the established App documentation address and original Git range."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "agent-system/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Edit the App documentation entry, change checklist, documentation and registry",
+        "indexes, documentation maintenance guide, five user guides, safe patterns,",
+        "glossary and build, compatibility, flavors and settings references in",
+        "`knowledge/documentation/`.",
+        "Run `python -B docs/scripts/prose_knowledge.py --write` to refresh their Markdown",
+        "views. The ordinary validator reads the records and checks the views.",
+        "GitHub, links in existing instructions and standalone doc",
+        "packs continue to open the published paths. The",
+        "[prose provenance](provenance/documentation.json) pins the original Git bytes.",
+        "Edit the App pull request template in `knowledge/documentation/pull-request-template.json`.",
+        "Use the same projector to refresh `.github/PULL_REQUEST_TEMPLATE.md` at its GitHub address.",
+        "",
+        "Edit the repository landing page in `knowledge/documentation/repository-readme.json`.",
+        "The same projector refreshes the root `README.md` for GitHub and local readers.",
+        "The separate [historical review](knowledge/documentation-evidence/repository-readme-original.json)",
+        "pins the earlier Git text and records the decision for each original section.",
+        "",
+        "Edit the three module scaffold inputs in the `scaffold-*-template.json` records",
+        "under `knowledge/documentation/`. The App scaffold uses these records for a",
+        "draft module pack. Run the prose projector to refresh the literal templates",
+        "at `docs/templates/module-docs/` for independent documentation folders.",
+        "",
+        "Add documentation changelog events as dated records in `knowledge/documentation/`.",
+        "The `documentation-changelog.json` record orders them and the prose projector",
+        "updates `docs/changelog.md`. Follow the [authoring steps](../docs/guides/documentation-maintenance.md#журнал-документации).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-knowledge-prose-authoring"
+    ]
+  }
+}

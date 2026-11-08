@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-08-b38dd614e2bd",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-08 — Багрепорты на собственный сервер",
+        "",
+        "- AppDiagnostics подключает Sentry к GlitchTip после isolated-script guard;",
+        "  event содержит stack/device/version и структурированные стадии работы.",
+        "- DiagnosticsTransport сохраняет SDK envelopes при offline/5xx/rate limits;",
+        "  connected WorkManager retry работает без Activity и GIS sync. Штатный транспорт",
+        "  SDK 8.37.1 удаляет отчёт при HTTP 503, поэтому заменён через ITransportFactory.",
+        "- Добавлены redaction, ограничение повторов handled ошибок, native offline/fatal/",
+        "  restart/server-recovery проверки, пользовательские и агентские инструкции.",
+        "  Версии приложения и библиотек не менялись.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-08",
+        "heading": "2026-10-08 — Багрепорты на собственный сервер",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-08-b38dd614e2bd"
+    ]
+  }
+}

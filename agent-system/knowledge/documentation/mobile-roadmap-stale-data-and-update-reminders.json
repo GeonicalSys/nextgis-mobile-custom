@@ -1,0 +1,97 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:mobile-roadmap-stale-data-and-update-reminders",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "implemented",
+    "source_verification": "UNKNOWN",
+    "merge": "merged",
+    "runtime_verification": "UNKNOWN",
+    "release": "unknown",
+    "retention": "Keep the source clocks, readiness states and owner decision on advisory actions with their separate evidence."
+  },
+  "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The advisory reminders landed. The whole phone and tablet acceptance retains the original conditions.",
+        "implementation": "App 78 has separate full online-project sync, update-check and known-update clocks. Local-project exclusions, same-process deduplication and advisory actions remain distinct.",
+        "source_verification": "The scoped tests belong to the App 78 reminder and word-fit receipts. The initial card keeps its own behavior scope.",
+        "merge": "App 78 merged at 769629c7. Current reminder ownership still points to the App and existing ProjectSyncState/updater.",
+        "runtime_verification": "The addressed UI checks and Full phone/tablet results keep their own frames. The complete two-device acceptance remains open.",
+        "release": "The 224 package history and later candidate gates are recorded separately under MOB-01 and MOB-REL-01.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "769629c7ccf6f6e065006b7ebecb8d702ee0d369",
+            "path": "update-reports/entries/android-20261025-maintenance-reminders.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "68bef7d199c4b83ac0ea4b0a9df263ca622d1bc4",
+            "path": "app/src/main/java/com/nextgis/mobile/util/MaintenanceReminders.java"
+          }
+        ]
+      }
+    },
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## UX-05 Напоминание об устаревших данных и обновлении",
+        "",
+        "Приоритет P1. Состояние: В PR #78; адресные emulator/unit/UI проверки пройдены, Full смартфона и планшета ещё выполняется. Владелец — Android app.",
+        "Причина: полевые устройства неделями работают без интернета или в авиарежиме.",
+        "Зависимости — существующие ProjectSyncState и проверенный self-hosted updater;",
+        "нового серверного контракта нет. Полная приёмка смартфона/планшета выполняется",
+        "после этого изменения; остальные задачи очереди не запускаются и не расширяются.",
+        "",
+        "Приёмка: более семи суток без успешного полного sync активного онлайн-проекта",
+        "и без успешной проверки обновлений различаются. У локального проекта sync не",
+        "проверяется. Известное более недели обновление даёт разные сообщения до загрузки",
+        "и после проверенной загрузки; новое издание не сбрасывает отсчёт уже ожидающего",
+        "обновления. Предупреждение не блокирует работу, не запускает sync/установку само",
+        "и не повторяется при повороте/сетевом retry в том же процессе. Неизвестная старая",
+        "история получает неделю наблюдения без выдуманной даты успеха. Unit, native UI",
+        "в обеих темах/ориентациях и крупном интерфейсе; затем Full на обоих устройствах.",
+        ""
+      ]
+    },
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "UX-05"
+    },
+    "priority": {
+      "role": "priority_at_pinned_roadmap_basis",
+      "value": "P1"
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "The roadmap records a scoped PR #78 checkpoint with addressed tests and pending Full. Whole-task runtime and release require their own evidence."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-stale-data-and-update-reminders"
+    ]
+  }
+}

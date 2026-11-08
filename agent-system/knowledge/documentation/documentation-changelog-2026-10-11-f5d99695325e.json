@@ -1,0 +1,73 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-11-f5d99695325e",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-11 — «Контрастная орбита» на пёстрых подложках",
+        "",
+        "- У маркера плотный синий диск, белая обводка с тонкой тёмной кромкой и",
+        "  увеличенный треугольник. Центр фикса и compass/course fallback сохранены.",
+        "- Сектор компаса увеличен до 56 логических пикселей, полупрозрачная заливка",
+        "  дополнена отдельными белым и синим контурами. Метрический GPS radius прежний.",
+        "- Rendering/location/settings contracts, пятислойный инвариант, module packs,",
+        "  native graphics smoke и карточки отчёта обновлены. Official app/maplib HEAD",
+        "  повторно сверены через GitHub API; оба SHA совпадают с проверкой «Орбиты».",
+        "- Порядок доставки: maplib Merge Commit → pin remote merge-коммита в app →",
+        "  app Squash Merge. Release APK до закрытия этой цепочки не собирается.",
+        "- Исправлена подготовка BackgroundLocationWarningTest: после ограничения",
+        "  фонового UID тест возвращается кнопкой Back из helper Activity, сохраняя",
+        "  ожидание RESUMED и все проверки предупреждения/настроек/отсутствия записи.",
+        "  Встроенный broadcast ActivityScenario задерживался на API 36 и давал таймаут.",
+        "- Maplib #48 слит Merge Commit `f2c676a6ea0e35dfb97f539ee3b5a9b653b273ab`;",
+        "  app #57 закрепляет fetched remote SHA. Все пять owner repositories проверены,",
+        "  иных открытых требуемых PR нет. Порядок и проверки записаны в delivery matrix.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-11",
+        "heading": "2026-10-11 — «Контрастная орбита» на пёстрых подложках",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-11-f5d99695325e"
+    ]
+  }
+}

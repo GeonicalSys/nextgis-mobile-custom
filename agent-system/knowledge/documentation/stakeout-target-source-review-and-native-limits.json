@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:stakeout-target-source-review-and-native-limits",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:stakeout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/stakeout.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "UI source pins конструктора/выбора/Bundle/fallback дополняют существующий",
+        "`UI-NAVIGATION-STAKEOUT-TARGET`. Это не native/JVM/NGW acceptance и не новая",
+        "функция продукта; шесть существующих geometry test bodies здесь лишь прочитаны.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "The existing geometry test bodies were read. Native, JVM and NGW acceptance are outside this source checkpoint."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:stakeout-target-source-review-and-native-limits"
+    ]
+  }
+}

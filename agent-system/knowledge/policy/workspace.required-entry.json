@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:instruction:workspace.required-entry",
+  "kind": "instruction",
+  "owner": "android_projects/android_gisapp",
+  "topic": "policy-workspace",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "."
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain editable logical subject and pinned provenance; product implementation/acceptance are separate records."
+  },
+  "facets": {
+    "body": {
+      "role": "permanent_rule",
+      "value": "Перед изменением кода прочитай:\n\n1. Из `C:\\dev\\lisa` выполни `tools\\workspace-preflight.ps1 -Fetch`.\n2. [`docs/START-HERE.md`](docs/START-HERE.md) — ментальная модель и маршрутизация.\n3. [`docs/guides/change-checklist.md`](docs/guides/change-checklist.md).\n4. Открой применимые правила затронутых модулей через общий читатель. Прочитай их `docs/README.md` и `docs/manifest.yaml`. У отдельного репозитория есть собственный `AGENTS.md`.\n5. [`docs/registry/change-impact.yaml`](docs/registry/change-impact.yaml) —\n   blast radius, обязательные документы и проверки.\n6. [`docs/registry/invariants.yaml`](docs/registry/invariants.yaml) и, для\n   upstream-задач,\n   [`docs/registry/upstream-overlaps.yaml`](docs/registry/upstream-overlaps.yaml).\n"
+    },
+    "classification": {
+      "role": "reviewed_knowledge_class",
+      "value": "permanent_rule"
+    },
+    "review": {
+      "role": "classification_reason",
+      "value": "Complete pre-change reading and shared preflight with all six prerequisite groups."
+    },
+    "source_section": {
+      "role": "source_document_context",
+      "value": [
+        "# GeonicalSystem NextGIS Mobile fork — инструкции для ИИ-агентов",
+        "## Обязательный вход"
+      ]
+    },
+    "authority_limit": {
+      "role": "authority_and_acceptance_boundary",
+      "value": "Path applicability is reviewed separately from the rule's textual triggers. Every source condition and heading remains attached; no automatic predicate or lifecycle inference. Stored commands and dates do not grant current execution, freshness or product acceptance. Existing instruction clients/checkers remain effective until measured cutover."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/policy-migration.json",
+    "scopes": [
+      "lisa:mobile:instruction:workspace.required-entry"
+    ]
+  }
+}

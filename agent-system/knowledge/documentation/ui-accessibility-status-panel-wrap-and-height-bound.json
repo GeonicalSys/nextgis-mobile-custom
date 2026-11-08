@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ui-accessibility-status-panel-wrap-and-height-bound",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:ui-accessibility"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ui-accessibility.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "`WrappingLabel` переносит полные слова; слово, которое само шире доступной",
+        "области, адаптивно уменьшается вместо разрыва по буквам. Панель занимает",
+        "область под toolbar/компасом, слева от кнопок карты. Коррекция",
+        "переносится целыми группами. GPS-статус использует общий wrapping layout вместо",
+        "автосжатия каждой координаты до мелкого шрифта. `MapStatusPanel` ограничивает",
+        "телеметрию четвертью доступной высоты карты и вписывает её после переноса,",
+        "оставляя место для действий. Если координаты и масштаб помещаются вместе,",
+        "они остаются сверху; иначе масштаб переходит к коротким GPS/спутникам и точности.",
+        "Помещающиеся вместе показатели не разбиваются на отдельные строки.",
+        "Высота и скорость удалены. При обычном масштабе это",
+        "компактные две строки без пустого footer, проверенные также на высоком DPI."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ui-accessibility-status-panel-wrap-and-height-bound"
+    ]
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:automated-tests-local-docs-and-environment-check-route",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "`tools/docs-check.ps1 -RunTests` выполняет report-card guard с его unit tests,",
+        "строгий change-impact по всему task diff от fetched origin target вместе с",
+        "рабочими/новыми файлами, validator и docs tests. GitHub API/token для этого",
+        "локального сравнения не нужны. До команды сохраняется обязательный preflight.",
+        "Linux Mesa/Xvfb остаётся отдельным ручным окружением; Windows host OpenGL и",
+        "реальные Android устройства не выдаются за проверку того же Linux driver.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:automated-tests-local-docs-and-environment-check-route"
+    ]
+  }
+}

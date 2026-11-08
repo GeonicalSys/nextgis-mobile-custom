@@ -1,0 +1,90 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:mobile-roadmap-mvt-correctness-and-freshness",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "UNKNOWN",
+    "release": "unknown",
+    "retention": "Keep the old offline failure and unresolved freshness question distinct."
+  },
+  "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "Keep the freshness and correctness matrix open, with the old offline blocker in its historical source frame.",
+        "implementation": "App 89 adopts the maplib 66 removal of the HTTP provider. Old render metadata is inert for direct SQLite sources. The older URL invalidation hypothesis belongs to the retired route.",
+        "source_verification": "The removal and current route are source-backed. Freshness after edits, deletions and cross-project ID reuse still needs the direct route's own evidence.",
+        "merge": "Maplib 66 and maplibui 48 reached App 89. That merge covers transport retirement.",
+        "runtime_verification": "The 67f0125 offline HTTP failure remains a historical reproduction. Test direct offline project switches, geometry, label and identify together on the accepted route.",
+        "release": "A future APK release requires its own direct route acceptance.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp/maplib",
+            "revision": "7152e3cd403f9020cebcf752b8299538a85136c1",
+            "path": "update-reports/entries/maplib-20261102-remove-loopback-tiles.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/reference/mobile-full-2026-10-25.md"
+          }
+        ]
+      }
+    },
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "При обновлении существующего источника используется прежний URL тайлов. Нужно проверить обновление уже видимой области после изменения/удаления объекта и синхронизации, без перезапуска и движения карты. Смена проекта с одинаковыми layer ID также не должна показывать данные другого проекта.",
+        "",
+        "Приёмка: геометрия, подпись и identify согласованы; известна версия данных, по которой построен тайл; принята явная инвалидация. Отдельная матрица покрывает multipart, holes, границы тайлов, тонкие полигоны, подписи, порядок/видимость, смену стиля и lifecycle. Пока воспроизведения нет, устаревшее изображение учитывается как риск, а не установленный пользовательский дефект.",
+        ""
+      ]
+    },
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "MVT-01"
+    },
+    "priority": {
+      "role": "priority_at_pinned_roadmap_basis",
+      "value": "P1"
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "The offline blocker and the unresolved stale-tile risk are separate."
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-mvt-offline-blocker-20261026",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-mvt-correctness-and-freshness"
+    ]
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:mobile-roadmap-release-225-renderer-and-debug-import-20261102",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout",
+      "lisa:mobile:task:mobile-roadmap-release-225"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the pinned checkpoint and keep its results within the stated source and runtime bounds."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Уточнение владельца2ноября2026: перед выпуском удалить obsolete loopback vector",
+        "server/ветку renderer; прежние `mobile_render_mode: local_vector_tiles` конфиги",
+        "кварталов/выделов принимает новый direct SQLite source. Общие cache/полная",
+        "геометрия/подписи сохраняются. Добавлен разбор переноса подложек из прежнего Debug:",
+        "жалоба на отсутствие прогресса и10мин без видимого результата, затем Cancel.",
+        "Причина задержки пока UNKNOWN; подтвердить source defects и подготовить исправление.",
+        "Смартфон отключён, новые live/ADB/emulator проверки отложены до новой команды.",
+        "Сейчас source/compile/docs/Draft PR, device acceptance — отдельный следующий этап.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:mobile-roadmap-release-225-renderer-and-debug-import-20261102"
+    ]
+  }
+}

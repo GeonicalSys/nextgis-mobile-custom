@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:app-module-key-components-layersfragment-b39c824ea1",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "app-module-manifest",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [
+      "lisa:mobile:metadata:app-module-manifest"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed module definition and its pinned source provenance."
+  },
+  "facets": {
+    "manifest-field": {
+      "role": "module_manifest_section",
+      "value": "key_components"
+    },
+    "definition": {
+      "role": "module_manifest_ordered_value",
+      "value": {
+        "path": "app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java",
+        "responsibility": "Shared worker snapshot includes enabled-track sent=0 rows, reacts to trackpoint commits and upload-intent changes, and keeps manual track upload available without vector accounts; explain absent network before dispatch, run one serial manual-sync pipeline, reconcile sync animation and the determinate progress ring against worker-owned state and the data-sync lease throughout the visible lifecycle, query pending changes off the main thread with lifecycle and map guards, and confirm explicit rechecking of skipped server geometries on long press."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/app-module-manifest.json",
+    "scopes": [
+      "lisa:mobile:contract:app-module-key-components-layersfragment-b39c824ea1"
+    ]
+  }
+}

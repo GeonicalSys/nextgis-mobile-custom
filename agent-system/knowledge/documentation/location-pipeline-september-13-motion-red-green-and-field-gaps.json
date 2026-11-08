@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:location-pipeline-september-13-motion-red-green-and-field-gaps",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:location-pipeline"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/location-pipeline.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Новые синтетические регрессии воспроизводят ходьбу при accuracy 3/5/8–10 м,",
+        "обычной неопределённости скорости, ранних поворотах, круговом маршруте и плохой",
+        "первой координате. Для заданных тестовых последовательностей подтверждение",
+        "при 3–5 м происходит не позже 8 секунд от старта; при 8–10 м — до 30 секунд,",
+        "с сохранением начала и поворотов. Это границы тестовых сценариев, не гарантия",
+        "для любого реального сигнала. Старый фильтр провалил 6 тестов; новый прошёл",
+        "все 33 проверки отдельного GPS core набора, включая прежнюю реальную запись",
+        "неподвижного A54 в руках. Новый полевой маршрут, длительный сон, автомобиль и",
+        "расход батареи после этих изменений ещё не проверены.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Six former failures and 33 new technical checks are bounded to their scenario windows."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:location-pipeline-september-13-motion-red-green-and-field-gaps"
+    ]
+  }
+}

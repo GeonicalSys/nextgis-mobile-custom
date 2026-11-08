@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-profiler-periodic-checkpoint-and-process-identity",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "После первых 10 секунд и затем каждые 30 секунд writer сохраняет отдельный",
+        "bounded aggregate checkpoint вне raw очереди. Он сохраняет статистику до",
+        "последней полной записи при process kill, но не заменяет terminal footer.",
+        "Header сообщает фактическую process 64-bit identity, kernel `/proc/self/stat`",
+        "field22 start ticks и фактический `_SC_CLK_TCK`. Они связывают сегмент с PID без",
+        "округления и позволяют обнаружить PID reuse. Process start elapsed ms остаётся",
+        "контекстом, а не заменой kernel birth identity; недоступные значения — unknown.",
+        "В рамках одного session",
+        "предпочтителен один проект: scene/time correlation не устанавливает отдельное",
+        "владение нативной памятью каждого слоя или проекта.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-profiler-periodic-checkpoint-and-process-identity"
+    ]
+  }
+}

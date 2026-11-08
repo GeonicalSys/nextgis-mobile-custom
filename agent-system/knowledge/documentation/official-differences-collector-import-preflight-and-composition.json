@@ -1,0 +1,80 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-collector-import-preflight-and-composition",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "14 октября official maplib проверен GitHub API на master",
+        "[`fcddbd2`](https://github.com/nextgis/android_maplib/commit/fcddbd2c03574a9c897eb45f30dbfb2befaa5cc4):",
+        "TrackLayer читает mMap.getDatabase; application-owned shared store там отсутствует.",
+        "Канонические контракты: [треки](../architecture/shared-tracks.md),",
+        "[стили и подписи](../architecture/classic-style-verification.md).",
+        "",
+        "Перед началом приложение убеждается, что сервер отдал описание проекта целиком.",
+        "Если один из ресурсов не прочитан, импорт отменяется, а не создаёт внешне",
+        "успешный, но неполный проект. Уже известные слои определяются по серверному id,",
+        "поэтому два разных слоя с одинаковым названием не мешают друг другу. Реестр",
+        "проектов записывается с резервной копией и при повреждении может быть восстановлен",
+        "по сохранившимся рабочим пространствам.",
+        "",
+        "Если в текущем проекте ещё идёт синхронизация или загрузка данных, подготовка",
+        "нового Collector workspace не начинается и не добавляет проект в реестр.",
+        "Вместо общей однострочной ошибки приложение показывает модальное окно с просьбой",
+        "дождаться завершения операции. Отдельный экран выбора ресурса и встроенный",
+        "диалог используют один результат `BUSY`, поэтому не расходятся по поведению.",
+        "",
+        "При следующей сверке приложение сравнивает текущий серверный состав с локальным.",
+        "Оно добавляет новые управляемые слои, обновляет существующие и обрабатывает",
+        "удалённые с сервера. Слои, которые пользователь добавил вручную, помечаются",
+        "отдельно и не удаляются вместе с серверной композицией.",
+        "",
+        "Сверка защищена от повторного импорта по стабильной паре `account + remote_id`.",
+        "Если у физически существующего слоя потерялась только project-origin metadata,",
+        "она восстанавливается на месте. Неоднозначная identity блокирует применение",
+        "состава и записывает диагностику, а HTTP 404 managed-слоя не превращает его",
+        "молча в несинхронизируемый локальный слой.",
+        "",
+        "Каждое изолированное рабочее пространство получает стандартную подложку",
+        "OpenStreetMap/Mapnik. Она не входит в серверную композицию, остаётся последней",
+        "строкой списка слоёв (нижний слой карты) и не исчезает при повторной загрузке",
+        "проекта. «Мои треки» при этом остаётся первой строкой списка.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-collector-import-preflight-and-composition"
+    ]
+  }
+}

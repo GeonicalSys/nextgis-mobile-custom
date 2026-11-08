@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:manual-resource-profiling-heavy-window-mode-and-byte-bounds",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:manual-resource-profiling"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/manual-resource-profiling.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Каждое тяжёлое окно: native heapprofd sampling1МиБ/dumps10с/block_client=false,",
+        "системный simpleperf `--app PACKAGE`/`task-clock:u`/99Гц/FP. Штатный app runner",
+        "даёт profileable release доступ к perf events; bare shell `-p PID` на T40",
+        "получил permission denied. PID/process segments в итоговых samples проверяются",
+        "отдельно, app selector не объявляется строгим main-PID фильтром. Каждый trace",
+        "ограничен32МиБ. Пять пар — максимум320МиБ; light32МиБ и выбранные app exports128МиБ",
+        "дают480МиБ плюс небольшой резерв metadata в пределах512МиБ. Достижение size cap",
+        "не считается покрытием всей запрошенной длительности.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "The sampling and storage rules are current within the runbook. The T40 bare-shell failure belongs to its observed device."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:manual-resource-profiling-heavy-window-mode-and-byte-bounds"
+    ]
+  }
+}

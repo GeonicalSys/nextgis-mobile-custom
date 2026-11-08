@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:project-scripts-audit-history-window-and-local-scope",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:project-scripts"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the NGFP or project-rule subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/project-scripts.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Первый пакет и следующие этапы",
+        "",
+        "`examples/project-scripts/contractor-audit` проверяет **создание** аудита по",
+        "десяти типам. Сравнение подрядчика — по сохранённому имени, как в этих слоях.",
+        "`issue == \"Да\"`, `date_audit` от даты минус один календарный месяц (включая",
+        "границу, с сокращением дня в коротком месяце) до конца сегодняшнего дня.",
+        "Например, 31 марта → с 28/29 февраля. Исправленные замечания тоже учитываются:",
+        "условие «были», а не «остаются открытыми». 5S и отдельный общий опрос исключены.",
+        "`Нет значения`/пустое не проверяется. `не применимо` не объявляется пустым.",
+        "Проверяется только загруженная на телефон история, включая локальные объекты;",
+        "отсутствие сообщения не доказывает отсутствие замечаний на сервере.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:project-scripts-audit-history-window-and-local-scope"
+    ]
+  }
+}

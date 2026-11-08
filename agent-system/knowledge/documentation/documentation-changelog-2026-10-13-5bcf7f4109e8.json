@@ -1,0 +1,62 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-13-5bcf7f4109e8",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-13 — Разбор открытых GlitchTip отчётов",
+        "",
+        "- Проверены 8 открытых Android-групп: 6 Debug и 2 production. Три UI сбоя уже",
+        "  исправлены текущими PR; старые startup ANR и обработанный отказ разрешения",
+        "  отделены от новых production причин. 503 подтверждён как локальный vector-tile",
+        "  endpoint; ANR главного потока ждёт native renderer. Причины перегрузки/остановки",
+        "  рендера пока не установлены. Статусы сервера сохранены.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-13",
+        "heading": "2026-10-13 — Разбор открытых GlitchTip отчётов",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-13-5bcf7f4109e8"
+    ]
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-knowledge-rendering-and-forms",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          ".",
+          "docs/README.md",
+          "docs/registry/README.md",
+          "docs/guides/documentation-maintenance.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the established App documentation address and original Git range."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "agent-system/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Edit rendering contracts in **knowledge/documentation/map-rendering-*.json**.",
+        "**map-rendering.json** orders the topics for the published architecture.",
+        "The two numbered clauses 12 have separate IDs for rule defaults and identify",
+        "refinement. Preserve their labels and order in the view. Record dated device",
+        "and source results as evidence linked to the applicable topic. After editing,",
+        "run the ordinary prose projector and check the generated Markdown.",
+        "",
+        "Edit map performance topics in **knowledge/documentation/map-performance-*.json**.",
+        "**map-performance.json** preserves their order at `docs/architecture/map-performance.md`.",
+        "Keep cache, admission and rendering contracts separate from D101 and 787",
+        "measurements. Record each run with its source frame, scope and acceptance limits.",
+        "Keep unresolved investigations linked to MOB-04. Run the same prose projector",
+        "after edits and review the generated document.",
+        "",
+        "Edit the classic verification matrix, firefly, polygon styles and visible line",
+        "labels in their respective records under **knowledge/documentation/**.",
+        "Keep the retired HTTP fallback and older runs in historical evidence.",
+        "Use the current SQLite live reload and classic preview records when updating",
+        "renderer and test contracts. Run the same projector after editing.",
+        "",
+        "Edit conditional NGFP rules, cascading lists and project scripts in their",
+        "respective records under **knowledge/documentation/**.",
+        "Keep the common Save boundary, each form pin and the isolated script grants",
+        "distinct. Store dated source anchors and results as historical evidence.",
+        "Run the ordinary projector after editing and verify the established addresses.",
+        "",
+        "Edit feature copying, geometry transforms and feature type creation in",
+        "their records under **knowledge/documentation/**. Keep source identity,",
+        "destination eligibility, gesture cancellation and form checkpoints separate.",
+        "Keep earlier device, boot and integration results as historical evidence.",
+        "Run the ordinary projector after editing and check the established addresses.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-knowledge-rendering-and-forms"
+    ]
+  }
+}

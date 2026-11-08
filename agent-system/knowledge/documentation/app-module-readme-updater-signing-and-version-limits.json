@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-updater-signing-and-version-limits",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "- Self-hosted update принимается только для того же flavor/application/signing",
+        "  identity и с увеличенным versionCode. На Android 9–10 пустой archive",
+        "  `SigningInfo` дополняется legacy `signatures`, после чего сертификат всё равно",
+        "  сверяется по SHA-256 с manifest и установленным пакетом.",
+        "- Ожидание специального разрешения на установку хранится как одноразовый",
+        "  app-private pending manifest; после возврата manifest и APK проверяются снова.",
+        "- Production version принадлежит `defaultConfig`; Lisa Debug переопределяет",
+        "  version через `androidComponents.onVariants`. `versionCode`/`versionName` в",
+        "  `buildTypes` запрещены на AGP 9.x.",
+        "- Update repository использует ветки `lisa`, `belka`, `debug` непосредственно",
+        "  под `https://apps-geonical.ru/lisa-mobile`; сегмента `stable` в URL нет."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-updater-signing-and-version-limits"
+    ]
+  }
+}

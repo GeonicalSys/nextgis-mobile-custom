@@ -1,0 +1,99 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:mobile-roadmap-roadmap-adoption",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "implemented",
+    "source_verification": "PASS",
+    "merge": "merged",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the initial Draft witness and later Git delivery. Preserve the separate authority requirement for branch protection."
+  },
+  "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The review procedure is in use. An automatic roadmap check and merge rule remain a separate open admission stage.",
+        "implementation": "The App instructions, start guide, checklist and PR template lead to the roadmap and require an ID or explicit admission.",
+        "source_verification": "The App 78 merge contains the navigation and template. The current production branch still describes the review rule and its pending automation.",
+        "merge": "App 78 delivered the procedure at 769629c7. The current report hook checks update-report cards under its own contract.",
+        "runtime_verification": "The delivery is a documentation and review procedure.",
+        "release": "This procedure has no APK publication stage.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "769629c7ccf6f6e065006b7ebecb8d702ee0d369",
+            "path": ".github/PULL_REQUEST_TEMPLATE.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "68bef7d199c4b83ac0ea4b0a9df263ca622d1bc4",
+            "path": "AGENTS.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "68bef7d199c4b83ac0ea4b0a9df263ca622d1bc4",
+            "path": ".githooks/pre-push"
+          }
+        ]
+      }
+    },
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## MOB-00 Привязка работы к дорожной карте",
+        "",
+        "Приоритет P1. Состояние: Слито в PR #78; регламент добавлен в документацию, автоматический контроль пока не реализован. Владелец — Android root; бизнес очередь согласует владелец продукта.",
+        "",
+        "Закрепить правило в Android AGENTS.md, docs/START-HERE.md, change-checklist и шаблоне PR. Приёмка: автор обычной и внеплановой доработки может найти карту из стартовых инструкций, указать существующий ID либо добавить новый, объяснить влияние и приложить проверку; ревьюер сверяет смысл и зависимости. Документационная доработка не запускает тяжёлые native проверки сама по себе.",
+        "",
+        "Автоматическую проверку существования ID и обязательных полей выделить следующим шагом: локальный pre-push даёт раннюю обратную связь, серверный PR check охватывает также сторонние и веб-коммиты. Обязательное прохождение check и ревью задаётся правилом слияния целевой ветки; изменение такой настройки требует отдельного полномочия. До внедрения этих мер контроль остаётся регламентом ревью. Один заполненный ID смыслового соответствия не доказывает.",
+        ""
+      ]
+    },
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "MOB-00"
+    },
+    "priority": {
+      "role": "priority_at_pinned_roadmap_basis",
+      "value": "P1"
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "PR #78 delivered the review workflow. Its proposed automated PR gate has its own implementation and still needs authority."
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-roadmap-first-draft-78",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-roadmap-adoption"
+    ]
+  }
+}

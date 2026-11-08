@@ -1,0 +1,93 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-map-locate-fallback",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-MAP-LOCATE-FALLBACK"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-MAP-LOCATE-FALLBACK",
+        "group": "map",
+        "title": "Найти без позиции устройства",
+        "surface": "Locate without fix",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [
+          "menu_locate"
+        ],
+        "meaning": "Fallback targets first enumerated layer with valid extent, not the union of every project extent.",
+        "value_origin": "locateCurrentPosition -> locateFirstLayerExtent -> ordered getAllLayers finite extent -> extent centre -> camera",
+        "units": "WGS84 camera target from EPSG3857 centre; zoom12 clamped; north-up/tilt0.",
+        "updates": [
+          "Explicit Locate without current device centre."
+        ],
+        "actions": [
+          "Skip unsuitable extents; report no location if none usable."
+        ],
+        "conditions": [
+          "Map/camera ready; initialized finite extent."
+        ],
+        "saved_state": "Camera state changes; no project centre metadata or feature is created.",
+        "source_ids": [
+          "map-locate",
+          "map-locate-fallback"
+        ],
+        "expectations": [
+          "Two far-apart valid layers are not a combined fitted project: source selects first.",
+          "Counterexample: successful fallback is not acquired GPS and cannot supply phone coordinates."
+        ],
+        "unknowns": [
+          "Runtime NOT_RUN: no GUI, device, emulator, build or APK resource merge acceptance in this task."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-map-locate",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-map-locate-fallback",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-map-locate-fallback"
+    ]
+  }
+}

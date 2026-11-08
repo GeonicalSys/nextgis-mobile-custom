@@ -1,0 +1,83 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:mobile-roadmap-actionable-errors-and-recovery",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "planned",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "planned",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "UNKNOWN",
+    "release": "unknown",
+    "retention": "Keep the diagnostic payload decision separate from UX scope and preserve operation evidence safely."
+  },
+  "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The proposed attention list combines visible recovery and next actions for several failure classes.",
+        "implementation": "App 86 delivers narrower sync and resource failure messages. The attention list and diagnostic preview still need separate admission.",
+        "source_verification": "Use the existing error-cause and payload policy receipts as constraints. A storage, permission or lifecycle recovery needs its own oracle.",
+        "merge": "App 86 is the scoped message delivery. The consolidated UX proposal needs separate review.",
+        "runtime_verification": "Verify a persistent actionable state across restart and safe recovery with the agreed diagnostic content.",
+        "release": "Release eligibility follows the accepted UX and the existing privacy and support policy.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "57fb5dbabbc17afa136ec8ada1bbf927a600499a",
+            "path": "update-reports/entries/android-20261030-user-facing-errors.md"
+          }
+        ]
+      }
+    },
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## UX-04 Ошибки и восстановление понятным языком",
+        "",
+        "Приоритет P1. Состояние: Предложена.",
+        "",
+        "Единый список «нужно внимание»: восстановить черновик, закончить отправку, проверить разрешение, освободить место. Текст сообщает, что сохранено и что делать дальше. Для ручной передачи поддержке предложить диагностический пакет с предварительным просмотром. Существующая политика полного диагностического payload принята владельцем; изменение состава, доступа и срока хранения требует отдельного решения и не включается в эту UX задачу автоматически.",
+        "",
+        "Приёмка: типовые сетевые, дисковые и lifecycle сбои приводят к понятному следующему действию; повторный старт не прячет проблему. Поддержке хватает безопасного ID операции и технических стадий для поиска, координаты и рабочие данные не отправляются без принятой политики.",
+        ""
+      ]
+    },
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "UX-04"
+    },
+    "priority": {
+      "role": "priority_at_pinned_roadmap_basis",
+      "value": "P1"
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "The existing diagnostic payload policy stays in scope as a constraint."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-actionable-errors-and-recovery"
+    ]
+  }
+}

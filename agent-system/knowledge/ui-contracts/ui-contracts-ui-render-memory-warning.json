@@ -1,0 +1,115 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-render-memory-warning",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-RENDER-MEMORY-WARNING"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-RENDER-MEMORY-WARNING",
+        "group": "map",
+        "title": "Предупреждение об экономии памяти карты",
+        "surface": "Foreground map warning and Map memory menu",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [],
+        "meaning": "Advisory render-resource economy status; slower tile/cache work does not authorize geometry thinning or data removal.",
+        "value_origin": "RenderMemoryGuard -> MapFragment foreground/process claim or MainActivity menu -> showRenderMemoryStatus -> bounded message with fixed actions.",
+        "units": "Resource state and optional layer names; not a measured free-memory quantity or render acknowledgment.",
+        "updates": [
+          "Automatic display is claimed once per application process across maps and Activity recreation.",
+          "Manual menu display is independent of the automatic process claim."
+        ],
+        "actions": [
+          "Continue dismisses the dialog.",
+          "Reload calls the owning MapDrawable.retryMemoryLimitedLayers; its existing resource-policy re-evaluation remains unchanged."
+        ],
+        "conditions": [
+          "Host must remain usable; automatic display additionally requires a resumed/visible map and resource notice.",
+          "The current guard restrictions() returns an empty map; the optional name list does not prove a particular layer lost geometry.",
+          "Programmatic dialog: no XML widgets. Complete title/actions reserve their measured height before the message scroll viewport."
+        ],
+        "saved_state": "No new preference or persistent mode. RenderMemoryNotice owns an atomic static process-session claim.",
+        "source_ids": [
+          "memory-warning-show",
+          "memory-warning-auto",
+          "memory-warning-menu",
+          "warning-dialog-layout",
+          "warning-dialog-measure"
+        ],
+        "expectations": [
+          "Oracle: all129 technical polygon IDs and whole SQL row hashes remain complete through economy/recreation; one automatic notice, with manual access remaining available.",
+          "Oracle: each character has a layout line, no ellipsis, visible glyph extents fit, both complete actions remain inside the dialog and the message can scroll in narrow Russian portrait/landscape themes/font profiles.",
+          "Counterexample: clipping a button, thinning geometry, or treating this notice as an overdue-update timer."
+        ],
+        "unknowns": [
+          "Extracted-helper native acceptance is pending. Earlier Full failed button bounds after correcting trailing-whitespace measurement.",
+          "Component profiles do not establish Full real-window, physical SM-X115, actual OOM/low-memory or all-map performance acceptance."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-memory-warning-show",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-memory-warning-auto",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-memory-warning-menu",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-warning-dialog-layout",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-warning-dialog-measure",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-render-memory-warning"
+    ]
+  }
+}

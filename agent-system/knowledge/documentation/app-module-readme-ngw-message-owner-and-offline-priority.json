@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-ngw-message-owner-and-offline-priority",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Понятные сообщения об ошибках ВебГИС",
+        "",
+        "App принимает только safe resource-backed presentation: known server-only cohort",
+        "показывает возможные техработы/перегрузку и повтор позже. current offline имеет",
+        "приоритет. Старая raw String notification API остаётся sanitized. Manual alert",
+        "строит новый package-scoped Intent только с двумя human strings; account output",
+        "Bundle/owner/raw diagnostics в него не передаются. См. UI-SYNC-FAILURE-MESSAGES и",
+        "INV-NGW-USER-MESSAGES в центральных registries.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-ngw-message-owner-and-offline-priority"
+    ]
+  }
+}

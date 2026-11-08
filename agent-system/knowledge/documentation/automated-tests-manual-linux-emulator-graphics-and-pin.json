@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:automated-tests-manual-linux-emulator-graphics-and-pin",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Linux CI компилирует Kotlin внутри build daemon и завершает его перед запуском",
+        "эмулятора. Host OpenGL/Mesa сохраняется для glyph/image assertions, Vulkan",
+        "эмулятора отключён через -feature -Vulkan по",
+        "[официальной рекомендации для GLES](https://developer.android.com/studio/run/emulator-troubleshooting).",
+        "Это настройка среды тестирования; все native cases и pixel assertions обязательны.",
+        "Emulator binary закреплён на 35.6.11 / build 13610412, используемом в local Full.",
+        "Незакреплённый 37.2.12 / 16428233 терял host EGL process после native suite",
+        "при переходе к enlarged-UI profile. Обновлять pin только с полным graphics/UI",
+        "прогоном; параметр emulator-build описан в",
+        "[android-emulator-runner](https://github.com/ReactiveCircus/android-emulator-runner#configurations).",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Manual Linux route and old emulator failure are independent of the current Windows software admission."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:automated-tests-manual-linux-emulator-graphics-and-pin"
+    ]
+  }
+}

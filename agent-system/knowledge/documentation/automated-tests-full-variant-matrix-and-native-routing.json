@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:automated-tests-full-variant-matrix-and-native-routing",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Если устройств несколько, передать `-PhoneSerial SERIAL -EmulatorSerial SERIAL`.",
+        "Полный прогон включает все unit tests app/maplib/maplibui, tests самого runner,",
+        "APK version matrix Lisa Debug/Lisa Release/Belka Release и документационный",
+        "validator. Затем все обнаруженные native `@Test` маршрутизируются по",
+        "`mobile-test-plan.json`: формы/SQLite/подписи/выбор/обычные UI и диагностика",
+        "на смартфон; mock GNSS/трек/обход/permissions/radio и graphics — на эмулятор.",
+        "Phone и emulator suites используют одинаковую verification identity и разные",
+        "устройства; стираются только disposable fixtures.",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:automated-tests-full-and-check-publication-entry",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:automated-tests-full-variant-matrix-and-native-routing"
+    ]
+  }
+}

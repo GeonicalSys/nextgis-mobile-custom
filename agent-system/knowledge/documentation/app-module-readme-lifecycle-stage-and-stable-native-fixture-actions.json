@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-lifecycle-stage-and-stable-native-fixture-actions",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Native Home/Back/recent-task probe читает Stage на main thread и допускает",
+        "прохождение промежуточного RESTARTED без ошибки getState. Графическая Orbit",
+        "fixture согласует сохранённую app camera с native viewport. Stop-dialog layout",
+        "ждёт OnDismiss и подтверждает единственный DOWN/UP на Cancel. Ui.tap проверяет",
+        "системное активное окно и повторно измеряет bounds только после отклонённого",
+        "до доставки DOWN; ошибка после принятого DOWN сохраняется. Все функциональные",
+        "assertions,254 метода и device routing сохраняются.",
+        "",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-lifecycle-stage-and-stable-native-fixture-actions"
+    ]
+  }
+}

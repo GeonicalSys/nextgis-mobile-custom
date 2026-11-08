@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:official-differences-september-sync-and-anr-comparison",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the dated comparison or verification at its original source span."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Для доработки sync/ANR все четыре HEAD повторно сверены через `git ls-remote`",
+        "18 сентября 2026 года: hashes выше не изменились. Прочитанные official",
+        "`NGWVectorLayer.getConnection` по-прежнему не задаёт timeouts, а",
+        "`SelectNGWResourceActivity.onSaveInstanceState` сериализует `Connections` целиком.",
+        "В рабочей доработке форка добавлены timeouts и interrupt-checks snapshot,",
+        "worker-owned sync state, фоновая badge-проверка SQLite, компактное async restore",
+        "NGW selector и ограниченный checkpoint объяснённых пропусков геометрии.",
+        "После воспроизведённого Debug ANR добавлены coalesced фоновые snapshots треков",
+        "и линейный проход по полям в `Feature.equalsData`; official всё ещё выполняет",
+        "вложенные indexed schema scans. GPS callback использует durable recording flag",
+        "вместо SQLite. Выпуск `3.1.2.22` включает эти исправления;",
+        "[фактические проверки и ограничения](sync-hang-verification.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:official-differences-september-sync-and-anr-comparison"
+    ]
+  }
+}

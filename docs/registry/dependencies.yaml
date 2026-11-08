@@ -1,99 +1,107 @@
+# Generated from agent-system/knowledge/dependencies.
+# Edit the owner records, then run python -B docs/scripts/keyed_registry_knowledge.py --write.
 schema_version: 1
 edges:
-  - from: app
-    to: maplib
-    type: runtime
-    scope: SQLite vector rendering, original editing and GPS recovery observation
-    purpose: Read complete SQLite originals through bounded native tiles without full startup GeoJSON; keep attributes-only32-ID queries separate from API28+1MiB small-geometry windows, full large/API26PFD fallback, exact order/bytes/current/error semantics and actual provider/owner lifecycle with transient full-original overlays. Full/lite and standalone rebinds preserve whole current-source field/point groups above all saved/current track passes using canonical model order independently from registration arrival and retaining cached wrapper/filter identity; sqlite-priority observes actual SDK ranges/labels/pixels/SQL/hide/Undo, with nested/recreation native gaps explicit. GpsEventSource supplies additive schema4 raw measurement time to the app's rare passive framework-cache witness without a lower-layer dependency on app or a change to acquisition/recording.
-    contracts:
-      - maplib/src/main/java/com/nextgis/maplib/map/LayerDisplayPriority.java
-      - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorLayerController.java
-      - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorSourceBridge.kt
-      - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileBackend.java
-      - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileProvider.java
-      - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorFeatureReader.java
-      - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileRequest.java
-      - maplib/src/main/java/com/nextgis/maplib/util/MapRuntimeDiagnostics.java
-      - maplib/src/main/java/com/nextgis/maplib/map/NativeVectorTileEncoder.java
-      - maplib/src/main/java/com/nextgis/maplib/map/NativeVectorTilePropertyCodec.java
-      - maplib/src/main/java/com/nextgis/maplib/map/NativeVectorTileClipper.java
-      - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
-      - maplib/src/main/java/com/nextgis/maplib/map/VisibleLineLabelQuery.java
-      - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
-      - app/src/androidTest/java/com/nextgis/mobile/rendering/NativeSqliteVectorRenderingTest.java
-      - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
-      - app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
-      - app/src/main/java/com/nextgis/mobile/util/DiagnosticsGpsPlatform.java
-      - app/src/main/java/com/nextgis/mobile/util/DiagnosticsGpsFixWitness.java
-  - from: app
-    to: maplibui
-    type: gradle
-    scope: implementation
-    purpose: UI, NGW import, sync orchestration and GISApplication base
-    contracts:
-      - maplibui/src/main/java/com/nextgis/maplibui/util/TrackActions.java
-      - maplibui/src/main/java/com/nextgis/maplibui/view/TrackSelectionPanel.java
-      - maplibui/src/main/java/com/nextgis/maplibui/util/FittedDialogs.java
-      - app/src/androidTest/java/com/nextgis/mobile/util/VerificationEnvironment.java
-      - maplibui/src/main/java/com/nextgis/maplibui/mapui/LocalChangesWorker.java
-      - maplib/src/main/java/com/nextgis/maplib/util/ProjectSyncState.java
-      - maplib/src/main/java/com/nextgis/maplib/gnss/GnssDevice.java
-      - maplib/src/main/java/com/nextgis/maplib/gnss/GnssDeviceScanner.java
-      - maplibui/src/main/java/com/nextgis/maplibui/util/TrackRecordingMode.java
-      - maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java
-      - maplib/src/main/java/com/nextgis/maplib/map/MaplibreMapInteraction.java
-      - maplib/src/main/java/com/nextgis/maplib/map/RenderMemoryGuard.java
-      - maplib/src/main/java/com/nextgis/maplib/util/MapRuntimeDiagnostics.java
-      - maplib/src/main/java/com/nextgis/maplib/map/NativeFeaturePayload.java
-      - maplib/src/main/java/com/nextgis/maplib/api/IGISApplication.java
-      - maplibui/src/main/java/com/nextgis/maplibui/util/NGWResourceImportHelper.java
-      - maplib/src/main/java/com/nextgis/maplib/util/StakeoutGeometryTarget.java
-      - maplib/src/main/java/com/nextgis/maplib/util/StakeoutGuidancePolicy.java
-      - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
-      - maplib/src/main/java/com/nextgis/maplib/location/GpsRecoveryPolicy.java
-  - from: app
-    to: easypicker-module
-    type: gradle
-    scope: implementation
-    purpose: Picker UI used by the application
-    contracts: []
-  - from: app
-    to: wizardpager
-    type: gradle
-    scope: implementation
-    purpose: Wizard-based application flows
-    contracts: []
-  - from: maplibui
-    to: maplib
-    type: gradle
-    scope: api
-    purpose: GIS model, storage, NGW and MapLibre contracts exposed through UI
-    contracts:
-      - maplib/src/main/java/com/nextgis/maplib/map/TrackLayer.java
-      - maplib/src/main/java/com/nextgis/maplib/map/TrackMapStyle.java
-      - maplib/src/main/java/com/nextgis/maplib/display/SimplePolygonStyle.java
-      - maplib/src/main/java/com/nextgis/maplib/display/PolygonPatternOptions.java
-      - maplib/src/main/java/com/nextgis/maplib/display/PolygonOutlineOptions.java
-      - maplib/src/main/java/com/nextgis/maplib/display/ConfigurablePolygonPatternRegistry.java
-      - maplib/src/main/java/com/nextgis/maplib/map/mpl/PolygonOutlineLayerFactory.java
-      - maplib/src/main/java/com/nextgis/maplib/display/SimpleMarkerStyle.java
-      - maplib/src/main/java/com/nextgis/maplib/display/FireflyMarkerRegistry.java
-      - maplib/src/main/java/com/nextgis/maplib/util/ProjectSyncState.java
-      - maplib/src/main/java/com/nextgis/maplib/util/FeatureChanges.java
-      - maplib/src/main/java/com/nextgis/maplib/datasource/Field.java
-      - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
-      - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
-      - maplib/src/main/java/com/nextgis/maplib/map/TrackLayer.java
-      - maplib/src/main/java/com/nextgis/maplib/api/IGISApplication.java
-      - maplib/src/main/java/com/nextgis/maplib/util/NGWResourceUrl.java
-      - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/ResourceGroup.java
-      - maplib/src/main/java/com/nextgis/maplib/util/LocalLogInitializer.java
-  - from: maplibui
-    to: easypicker-module
-    type: gradle
-    scope: api
-    purpose: Picker controls exposed by maplibui forms
-    contracts: []
+- from: app
+  to: maplib
+  type: runtime
+  scope: SQLite vector rendering, original editing and GPS recovery observation
+  purpose: Read complete SQLite originals through bounded native tiles without full startup GeoJSON; keep attributes-only32-ID
+    queries separate from API28+1MiB small-geometry windows, full large/API26PFD fallback, exact order/bytes/current/error
+    semantics and actual provider/owner lifecycle with transient full-original overlays. Full/lite and standalone rebinds
+    preserve whole current-source field/point groups above all saved/current track passes using canonical model order independently
+    from registration arrival and retaining cached wrapper/filter identity; sqlite-priority observes actual SDK ranges/labels/pixels/SQL/hide/Undo,
+    with nested/recreation native gaps explicit. GpsEventSource supplies additive schema4 raw measurement time to the app's
+    rare passive framework-cache witness without a lower-layer dependency on app or a change to acquisition/recording.
+  contracts:
+  - maplib/src/main/java/com/nextgis/maplib/map/LayerDisplayPriority.java
+  - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorLayerController.java
+  - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorSourceBridge.kt
+  - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileBackend.java
+  - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileProvider.java
+  - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorFeatureReader.java
+  - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileRequest.java
+  - maplib/src/main/java/com/nextgis/maplib/util/MapRuntimeDiagnostics.java
+  - maplib/src/main/java/com/nextgis/maplib/map/NativeVectorTileEncoder.java
+  - maplib/src/main/java/com/nextgis/maplib/map/NativeVectorTilePropertyCodec.java
+  - maplib/src/main/java/com/nextgis/maplib/map/NativeVectorTileClipper.java
+  - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
+  - maplib/src/main/java/com/nextgis/maplib/map/VisibleLineLabelQuery.java
+  - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
+  - app/src/androidTest/java/com/nextgis/mobile/rendering/NativeSqliteVectorRenderingTest.java
+  - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
+  - app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
+  - app/src/main/java/com/nextgis/mobile/util/DiagnosticsGpsPlatform.java
+  - app/src/main/java/com/nextgis/mobile/util/DiagnosticsGpsFixWitness.java
+- from: app
+  to: maplibui
+  type: gradle
+  scope: implementation
+  purpose: UI, NGW import, sync orchestration and GISApplication base
+  contracts:
+  - maplibui/src/main/java/com/nextgis/maplibui/util/TrackActions.java
+  - maplibui/src/main/java/com/nextgis/maplibui/view/TrackSelectionPanel.java
+  - maplibui/src/main/java/com/nextgis/maplibui/util/FittedDialogs.java
+  - app/src/androidTest/java/com/nextgis/mobile/util/VerificationEnvironment.java
+  - maplibui/src/main/java/com/nextgis/maplibui/mapui/LocalChangesWorker.java
+  - maplib/src/main/java/com/nextgis/maplib/util/ProjectSyncState.java
+  - maplib/src/main/java/com/nextgis/maplib/gnss/GnssDevice.java
+  - maplib/src/main/java/com/nextgis/maplib/gnss/GnssDeviceScanner.java
+  - maplibui/src/main/java/com/nextgis/maplibui/util/TrackRecordingMode.java
+  - maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java
+  - maplib/src/main/java/com/nextgis/maplib/map/MaplibreMapInteraction.java
+  - maplib/src/main/java/com/nextgis/maplib/map/RenderMemoryGuard.java
+  - maplib/src/main/java/com/nextgis/maplib/util/MapRuntimeDiagnostics.java
+  - maplib/src/main/java/com/nextgis/maplib/map/NativeFeaturePayload.java
+  - maplib/src/main/java/com/nextgis/maplib/api/IGISApplication.java
+  - maplibui/src/main/java/com/nextgis/maplibui/util/NGWResourceImportHelper.java
+  - maplib/src/main/java/com/nextgis/maplib/util/StakeoutGeometryTarget.java
+  - maplib/src/main/java/com/nextgis/maplib/util/StakeoutGuidancePolicy.java
+  - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
+  - maplib/src/main/java/com/nextgis/maplib/location/GpsRecoveryPolicy.java
+- from: app
+  to: easypicker-module
+  type: gradle
+  scope: implementation
+  purpose: Picker UI used by the application
+  contracts: []
+- from: app
+  to: wizardpager
+  type: gradle
+  scope: implementation
+  purpose: Wizard-based application flows
+  contracts: []
+- from: maplibui
+  to: maplib
+  type: gradle
+  scope: api
+  purpose: GIS model, storage, NGW and MapLibre contracts exposed through UI
+  contracts:
+  - maplib/src/main/java/com/nextgis/maplib/map/TrackLayer.java
+  - maplib/src/main/java/com/nextgis/maplib/map/TrackMapStyle.java
+  - maplib/src/main/java/com/nextgis/maplib/display/SimplePolygonStyle.java
+  - maplib/src/main/java/com/nextgis/maplib/display/PolygonPatternOptions.java
+  - maplib/src/main/java/com/nextgis/maplib/display/PolygonOutlineOptions.java
+  - maplib/src/main/java/com/nextgis/maplib/display/ConfigurablePolygonPatternRegistry.java
+  - maplib/src/main/java/com/nextgis/maplib/map/mpl/PolygonOutlineLayerFactory.java
+  - maplib/src/main/java/com/nextgis/maplib/display/SimpleMarkerStyle.java
+  - maplib/src/main/java/com/nextgis/maplib/display/FireflyMarkerRegistry.java
+  - maplib/src/main/java/com/nextgis/maplib/util/ProjectSyncState.java
+  - maplib/src/main/java/com/nextgis/maplib/util/FeatureChanges.java
+  - maplib/src/main/java/com/nextgis/maplib/datasource/Field.java
+  - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
+  - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
+  - maplib/src/main/java/com/nextgis/maplib/map/TrackLayer.java
+  - maplib/src/main/java/com/nextgis/maplib/api/IGISApplication.java
+  - maplib/src/main/java/com/nextgis/maplib/util/NGWResourceUrl.java
+  - maplib/src/main/java/com/nextgis/maplib/datasource/ngw/ResourceGroup.java
+  - maplib/src/main/java/com/nextgis/maplib/util/LocalLogInitializer.java
+- from: maplibui
+  to: easypicker-module
+  type: gradle
+  scope: api
+  purpose: Picker controls exposed by maplibui forms
+  contracts: []
 runtime_contracts:
   local-tile-cache-and-admission:
     owner: maplib
@@ -104,168 +112,314 @@ runtime_contracts:
     - maplib
     - maplibui
     - app
-    contract: Direct SqliteVectorTileProvider uses the bounded canonical-root derived-PBF ledger with native current
-      guards inside publication. SqliteVectorSourceBridge admits at most two uncanceled blocking payloads before shared
-      IO dispatch, with exact-once unwind ownership and unchanged SDK demand/content. The old HTTP server/queue are
-      removed; line-label scheduling remains separate. SQLite/NGW/desktop schema, memory budgets and saved original
-      rows are unchanged.
+    contract: Direct SqliteVectorTileProvider uses the bounded canonical-root derived-PBF ledger with native current guards
+      inside publication. SqliteVectorSourceBridge admits at most two uncanceled blocking payloads before shared IO dispatch,
+      with exact-once unwind ownership and unchanged SDK demand/content. The old HTTP server/queue are removed; line-label
+      scheduling remains separate. SQLite/NGW/desktop schema, memory budgets and saved original rows are unchanged.
   sqlite-bounded-original-reads:
     owner: maplib
     defined_in: maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorFeatureReader.java
-    implementers: [maplib]
-    callers: [maplib, app]
-    contract: Provider and visible-line visitors pass only existing deduplicated eligible IDs in original order to attributes-only cursors of at most32 rows ordered by CASE, with one full original BLOB/geometry at a time and one lazy visit-owned compiled BLOB statement. Preserve typed fields/NULLs/full geometry, hidden/excluded/current/owner/content/style guards and existing style/clip/anchor/PBF/cache/gate/free-only contracts. Close cursors/descriptors/statements on success/error/cancel; reject missing/extra/reordered IDs or BLOB/decode failure instead of partial successful tiles. Default Access visitor preserves fixtures, original editor/sync APIs and producer/schema/saved-state formats stay unchanged. Existing typed phase definitions stay comparable to private843d; no native-ready or speed acceptance is implied.
+    implementers:
+    - maplib
+    callers:
+    - maplib
+    - app
+    contract: Provider and visible-line visitors pass only existing deduplicated eligible IDs in original order to attributes-only
+      cursors of at most32 rows ordered by CASE, with one full original BLOB/geometry at a time and one lazy visit-owned compiled
+      BLOB statement. Preserve typed fields/NULLs/full geometry, hidden/excluded/current/owner/content/style guards and existing
+      style/clip/anchor/PBF/cache/gate/free-only contracts. Close cursors/descriptors/statements on success/error/cancel;
+      reject missing/extra/reordered IDs or BLOB/decode failure instead of partial successful tiles. Default Access visitor
+      preserves fixtures, original editor/sync APIs and producer/schema/saved-state formats stay unchanged. Existing typed
+      phase definitions stay comparable to private843d; no native-ready or speed acceptance is implied.
   sqlite-native-layer-priority:
     owner: maplib
     defined_in: maplib/src/main/java/com/nextgis/maplib/map/LayerDisplayPriority.java
-    implementers: [maplib]
-    callers: [maplib, app]
-    contract: Exact logical/style-controller current/known line-label aliases bind whole SDK groups; stale/prefix aliases and polygon label anchors cannot gain point priority. Canonical flattened model index0-bottom order is independent from source/cache arrival. Move cached Style.getLayer wrappers to retain controller hide/edit filter identity; full/lite reorder once after batch and standalone style/source/data/private rebind restore order. No schema/saved-state migration or producer/NGW/Collector/cache/queue contract changes; maplibui keeps its existing callback API. Technical source/native checks and real-project/Full acceptance remain distinct.
+    implementers:
+    - maplib
+    callers:
+    - maplib
+    - app
+    contract: Exact logical/style-controller current/known line-label aliases bind whole SDK groups; stale/prefix aliases
+      and polygon label anchors cannot gain point priority. Canonical flattened model index0-bottom order is independent from
+      source/cache arrival. Move cached Style.getLayer wrappers to retain controller hide/edit filter identity; full/lite
+      reorder once after batch and standalone style/source/data/private rebind restore order. No schema/saved-state migration
+      or producer/NGW/Collector/cache/queue contract changes; maplibui keeps its existing callback API. Technical source/native
+      checks and real-project/Full acceptance remain distinct.
   sqlite-phase-diagnostics:
     owner: maplib
     defined_in: maplib/src/main/java/com/nextgis/maplib/util/MapRuntimeDiagnostics.java
-    implementers: [maplib]
-    callers: [maplib, app]
-    contract: Typed SqliteScope spans bridge IO queue through Java provider return and existing VectorLayer attributes/BLOB/full decode, style, clip, labels, PBF and cache operations without extra reads or changed rendering. The compatible backend overload retains old callers. One observer and bounded writer retain at most16 active scopes and32 layer summaries, throttle local LISA-SqlitePhase to10s per layer, report observation loss and release slots after clock/writer/watch failures. Numeric layer/source/content IDs, zoom and fixed count/phase arrays exclude URI, tile X/Y, coordinates, business attributes and error messages. Provider-return, SDK-return, cancelled and failed outcomes differ; native content ready stays unverified. No data/project/style migration, memory-policy change or producer resource-format change is involved.
+    implementers:
+    - maplib
+    callers:
+    - maplib
+    - app
+    contract: Typed SqliteScope spans bridge IO queue through Java provider return and existing VectorLayer attributes/BLOB/full
+      decode, style, clip, labels, PBF and cache operations without extra reads or changed rendering. The compatible backend
+      overload retains old callers. One observer and bounded writer retain at most16 active scopes and32 layer summaries,
+      throttle local LISA-SqlitePhase to10s per layer, report observation loss and release slots after clock/writer/watch
+      failures. Numeric layer/source/content IDs, zoom and fixed count/phase arrays exclude URI, tile X/Y, coordinates, business
+      attributes and error messages. Provider-return, SDK-return, cancelled and failed outcomes differ; native content ready
+      stays unverified. No data/project/style migration, memory-policy change or producer resource-format change is involved.
   render-memory-pressure:
     owner: maplib
     defined_in: maplib/src/main/java/com/nextgis/maplib/map/RenderMemoryGuard.java
-    implementers: [maplib, app]
-    callers: [maplib, app]
-    contract: MapFragment binds current MapDrawable ownership and starts/stops its resource watch with view lifecycle. Only actual remaining free system/Java headroom and OS low-memory state decide economy/work admission; nominal RAM class may choose ordinary disk-cache capacity and allocation reserve only, and absolute used/native/RSS counters remain diagnostics. Unknown counters are not zero free memory. Owner-fenced MapDrawable callbacks cross MaplibreMapInteraction back to MapFragment. MapRuntimeDiagnostics records bounded available RAM, Java headroom, system threshold/low-memory, free reserve and tile work limit alongside separate numeric process observations. There is no used/RSS target or enforced native cap, and no feature/geometry/visibility/data suppression is allowed.
+    implementers:
+    - maplib
+    - app
+    callers:
+    - maplib
+    - app
+    contract: MapFragment binds current MapDrawable ownership and starts/stops its resource watch with view lifecycle. Only
+      actual remaining free system/Java headroom and OS low-memory state decide economy/work admission; nominal RAM class
+      may choose ordinary disk-cache capacity and allocation reserve only, and absolute used/native/RSS counters remain diagnostics.
+      Unknown counters are not zero free memory. Owner-fenced MapDrawable callbacks cross MaplibreMapInteraction back to MapFragment.
+      MapRuntimeDiagnostics records bounded available RAM, Java headroom, system threshold/low-memory, free reserve and tile
+      work limit alongside separate numeric process observations. There is no used/RSS target or enforced native cap, and
+      no feature/geometry/visibility/data suppression is allowed.
   native-geojson-payload:
     owner: maplib
     defined_in: maplib/src/main/java/com/nextgis/maplib/map/NativeFeaturePayload.java
-    implementers: [maplib]
-    callers: [maplib, app]
-    contract: MPLFeaturesUtils, MapDrawable and all six MLP background constructors project separate native property maps while retaining rich Java editor features and full geometry/IDs/unknowns. Polygon label sources omit empty signatures and geometry paint; point sources keep combined roles and lines retain query fallback inputs. Uniform sparsity needs exact factory-default context; rules retain actual consumers, zoom curves/layout keys/gates. App verification fixture observes this transport projection without weakening rich Java or GPU assertions; source/URI/edit paths cannot bypass it.
+    implementers:
+    - maplib
+    callers:
+    - maplib
+    - app
+    contract: MPLFeaturesUtils, MapDrawable and all six MLP background constructors project separate native property maps
+      while retaining rich Java editor features and full geometry/IDs/unknowns. Polygon label sources omit empty signatures
+      and geometry paint; point sources keep combined roles and lines retain query fallback inputs. Uniform sparsity needs
+      exact factory-default context; rules retain actual consumers, zoom curves/layout keys/gates. App verification fixture
+      observes this transport projection without weakening rich Java or GPU assertions; source/URI/edit paths cannot bypass
+      it.
   render-memory-notice:
     owner: app
     defined_in: app/src/main/java/com/nextgis/mobile/util/RenderMemoryNotice.java
-    implementers: [app]
-    callers: [app]
-    contract: MapFragment consumes resource-economy callbacks through one atomic automatic notice claim per process across maps/recreation. A full work queue alone is not evidence of low free memory and must not produce a memory notice. MainActivity exposes independent manual status while the current guard reports economy. Manual Retry re-evaluates caches/resources, preserves source data and does not reset the automatic claim; verification acknowledges the notice only outside the dedicated production-delivery memory case.
+    implementers:
+    - app
+    callers:
+    - app
+    contract: MapFragment consumes resource-economy callbacks through one atomic automatic notice claim per process across
+      maps/recreation. A full work queue alone is not evidence of low free memory and must not produce a memory notice. MainActivity
+      exposes independent manual status while the current guard reports economy. Manual Retry re-evaluates caches/resources,
+      preserves source data and does not reset the automatic claim; verification acknowledges the notice only outside the
+      dedicated production-delivery memory case.
   point-firefly:
     owner: maplib
     defined_in: maplib/src/main/java/com/nextgis/maplib/display/FireflyMarkerRegistry.java
-    implementers: [maplib, maplibui]
-    callers: [maplibui, app]
-    contract: Marker type 9 persists existing size/colour/alpha/width/blur fields; its RGBA core/glow sprite is shared by native rendering and category previews. Native images follow logical-layer ownership, rendering children reuse picking/order/visibility, and old marker blur remains unchanged.
+    implementers:
+    - maplib
+    - maplibui
+    callers:
+    - maplibui
+    - app
+    contract: Marker type 9 persists existing size/colour/alpha/width/blur fields; its RGBA core/glow sprite is shared by
+      native rendering and category previews. Native images follow logical-layer ownership, rendering children reuse picking/order/visibility,
+      and old marker blur remains unchanged.
   compass-sector-visibility:
     owner: maplib
     defined_in: maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
-    implementers: [maplib]
-    callers: [app]
-    contract: setCompassAccuracySectorVisible applies the host display choice to fill and both contours and retains it before style creation and across reload; direction arrow and GPS accuracy remain independent.
+    implementers:
+    - maplib
+    callers:
+    - app
+    contract: setCompassAccuracySectorVisible applies the host display choice to fill and both contours and retains it before
+      style creation and across reload; direction arrow and GPS accuracy remain independent.
   local-log-startup:
     owner: maplib
     defined_in: maplib/src/main/java/com/nextgis/maplib/util/LocalLogInitializer.java
-    implementers: [maplib]
-    callers: [app, maplibui]
-    contract: One process initialization migrates obsolete upload URL before HyperLog reads it and retains local logs and app format; delegating handlers remain owned by their callers.
+    implementers:
+    - maplib
+    callers:
+    - app
+    - maplibui
+    contract: One process initialization migrates obsolete upload URL before HyperLog reads it and retains local logs and
+      app format; delegating handlers remain owned by their callers.
   app-error-diagnostics:
     owner: app
     defined_in: app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
-    implementers: [app]
-    callers: [app]
-    contract: Typed operation breadcrumbs, classified GPS episode snapshots with paired outcomes, and selected handled failures; emitted GPS reports alone may attach the app-owned passive numeric cache witness while preserving historical replay identity. SDK event cache, transport extension and WorkManager delivery remain independent of GIS sync and draft storage.
+    implementers:
+    - app
+    callers:
+    - app
+    contract: Typed operation breadcrumbs, classified GPS episode snapshots with paired outcomes, and selected handled failures;
+      emitted GPS reports alone may attach the app-owned passive numeric cache witness while preserving historical replay
+      identity. SDK event cache, transport extension and WorkManager delivery remain independent of GIS sync and draft storage.
   gps-cache-fix-witness:
     owner: app
     defined_in: app/src/main/java/com/nextgis/mobile/util/DiagnosticsGpsFixWitness.java
-    implementers: [app]
-    callers: [app]
-    contract: Compare a single optional framework GPS cached measurement time with maplib schema4 rawGps measurement milliseconds using ten fixed numeric/enum keys and explicit unavailable/invalid/future states. rawGps may include a seed and is not exact callback receipt. No coordinates, retained Location, source injection, new acquisition or causal conclusion; no Binder wall-time timeout is promised.
+    implementers:
+    - app
+    callers:
+    - app
+    contract: Compare a single optional framework GPS cached measurement time with maplib schema4 rawGps measurement milliseconds
+      using ten fixed numeric/enum keys and explicit unavailable/invalid/future states. rawGps may include a seed and is not
+      exact callback receipt. No coordinates, retained Location, source injection, new acquisition or causal conclusion; no
+      Binder wall-time timeout is promised.
   sync-workspace-session:
     owner: maplib
     defined_in: maplib/src/main/java/com/nextgis/maplib/util/SyncWorkspaceSession.java
-    implementers: [maplib, maplibui]
-    callers: [app, maplibui]
-    contract: Non-activating owning map, inherited cancellation and exactly-once tracked async children keep the database open until quiet. Untagged provider URI remains active-UI scoped even inside a background Scope; tagged URI resolves only its live owner, with no expired-token fallback. Broadcast ownership uses map path separately. A service delivery has its own reserve/claim/release ticket; only unclaimed delivery expires after 60 seconds, not every claimed child. Global operation lease identity is not the background database binding. Per-account recovery ACK precedes final cleanup and full-project clock; those commit boundaries and UID/path/mapName/token keys must not be treated as interchangeable or migrated implicitly.
+    implementers:
+    - maplib
+    - maplibui
+    callers:
+    - app
+    - maplibui
+    contract: Non-activating owning map, inherited cancellation and exactly-once tracked async children keep the database
+      open until quiet. Untagged provider URI remains active-UI scoped even inside a background Scope; tagged URI resolves
+      only its live owner, with no expired-token fallback. Broadcast ownership uses map path separately. A service delivery
+      has its own reserve/claim/release ticket; only unclaimed delivery expires after 60 seconds, not every claimed child.
+      Global operation lease identity is not the background database binding. Per-account recovery ACK precedes final cleanup
+      and full-project clock; those commit boundaries and UID/path/mapName/token keys must not be treated as interchangeable
+      or migrated implicitly.
   conditional-form-rules:
     owner: maplib
     defined_in: maplib/src/main/java/com/nextgis/maplib/forms/ConditionalRequiredRules.java
-    implementers: [maplib, maplibui]
-    callers: [maplibui, app]
+    implementers:
+    - maplib
+    - maplibui
+    callers:
+    - maplibui
+    - app
   project-scripts:
     owner: maplib
     defined_in: maplib/src/main/java/com/nextgis/maplib/scripts/ScriptPackage.java
-    implementers: [maplib]
-    callers: [maplibui, app]
-    contract: Source-only package API v1, isolated service, read-only native broker and pinned form reference; desktop stand_project mirrors the portable format.
+    implementers:
+    - maplib
+    callers:
+    - maplibui
+    - app
+    contract: Source-only package API v1, isolated service, read-only native broker and pinned form reference; desktop stand_project
+      mirrors the portable format.
   ngw-required-fields:
     owner: maplib
     defined_in: maplib/src/main/java/com/nextgis/maplib/datasource/Field.java
-    implementers: [maplib]
-    callers: [maplibui]
+    implementers:
+    - maplib
+    callers:
+    - maplibui
   local-write-commit:
     owner: maplib
     defined_in: maplib/src/main/java/com/nextgis/maplib/util/LayerDatabaseTransaction.java
-    implementers: [maplib]
-    callers: [maplib, maplibui]
+    implementers:
+    - maplib
+    callers:
+    - maplib
+    - maplibui
   track-retry:
     owner: maplib
     defined_in: maplib/src/main/java/com/nextgis/maplib/util/PendingTrackPoints.java
-    implementers: [maplib]
-    callers: [maplibui]
+    implementers:
+    - maplib
+    callers:
+    - maplibui
   independent-walk-session:
     owner: maplibui
     defined_in: maplibui/src/main/java/com/nextgis/maplibui/util/WalkSessionStore.java
-    implementers: [maplibui, app]
-    callers: [app, maplibui]
+    implementers:
+    - maplibui
+    - app
+    callers:
+    - app
+    - maplibui
   passive-walk-preview:
     owner: maplib
     defined_in: maplib/src/main/java/com/nextgis/maplib/map/WalkPreviewGeometry.java
-    implementers: [maplib]
-    callers: [app]
+    implementers:
+    - maplib
+    callers:
+    - app
   map-host:
     owner: maplib
     defined_in: maplib/src/main/java/com/nextgis/maplib/map/MaplibreMapInteraction.java
-    implementers: [app]
-    callers: [maplib, maplibui]
-    contract: Existing GIS interaction callbacks remain compatible. The default onRenderMemoryWarningChanged callback lets current MapDrawable report cache/work economy to app MapFragment; its lifecycle owner controls the watch, reads Guard status and applies the process-session notice policy without changing map data or visibility. Other hosts retain the default no-op.
+    implementers:
+    - app
+    callers:
+    - maplib
+    - maplibui
+    contract: Existing GIS interaction callbacks remain compatible. The default onRenderMemoryWarningChanged callback lets
+      current MapDrawable report cache/work economy to app MapFragment; its lifecycle owner controls the watch, reads Guard
+      status and applies the process-session notice policy without changing map data or visibility. Other hosts retain the
+      default no-op.
   gis-application:
     owner: maplib
     defined_in: maplib/src/main/java/com/nextgis/maplib/api/IGISApplication.java
-    implementers: [maplibui]
-    callers: [maplib, maplibui, app]
+    implementers:
+    - maplibui
+    callers:
+    - maplib
+    - maplibui
+    - app
     integrity_hook: repairProjectIntegrityBeforeSync(accountName)
   collector-metadata:
     owner: maplib
     defined_in: maplib/src/main/java/com/nextgis/maplib/map/CollectorProjectMetadata.java
-    implementers: [maplib]
-    callers: [maplib, maplibui, app]
+    implementers:
+    - maplib
+    callers:
+    - maplib
+    - maplibui
+    - app
   ngw-url-import:
     owner: maplib
     defined_in: maplib/src/main/java/com/nextgis/maplib/util/NGWResourceUrl.java
-    implementers: [maplib, maplibui, app]
-    callers: [app]
+    implementers:
+    - maplib
+    - maplibui
+    - app
+    callers:
+    - app
   ngw-account-identity:
     owner: app
     defined_in: app/build.gradle
-    implementers: [app, maplibui]
-    callers: [app, maplibui]
+    implementers:
+    - app
+    - maplibui
+    callers:
+    - app
+    - maplibui
   maplibre-renderer-backend:
     owner: app
     defined_in: app/build.gradle
-    implementers: [app, maplibui, maplib]
-    callers: [app, maplibui, maplib]
+    implementers:
+    - app
+    - maplibui
+    - maplib
+    callers:
+    - app
+    - maplibui
+    - maplib
     artifact: org.maplibre.gl:android-sdk-opengl:13.7.1
     backend: OpenGL ES
-    contract: Direct SQLite native vector generations require distinct actual source IDs while logical layer paths remain stable; SDK13.7.1 same-ID custom loader replacement alone does not retire old tile pyramids.
+    contract: Direct SQLite native vector generations require distinct actual source IDs while logical layer paths remain
+      stable; SDK13.7.1 same-ID custom loader replacement alone does not retire old tile pyramids.
   historical-process-exit:
     owner: app
     defined_in: app/src/main/java/com/nextgis/mobile/util/DiagnosticsProcessExitReporter.java
-    implementers: [app]
-    callers: [app]
-    contract: AppDiagnostics invokes Reporter then TracePolicy and bounded NativeTrace; process_exit metadata goes through existing sanitize/cache/replay/transport. API30 SIGNALED may contain an earlier recovered ANR trace, explicitly may_precede_exit, and never proves OOM or final-exit cause.
+    implementers:
+    - app
+    callers:
+    - app
+    contract: AppDiagnostics invokes Reporter then TracePolicy and bounded NativeTrace; process_exit metadata goes through
+      existing sanitize/cache/replay/transport. API30 SIGNALED may contain an earlier recovered ANR trace, explicitly may_precede_exit,
+      and never proves OOM or final-exit cause.
   stakeout-guidance:
     owner: maplib
     defined_in: maplib/src/main/java/com/nextgis/maplib/util/StakeoutGeometryTarget.java
-    implementers: [maplib, app]
-    callers: [app]
+    implementers:
+    - maplib
+    - app
+    callers:
+    - app
   private-resource-profiler:
     owner: maplib
     defined_in: maplib/src/main/java/com/nextgis/maplib/util/RenderResourceProfiler.java
-    implementers: [maplib, app]
-    callers: [maplib, app]
-    contract: App private flag starts bounded local sink; every SQLite/line token reports phases/counts independently of legacy observation slots. App owns MediaStore writer/memory sampler and stock MapLibre13.7.1 frame callbacks. External owned tooling binds APK/session/PID/start_ticks and separates process memory, SDK resources, allocation samples and CPU windows. Existing SQLite/NGW/Collector producers, originals, styles, saved-state and public defaults remain unchanged. No long-term-cache optimization or per-layer native ownership claim.
+    implementers:
+    - maplib
+    - app
+    callers:
+    - maplib
+    - app
+    contract: App private flag starts bounded local sink; every SQLite/line token reports phases/counts independently of legacy
+      observation slots. App owns MediaStore writer/memory sampler and stock MapLibre13.7.1 frame callbacks. External owned
+      tooling binds APK/session/PID/start_ticks and separates process memory, SDK resources, allocation samples and CPU windows.
+      Existing SQLite/NGW/Collector producers, originals, styles, saved-state and public defaults remain unchanged. No long-term-cache
+      optimization or per-layer native ownership claim.

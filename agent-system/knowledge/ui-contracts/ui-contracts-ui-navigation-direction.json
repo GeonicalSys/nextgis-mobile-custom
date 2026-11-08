@@ -1,0 +1,108 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-navigation-direction",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-NAVIGATION-DIRECTION"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-NAVIGATION-DIRECTION",
+        "group": "navigation",
+        "title": "Стрелка направления и магнитный азимут",
+        "surface": "Stakeout arrow/azimuth",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [
+          "stakeout_direction",
+          "stakeout_details",
+          "azimuth_bearing"
+        ],
+        "meaning": "With compass, arrow is relative magnetic direction; without compass it compensates absolute true target bearing by camera bearing. Numeric target azimuth stays magnetic.",
+        "value_origin": "True target bearing -> WMM+saved correction -> magnetic bearing; subtract device magnetic heading or camera bearing in respective branches",
+        "units": "Clockwise degrees: true, magnetic and screen-relative references distinct.",
+        "updates": [
+          "Fix/heading/correction and camera-idle refresh."
+        ],
+        "actions": [
+          "Rotate camera without compass; adjust correction."
+        ],
+        "conditions": [
+          "Valid guidance result/current mode; compass availability chooses reference frame."
+        ],
+        "saved_state": "Correction persists; arrow/target bearing recomputed without geometry mutation.",
+        "source_ids": [
+          "stakeout-publish",
+          "map-stakeout-widget",
+          "azimuth-magnetic-transform",
+          "map-camera-idle"
+        ],
+        "expectations": [
+          "Without compass, camera+90 changes screen arrow-90 while numeric target magnetic azimuth stays constant.",
+          "Counterexample: arrow rotation is not numeric absolute magnetic bearing."
+        ],
+        "unknowns": [
+          "Runtime NOT_RUN: no GUI, device, emulator, build or APK resource merge acceptance in this task.",
+          "StakeoutHeadingProvider calibration/freshness and independent WMM oracle not fully audited."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-stakeout-publish",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-map-stakeout-widget",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-azimuth-magnetic-transform",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-map-camera-idle",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-navigation-direction"
+    ]
+  }
+}

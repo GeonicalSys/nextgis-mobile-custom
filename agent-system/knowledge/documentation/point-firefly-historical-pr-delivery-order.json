@@ -1,0 +1,49 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:point-firefly-historical-pr-delivery-order",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:point-firefly"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original measurement or checkpoint and its acceptance limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/point-firefly.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Порядок будущего слияния: maplib Merge Commit → maplibui Merge Commit → root",
+        "PR #78 Squash с pins на удалённые merge commits библиотек. Текущие Draft PR",
+        "не являются выпуском; версия и публикация в этой доработке не меняются.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:point-firefly-historical-pr-delivery-order"
+    ]
+  }
+}

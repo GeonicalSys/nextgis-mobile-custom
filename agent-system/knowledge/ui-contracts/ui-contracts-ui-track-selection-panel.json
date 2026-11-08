@@ -1,0 +1,227 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-track-selection-panel",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-TRACK-SELECTION-PANEL"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-TRACK-SELECTION-PANEL",
+        "group": "tracks",
+        "title": "Панель выбранного трека показывает следующую команду",
+        "surface": "Нижняя панель трека; controls создаются программно, их смысл подтверждён Java source, XML android:id evidence отсутствует",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [],
+        "meaning": "Панель относится к выбранному TrackInfo; кнопка видимости сообщает действие, которое произойдёт после нажатия.",
+        "value_origin": "TrackInfo.name/visible; bind выставляет hidden-name variant и противоположное действие visibility.",
+        "units": "Имя и булева видимость; координаты/GPS не вычисляются.",
+        "updates": [
+          "Bind обновляет title, текст, icon и contentDescription видимости."
+        ],
+        "actions": [
+          "Показать/скрыть",
+          "Цвет",
+          "Переименовать",
+          "Удалить",
+          "Закрыть панель",
+          "Поделиться сохранённым GPX выбранного shared track ID"
+        ],
+        "conditions": [
+          "TrackInfo уже выбран вызывающим UI; CLOSE не является удалением трека."
+        ],
+        "saved_state": "Панель показывает модель и callback; persistence выполняется отдельными TrackActions/provider.",
+        "source_ids": [
+          "WF-TRACK-PANEL",
+          "WF-TRACK-MAP-SHARE-BINDING",
+          "WF-TRACK-PANEL-CONSTRUCTION",
+          "WF-TRACK-PANEL-WRAP",
+          "WF-TRACK-GPX-WORKER",
+          "WF-TRACK-GPX-XML-NAME",
+          "WF-TRACK-GPX-SEPARATE-NAME",
+          "WF-TRACK-SHARE-ID-COPY",
+          "WF-TRACK-GPX-PUBLISH"
+        ],
+        "expectations": [
+          "Oracle: для скрытого трека написано Показать, для видимого Скрыть; закрытие панели оставляет сам трек.",
+          "Контрпример: текст описывает старое состояние вместо следующей команды либо Close удаляет track.",
+          "Share передаёт только bound shared TrackInfo.id существующему exporter; stale Activity/view/selection/tool mode не запускает worker.",
+          "Обычный и hidden/current track сохраняют выбор; Share не останавливает recorder и не обещает durable-tail drain.",
+          "XML parser восстанавливает XML-valid Unicode, ampersand/angle/quote/entity-looking text и CR/LF/tab; basename остаётся в export directory.",
+          "Одни и те же action Views/callbacks меняют число колонок по floor(available/48dp) и сохраняют порядок.",
+          "Wrapped actionrow text baseline alignment is disabled; measuredrowheightcontainsallactions, noRename/Visibility3pxintersectionwithnextrow."
+        ],
+        "unknowns": [
+          "Callback wiring всех действий, реальное выделение линии и large-font hit targets проверяются отдельно; core GPS scope не затронут.",
+          "XML binding detector не покрывает programmatic track controls; это ограничение XML-проверки, не неизвестный смысл проверенных команд. Native appearance/hit targets NOT_RUN.",
+          "64/112dp action-only bounds не принимают title/Close header или outer vertical scale короткого окна; NativeCPUpaint не является device/OEM/touch/GPU/recipient acceptance.",
+          "Canonical AUDIT-TODO-MOBILE-TRACK-GPX-EXPORT-OWNERSHIP сохраняет existing asynchronous snapshot/cache/name collision/provider/Activity lifetime unknowns."
+        ],
+        "track_share_scope_result": "Actual acceptance is compositional: Binding8 andExporter10 all18PASS inearlierfirstgreen23 on637a; itsfourPaneloverlapfailures werekept. Diagnostic-only64ac changedfailuremessage/helper only, notfivepredicates/oracles/setup.31Octactualcohort10 hadCaption5PASS+Panel1PASS4FAIL andexit1, NOTwhole10PASS; observedRename/Visibilityrowoverflow3px. Oneproductionline disablesbaselinealignment onlyownedactionRows. FinalONLYsamePanel5/64ac on0069 PASS0fail/errors/skips, XML19.913s, Gradle0/BUILD1m17s,81.6374157sobserved,120unchangedinputs/all13ownedsettledabsent. Thus23distinctmethodsacceptedACROSS18+5batches; noonefinal23rerun, no18/Caption5rerun, noMIME2executionclaim. Финальная consumer source compile Belka: Gradle exit0, BUILD SUCCESSFUL in 1m 23s, 86.8108238s observed, 100 source-only tasks,120 inputs unchanged/all12 owned processes naturally stopped. Java/Kotlin source compilation; no APK/AAB/AAR/dex/NDK/install/publish or native Android/GPU/device acceptance. Receipt Q:\\Codex\\Scratch\\lisa-ecosystem-depth-audit-20261029\\evidence\\resume-20261031-source-checkpoint\\belka-resume-compile\\final-result-source-stop.json SHA256 be7f54baa369662c2cd44a509c745fbc099f357a0df91c9a30a7d69a12008d1c.; CPUfont/JVM isnotnativeAndroid/device/OEM/wholewindow/GPU/recipientacceptance.",
+        "visual_resource_semantics": {
+          "reviewed_at": "2026-10-31",
+          "resource_id": "R.drawable.ic_action_social_share_dark",
+          "consumer": "TrackSelectionPanel constructor → button(track_panel_share) → top compound drawable → setCompoundDrawableTintList(ColorStateList.valueOf(foreground))",
+          "assets": [
+            {
+              "repository": "maplibui",
+              "module_path": "src/main/res/drawable-hdpi/ic_action_social_share_dark.png",
+              "workspace_path": "android_projects/android_gisapp/maplibui/src/main/res/drawable-hdpi/ic_action_social_share_dark.png",
+              "raw_sha256": "72ddbebbe683e37852db0a6e2d9fc6951b8e7df7effac03bda51defbc2b44350",
+              "density": "drawable-hdpi",
+              "pixel_size": [
+                48,
+                48
+              ],
+              "max_alpha": 205
+            },
+            {
+              "repository": "maplibui",
+              "module_path": "src/main/res/drawable-mdpi/ic_action_social_share_dark.png",
+              "workspace_path": "android_projects/android_gisapp/maplibui/src/main/res/drawable-mdpi/ic_action_social_share_dark.png",
+              "raw_sha256": "57d57ab2f7080de5e1b7f9439a8eee6bb173ec9e060910b8289fdb8c5bcab362",
+              "density": "drawable-mdpi",
+              "pixel_size": [
+                32,
+                32
+              ],
+              "max_alpha": 205
+            },
+            {
+              "repository": "maplibui",
+              "module_path": "src/main/res/drawable-xhdpi/ic_action_social_share_dark.png",
+              "workspace_path": "android_projects/android_gisapp/maplibui/src/main/res/drawable-xhdpi/ic_action_social_share_dark.png",
+              "raw_sha256": "b97ebf0b05ee6397da39a83fc0a9be9eb02f38785cf2b8a33398e293f579bd43",
+              "density": "drawable-xhdpi",
+              "pixel_size": [
+                64,
+                64
+              ],
+              "max_alpha": 205
+            },
+            {
+              "repository": "maplibui",
+              "module_path": "src/main/res/drawable-xxhdpi/ic_action_social_share_dark.png",
+              "workspace_path": "android_projects/android_gisapp/maplibui/src/main/res/drawable-xxhdpi/ic_action_social_share_dark.png",
+              "raw_sha256": "aab47be5080dfffbc5b9be037176035ffe7d573684e75f47b80ea2fb39573dee",
+              "density": "drawable-xxhdpi",
+              "pixel_size": [
+                96,
+                96
+              ],
+              "max_alpha": 205
+            }
+          ],
+          "alpha_semantics": {
+            "used_share_max_alpha": 205,
+            "used_share_fraction": 0.803921568627451,
+            "existing_chosen_rename_light_max_alpha": 204,
+            "existing_problematic_rename_dark_max_alpha": 123,
+            "unused_share_light_max_alpha": 153,
+            "conclusion": "Do not infer opacity/color from dark/light basename. Used Share is approximately80%alpha across all four densities, comparable to corrected Rename; it does not repeat the approximately48% rename-dark issue. Switching to unused share-light would reduce alpha."
+          },
+          "foreground_tint": {
+            "Light": "#181818 opaque",
+            "Dark": "#ffffff opaque",
+            "source": "Theme.NextGIS.AppCompat.Light.Base/Dark.Base android:textColorPrimary → TrackSelectionPanel.foreground; tint replaces source RGB and retains source pixel alpha"
+          },
+          "conditional_pixel_contrast": {
+            "scope": "Static alpha-compositing math on inherited stock API28 Material backgrounds, not a rendered/device measurement",
+            "Light_background": "#fafafa",
+            "Dark_background": "#303030",
+            "strongest_used_share_pixels_ratio_Light": 9.2856,
+            "strongest_used_share_pixels_ratio_Dark": 9.1175,
+            "qualification": "Antialias edge pixels legitimately approach contrast1; peak/body comparison does not certify every pixel, accessibility or effective OEM/theme overlays. Source style parents/explicit foreground and existing cached API28 framework color metadata were read without runtime."
+          },
+          "protected": "No asset/code/state/listener/ID/font/test-oracle changes. Existing selected-track identity/Share exporter and report ownership unchanged.",
+          "unknown": "Actual OEM/API/theme/window/background/rendering/scale/visual/touch acceptance remains unverified under existing UI/Track risks. No new defect, TODO, contract family, visual stage or merge blocker from this bounded source finding.",
+          "enforcement": "Raw PNG hashes/maxalpha and source binding were manually reviewed. This additive metadata is not a new binary-image checker/parser feature; source index/raw resource hashes preserve file identity.",
+          "evidence_receipt_sha256": "0a6050574401583e964918bf94e84b52c9663c3d09b10d68c0b1240c2353c9b8"
+        }
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-track-panel",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-track-map-share-binding",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-track-panel-construction",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-track-panel-wrap",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-track-gpx-worker",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-track-gpx-xml-name",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-track-gpx-separate-name",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-track-share-id-copy",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-track-gpx-publish",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-track-selection-panel"
+    ]
+  }
+}

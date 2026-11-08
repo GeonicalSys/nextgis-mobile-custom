@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-smoke-map-surface-lifecycle",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "SMOKE-MAP-SURFACE-LIFECYCLE"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "device",
+        "scope": [
+          "app",
+          "maplib"
+        ],
+        "steps": [
+          "Open a populated map and wait until MapLibre renders it",
+          "Open and close layer properties and project settings at least five times",
+          "Send the application to background and return, then lock and unlock the screen",
+          "Recreate MainActivity by switching a Collector project or changing configuration",
+          "Load or switch to a large Collector project without touching the map and wait for project styling to finish",
+          "On Android 9 leave the styled map untouched for at least ten minutes, then repeat background and screen-lock cycles and inspect renderer-mode logs",
+          "During Activity recreation touch the old map surface and verify late events are ignored",
+          "Inspect HyperLog lifecycle, first-frame-after-resume and render-recovery entries"
+        ],
+        "expected": "The map becomes visible after project styling without requiring a pan gesture and remains rendered and interactive after every return while Android controls stay responsive and are never covered by a full-window black surface; every API logs SurfaceViewMapRenderer, Android 8-9 log tilePrefetch=false without a 5/30 FPS cap or idle CONTINUOUS mode, remains responsive after low-memory pressure, each created MapView has balanced start/stop and one destroy, late touches do not query a destroyed map, and bounded render recovery never reports completion while fully=false or loadingForeground=true and clears only a stale loading foreground without restarting the process. Every API restores the previous rendering mode after the burst."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-smoke-map-surface-lifecycle"
+    ]
+  }
+}

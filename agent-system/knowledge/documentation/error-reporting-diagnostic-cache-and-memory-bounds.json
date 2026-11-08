@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:error-reporting-diagnostic-cache-and-memory-bounds",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:error-reporting"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/error-reporting.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Очередь и транспорт",
+        "",
+        "Используется один SDK envelope cache в app-private `files/diagnostic-reports/`,",
+        "с разделением по DSN. Это files storage, не очищаемый Android cache directory.",
+        "Предел — 256 обычных envelopes; SDK вытесняет старые при переполнении. Очередь",
+        "HTTP в памяти ограничена 128 задачами, история — 80 breadcrumbs.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:error-reporting-diagnostic-cache-and-memory-bounds"
+    ]
+  }
+}

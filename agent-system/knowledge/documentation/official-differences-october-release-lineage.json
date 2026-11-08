@@ -1,0 +1,102 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:official-differences-october-release-lineage",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the dated comparison or verification at its original source span."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Базовая OpenGL-интеграция содержит Merge Commit:",
+        "maplib PR #20 [`4323cb0`](https://github.com/GeonicalSys/android_maplib/commit/4323cb00bc9d03c3e183afdce6dc1b7012266831)",
+        "(содержит #19/#18) и",
+        "maplibui PR #12 [`5d48122`](https://github.com/GeonicalSys/android_maplibui/commit/5d48122d236769afb0f37247e0b3aa4c0ff8f604)",
+        "(содержит #11). Выпуск `3.1.2.18` дополнительно закрепляет Merge Commit",
+        "maplib PR #21 [`761d7a2`](https://github.com/GeonicalSys/android_maplib/commit/761d7a244a6a849cba709de1bfc6f0f1b7b034c4)",
+        "и maplibui PR #13 [`223f8b04`](https://github.com/GeonicalSys/android_maplibui/commit/223f8b041d05d9261e3a552128a160cb8ffb4b3c).",
+        "Каталог подложек закрепляет Merge Commit maplib PR #22",
+        "[`998daff`](https://github.com/GeonicalSys/android_maplib/commit/998daff8a26cebc0abe76603d54eb9932ff2f339)",
+        "и maplibui PR #14 [`4052cde3`](https://github.com/GeonicalSys/android_maplibui/commit/4052cde3b1f0c4beef19556aec1a2b533f49b1d9).",
+        "Исправления NGRc и raster-ссылок закрепляют Merge Commit maplib PR #23",
+        "[`96db542`](https://github.com/GeonicalSys/android_maplib/commit/96db5423c5afd50c2ff887068fe7b84a77acbe76),",
+        "сохраняющий #21/#22 и дерево проверенного `a5603fb7`.",
+        "Выпуск `3.1.2.19` закрепляет Merge Commit maplib PR #24",
+        "[`85dbe67`](https://github.com/GeonicalSys/android_maplib/commit/85dbe677fc62812b268a6f64ae300b1988c4c6d9)",
+        "(конус направления), maplibui PR #15",
+        "[`cc19ef66`](https://github.com/GeonicalSys/android_maplibui/commit/cc19ef66d2b9bf2c88463c998e5b84659c3dcb67)",
+        "(шаринг GPX) и maplib PR #25",
+        "[`02a9fa4`](https://github.com/GeonicalSys/android_maplib/commit/02a9fa4af1625948b2b5bfe81317acb91245b122)",
+        "(диагностическая версия `3.1.2.19`).",
+        "Выпуск `3.1.2.20` закрепляет Merge Commit maplib PR #27",
+        "[`b698466`](https://github.com/GeonicalSys/android_maplib/commit/b69846662e5a9d2b9f6e56e053f605c4c5bcfb70)",
+        "(внешний NMEA GNSS) и maplibui PR #17",
+        "[`c9cea108`](https://github.com/GeonicalSys/android_maplibui/commit/c9cea108131e7e51e2b3270024a5c284ab691019)",
+        "(foreground GNSS service).",
+        "Выпуск `3.1.2.21` закрепляет Merge Commit maplib PR #29",
+        "[`18e7e00`](https://github.com/GeonicalSys/android_maplib/commit/18e7e0090bb3bff627978e5a22456eec39e99647)",
+        "(sync timeouts, coalesced track reads, linear field comparison) и maplibui PR #18",
+        "[`53f9fc9a`](https://github.com/GeonicalSys/android_maplibui/commit/53f9fc9a37d379f5d0c1935f1aed6ba2c0c0e2e6)",
+        "(компактное восстановление NGW selector).",
+        "Выпуск `3.1.2.22` закрепляет Merge Commit maplib PR #32",
+        "[`ffff44f`](https://github.com/GeonicalSys/android_maplib/commit/ffff44fd69fd792eead95ca58ffea1af8ac73226)",
+        "(быстрая безопасная отмена sync, сессионный прогресс) и maplibui PR #20",
+        "[`56fd1585`](https://github.com/GeonicalSys/android_maplibui/commit/56fd158583613fe51e1c7c470304ae519a46aeb9)",
+        "(зелёный значок видимости и прерывание sync перед сменой проекта и загрузкой слоя).",
+        "Выпуск `3.1.2.23` закрепляет Merge Commit maplib PR #33",
+        "[`d6fde46`](https://github.com/GeonicalSys/android_maplib/commit/d6fde46d4e774d9101a7577780c3f57a5adec6b3)",
+        "(имя и прогресс импорта подложки из файла) и maplibui PR #21",
+        "[`5fb72ee8`](https://github.com/GeonicalSys/android_maplibui/commit/5fb72ee8159ec22fb87d3c1dfef09f8d0d96b163)",
+        "(список загрузки проекта, перенос длинных имён Веб ГИС и имя NGRc-подложки).",
+        "Выпуск `3.1.2.24` закрепляет Merge Commit maplib PR #34",
+        "[`5100feb`](https://github.com/GeonicalSys/android_maplib/commit/5100feb6caf89e09629eebbeae6933ddb364c47c)",
+        "(диагностическая версия `3.1.2.24`) и maplibui PR #22",
+        "[`dffe7079`](https://github.com/GeonicalSys/android_maplibui/commit/dffe70790db66cfbe2c174495f9524d644485ab3)",
+        "(запись трека и обхода только location foreground service и явное сообщение,",
+        "если запись не стартовала).",
+        "Выпуск `3.1.2.25` закрепляет Merge Commit maplib PR #35",
+        "[`08df9be`](https://github.com/GeonicalSys/android_maplib/commit/08df9be25ab631c9f057d6aca0fce7bd6636042e)",
+        "(диагностическая версия `3.1.2.25`) и maplibui PR #23",
+        "[`6dadbd7a`](https://github.com/GeonicalSys/android_maplibui/commit/6dadbd7a91745ba5e21dcbdbb2d71e22308540ec)",
+        "(меню во время записи показывает завершение трека, а не «не записывается»).",
+        "Выпуск `3.1.2.26` закрепляет Merge Commit maplib PR #36",
+        "[`f9ab155`](https://github.com/GeonicalSys/android_maplib/commit/f9ab1550cffb41088fbb4f8970f964b422f533ce)",
+        "(диагностическая версия `3.1.2.26`) и maplibui PR #24",
+        "[`d79f2e98`](https://github.com/GeonicalSys/android_maplibui/commit/d79f2e98c4afd42967c68920e0a936733f378779)",
+        "(кнопка трека, отказ старта без системной геопозиции и аварийный сброс обхода).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:official-differences-october-release-lineage"
+    ]
+  }
+}

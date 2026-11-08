@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:automated-tests-missing-or-ambiguous-test-project-requires-choice",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Если 1403 отсутствует или совпал в нескольких workspaces, runner **спрашивает,",
+        "на каком проекте можно протестировать**. Интерактивный терминал принимает",
+        "ID/название/каталог; non-interactive возвращает вопрос до проектных действий.",
+        "Агент должен передать вопрос пользователю и после ответа повторить:",
+        "`tools\\verify-mobile-tests.ps1 -Scope Full -TestProject <разрешённый-проект>`.",
+        "Не подставлять другой проект автоматически. Явный выбор хранится локально в",
+        "игнорируемом `build/verification/authorized-test-project.json`. Полный receipt",
+        "содержит ID и checksum snapshot. Related на эмуляторе использует синтетические",
+        "fixtures и не зависит от доступности телефонного проекта.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:automated-tests-missing-or-ambiguous-test-project-requires-choice"
+    ]
+  }
+}

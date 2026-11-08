@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ui-accessibility-fitted-dialogs-callbacks-list-and-keyboard",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:ui-accessibility"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ui-accessibility.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "`FittedDialogs.nativeBuilder/compatBuilder` сохраняют исходный тип диалога,",
+        "кнопки и callbacks. При крупном интерфейсе окна без списка разрешают полные",
+        "подписи и оборачивают содержимое в `FittedPanelLayout` до показа. Ограничение",
+        "окна задаёт доступную область для локального вписывания. При крупном масштабе",
+        "диалог использует ширину окна, а его существующие панели измеряются по естественной",
+        "высоте: специальные замеры AlertDialogLayout не обрезают многострочные кнопки. Системные окна Android не модифицируются; диалоги",
+        "списков сохраняют свой штатный прокручиваемый viewport.",
+        "Контроль полной видимости выполняется с закрытой клавиатурой. Одновременное",
+        "вписывание всего интерфейса вместе с открытой клавиатурой не требуется.",
+        "Настройки IME и её штатное поведение не изменяются.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ui-accessibility-fitted-dialogs-callbacks-list-and-keyboard"
+    ]
+  }
+}

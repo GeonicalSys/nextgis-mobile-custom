@@ -1,0 +1,62 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:invariants-inv-scrolling-dialog-viewport",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "invariants",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "INV-SCROLLING-DIALOG-VIEWPORT"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "title": "Nested adapter dialogs retain a bounded native viewport",
+        "owners": [
+          "app",
+          "maplibui"
+        ],
+        "statement": "Custom setView dialogs containing AbsListView or RecyclerView must not have their whole body measured with UNSPECIFIED height by FittedPanelLayout. All eligible layers remain offered and reachable; enlarged lists may scroll normally.",
+        "related_code": [
+          "maplibui/src/main/java/com/nextgis/maplibui/util/FittedDialogs.java",
+          "app/src/androidTest/java/com/nextgis/mobile/reliability/LayerSelectionDialogTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/reliability/ProjectLayerSelectionTest.java"
+        ],
+        "verify_smoke": [
+          "SMOKE-LAYER-CHOOSER",
+          "AUTO-MOBILE-RELATED"
+        ],
+        "must_update_docs": [
+          "docs/architecture/ui-accessibility.md",
+          "docs/runbooks/automated-tests.md"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:invariants-inv-scrolling-dialog-viewport"
+    ]
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:invariants-inv-ngw-resource-row-text-fit",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "invariants",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "INV-NGW-RESOURCE-ROW-TEXT-FIT"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "title": "Complete resource name/mode captions and reachable breadcrumb after repeated measurement",
+        "owners": [
+          "maplibui",
+          "app"
+        ],
+        "statement": "Три caption width=wrap_content сохраняют полный owned RU/EN текст. NgwResourceRowLayout сначала измеряет обычную горизонтальную строку; лишь фактический glyph clipping имени переводит две статические header/mode группы друг под друга. Перед обычным и full-width измерением локально forceLayout для каждого descendant обновляет getLayout до решения о размещении; parent requestLayout/reparent нет. При расширении та же строка возвращается в горизонтальную компоновку. Шрифт, IDs, порядок controls, listeners/CheckState/local-vs-remote identity/JSON/Parcel/import/refresh прежние. Shared breadcrumb layout переносит5dp child margin в5dp padding HorizontalScrollView: API28 clamp учитывает padding, а child margin не учитывает. Визуальный отступ сохранён, конец пути достижим в технической модели. Complete line ends/ellipsis/height/glyph bounds and non-overlap are independent expectations; cached dimensions/getText are insufficient. Полная owned copy и CPU glyph bounds не принимают фактическое число доступных строк, touch targets/scroll/OEM/font/theme/rotation/display-size/installed APK/phone performance. font1.3 и реальные orientation/display combinations не исполнены. Единственный narrow Root risk AUDIT-TODO-MOBILE-RESOURCE-ROW-LAYOUT; broader UI audit продолжается, не all-screens PASS. F61 clock/Wiki/pointer blockers прежние.",
+        "related_code": [
+          "maplibui/src/main/java/com/nextgis/maplibui/view/NgwResourceRowLayout.java",
+          "maplibui/src/main/res/layout/row_ngwlayer_check.xml",
+          "maplibui/src/main/res/layout/row_ngwlayer_doublecheck.xml",
+          "maplibui/src/main/res/layout/layout_resources.xml",
+          "app/src/test/java/com/nextgis/maplibui/dialog/ResourceSelectionRowLayoutTest.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/dialog/NGWResourcesListAdapter.java"
+        ],
+        "must_update_docs": [
+          "docs/architecture/ui-contracts.md",
+          "docs/registry/ui-contracts.json"
+        ],
+        "verify_smoke": [
+          "AUTO-NGW-RESOURCE-ROW-TEXT-FIT",
+          "AUTO-UI-SOURCE-CONTRACTS"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:invariants-inv-ngw-resource-row-text-fit"
+    ]
+  }
+}

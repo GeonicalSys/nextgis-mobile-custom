@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-non-method-evidence-127816fc4ccef7e3dd75edc2",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "non_method_evidence"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": [
+        "root",
+        "app/src/test/java/com/nextgis/maplibui/dialog/ResourceSelectionRowLayoutTest.java"
+      ]
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "repository": "root",
+        "path": "app/src/test/java/com/nextgis/maplibui/dialog/ResourceSelectionRowLayoutTest.java",
+        "purpose": "Five unchanged calibrated CPU-native-text actual-adapter/layout models; source pin, no device/native GIS acceptance.",
+        "contract_ids": [
+          "UI-NGW-RESOURCE-CHECKBOX-SELECTION"
+        ],
+        "sha256": "cc1fb961f2459d6b9e71097f403f5898b82aaa2425093b6157ee76edf03d06ac"
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "consumed_by",
+      "target": "lisa:mobile:contract:ui-contracts-ui-ngw-resource-checkbox-selection",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-non-method-evidence-127816fc4ccef7e3dd75edc2"
+    ]
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-rendering-load-order-intro",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### Большие слои, загрузка и порядок на карте",
+        "",
+        "**Что это.** Набор доработок производительности и согласованности карты: дисковый",
+        "render cache для векторных слоёв, опциональный режим локальных vector tiles для",
+        "тяжёлых read-only полигонов и простых точечных слоёв, пакетная загрузка слоёв с отложенной перезагрузкой",
+        "карты, явный контракт порядка `LayerGroup` ↔ MapLibre style, верхний overlay",
+        "курсора местоположения и политика `immutable_local` для распакованных `.ngrc`-",
+        "подложек. В official NextGIS Mobile классический путь всегда читает все объекты",
+        "слоя из SQLite, строит Java `FeatureCollection` и отдаёт её в `GeoJsonSource`;",
+        "пакетный импорт часто требует перезапуска, а порядок слоёв после hot-add может",
+        "расходиться между списком и картой.",
+        "",
+        "**Для чего.** Сократить время повторного открытия карты и стоимость отрисовки",
+        "десятков тысяч полигонов, не ломая редактирование и identify. Выборка линий",
+        "идёт по пересечению с допуском тапа (±20dp), а не по прямоугольнику экстента",
+        "объекта (буквы «Г» больше не выбираются тапом в пустом углу bbox). Одновременно —",
+        "чтобы добавление растра, `.ngrc` или пакета NGW-слоёв во время работы давало",
+        "предсказуемый результат без перезапуска приложения.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-rendering-load-order-intro"
+    ]
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:invariants-inv-sync-notifications",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "invariants",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "INV-SYNC-NOTIFICATIONS"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "title": "Completed sync cannot leave or recreate its progress notification",
+        "owners": [
+          "app"
+        ],
+        "statement": "Optional start/finish/cancel messages default to false in XML and runtime fallback; an explicit user choice is preserved. A queue failure posts one replaceable readable error independently of that preference, and successful retry clears it. Manual/account foreground indicators are silent and last only through the owning service. Inactive progress and post-destroy callbacks cannot repost them; main-process startup clears old service indicators without removing error, GPS or unrelated notifications.\n",
+        "related_code": [
+          "app/src/main/java/com/nextgis/mobile/util/SyncNotifications.java",
+          "app/src/main/java/com/nextgis/mobile/util/OfflineSyncIntentService.java",
+          "app/src/main/java/com/nextgis/mobile/datasource/SyncService.java",
+          "app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java",
+          "app/src/main/res/xml/preferences_general.xml"
+        ],
+        "verify_smoke": [
+          "SMOKE-SYNC-NOTIFICATIONS"
+        ],
+        "must_update_docs": [
+          "docs/architecture/ngw-sync-and-storage.md",
+          "docs/guides/project-synchronization-user-guide.md",
+          "docs/reference/settings-and-config.md"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:invariants-inv-sync-notifications"
+    ]
+  }
+}

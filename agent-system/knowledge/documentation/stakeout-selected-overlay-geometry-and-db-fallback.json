@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:stakeout-selected-overlay-geometry-and-db-fallback",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:stakeout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/stakeout.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### Геометрия цели, сохранённый выбор и обновление данных",
+        "",
+        "`startStakeout` предпочитает geometry выбранного `EditLayerOverlay`; полную",
+        "DB-геометрию читает лишь при null. `getGeometryForId` сам делегирует",
+        "`getLargeGeometryForId`, поэтому это не выбор упрощённого render cache.",
+        "Конструктор создаёт приватную копию и новый JTS index; layer/FID/workspace",
+        "не хранятся в target. Для линии/полигона ближайшая точка меняется с device fix",
+        "внутри той же geometry snapshot. Camera centre/bearing не заменяют начало",
+        "расчёта или выбранную геометрию; bearing камеры влияет на отдельную стрелку.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:stakeout-selected-overlay-geometry-and-db-fallback"
+    ]
+  }
+}

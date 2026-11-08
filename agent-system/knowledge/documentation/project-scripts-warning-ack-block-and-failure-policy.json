@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:project-scripts-warning-ack-block-and-failure-policy",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:project-scripts"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the NGFP or project-rule subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/project-scripts.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Предупреждение подтверждается для конкретного hook, значений watched fields,",
+        "ключа и текста. Save всегда пересчитывает условие, но уже подтверждённое",
+        "идентичное предупреждение не повторяет. Block подтверждением не обходится.",
+        "При ошибке `open` сообщает о неполной проверке и разрешает продолжить;",
+        "`closed` сохранять не позволяет. Неисправная сама ссылка считается closed.",
+        "Закрытие формы/смена карты отменяют результат; технические ошибки идут в лог,",
+        "в диалоге только понятный человеку текст.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:project-scripts-warning-ack-block-and-failure-policy"
+    ]
+  }
+}

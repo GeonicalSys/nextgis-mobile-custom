@@ -1,0 +1,50 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:mobile-roadmap-discovery-ngfp-form-values-20261030",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout",
+      "lisa:mobile:task:mobile-roadmap-dependency-discovery"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the pinned checkpoint and keep its results within the stated source and runtime bounds."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### Продолжение MOB-02: значения формы NGFP — 2026-10-30",
+        "",
+        "Сохранены11 source-backed связей от nullable SQL/NGFP/catalog/private resolver/publisher через Collector first-form selection к remote Field metadata, restored pair и Save. Default Прочие / прочие действующий; нарушение не установлено. UI-FORM-TEXT-LINE-CAP отделяет requested lines от текста и resource IDs. Интегрированный docs-only каталог39/134/17 сохраняет прежние38/128/14 и clock F61; проверки текущих docs ещё NOT_RUN, существующий clock drift не скрывается. Четыре root NGFP TODO принадлежат единой очереди; native/UI/data policy не возобновляется.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:mobile-roadmap-discovery-ngfp-form-values-20261030"
+    ]
+  }
+}

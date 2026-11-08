@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:track-controls-gpx-launch-guards-naming-and-grants",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:track-controls"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/track-controls.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Непосредственно перед запуском проверяются текущие Activity, view, selected ID",
+        "и обычный режим карты. Список по-прежнему умеет выбирать несколько треков и",
+        "использует прежний вопрос об одном/отдельных GPX. XML-valid имя сохраняется в",
+        "GPX без потери Unicode, XML metacharacters и CR/LF/tab; path separators меняют",
+        "только basename отдельного файла. Обычные имена файлов и GPX segments/order",
+        "сохранены. Intent, FileProvider, MIME и read grant остаются у прежнего exporter.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:track-controls-gpx-launch-guards-naming-and-grants"
+    ]
+  }
+}

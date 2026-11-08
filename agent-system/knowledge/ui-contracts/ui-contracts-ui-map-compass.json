@@ -1,0 +1,101 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-map-compass",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-MAP-COMPASS"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-MAP-COMPASS",
+        "group": "map",
+        "title": "Отдельный компас устройства",
+        "surface": "Map/full compass",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [
+          "fl_compass",
+          "azimuth"
+        ],
+        "meaning": "CompassFragment uses device orientation with north preference and display rotation; separate from camera bearing and DeviceHeadingProvider sector.",
+        "value_origin": "TYPE_ORIENTATION -> updateCompass -> applicable declination+display rotation -> caption and needles",
+        "units": "Compass degrees/cardinal code; legacy Android GeomagneticField declination.",
+        "updates": [
+          "Compass resume preferences and orientation sensor callbacks."
+        ],
+        "actions": [
+          "Small compass opens FullCompassFragment; true/magnetic visibility preferences apply."
+        ],
+        "conditions": [
+          "show compass, sensors/permissions; true-north uses cached current location."
+        ],
+        "saved_state": "True-north/magnetic/vibration preferences persist; declination cache independent from camera.",
+        "source_ids": [
+          "legacy-compass-value",
+          "legacy-compass-prefs",
+          "map-click-actions"
+        ],
+        "expectations": [
+          "Camera fixed/device rotated can change compass; camera-only rotation need not change compass number.",
+          "Counterexample: compass is not target azimuth or north-up toggle."
+        ],
+        "unknowns": [
+          "Runtime NOT_RUN: no GUI, device, emulator, build or APK resource merge acceptance in this task.",
+          "Cached legacy location/declination freshness, absent sensors and full-compass layout not closed."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-legacy-compass-value",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-legacy-compass-prefs",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-map-click-actions",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-map-compass"
+    ]
+  }
+}

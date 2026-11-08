@@ -1,0 +1,220 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ui-accessibility",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/architecture/ui-accessibility.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ui-accessibility.md"
+    },
+    "frontmatter": {
+      "role": "markdown_frontmatter_lines",
+      "value": [
+        "title: Адаптация интерфейса к крупному шрифту и размеру отображения",
+        "type: architecture",
+        "last_verified: 2026-10-26",
+        "related_code:",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/view/WrappingRow.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/view/ReflowingGuidanceHeader.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/view/WrappingLabel.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/view/FittedPanelLayout.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/util/ToolbarTextFit.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/util/FittedDialogs.java",
+        "  - maplibui/src/main/res/layout-land/fragment_ngw_login.xml",
+        "  - app/src/androidTest/java/com/nextgis/mobile/reliability/LargeTextLayoutTest.java",
+        "  - app/src/main/java/com/nextgis/mobile/view/ResponsiveMapLayout.java",
+        "  - app/src/main/java/com/nextgis/mobile/view/MapStatusPanel.java",
+        "  - app/src/main/java/com/nextgis/mobile/view/BoundedDrawerLayout.java"
+      ]
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "",
+        "# Крупный интерфейс",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-accessibility-glyph-width-and-whole-word-oracle",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-accessibility-polygon-style-preview-and-contrast",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-accessibility-firefly-editor-layout-and-touch-profiles",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-accessibility-phone-gps-accuracy-number-and-native-radius",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-accessibility-help-links-full-text-and-span-destinations",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-accessibility-independent-guidance-panels-and-full-sync-clock",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-accessibility-background-gps-and-network-position-age",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ui-accessibility-october-14-settings-and-status-profiles",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-accessibility-system-scale-ownership-and-fitting-order",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-accessibility-whole-element-wrap-and-fixed-grid-autosize",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-accessibility-fitted-panel-native-scale-and-touch",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-accessibility-guidance-header-and-responsive-map-layout",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-accessibility-status-panel-wrap-and-height-bound",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-accessibility-osm-attribution-and-transparent-map-action-touch",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-accessibility-gnss-hud-drawer-walk-and-login-sizing",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-accessibility-toolbar-local-text-fit-and-overflow",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-accessibility-warning-overlay-text-actions-and-map-scope",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-accessibility-fitted-dialogs-callbacks-list-and-keyboard",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-accessibility-native-large-text-layout-and-touch-acceptance",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-accessibility-real-window-profiles-and-form-appearance",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-accessibility-real-settings-navigation-and-stale-screen-listeners",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-accessibility-changed-ui-states-and-visible-text-oracle",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-accessibility-nested-dialog-list-viewport-preservation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-accessibility-nested-list-rows-real-taps-and-approved-policy",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ui-accessibility-october-17-related-bugreports-scope",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-accessibility-resumed-tab-navigation-and-fragment-state",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-accessibility-main-screen-back-and-home-lifecycle",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ui-accessibility-selected-track-actions-width-and-order",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ui-accessibility-track-share-icon-static-alpha-and-contrast",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ui-accessibility"
+    ]
+  }
+}

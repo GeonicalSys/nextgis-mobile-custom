@@ -1,0 +1,64 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:invariants-inv-hidden-vector-tile-identify",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "invariants",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "INV-HIDDEN-VECTOR-TILE-IDENTIFY"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "title": "Only visible vector layers participate in tap and long-press identification",
+        "owners": [
+          "maplib",
+          "app"
+        ],
+        "statement": "LayerIdentifyPolicy requires a nonnull visible vector layer. Old local_vector_tiles origin metadata does not bypass hidden-layer selection. Tap and long-press share this rule. Turning rendering off preserves original SQLite geometry, attributes, schema and editing/sync rights; it does not implicitly expose hidden objects through the map.",
+        "related_code": [
+          "maplib/src/main/java/com/nextgis/maplib/map/LayerIdentifyPolicy.java",
+          "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+          "maplib/src/test/java/com/nextgis/maplib/map/LayerIdentifyPolicyTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/rendering/DirectVectorTilesTest.java"
+        ],
+        "verify_smoke": [
+          "SMOKE-HIDDEN-VECTOR-TILE-IDENTIFY"
+        ],
+        "must_update_docs": [
+          "docs/architecture/map-rendering.md",
+          "docs/reference/official-differences.md",
+          "maplib/docs/README.md",
+          "app/docs/README.md"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:invariants-inv-hidden-vector-tile-identify"
+    ]
+  }
+}

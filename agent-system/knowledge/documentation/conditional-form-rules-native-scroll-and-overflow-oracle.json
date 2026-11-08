@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:conditional-form-rules-native-scroll-and-overflow-oracle",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:conditional-form-rules"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the NGFP or project-rule subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/conditional-form-rules.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Native verification учитывает реальный viewport: скрытый прокруткой control",
+        "сначала раскрывается обычным requestRectangleOnScreen, затем выполняется один",
+        "жест. Проверка имени различает полное вписывание на одной строке широкого окна",
+        "и overflow: все строки/высота/ellipsis проверяются всегда, строгий перенос —",
+        "дополнительно на 320/280dp компонентах в обеих темах. Production navigation,",
+        "условия и layout правила этим test-only изменением не меняются.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:conditional-form-rules-native-scroll-and-overflow-oracle"
+    ]
+  }
+}

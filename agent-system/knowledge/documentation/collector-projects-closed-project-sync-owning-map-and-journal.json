@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:collector-projects-closed-project-sync-owning-map-and-journal",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:collector-projects"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the App mobile project topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/collector-projects.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Фоновая синхронизация закрытых проектов",
+        "",
+        "ProjectSyncRunner открывает отдельный MapDrawable без активации и renderer.",
+        "SyncWorkspaceSession передаёт owning map всем callbacks, provider URI и сервисам;",
+        "глобальная открытая карта и preferences не переключаются. Collector import journal",
+        "хранится отдельно для canonical map path, runtime state восстанавливается по owner",
+        "на main thread. Одинаковые group IDs в разных проектах не связывают их очереди.",
+        "Полный контракт — [sync/storage](ngw-sync-and-storage.md), действия пользователя —",
+        "[синхронизация проектов](../guides/project-synchronization-user-guide.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:collector-projects-closed-project-sync-owning-map-and-journal"
+    ]
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:device-smoke-tests-august-21-gps-centre-and-form-save",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:device-smoke-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/device-smoke-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "   сообщение с выходом без объекта. Из далёкого экстента начать создание по",
+        "   местоположению и новый обход: карта центрируется по своей GPS-опоре без",
+        "   смены масштаба. Проверить обе темы, крупный шрифт и 48 dp зоны нажатия. Кнопка",
+        "   формы активна и работает как «Сохранить»; двойной тап",
+        "   открывает одну форму. Сохранить/синхронизировать новый объект и убедиться, что",
+        "   приложение вышло в обычный режим карты со стандартными панелями и без выборки.",
+        "   Отдельно открыть существующий объект, изменить его геометрию и сохранить",
+        "   напрямую, затем повторить изменение через подтверждение формы атрибутов: оба",
+        "   успешных сценария должны закрывать панель атрибутов, завершать редактирование и",
+        "   снимать выборку, а ошибка записи — оставлять текущий контекст. Затем открыть"
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Dated package recipe for camera, form and direct save behavior."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:device-smoke-tests-august-21-gps-centre-and-form-save"
+    ]
+  }
+}

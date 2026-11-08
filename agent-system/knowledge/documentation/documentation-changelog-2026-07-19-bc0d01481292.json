@@ -1,0 +1,92 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-07-19-bc0d01481292",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-07-19",
+        "",
+        "- Курсор текущего местоположения закреплён последним MapLibre style layer после",
+        "  cold/lite/hot reload и больше не перекрывается треками или пользовательскими слоями.",
+        "- Зафиксирован rollout-контракт Collector: неполный remote snapshot не импортируется,",
+        "  незавершённая партия переживает process death и продолжает verify/repair только для",
+        "  отсутствующих слоёв, а schema rebuild сохраняет старый слой до успешной подготовки замены.",
+        "- Реестр Collector workspace переведён на атомарную запись с backup/recovery scan;",
+        "  формы — на hash-проверку и восстанавливаемую транзакцию пары form/meta.",
+        "- Для `.ngrc` документирован и реализован `immutable_local` lifecycle с SHA-256,",
+        "  безопасной распаковкой и сохранением подложки при APK/project update. Remote lifecycle",
+        "  отложен до спецификации нового сервера.",
+        "- Синхронизация account изолирует результаты, обслуживает активный Collector account первым,",
+        "  ограничивает молчащее HTTP-чтение и восстанавливает фоновые расписания единым путём.",
+        "- Добавлен поддерживаемый агентами handoff-документ",
+        "  `reference/official-differences.md`: только актуальные пользовательские отличия от official,",
+        "  без истории и отменённых решений. Для каждой возможности описаны назначение, пользовательский",
+        "  сценарий и принцип работы. Новый strict change-impact trigger требует его пересмотра при изменении",
+        "  app behavior или submodule pointers; CI теперь применяет strict-требования к diff.",
+        "- Документирован selective upstream 3.1.2 cycle: прямой импорт NGW-ресурса по URL,",
+        "  permission/read-only contract, критические crash/form fixes и production Sentry policy.",
+        "- Матрицы, module contracts и release notes обновлены до версии форка 3.1.2.1 / 192.",
+        "- `upstream-sync.ps1` теперь использует command-scoped `safe.directory` и не",
+        "  маскирует ненулевые exit codes Git.",
+        "- Удалены невоспроизводимые upstream diff snapshots; полезные команды, выводы и результаты",
+        "  перенесены в `docs/history/upstream/`.",
+        "- `CUSTOMIZATIONS.md` сокращён до compatibility-указателя, а актуальный тематический индекс",
+        "  перенесён в `docs/reference/fork-customizations.md`.",
+        "- Collector setup/roadmap и анализ map startup перенесены из корня в проверяемую структуру docs;",
+        "  roadmap очищен от уже реализованных milestone.",
+        "- `WHATS_NEW.md` актуализирован до 3.0.3.9 / `versionCode` 187.",
+        "- Создан автоматический agent entry через root/module `AGENTS.md` и Cursor rules.",
+        "- Добавлена центральная структура architecture/guides/runbooks/reference.",
+        "- Введены машиночитаемые repositories, modules, dependencies, invariants,",
+        "  change-impact, config, upstream overlap и smoke registries.",
+        "- Добавлены module packs, scaffold, validator, unit tests и CI workflow.",
+        "- `CONTEXT_INSTRUCTION.md` переведён в совместимый redirect на новую систему.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-07-19",
+        "heading": "2026-07-19",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-07-19-bc0d01481292"
+    ]
+  }
+}

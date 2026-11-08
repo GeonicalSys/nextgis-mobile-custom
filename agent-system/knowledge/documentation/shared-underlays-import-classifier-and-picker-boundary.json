@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:shared-underlays-import-classifier-and-picker-boundary",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:shared-underlays"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/shared-underlays.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Обычный ZIP-TMS, онлайн-OSM/QMS/NGW и их кэши не входят в каталог. «Новая",
+        "подложка из файла» и «Открыть локальный» для NGRc, raster MBTiles и ZIP с",
+        "одним MBTiles или NGRc-конфигурацией (`config.json`/`Mapnik.json`) идут в",
+        "`shared_underlays` одним классификатором. ZIP, который оказался NGRc, больше",
+        "не распаковывается в проектный `layer_*`. Обычный ZIP-TMS в «Открыть локальный»",
+        "по-прежнему распаковывается в проект; dedicated picker его отклоняет. Новые",
+        "пункты «Новая подложка из файла» и «Подложка из хранилища» добавляют подложку",
+        "сразу над OSM; повторное подключение того же ассета в один проект не создаёт",
+        "второй слой. Диалог загрузки показывает человеческое имя файла (не SAF id",
+        "вида `msf:308`) и движущуюся полосу: для NGRc — число тайлов, для MBTiles —",
+        "объём, если Android отдаёт размер. Системный выбор файла (`ACTION_OPEN_DOCUMENT`)",
+        "не заменяется своим экраном.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:shared-underlays-import-classifier-and-picker-boundary"
+    ]
+  }
+}

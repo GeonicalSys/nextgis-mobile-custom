@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-attachment-terminal-404",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Вложения: terminal404 и публикация кеша — 2026-11-01",
+        "",
+        "Адресно проверен официальный `nextgis/easypicker` на",
+        "[9d783d368b408b59f6ac5931291c948595925739](https://github.com/nextgis/easypicker/blob/9d783d368b408b59f6ac5931291c948595925739/easypicker/src/main/java/com/keenfin/easypicker/DownloadPhotoIntentService.java):",
+        "именованный service возвращает404 без terminal callback из handler и пишет",
+        "поток прямо под конечным именем. Fork fix завершает404 с исходным статусом",
+        "и публикует собственный staging после200/close через atomic move без copy",
+        "fallback. Старый final и соседние файлы сохраняются при failure.",
+        "",
+        "Сравнение ограничено этим source file; это не whole official App/runtime",
+        "comparison. Семь owning-library JVM-регрессий дают7 RED→7 GREEN; они не",
+        "проверяют устройство/GUI/сервер. Исправление пока принадлежит library delivery,",
+        "а App adoption требует её merge и отдельного gitlink update. Legacy corrupt",
+        "cache и полная integrity/silent-truncated200 проверка не добавлены.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-attachment-terminal-404"
+    ]
+  }
+}

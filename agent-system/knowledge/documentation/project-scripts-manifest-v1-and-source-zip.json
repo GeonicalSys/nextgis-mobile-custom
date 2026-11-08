@@ -1,0 +1,68 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:project-scripts-manifest-v1-and-source-zip",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:project-scripts"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the NGFP or project-rule subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/project-scripts.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Форматы API v1",
+        "",
+        "ZIP содержит `manifest.json` и исходники `scripts/<name>.js`. Допускаются файлы",
+        "`tables/<name>.json`, но API чтения таблиц пока отсутствует. Только UTF-8,",
+        "исходники; bytecode, модули `std`/`os`, package managers и загрузка зависимостей",
+        "не поддерживаются. Пример минимального manifest:",
+        "",
+        "```json",
+        "{",
+        "  \"schema_version\": 1,",
+        "  \"api_version\": 1,",
+        "  \"id\": \"audit-check\",",
+        "  \"version\": \"1.0.0\",",
+        "  \"capabilities\": [\"gis.query\", \"time.monthWindow\"],",
+        "  \"layers\": {\"audits\": {\"read_fields\": [\"contractor\", \"issue\", \"date_audit\"]}},",
+        "  \"hooks\": [{",
+        "    \"id\": \"prior-audits\", \"layer\": \"audits\", \"entry\": \"scripts/check.js\",",
+        "    \"events\": [\"on_open\", \"on_field_change\", \"before_save\"],",
+        "    \"fields\": [\"contractor\"]",
+        "  }]",
+        "}",
+        "```",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:project-scripts-manifest-v1-and-source-zip"
+    ]
+  }
+}

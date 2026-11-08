@@ -1,0 +1,88 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-batch-load-and-hot-add",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "#### Пакетная загрузка и hot-add",
+        "",
+        "Импорт одного или нескольких слоёв идёт через foreground-сервис",
+        "`LayerFillService` с очередью задач (`drainLoop` на worker executor).",
+        "",
+        "**Вставка в модель.** После успешного fill слой попадает в `LayerGroup` с учётом",
+        "типа:",
+        "",
+        "| Тип импорта | Позиция в `LayerGroup` |",
+        "|-------------|------------------------|",
+        "| `.ngrc` (LocalTMSFillTask) | сразу над OSM (index 0 = низ стека), если OSM есть; иначе вниз |",
+        "| Collector project layer | `LayerGroup.computeCollectorOrderedInsertIndex()` по `collector_order`, ниже «Мои треки» |",
+        "| Восстановление после rebuild | сохранённый `mLayerRestoreInsertIndex` |",
+        "| Обычный слой | `addLayer()` в конец |",
+        "",
+        "**Отложенная перезагрузка карты.** При пакетном импорте (Collector, несколько",
+        "NGW-слоёв) каждая задача ставится с флагом",
+        "`KEY_DEFER_MAP_RELOAD_UNTIL_QUEUE_EMPTY`. Пока очередь не пуста, карта не",
+        "пересобирает style — это избегает N полных reload подряд. После drain:",
+        "`finalizeCollectorImportVerifyAndRepairIfNeeded()` →",
+        "`requestMapReloadAfterLayerFillBatch()` →",
+        "`MapFragment.reloadMapStyleAndLayersAfterLayerFillBatch()` → полный",
+        "`loadLayersToMaplibreMap()` с `ngwstyle.json`.",
+        "",
+        "**Общие ассеты.** Оба маршрута загрузки стиля используют `ngwstyle.json`.",
+        "Lisa Debug, Lisa Release и Belka Release наследуют его из `main/assets`.",
+        "Пустой `geo.json` выведен из общего набора в рамках MOB-DEV-02.",
+        "",
+        "**Hot-add без пакета.** Одиночный растр после вставки вызывает",
+        "`loadLayersLite()` (`loadLayersToMaplibreMapLite`) — пересоздаёт MapLibre layers",
+        "из уже подготовленных `sourceFeaturesHashMap`, не перечитывая SQLite. Для",
+        "растра `MPLFeaturesUtils.resolveRasterSiblingAnchorOrNull()` выбирает anchor",
+        "относительно соседей в `LayerGroup`, чтобы TMS-слой оказался в том же месте",
+        "стека, что и в списке слоёв (в т.ч. над OSM, но не поверх всего пользовательского",
+        "стека).",
+        "",
+        "**Контракт порядка.** Индекс `0` в `LayerGroup` — низ карты. Порядок UI",
+        "(`ReorderedLayerView`), модели и MapLibre style должны сходиться после cold",
+        "start, hot add, reorder и batch fill. Инварианты: `INV-LAYER-ORDER`,",
+        "`INV-HOT-ADD-CONSISTENCY`. Слой «Мои треки» хранится последним во внутреннем",
+        "порядке и потому отображается первым в перевёрнутом списке; Collector fill не",
+        "может вставлять project-managed слои выше него.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-batch-load-and-hot-add"
+    ]
+  }
+}

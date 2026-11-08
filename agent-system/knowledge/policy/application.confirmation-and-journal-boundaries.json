@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:application.confirmation-and-journal-boundaries",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "policy-application",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain editable logical subject and pinned provenance; product implementation/acceptance are separate records."
+  },
+  "facets": {
+    "body": {
+      "role": "standing_contract",
+      "value": "До изменения async/provider/service или project storage прочитать раздел\n«Владение workspace и границы подтверждения» в том же architecture документе:\nlease не выбирает БД, pair ACK не равен full clock, а 60s expiry не ограничивает\nclaimed child. При изменении recovery journal читать также его process-view contract:\nточный preferences owner и все семь известных ключей образуют один typed cohort.\ncommit=false/throw не публикует новый план через Journal API; очередная обычная\nзапись должна исходить из принятого cohort, сохраняя неизвестные ключи.\nПервое чтение raw cache не доказывает disk confirmation. Не заменять этот\nконтракт compensating writes, [] fallback или обещанием rollback после restart. Directory/mapName/UID/token имеют разные ключи и миграции;\nоткрытые риски ведутся в едином LISA dependency-audit-todo, не в отдельном списке.\n"
+    },
+    "classification": {
+      "role": "reviewed_knowledge_class",
+      "value": "standing_contract"
+    },
+    "review": {
+      "role": "classification_reason",
+      "value": "Lease versus database/ACK/clock/expiry, exact seven-key accepted cohort, unknown raw-cache durability, no compensation/fallback/rollback fiction and one root risk queue."
+    },
+    "source_section": {
+      "role": "source_document_context",
+      "value": [
+        "# app — инструкции для ИИ-агентов",
+        "## Общая синхронизация проектов"
+      ]
+    },
+    "authority_limit": {
+      "role": "authority_and_acceptance_boundary",
+      "value": "Path applicability is reviewed separately from the rule's textual triggers. Every source condition and heading remains attached; no automatic predicate or lifecycle inference. Stored commands and dates do not grant current execution, freshness or product acceptance. Existing instruction clients/checkers remain effective until measured cutover."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/policy-migration.json",
+    "scopes": [
+      "lisa:mobile:contract:application.confirmation-and-journal-boundaries"
+    ]
+  }
+}

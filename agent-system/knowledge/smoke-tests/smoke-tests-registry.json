@@ -1,0 +1,764 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:metadata:smoke-tests-registry",
+  "kind": "metadata",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-schema": {
+      "role": "incumbent_registry_schema",
+      "value": 1
+    },
+    "registry-order": {
+      "role": "complete_reviewed_mapping_order",
+      "value": [
+        "AUTO-SYNC-JOURNAL-CONFIRMATION",
+        "AUTO-UI-SOURCE-CONTRACTS",
+        "SMOKE-UI-VALUE-PROVENANCE",
+        "AUTO-GPS-CACHE-WITNESS",
+        "AUTO-SQLITE-LAYER-PRIORITY",
+        "AUTO-LOCAL-TILE-CACHE-ADMISSION",
+        "AUTO-SQLITE-NATIVE-VECTORS",
+        "AUTO-RENDER-MEMORY-UNITS",
+        "AUTO-RENDER-MEMORY",
+        "SMOKE-RENDER-MEMORY-NATIVE",
+        "SMOKE-NATIVE-HEAP-DIAGNOSTIC",
+        "AUTO-LOCAL-VECTOR-TILE-OFFLINE",
+        "AUTO-MAINTENANCE-REMINDERS",
+        "AUTO-POLYGON-STYLE-CONTROLS",
+        "AUTO-POINT-FIREFLY",
+        "AUTO-FEATURE-EDITING",
+        "SMOKE-FEATURE-COPY-TRANSFORM",
+        "AUTO-MOBILE-USAGE",
+        "AUTO-MOBILE-RELATED",
+        "AUTO-MOBILE-FULL",
+        "AUTO-MOBILE-PUBLICATION-GATE",
+        "SMOKE-LAYER-CHOOSER",
+        "AUTO-UPDATER-CHECKS",
+        "SMOKE-LARGE-TEXT-UI",
+        "SMOKE-SYNC-OFFLINE",
+        "SMOKE-SYNC-NOTIFICATIONS",
+        "SMOKE-BACKGROUND-LOCATION-WARNING",
+        "SMOKE-DIAGNOSTIC-NOISE",
+        "SMOKE-FEATURE-TYPE-CREATION",
+        "SMOKE-SYNC-JOURNAL-CANCELLATION",
+        "AUTO-SQLITE-ORIGINAL-BATCH-UNITS",
+        "AUTO-SQLITE-PHASE-UNITS",
+        "SMOKE-SQLITE-PHASE-TABLET",
+        "SMOKE-MAP-RUNTIME-DIAGNOSTICS",
+        "SMOKE-DIAGNOSTIC-DELIVERY",
+        "SMOKE-STAKEOUT-PERMISSIONS",
+        "SMOKE-FORM-APPEARANCE",
+        "SMOKE-ALL-PROJECT-SYNC",
+        "SMOKE-CONDITIONAL-REQUIRED",
+        "SMOKE-FORM-NAVIGATION",
+        "SMOKE-LAYER-PENDING-INDICATOR",
+        "SMOKE-CASCADING-FORM-LISTS",
+        "SMOKE-PROJECT-SCRIPTS",
+        "SMOKE-REQUIRED-FIELDS",
+        "AUTO-RELIABILITY-NATIVE",
+        "SMOKE-RELIABILITY-FAILURES",
+        "SMOKE-TOOL-TAP",
+        "SMOKE-NGID-AND-RESOURCE-ICONS",
+        "SMOKE-NGW-SYNC-RECOVERY",
+        "SMOKE-NGW-SELECTOR-RESTORE",
+        "SMOKE-SHARED-UNDERLAYS",
+        "SMOKE-DEBUG-COMPANION",
+        "AUTO-DOCS-VALIDATE",
+        "AUTO-MAPLIB-UNIT",
+        "AUTO-MAPLIBUI-ASSEMBLE",
+        "AUTO-MAPLIBUI-UNIT",
+        "AUTO-APP-DEBUG",
+        "AUTO-APP-RELEASES",
+        "AUTO-APP-VERSION-MATRIX",
+        "SMOKE-MAP-COLD-START",
+        "SMOKE-POLYGON-LABEL-ANCHOR",
+        "SMOKE-MAP-OPENGL-COMPATIBILITY",
+        "SMOKE-MAP-SURFACE-LIFECYCLE",
+        "SMOKE-LOCATION-CURSOR-TOP",
+        "SMOKE-MAP-CAMERA-CONTROLS",
+        "SMOKE-UNDERLAY-DISPLAY",
+        "SMOKE-NGRC-ORDER",
+        "SMOKE-NGRC-PRESERVE",
+        "SMOKE-UPDATE-DATA-PRESERVE",
+        "SMOKE-DEBUG-UNDERLAY-MIGRATION",
+        "SMOKE-HOT-RASTER",
+        "SMOKE-LAYER-REORDER",
+        "SMOKE-LAYER-VISIBILITY-ICON",
+        "SMOKE-COLLECTOR-IMPORT",
+        "SMOKE-LAYER-SYNC-SETTINGS",
+        "SMOKE-COLLECTOR-RESUME",
+        "SMOKE-COLLECTOR-INCOMPLETE",
+        "SMOKE-COLLECTOR-IDENTITY",
+        "SMOKE-FORM-ROLLBACK",
+        "SMOKE-COLLECTOR-SWITCH",
+        "SMOKE-PROJECT-MANAGEMENT",
+        "SMOKE-SCHEMA-REBUILD-GUARD",
+        "SMOKE-BACKUP-GATE",
+        "SMOKE-CRASH-DRAFT-RECOVERY",
+        "SMOKE-SYNC-OFF-CONFIG",
+        "SMOKE-SYNC-INTERRUPT-ACTION",
+        "SMOKE-MULTI-ACCOUNT-SYNC",
+        "SMOKE-SYNC-OWNER-ACK-BOUNDARY",
+        "SMOKE-NGW-LARGE-PULL-CACHE",
+        "SMOKE-NGW-ACCOUNT-ADD",
+        "SMOKE-NGW-CONNECTION-FAILURE",
+        "SMOKE-WALK-POINT-SESSION",
+        "SMOKE-WALK",
+        "SMOKE-GPS-RECORDING",
+        "SMOKE-STAKEOUT",
+        "SMOKE-MULTIPOLYGON-REPAIR",
+        "SMOKE-GEOMETRY-SKETCH-WORKFLOW",
+        "SMOKE-TRACK-NO-FLAGS",
+        "SMOKE-LISA-RELEASE",
+        "SMOKE-BELKA-RELEASE",
+        "SMOKE-SELF-UPDATE",
+        "SMOKE-NGW-URL-IMPORT",
+        "SMOKE-NGW-IMPORT-BACK",
+        "SMOKE-LOCAL-VECTOR-LAYERS",
+        "SMOKE-HIDDEN-VECTOR-TILE-IDENTIFY",
+        "SMOKE-LOCAL-VECTOR-TILE-STRESS",
+        "SMOKE-TRACK-DELIVERY",
+        "AUTO-PRIVATE-RESOURCE-PROFILER",
+        "SMOKE-PRIVATE-RESOURCE-PROFILER",
+        "SMOKE-WORKSPACE-STORAGE-MUTATION",
+        "AUTO-NGW-LOOKUP-CACHE-SYNC",
+        "AUTO-NGFP-LOOKUP-PREFETCH",
+        "SMOKE-NGFP-LOOKUP-PREFETCH",
+        "AUTO-NGW-SYNC-ADMISSION",
+        "AUTO-NGW-USER-MESSAGES",
+        "AUTO-NGW-RESOURCE-CHECKBOX-SELECTION",
+        "AUTO-VECTOR-SPATIAL-CACHE-RECOVERY",
+        "AUTO-NGW-RESOURCE-ROW-TEXT-FIT",
+        "AUTO-TRACK-SELECTED-GPX-SHARE",
+        "AUTO-DEBUG-UNDERLAY-PROGRESS"
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-sync-journal-confirmation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-ui-source-contracts",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-ui-value-provenance",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-gps-cache-witness",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-sqlite-layer-priority",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-local-tile-cache-admission",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-sqlite-native-vectors",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-render-memory-units",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-render-memory",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-render-memory-native",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-native-heap-diagnostic",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-local-vector-tile-offline",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-maintenance-reminders",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-polygon-style-controls",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-point-firefly",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-feature-editing",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-feature-copy-transform",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-mobile-usage",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-mobile-related",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-mobile-full",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-mobile-publication-gate",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-layer-chooser",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-updater-checks",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-large-text-ui",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-sync-offline",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-sync-notifications",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-background-location-warning",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-diagnostic-noise",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-feature-type-creation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-sync-journal-cancellation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-sqlite-original-batch-units",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-sqlite-phase-units",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-sqlite-phase-tablet",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-map-runtime-diagnostics",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-diagnostic-delivery",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-stakeout-permissions",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-form-appearance",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-all-project-sync",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-conditional-required",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-form-navigation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-layer-pending-indicator",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-cascading-form-lists",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-project-scripts",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-required-fields",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-reliability-native",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-reliability-failures",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-tool-tap",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-ngid-and-resource-icons",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-ngw-sync-recovery",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-ngw-selector-restore",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-shared-underlays",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-debug-companion",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-docs-validate",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-maplib-unit",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-maplibui-assemble",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-maplibui-unit",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-app-debug",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-app-releases",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-app-version-matrix",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-map-cold-start",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-polygon-label-anchor",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-map-opengl-compatibility",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-map-surface-lifecycle",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-location-cursor-top",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-map-camera-controls",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-underlay-display",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-ngrc-order",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-ngrc-preserve",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-update-data-preserve",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-debug-underlay-migration",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-hot-raster",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-layer-reorder",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-layer-visibility-icon",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-collector-import",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-layer-sync-settings",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-collector-resume",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-collector-incomplete",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-collector-identity",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-form-rollback",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-collector-switch",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-project-management",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-schema-rebuild-guard",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-backup-gate",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-crash-draft-recovery",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-sync-off-config",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-sync-interrupt-action",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-multi-account-sync",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-sync-owner-ack-boundary",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-ngw-large-pull-cache",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-ngw-account-add",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-ngw-connection-failure",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-walk-point-session",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-walk",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-gps-recording",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-stakeout",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-multipolygon-repair",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-geometry-sketch-workflow",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-track-no-flags",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-lisa-release",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-belka-release",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-self-update",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-ngw-url-import",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-ngw-import-back",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-local-vector-layers",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-hidden-vector-tile-identify",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-local-vector-tile-stress",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-track-delivery",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-private-resource-profiler",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-private-resource-profiler",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-workspace-storage-mutation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-ngw-lookup-cache-sync",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-ngfp-lookup-prefetch",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-smoke-ngfp-lookup-prefetch",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-ngw-sync-admission",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-ngw-user-messages",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-ngw-resource-checkbox-selection",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-vector-spatial-cache-recovery",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-ngw-resource-row-text-fit",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-track-selected-gpx-share",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:smoke-tests-auto-debug-underlay-progress",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:metadata:smoke-tests-registry"
+    ]
+  }
+}

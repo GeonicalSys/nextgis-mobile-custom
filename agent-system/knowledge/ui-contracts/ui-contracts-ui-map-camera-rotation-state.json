@@ -1,0 +1,106 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-map-camera-rotation-state",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-MAP-CAMERA-ROTATION-STATE"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-MAP-CAMERA-ROTATION-STATE",
+        "group": "map",
+        "title": "Вращение камеры и сохранённый viewport",
+        "surface": "Toolbar rotation and camera",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [
+          "menu_map_rotation"
+        ],
+        "meaning": "Rotation permission/bearing is camera state, independent from device compass, position and target magnetic azimuth.",
+        "value_origin": "toggleMapRotation -> stored flag -> gesture settings; onCameraIdle/onPause -> bearing/zoom/getMaplibreCenter",
+        "units": "Camera bearing degrees; stored scroll centre EPSG3857; MapLibre zoom.",
+        "updates": [
+          "Toggle, gesture idle and pause/restore route."
+        ],
+        "actions": [
+          "Enable rotation; disabling returns north-up; tilt stays disabled and pinch can coexist."
+        ],
+        "conditions": [
+          "Rotation-enabled default false; flag determines stored/restored bearing."
+        ],
+        "saved_state": "Enabled flag, bearing, zoom and scroll X/Y persist separately from Location.",
+        "source_ids": [
+          "map-rotation-toggle",
+          "map-rotation-gestures",
+          "map-persist-camera",
+          "map-camera-idle"
+        ],
+        "expectations": [
+          "Camera turning must not change target numeric magnetic azimuth; disabling stores0bearing.",
+          "Counterexample: rotated map is not proof the phone rotated or moved."
+        ],
+        "unknowns": [
+          "Runtime NOT_RUN: no GUI, device, emulator, build or APK resource merge acceptance in this task.",
+          "Cold start/Activity recreation acceptance not run."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-map-rotation-toggle",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-map-rotation-gestures",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-map-persist-camera",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-map-camera-idle",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-map-camera-rotation-state"
+    ]
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-verification-uid-log-admission",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Ограниченный UID logcat verification APK — MOB-04, 2026-10-28",
+        "",
+        "`tools/mobile_native_log.py` начинает непрерывный host capture перед native",
+        "instrumentation только для UID точного `com.nextgis.mobile.verification.debug`.",
+        "Сначала read-only определяется текущий Android user, затем package query получает",
+        "явный `--user`. Из substring-ответа выбирается ровно один точный app package;",
+        "известный instrumentation `.test` допускается отдельно, его UID не читается.",
+        "Дубликаты/конфликты/другие строки/несовпадающий user отвергаются. Logcat получает `--uid`, `-T1`, `-vthreadtime`, без очистки журналов",
+        "и whole-system capture. Caller передаёт новый owned output на Q.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-verification-uid-log-admission"
+    ]
+  }
+}

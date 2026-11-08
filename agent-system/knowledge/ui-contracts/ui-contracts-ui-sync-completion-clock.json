@@ -1,0 +1,132 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-sync-completion-clock",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-SYNC-COMPLETION-CLOCK"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-SYNC-COMPLETION-CLOCK",
+        "group": "sync",
+        "title": "Время полного обмена относится к видимому проекту",
+        "surface": "Подпись под синхронизацией",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [
+          "info"
+        ],
+        "meaning": "Показано время полного обмена видимого workspace из ProjectSyncState. Для точного SharedPreferences owner и canonical project key текущий процесс сохраняет подтверждённое значение; новая попытка публикуется через API только после commit=true. Эта process-view защита не доказывает состояние physical XML/backup или fresh-process reload.",
+        "value_origin": "Visible MapBase.getActiveInstance path → ProjectSyncState.lastComplete canonical-path UUID key → confirmed owner.clocks; при первом чтении без shield — raw getLong с повторной проверкой shield. Sole production writer ProjectSyncRunner.markComplete находится после full-project, pair-ACK, final-child-drain, cleanup и final generation/interruption gates.",
+        "units": "Хранимое время — Unix milliseconds; ControlHelper форматирует dd MMM и HH:mm с Locale.getDefault и default timezone, без года/секунд и без относительной давности.",
+        "updates": [
+          "updateInfo читает clock active map, даже внутри scoped callback другого проекта; timestamp>0 форматируется, иначе project_sync_never_completed.",
+          "lastComplete проверяет confirmed shield до и после raw getLong; shield устанавливается до edit/put/commit observers. False/RuntimeException не публикуют новое время через API того же owner.",
+          "Успешные вложенные вызовы выбираются по последней успешной invocation, а не по максимальному timestamp или порядку возврата callbacks. Более поздний успешный меньший положительный timestamp допускается."
+        ],
+        "actions": [
+          "Посмотреть состояние",
+          "Запустить полноценную sync отдельно"
+        ],
+        "conditions": [
+          "Layer-only/partial pass, track-only upload, отдельные account ticks разных запусков, progress finish и SYNC_FINISH не означают полный project ACK.",
+          "Один pass должен завершить все required project accounts с pair ACK и пустым ready-outbox; final child drain/cleanup, cancellation, interruption и generation проверяются до markComplete.",
+          "Инициализация без shield доверяет raw preferences; другой preferences owner или новый процесс не наследует прежнее process подтверждение. Все production записи этого namespace проходят через ProjectSyncState."
+        ],
+        "saved_state": "Файл full-project-sync-state, UUID.nameUUIDFromBytes(canonical path UTF-8) и long Unix-ms не изменены; schema/key migration и перенос legacy global/account timestamps отсутствуют. Shield слабого exact-owner identity живёт в процессе до GC владельца. False может оставить cache и диск старыми либо новыми, в том числе при последующем commit другого project key; компенсирующие/async/лишние записи не добавлены. Физический failed-write/restart остаётся AUDIT-TODO-SYNC-ACK-RECOVERY.",
+        "source_ids": [
+          "WF-SYNC-CLOCK",
+          "WF-SYNC-CLOCK-STORE",
+          "WF-SYNC-RUN",
+          "WF-SYNC-WIDGET-BINDING",
+          "WF-SYNC-CLOCK-FORMAT",
+          "WF-SYNC-RECEIVER",
+          "WF-SYNC-CLOCK-PUBLISH"
+        ],
+        "expectations": [
+          "Oracle: фоновая sync B не меняет info открытого A; только полный A после account/child/cleanup/final gates начинает markComplete. Это source contract; full-scenario native run здесь не выполнен.",
+          "API fault-model oracle: held/false/throwing commit с уже изменённым raw cache, edit/put observers и miss/get/recheck race сохраняют прежнее подтверждение для exact owner; последующая успешная попытка восстанавливает публикацию.",
+          "API identity/order oracle: canonical aliases делят shield, equal-but-distinct prefs owners изолированы, другой owner не блокируется writer monitor; последняя successful invocation выигрывает, меньший time не отбрасывается.",
+          "Persistence oracle: имя namespace, canonical UUID и long прежние. Отдельный model-тест явно допускает, что commit другого key сохраняет failed cached value на модельном диске при прежнем API-visible подтверждении. Native physical XML/backup и fresh process проверяются отдельно."
+        ],
+        "unknowns": [
+          "Реальный failed physical write, backup/rename, restart/fresh-process reload, weak-owner GC и native redraw/locale/timezone не выполнены этой regression. Process shield не обещает cross-process rollback или durable исправление файла.",
+          "Exact current Core merge commit и App gitlink должны быть проверены до применения этого semantic pin. Исходный whole F61 source row и UI contract сохранены в coverage.project_sync_clock_delivery_review.history; старые docs failures остаются историческими.",
+          "Clock не подтверждает серверную полноту/актуальность. Reminder age читает canonical online project clock, tracked NGW since — owning map clock; эти реальные consumers с новым owner shield source-reviewed, их native бизнес-исходы не выполнены."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-clock",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-clock-store",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-run",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-widget-binding",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-clock-format",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-receiver",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-clock-publish",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-sync-completion-clock"
+    ]
+  }
+}

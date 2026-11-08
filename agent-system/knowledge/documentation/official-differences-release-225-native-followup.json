@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:official-differences-release-225-native-followup",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the dated comparison or verification at its original source span."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Последующий native validation исправляет отдельно ожидания verification suite:",
+        "current SQLite source ID вместо прежнего GeoJSON path и structural stack refresh",
+        "вместо перестройки карты на sensor tick. Измерение warning text исключает только",
+        "конечные wrap-boundary пробелы Android Layout, сохраняя полный текст и действия.",
+        "Затем воспроизведён выход кнопки сообщения памяти за тесное окно. Follow-up",
+        "использует существующий bounded message layout напоминаний и для этого диалога:",
+        "полные действия остаются в окне, длинное сообщение прокручивается. Частота",
+        "update/sync reminders, данные и renderer не меняются. A56 component matrix",
+        "прошла; зелёный Full и опубликованный выпуск пока не заявлены, pixel FAIL открыты.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:official-differences-release-225-native-followup"
+    ]
+  }
+}

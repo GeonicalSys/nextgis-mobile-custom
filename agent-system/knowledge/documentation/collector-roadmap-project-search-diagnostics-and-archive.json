@@ -1,0 +1,74 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:collector-roadmap-project-search-diagnostics-and-archive",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "planned",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:collector-roadmap"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "UNKNOWN",
+    "release": "unknown",
+    "retention": "Preserve the simple quick picker and distinguish project diagnostics from destructive workspace actions."
+  },
+  "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The broader search, diagnostics and archive workflow still needs scope and acceptance.",
+        "implementation": "Existing settings show project identity and change counts. Quick selection stays name-only, with the active project marked and storage operations owned by the registry.",
+        "source_verification": "Check existing selector and registry behavior before admitting search, diff summary, explicit sync and archive actions.",
+        "merge": "The existing registry and settings are in the adopted frame. The combined workflow has its own delivery.",
+        "runtime_verification": "Verify project selection during active recording, diagnostics permissions and archive/return on the agreed projects.",
+        "release": "A release follows the accepted scope of each added action.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/architecture/collector-projects.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp/maplibui",
+            "revision": "69cccf208689c2e443994aca123c4b5ebeab0a50",
+            "path": "src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java"
+          }
+        ]
+      }
+    },
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/collector.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "3. Добавить экран/действия проекта: поиск, последняя проверка, diff summary, отдельный sync,",
+        "   диагностика и безопасное архивирование workspace."
+      ]
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "Lifecycle describes the next action in the pinned roadmap. Existing implementation claims are source wording."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:collector-roadmap-project-search-diagnostics-and-archive"
+    ]
+  }
+}

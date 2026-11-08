@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-wf-sync-error-late-outcome",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "WF-SYNC-ERROR-LATE-OUTCOME"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "WF-SYNC-ERROR-LATE-OUTCOME",
+        "repository": "root",
+        "path": "app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java",
+        "marker": "static boolean recordLateProjectFailure(SyncResult result, List<String> failedProjects,\n                                           String projectName, boolean childFailed,\n                                           boolean alreadyFailed, boolean cancelled)",
+        "requires": [
+          "!childFailed || alreadyFailed || cancelled",
+          "result.stats.numIoExceptions++",
+          "failedProjects.add(projectName)"
+        ],
+        "forbids": [],
+        "sha256": "40d1ccae0715c72d5a940fe7146c250f10d3f1d8fabee272e05c19bedc4feb49"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-wf-sync-error-late-outcome"
+    ]
+  }
+}

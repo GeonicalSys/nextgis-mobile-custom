@@ -1,0 +1,51 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:config-keys-preferences-feature-form-draft",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "config-keys",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_registry_section",
+      "value": "preferences"
+    },
+    "registry-key": {
+      "role": "incumbent_mapping_or_list_key",
+      "value": "feature_form_draft"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "owner": "maplibui",
+        "type": "shared_preferences_file",
+        "source": "maplibui/src/main/java/com/nextgis/maplibui/util/FeatureFormDraftStore.java",
+        "purpose": "Compatible v1 typed form snapshot with map/operation UUID, assigned feature id, geometry, fields/sign strokes, photos, cascade definition/keys/original values and point/walk owners; periodic, pre-Save and post-id checkpoints survive retry"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/sectioned-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:config-keys-preferences-feature-form-draft"
+    ]
+  }
+}

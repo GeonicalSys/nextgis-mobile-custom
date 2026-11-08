@@ -1,0 +1,80 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-required-fields-metadata-and-save",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Обязательность полей",
+        "",
+        "Управляемый каскадом legacy `double_combobox` отображается двумя отдельными",
+        "полями с подписями. Каждое сохраняет своё имя, required и typed value в общем",
+        "Save gate; преобразование не переписывает NGFP, SQLite или outbox.",
+        "",
+        "Источник — штатный feature_layer.fields[].required в настройках поля NGW.",
+        "NGWUtil читает его при импорте, Field сохраняет в JSON/Parcel; отсутствие",
+        "флага в старой конфигурации означает false. Следующая успешная синхронизация",
+        "настроек обновляет флаг и подписи без пересоздания SQLite или сброса объектов,",
+        "outbox и вложений. Изменение флага не является изменением физической схемы и",
+        "не входит в fingerprint разрушительного rebuild. Offline используется последнее",
+        "успешно сохранённое описание слоя.",
+        "",
+        "Стандартная и NGFP-форма используют одну проверку перед локальным insert/update",
+        "и обработкой вложений, включая Save через Back. Пустое значение, пробельная",
+        "строка и «Нет значения» (краевые пробелы и регистр игнорируются) недопустимы;",
+        "«не применимо», числовой ноль и логическое false допустимы. Необязательные",
+        "поля сохраняют прежнее поведение. Проверяются все страницы и оба поля",
+        "зависимого списка. Обязательность не означает подтверждение автоматически",
+        "подставленного корректного значения при каждом новом аудите.",
+        "",
+        "Значение существующего объекта, отсутствующее в форме, проверяется по SQLite",
+        "и не перезаписывается. Для нового объекта отсутствие обязательного поля в форме",
+        "блокирует Save с сообщением о необходимости исправить форму. Черновик",
+        "записывается до проверки и может оставаться незавершённым: ошибка валидации",
+        "не теряет геометрию, фотографии и введённые значения.",
+        "",
+        "Новых свойств NGFP, переопределения last, миграции таблиц PostGIS или",
+        "изменений QGIS publisher для этого consumer-only расширения не требуется.",
+        "Правило относится к пользовательскому Save в обновлённом приложении; старые",
+        "APK, прямые обращения к БД/API и ограничения PostgreSQL — отдельные контракты.",
+        "Развёртывание: Merge Commit библиотек → root submodule pointers → выпуск APK;",
+        "настройки обязательности применяются только к явно выбранным NGW-ресурсам.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-required-fields-metadata-and-save"
+    ]
+  }
+}

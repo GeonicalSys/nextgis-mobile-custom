@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:crash-recovery-polygon-rings-and-wkt-reconstruction",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:crash-recovery"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/crash-recovery.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "The latest geometry is durable, including the visible line in the reported",
+        "“draw line → swipe app away” case. The transient undo/redo stack itself is not",
+        "serialized. Polygon conversion explicitly closes every non-empty outer/inner",
+        "GeoJSON ring before MapLibre vertex extraction; a restored manual Polygon or",
+        "MultiPolygon therefore shows the same fill and node order before and after a",
+        "node is moved. WKT recovery identifies Polygon rings and MultiPolygon members by",
+        "parenthesis depth, preserving every polygon part, one outer ring per part and",
+        "only actual holes instead of duplicating or truncating rings in a way that",
+        "cancels the fill.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:crash-recovery-polygon-rings-and-wkt-reconstruction"
+    ]
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-independent-walk-ui-and-touch-targets",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Независимый обход и создание точки",
+        "",
+        "Телефон, landscape и планшет используют единый `layout_map_content`:",
+        "кнопка трека и панель обхода обязательны во всех конфигурациях. `MapControlRail`",
+        "перекомпоновывает инструменты в столбцы справа по фактической высоте view,",
+        "включая поворот без пересоздания Activity. Меню создания раскрывается влево",
+        "в отдельной нижней строке; компактная панель обхода прижата к низу карты,",
+        "слева от инструментов, и временно поднимается при раскрытии меню создания.",
+        "При достаточном месте панель — одна строка: название слоя и три значка",
+        "«Сохранить», «Пауза/Продолжить», «Отменить». Все нажатия требуют подтверждения;",
+        "назначения доступны по долгому нажатию и для TalkBack. Естественные цели — 48 dp;",
+        "длинное название переносится над действиями, которые при необходимости тоже",
+        "переносятся. После вписывания проверяются реальные области нажатия. Тематическая поверхность,",
+        "скругление и цвет основной кнопки соответствуют ЛИСА/БЕЛКА. Сообщение появляется",
+        "только при ошибке сохранения или блокировке управления создаваемой точкой.",
+        "Точность GPS и выпадающее меню отсутствуют.",
+        "Регрессии структуры resources и расчёта столбцов проверяются unit-тестами;",
+        "реальные нажатия и повороты требуют device smoke.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-independent-walk-ui-and-touch-targets"
+    ]
+  }
+}

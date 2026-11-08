@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-entrypoints",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "app-module-manifest",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/main/java/com/nextgis/mobile/MainApplication.java",
+          "app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt",
+          "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+          "app/src/main/AndroidManifest.xml"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [
+      "lisa:mobile:metadata:app-module-manifest"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed module definition and its pinned source provenance."
+  },
+  "facets": {
+    "manifest-field": {
+      "role": "module_manifest_section",
+      "value": "entrypoints"
+    },
+    "definition": {
+      "role": "module_manifest_ordered_value",
+      "value": [
+        "app/src/main/java/com/nextgis/mobile/MainApplication.java",
+        "app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt",
+        "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+        "app/src/main/AndroidManifest.xml"
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/app-module-manifest.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-entrypoints"
+    ]
+  }
+}

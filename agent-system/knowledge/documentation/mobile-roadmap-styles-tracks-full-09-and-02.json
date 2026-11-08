@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:mobile-roadmap-styles-tracks-full-09-and-02",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout",
+      "lisa:mobile:task:mobile-roadmap-styles-and-tracks"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the pinned checkpoint and keep its results within the stated source and runtime bounds."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Итог фиксированного набора после67f0125: Full09 смартфон+AVD253/253 PASS;",
+        "после пользовательского отключения VPN Full02 планшета+AVD завершил все253",
+        "метода с249 PASS/4 FAIL. Три ошибки тестового API30 кода, unresolved azimuth",
+        "word-wrap и отдельный CI TrackUpload assertion требуют разбора; MVT-01",
+        "имеет подтверждённый offline блокер. В этой проверке код/набор не менялся,",
+        "исправления и выпуск не объявлены. [Полная квитанция](../reference/mobile-full-2026-10-25.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:mobile-roadmap-styles-tracks-full-09-and-02"
+    ]
+  }
+}

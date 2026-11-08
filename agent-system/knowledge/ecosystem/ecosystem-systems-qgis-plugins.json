@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ecosystem-systems-qgis-plugins",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ecosystem",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_registry_section",
+      "value": "systems"
+    },
+    "registry-key": {
+      "role": "incumbent_mapping_or_list_key",
+      "value": "qgis-plugins"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "title": "Geonical QGIS Plugins workspace",
+        "kind": "external_workspace",
+        "location": "../../plugins",
+        "current_machine_path": "C:/dev/lisa/plugins",
+        "origin": "https://github.com/GeonicalSys/lisa.git",
+        "docs_entry": "geonical-docs/START-HERE.md",
+        "docs_url": "https://github.com/GeonicalSys/lisa/blob/main/plugins/geonical-docs/START-HERE.md",
+        "source_of_truth": "QGIS plugin sources, desktop workflows, GIS resource publishing and central plugin documentation."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/sectioned-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:ecosystem-systems-qgis-plugins"
+    ]
+  }
+}

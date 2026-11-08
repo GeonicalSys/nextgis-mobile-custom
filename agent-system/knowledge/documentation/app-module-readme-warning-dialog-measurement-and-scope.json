@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-warning-dialog-measurement-and-scope",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Предупреждения при подготовке3.1.2.31",
+        "",
+        "`ScrollableAlertDialogs` сохраняет полные заголовок и действия прежде",
+        "прокручиваемого сообщения. Общий алгоритм выделен из MaintenanceReminders;",
+        "MapFragment использует его для сообщения об экономии памяти, где native",
+        "проверка воспроизвела кнопку за границей тесного окна. Частота напоминаний об",
+        "обновлении/полной синхронизации и обработчики действий не меняются. Контракты:",
+        "`UI-RENDER-MEMORY-WARNING` и `UI-MAINTENANCE-REMINDERS` в общем UI registry.",
+        "Текущие результаты и ограничения — [подготовка выпуска](../../docs/reference/mobile-release-3.1.2.31-2026-11-01.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-warning-dialog-measurement-and-scope"
+    ]
+  }
+}

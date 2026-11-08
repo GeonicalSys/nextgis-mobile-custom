@@ -1,0 +1,71 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-diagnose-renderer-and-camera",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "- Карта/слои: сначала проверить callbacks `MapFragment` и состояние",
+        "  `GISApplication`, затем rendering docs.",
+        "- Чёрная карта при видимых Android-кнопках после возврата с другого экрана:",
+        "  проверить последовательность `MapLibreMapView.onStart/onResume`, первый кадр",
+        "  после resume, `MapLibre render recovery started/completed`, последующие",
+        "  `onPause/onStop/onDestroy` и отсутствие старой ссылки `MapDrawable` на",
+        "  уничтоженный view. `completed` не должен содержать одновременно",
+        "  `fully=false` и `loadingForeground=true`. Запись",
+        "  `cleared stale loading foreground` означает, что",
+        "  project layers уже были применены, но MapLibre не снял свой loading foreground",
+        "  после ограниченной серии repaint.",
+        "- На Android 8–9 после recovery не должно быть постоянного `CONTINUOUS` и",
+        "  `setMaximumFps`; в логе остаётся `tilePrefetch=false` и общий burst",
+        "  `MapLibre render recovery started/completed`.",
+        "- Полностью чёрный экран вместе с Android-панелями на Android 8–9: проверить",
+        "  `onLowMemory`, системные `GL_OUT_OF_MEMORY`/`EGL_CONTEXT_LOST`, запись",
+        "  `MapLibreMapView renderer=SurfaceViewMapRenderer` и `tilePrefetch=false`.",
+        "  `TextureViewMapRenderer` на этих API является неверной конфигурацией: его",
+        "  render thread не пересоздаёт surface после потери EGL-контекста.",
+        "- Crash `No Vulkan compatible GPU found` при открытии карты означает неверный",
+        "  MapLibre runtime artifact: штатный APK использует OpenGL и не требует Vulkan.",
+        "- Карта не вращается: проверить состояние кнопки вращения рядом с геолокацией и",
+        "  `map_rotation_enabled`; запрет вращения является штатным значением по умолчанию.",
+        "- Кнопка геолокации не перешла к слою без GPS: проверить, что хотя бы один слой",
+        "  имеет конечный и инициализированный `GeoEnvelope`; пустой проект сохраняет",
+        "  обычное сообщение об отсутствии местоположения."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-diagnose-renderer-and-camera"
+    ]
+  }
+}

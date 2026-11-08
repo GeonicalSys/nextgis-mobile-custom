@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:map-performance-private-t40-capture-plan-20261028",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-performance",
+      "lisa:mobile:resource:map-performance-private-profiler-aggregation"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original measurement or checkpoint and its acceptance limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-performance.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Первый ручной trial:30мин лёгких метрик и5 окон по180с native malloc/simpleperf",
+        "(15мин тяжёлого coverage, распределённых по сеансу). У каждого окна собственные",
+        "PID/start_ticks, APK/source/signing identity, предел размера и quality/loss flags.",
+        "Late attach не видит прежние native allocations; retained из разных окон не",
+        "складывается. Данные Graphics не выводятся из heapprofd. Подтверждение переноса",
+        "файла не равно пригодности профиля. Все профили локальны, без root/ADB permissions",
+        "changes и без остановки чужих jobs. Scoped-storage обхода через private app files нет.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:map-performance-private-t40-capture-plan-20261028"
+    ]
+  }
+}

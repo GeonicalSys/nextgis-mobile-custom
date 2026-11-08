@@ -1,0 +1,49 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-smoke-sync-journal-cancellation",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "SMOKE-SYNC-JOURNAL-CANCELLATION"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "automatic",
+        "scope": [
+          "app"
+        ],
+        "command": "powershell -NoProfile -File tools/verify-mobile-tests.ps1 -Scope Related -Area bugreports",
+        "expected": "On an isolated API 36 emulator, interrupted enqueue and pair acknowledgment reach physical shared_prefs XML, retain the other pair and restore caller interrupt. Blocked startup/query snapshots survive in SDK events, including a Backfillable AnrV2Hint without replacing original release or operation."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-smoke-sync-journal-cancellation"
+    ]
+  }
+}

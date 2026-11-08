@@ -62,7 +62,8 @@ Root, `maplib`, `maplibui` и `easypicker` — разные git-репозито
 не переносить назначение соседнего индикатора по внешнему сходству.
 
 1. Код и Gradle/manifest — фактическое поведение.
-2. `docs/registry/*.yaml` — стабильные IDs, зависимости, инварианты и проверки.
+2. [Реестры документации](registry/README.md) — стабильные IDs, зависимости,
+   инварианты и проверки. Производные YAML обновляются из записей App.
 3. `docs/registry/ecosystem.yaml` — владельцы и границы между тремя проектами
    ЛИСА.
 4. Architecture/runbooks/reference — объяснения для людей.
@@ -92,7 +93,7 @@ Root, `maplib`, `maplibui` и `easypicker` — разные git-репозито
 
 1. Из `C:\dev\lisa` выполни `tools\workspace-preflight.ps1 -Fetch` и определи
    репозитории/модули в scope.
-2. Открой ближайшие `AGENTS.md` и manifests.
+2. Открой `AGENTS.md` владельца, применимые правила по путям изменения и manifests модулей.
 3. Найди trigger в `change-impact.yaml`.
 4. Проверь invariant IDs и upstream hotspots.
 5. Измени код, выполни автоматические и ручные проверки.

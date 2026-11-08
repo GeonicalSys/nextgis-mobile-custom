@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:manual-resource-profiling-simpleperf-parent-identity-and-child-stop",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:manual-resource-profiling"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/manual-resource-profiling.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "CPU ownership относится к shell-parent с точными `--app PACKAGE`, output path,",
+        "PID/start ticks. На T40 setsid fork возвращает короткоживущий launcher PID;",
+        "`$!` сохраняется отдельно и никогда не используется как доказанный owner.",
+        "До5с проверяются реальные simpleperf процессы, выбирается единственный parent",
+        "с точным package/output, затем сохраняются его actual PID/start ticks.",
+        "Старая квитанция с PID без start ticks требует такого же повторного discovery.",
+        "In-app child использует `--out-fd`/stop pipe и не выбирается для",
+        "прямого kill. SIGINT parent штатно закрывает pipe и ждёт child; это подтверждается",
+        "отдельной полной проверкой stop на устройстве.",
+        "[AOSP app runner](https://android.googlesource.com/platform/system/extras.git/+/0744f4b1eb07920150f5561dfbcb38fb11b5b89c/simpleperf/environment.cpp).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:manual-resource-profiling-simpleperf-parent-identity-and-child-stop"
+    ]
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:map-performance-787-current-cab9-d101-memory-pair-20261028",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-performance",
+      "lisa:mobile:task:mobile-roadmap-map-memory"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original measurement or checkpoint and its acceptance limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-performance.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Свежая CURRENT787 пара legacycab9→finalD101 после изменения2TMS/LVPC/bbox/data:",
+        "42+42 meminfo/6+6taps/210s каждый,lateRSS820.42→643.06MiB(-21.62%), sampledpeak",
+        "896.19→751.16(-16.18%),PSSlate700.41→522.28MiB. GraphicsPSSlate вырос143.36→",
+        "210.14MiB(+46.58%). Одна последовательная пара не pooledABBA/CI и не draw-speed;",
+        "старые31.15% относятся к другому прежнему состоянию. ExactcameraUNKNOWN,",
+        "visible14.5z/99.4m/основные landmarks совпадают, label placement отличается.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:map-performance-787-current-cab9-d101-memory-pair-20261028"
+    ]
+  }
+}

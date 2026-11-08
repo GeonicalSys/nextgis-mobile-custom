@@ -1,0 +1,61 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:mobile-roadmap-discovery-storage-move-20261029",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout",
+      "lisa:mobile:task:mobile-roadmap-dependency-discovery"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the pinned checkpoint and keep its results within the stated source and runtime bounds."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Адресное исправление по дополнительному прямому поручению владельца29 октября",
+        "«явные баги исправлять сразу»: карточка",
+        "[android-20261029-storage-move-ownership](../../update-reports/entries/android-20261029-storage-move-ownership.md).",
+        "В существующем MOB-02 выявлен обход operation exclusion в legacy storage move",
+        "и Reset Settings; baseline фактически дал5 FAIL/1 штатный PASS без GIS/БД/device.",
+        "Оба входа исправляются до изменения preferences и сохраняют владельца через",
+        "асинхронное завершение/перепривязку. RESULT_OK здесь refresh, не move ACK.",
+        "Это адресная source-доработка по поручению владельца; прежняя граница docs-only",
+        "выше относится к исходному entry bridge и не отменяет новое поручение.",
+        "Приоритет продуктовых функций и native/Related/Full/публикация не возобновляются.",
+        "Состояние — source-реализация завершена:21 actual-body JVM PASS, LisaDebug и",
+        "BelkaRelease Java/Kotlin compile PASS, независимый разбор CLEAR; Git/docs closure",
+        "продолжается. Merge, поставка библиотек и device-приёмка отмечаются отдельно. Политика миграции",
+        "11 stores, disk/restart и renderer drain остаётся в едином LISA audit TODO.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:mobile-roadmap-discovery-storage-move-20261029"
+    ]
+  }
+}

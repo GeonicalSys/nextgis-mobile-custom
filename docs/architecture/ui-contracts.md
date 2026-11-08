@@ -1,7 +1,7 @@
 ---
 title: Контракты значений и действий мобильного интерфейса
 type: architecture
-last_verified: 2026-11-02
+last_verified: 2026-11-04
 related_code:
   - app/src/test/java/com/nextgis/mobile/fragment/SettingsWorkspaceMoveTest.java
   - app/src/main/java/com/nextgis/mobile/util/SelectMapPathPreference.java
@@ -45,6 +45,10 @@ file hashes после сравнения diff; UI method/resource expectations 
 [ui-contracts.json](../registry/ui-contracts.json). Он связывает пользовательский
 контракт с конкретными телами методов и XML resource IDs, условиями Lisa/Belka,
 защищённым состоянием, независимыми ожиданиями и явными неизвестными.
+Каталог строится из записей `agent-system/knowledge/ui-contracts/`.
+После подтверждённой правки записей выполни
+`python -B docs/scripts/ui_catalogue_knowledge.py --write`. Проверка App
+сверяет JSON с записями. Автономная копия и явный `--registry` читают JSON.
 Repository IDs совпадают с существующим `registry/repositories.yaml`:
 `root` означает корень Android checkout (модуль app находится в `app/`),
 `maplib` и `maplibui` — отдельные закреплённые репозитории библиотек.

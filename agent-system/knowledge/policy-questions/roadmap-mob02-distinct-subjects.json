@@ -1,0 +1,95 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:question:roadmap-mob02-distinct-subjects",
+  "kind": "question",
+  "owner": "android_projects/android_gisapp",
+  "topic": "instruction-policy-review",
+  "status": "superseded",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "."
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "complete",
+    "implementation": "not_applicable",
+    "source_verification": "PASS",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the prior open question and exact evidence. The linked decision records its source reconciliation."
+  },
+  "facets": {
+    "title": {
+      "role": "question",
+      "value": "Two distinct MOB-02 subjects need separate stable identities and lifecycle views"
+    },
+    "observation": {
+      "role": "source_migration_question_not_product_defect",
+      "value": "The same legacy alias labels the 224 process-exit incident and the separately scoped source dependency-discovery/map task. These are confirmed different subjects. Later source-map continuations do not merge their goals, runtime evidence or authority. Alias equality cannot deduplicate them. Complete roadmap migration and its per-subject lifecycle reconciliation remain unfinished."
+    },
+    "next_step": {
+      "role": "bounded_migration_question",
+      "value": "During whole-roadmap migration, give the crash incident and dependency-map work separate stable task identities; map every original section and continuation by source address/meaning, keeping implementation/source/merge/runtime/release dimensions independent. Do not run either task from its old orders."
+    },
+    "protected": {
+      "role": "protected_behavior",
+      "value": "Current user authority remains external. Preserve own/foreign ownership, original instructions and evidence, one writer, paused product/native/cloud stages, no merge/publication and no unmerged accepted pin."
+    },
+    "source_witnesses": {
+      "role": "exact_individually_reviewed_sources",
+      "value": [
+        {
+          "path": "docs/roadmap/mobile.md",
+          "revision": "68bef7d199c4b83ac0ea4b0a9df263ca622d1bc4",
+          "blob": "54a0565ff9331419e4aef2368c2d7ac8cd77290e",
+          "source_sha256_utf8_lf": "4bf8e90721f8ed7ce4b68c2519c2fefac07886d9a679586d5484d0e0e629d7f1",
+          "spans": [
+            [
+              12690,
+              15907
+            ]
+          ],
+          "subject": "224-process-exit-incident",
+          "legacy_alias": "MOB-02"
+        },
+        {
+          "path": "docs/roadmap/mobile.md",
+          "revision": "68bef7d199c4b83ac0ea4b0a9df263ca622d1bc4",
+          "blob": "54a0565ff9331419e4aef2368c2d7ac8cd77290e",
+          "source_sha256_utf8_lf": "4bf8e90721f8ed7ce4b68c2519c2fefac07886d9a679586d5484d0e0e629d7f1",
+          "spans": [
+            [
+              21168,
+              25896
+            ]
+          ],
+          "subject": "source-dependency-discovery-and-map",
+          "legacy_alias": "MOB-02"
+        }
+      ]
+    },
+    "resolution": {
+      "role": "current_resolution_record",
+      "value": "lisa:mobile:decision:legacy-mob02-subject-resolution"
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/migration/instruction-review.json",
+    "scopes": [
+      "roadmap-mob02-distinct-subjects"
+    ]
+  }
+}

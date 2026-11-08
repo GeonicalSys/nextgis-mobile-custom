@@ -1,0 +1,51 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-auto-polygon-style-controls",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "AUTO-POLYGON-STYLE-CONTROLS"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "automatic",
+        "scope": [
+          "maplib",
+          "maplibui",
+          "app"
+        ],
+        "command": "tools\\verify-mobile-tests.ps1 -Scope Related -Area styles",
+        "expected": "Periodic procedural textures, independent fill/pattern/contour alpha, dashed and secondary contours, saved categories, Polygon/MultiPolygon holes, fractional zoom, visibility/picking, image cleanup and live direct SQLite style reload pass actual native checks. The real editor keeps the native preview visible and Save/Cancel reachable across 72 Russian window-local profiles. The polygon-styles area is a scoped development subset; Full remains required before publication."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-auto-polygon-style-controls"
+    ]
+  }
+}

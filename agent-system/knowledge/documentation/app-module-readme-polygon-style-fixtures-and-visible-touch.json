@@ -1,0 +1,51 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-polygon-style-fixtures-and-visible-touch",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Штриховки, контуры и живой образец",
+        "",
+        "Related styles включает native PolygonStyleRenderingTest, PolygonStyleEditorTest и PolygonStyleTileFallbackTest. Они проверяют actual pixels, сохранённые категории, lifecycle и 72 русских локальных профиля редактора с Save/Cancel. Full выполняется перед публикацией. Контракт — consuming docs/architecture/polygon-style-controls.md.",
+        "",
+        "Высокие действия в прокрутке проверяются реальным касанием видимой области после стабилизации окна; отдельный регрессионный сценарий покрывает частичное обрезание кнопки viewport. Системная защита ввода Android сохранена.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-polygon-style-fixtures-and-visible-touch"
+    ]
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:manual-resource-profiling-startup-coverage-and-attach-interpretation",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:manual-resource-profiling"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/manual-resource-profiling.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "В AOSP `OpenOutputFile`/`OnConnect` открывают output и передают FD сервису;",
+        "[исходник](https://android.googlesource.com/platform/external/perfetto/+/refs/heads/android10-dev/src/perfetto_cmd/perfetto_cmd.cc).",
+        "Это не подтверждение готовности heapprofd. Даже при cold request фактический",
+        "`from_startup` и покрытие должны быть проверены в trace. CPU app attach начинается",
+        "после запуска приложения и не принимает раннюю startup часть. При обычном late attach",
+        "прежние allocations намеренно не входят в native профиль.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:manual-resource-profiling-startup-coverage-and-attach-interpretation"
+    ]
+  }
+}

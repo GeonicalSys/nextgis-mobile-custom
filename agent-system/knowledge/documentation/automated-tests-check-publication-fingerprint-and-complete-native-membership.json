@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:automated-tests-check-publication-fingerprint-and-complete-native-membership",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "`Check-Publication` сверяет отчёт с текущим кодом, тестами и build recipe всех",
+        "потребляемых модулей. Изменение версии/источников/плана требует нового Full.",
+        "Source fingerprint учитывает рабочие правки, не только Git HEAD; doc-only",
+        "правки не инвалидируют выполненную проверку кода. Зелёный Related/CI, `adb`",
+        "exit code или `OK (0 tests)` не подтверждают Full. Assumption skip не является",
+        "выполненным case: все требуемые cases должны пройти хотя бы в одном запуске.",
+        "Новый класс без маршрутизации блокируется сразу, новые методы класса входят",
+        "в ожидаемый набор автоматически.",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:automated-tests-full-result-and-raw-production-data-exclusion",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:automated-tests-check-publication-fingerprint-and-complete-native-membership"
+    ]
+  }
+}

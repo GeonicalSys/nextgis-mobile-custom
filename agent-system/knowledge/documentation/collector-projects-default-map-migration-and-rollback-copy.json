@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:collector-projects-default-map-migration-and-rollback-copy",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:collector-projects"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the App mobile project topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/collector-projects.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "При первом запуске обновлённой версии прежняя штатная `default.ngm` вне registry",
+        "копируется в этот локальный workspace вместе с перечисленными в карте",
+        "каталогами слоёв и базой треков. Исходные файлы не удаляются и остаются",
+        "rollback-копией. Маркер `collector_initial_local_project_created_v1` делает",
+        "миграцию одноразовой; стабильная внутренняя identity начального проекта",
+        "позволяет без дубликатов завершить инициализацию после",
+        "прерванной записи registry. Если в момент обновления уже активен корректный Web",
+        "GIS/local project, он остаётся активным, а локальный проект лишь добавляется в",
+        "список для возврата к старым локальным данным.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:collector-projects-default-map-migration-and-rollback-copy"
+    ]
+  }
+}

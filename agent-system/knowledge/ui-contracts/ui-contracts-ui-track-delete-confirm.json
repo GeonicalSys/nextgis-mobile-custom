@@ -1,0 +1,95 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-track-delete-confirm",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-TRACK-DELETE-CONFIRM"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-TRACK-DELETE-CONFIRM",
+        "group": "tracks",
+        "title": "Удаление трека требует отдельного подтверждения",
+        "surface": "Диалог удаления трека; controls создаются программно, их смысл подтверждён Java source, XML android:id evidence отсутствует",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [],
+        "meaning": "Удаление выбранных tracks — отдельная команда с предупреждением об активной записи, не эффект закрытия панели.",
+        "value_origin": "Копия selectedIds → includesRecordingTrack → соответствующий текст → TrackerService.deleteTracks.",
+        "units": "Набор идентификаторов; не время записи.",
+        "updates": [
+          "Confirmation text выбирается по принадлежности выбранного набора к recording track.",
+          "Изменённый UI обновляется после успешного delete callback."
+        ],
+        "actions": [
+          "Подтвердить удаление",
+          "Отмена"
+        ],
+        "conditions": [
+          "Пустой selectedIds не открывает диалог.",
+          "Mutable caller selection клонируется до confirmation."
+        ],
+        "saved_state": "Сеанс и durable drain принадлежат TrackerService; данный UI source не доказывает внутреннюю атомарность удаления.",
+        "source_ids": [
+          "WF-TRACK-DELETE",
+          "WF-TRACK-DATABASE"
+        ],
+        "expectations": [
+          "Oracle: Cancel сохраняет выбранные tracks; изменение внешнего selection во время диалога не расширяет подтверждённый набор.",
+          "Контрпример: при подтверждении берётся новый mutable selection либо удаление начинается до Positive button."
+        ],
+        "unknowns": [
+          "Детали остановки собственного/чужого recording session и drain — следующий source/runtime этап владельца сервиса, не GPS/model обещание этой карточки.",
+          "XML binding detector не покрывает programmatic track controls; это ограничение XML-проверки, не неизвестный смысл проверенных команд. Native appearance/hit targets NOT_RUN."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-track-delete",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-track-database",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-track-delete-confirm"
+    ]
+  }
+}

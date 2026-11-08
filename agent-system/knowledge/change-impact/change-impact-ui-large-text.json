@@ -1,0 +1,92 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:change-impact-ui-large-text",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "change-impact",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "definition": {
+      "role": "complete_change_impact_definition",
+      "value": {
+        "id": "UI-LARGE-TEXT",
+        "paths": [
+          "app/src/main/res/values-ru",
+          "maplibui/src/main/res/values-ru",
+          "app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt",
+          "app/src/main/res/menu",
+          "app/src/main/res/values/large_interface.xml",
+          "app/src/main/res/values-h320dp",
+          "maplibui/src/main/res/menu",
+          "maplibui/src/main/java/com/nextgis/maplibui/view/WrappingLabel.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/view/ReflowingGuidanceHeader.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/util/FittedDialogs.java",
+          "app/src/main/res/layout",
+          "app/src/main/res/layout-land",
+          "app/src/main/res/values/styles.xml",
+          "app/src/main/java/com/nextgis/mobile/view",
+          "app/src/androidTest/java/com/nextgis/mobile/reliability/LargeTextLayoutTest.java",
+          "maplibui/src/main/res/layout",
+          "maplibui/src/main/res/layout-land",
+          "maplibui/src/main/res/values/styles.xml",
+          "maplibui/src/main/res/values/readable_buttons.xml",
+          "maplibui/src/main/java/com/nextgis/maplibui/view/FittedPanelLayout.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/view/WrappingRow.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/view/WalkRecordingPanel.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/util/ToolbarTextFit.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/activity/NGActivity.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/activity/NGPreferenceActivity.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/fragment/NGPreferenceFragment.java"
+        ],
+        "owners": [
+          "app",
+          "maplibui"
+        ],
+        "read": [
+          "docs/architecture/ui-accessibility.md"
+        ],
+        "invariants": [
+          "INV-UI-VISIBLE-BOUNDS"
+        ],
+        "must_update_docs": [
+          "docs/architecture/ui-accessibility.md",
+          "docs/reference/official-differences.md",
+          "app/docs/README.md",
+          "app/docs/manifest.yaml",
+          "maplibui/docs/README.md",
+          "maplibui/docs/manifest.yaml"
+        ],
+        "verify": [
+          "AUTO-MAPLIBUI-ASSEMBLE",
+          "AUTO-APP-DEBUG",
+          "SMOKE-LARGE-TEXT-UI"
+        ],
+        "strict_docs": true
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/change-impact.json",
+    "scopes": [
+      "lisa:mobile:contract:change-impact-ui-large-text"
+    ]
+  }
+}

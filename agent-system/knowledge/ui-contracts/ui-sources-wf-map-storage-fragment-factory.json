@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-wf-map-storage-fragment-factory",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "WF-MAP-STORAGE-FRAGMENT-FACTORY"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "WF-MAP-STORAGE-FRAGMENT-FACTORY",
+        "repository": "root",
+        "path": "app/src/main/java/com/nextgis/mobile/activity/SettingsActivity.java",
+        "marker": "protected NGPreferenceSettingsFragment getNewPreferenceSettingsFragment(String subScreenKey)",
+        "requires": [
+          "default:",
+          "fragment = new SettingsFragment()"
+        ],
+        "forbids": [],
+        "sha256": "d8d10af45e696f5dbc91f1a22fdf1526330976b1aa1aa24178f8bf5ee2a98aaa"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-wf-map-storage-fragment-factory"
+    ]
+  }
+}

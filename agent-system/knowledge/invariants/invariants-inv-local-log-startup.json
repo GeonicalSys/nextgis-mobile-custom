@@ -1,0 +1,67 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:invariants-inv-local-log-startup",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "invariants",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "INV-LOCAL-LOG-STARTUP"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "title": "Local logging does not prepare remote backlog uploads at startup",
+        "owners": [
+          "maplib",
+          "maplibui",
+          "app"
+        ],
+        "statement": "Initialize HyperLog only once per process after removing its obsolete URL setting; never persist a dummy endpoint, overwrite the app format in base initialization or delete local logs. Preserve expiry, export preferences and delegating crash handlers.",
+        "related_code": [
+          "maplib/src/main/java/com/nextgis/maplib/util/LocalLogInitializer.java",
+          "app/src/main/java/com/nextgis/mobile/util/Logger.java",
+          "app/src/main/java/com/nextgis/mobile/MainApplication.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java"
+        ],
+        "verify_smoke": [
+          "AUTO-MAPLIB-UNIT",
+          "AUTO-MAPLIBUI-ASSEMBLE",
+          "SMOKE-DIAGNOSTIC-NOISE"
+        ],
+        "must_update_docs": [
+          "docs/architecture/error-reporting.md",
+          "maplib/docs/README.md",
+          "maplibui/docs/README.md",
+          "app/docs/README.md"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:invariants-inv-local-log-startup"
+    ]
+  }
+}

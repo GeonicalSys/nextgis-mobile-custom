@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-smoke-ngw-selector-restore",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "SMOKE-NGW-SELECTOR-RESTORE"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "device",
+        "scope": [
+          "app",
+          "maplibui"
+        ],
+        "steps": [
+          "Load a large NGW resource tree, choose layers from multiple branches, rotate and background the Activity and Dialog",
+          "Recreate the process, fail the restore network call, retry and then close the screen during another restore",
+          "Inspect saved-state Parcel size and reopen add-layer and export selectors",
+          "Open Add from Web GIS on a group with a long layer or folder name and confirm the name wraps instead of truncating while the checkbox stays tappable"
+        ],
+        "expected": "No Parcelable resource tree or credentials in state or launch Intent. Current remote path and selected flags restore asynchronously with new process-local IDs; incomplete restoration cannot import, saved selection survives retry, and destroyed screens receive no dialog. Long layer and folder names wrap onto additional lines instead of being truncated.\n"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-smoke-ngw-selector-restore"
+    ]
+  }
+}

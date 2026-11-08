@@ -1,0 +1,50 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:feature-type-creation-destination-category-and-copy-identity",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:feature-type-creation"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the App feature editing subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/feature-type-creation.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Категория при копировании",
+        "",
+        "Кнопка «Копировать в слой» после выбора совместимого назначения использует этот же выбор категории. Копия получает новую identity; выбранная категория назначения и её зависимые поля перекрывают скопированные совпадающие значения. Слой с простым стилем сразу открывает новую форму. [Полный контракт](feature-copy-transform.md).",
+        "",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:feature-type-creation-destination-category-and-copy-identity"
+    ]
+  }
+}

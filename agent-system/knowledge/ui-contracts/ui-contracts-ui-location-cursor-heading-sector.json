@@ -1,0 +1,116 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-location-cursor-heading-sector",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-LOCATION-CURSOR-HEADING-SECTOR"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-LOCATION-CURSOR-HEADING-SECTOR",
+        "group": "location",
+        "title": "Курсор позиции и сектор направления",
+        "surface": "Map location overlay",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [],
+        "meaning": "Cursor position uses displayed fix; heading sector uses fresh device-heading uncertainty, separate from metric GPS accuracy and stakeout correction.",
+        "value_origin": "Location -> DeviceHeadingProvider/WMM -> MapDrawable user-location GeoJSON; preference controls sector layers",
+        "units": "WGS84 point, metre accuracy radius, true heading degrees/angular half-angle.",
+        "updates": [
+          "Location, independent heading callbacks and camera-idle scale refresh."
+        ],
+        "actions": [
+          "Toggle sector; stale/missing heading removes angular information."
+        ],
+        "conditions": [
+          "Fresh device rotation sensor sample for heading; default setting false; location independently required."
+        ],
+        "saved_state": "Sector preference persists; fix/heading memory rebuilt; recording inputs are unchanged.",
+        "source_ids": [
+          "map-device-fix",
+          "maplib-publish-location",
+          "maplib-sector-visibility",
+          "device-true-heading",
+          "device-heading-declination",
+          "map-resume-settings"
+        ],
+        "expectations": [
+          "Heading uncertainty can widen without GPS metre change; hiding sector must not clear fix.",
+          "Counterexample: heading sector is not accuracy circle or direction to selected object."
+        ],
+        "unknowns": [
+          "Runtime NOT_RUN: no GUI, device, emulator, build or APK resource merge acceptance in this task.",
+          "Overlay is programmatic MapLibre source/layers, not a resource widget: widgets intentionally empty. Native pixels and all geometry builder branches not fully audited."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-map-device-fix",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-maplib-publish-location",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-maplib-sector-visibility",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-device-true-heading",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-device-heading-declination",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-map-resume-settings",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-location-cursor-heading-sector"
+    ]
+  }
+}

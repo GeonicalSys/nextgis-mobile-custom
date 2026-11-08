@@ -1,0 +1,51 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-auto-local-tile-cache-admission",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "AUTO-LOCAL-TILE-CACHE-ADMISSION"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "automatic",
+        "scope": [
+          "maplib",
+          "maplibui",
+          "app"
+        ],
+        "command": ".\\gradlew.bat :maplib:testDebugUnitTest --tests com.nextgis.maplib.map.LocalVectorTileDiskCacheTest --tests com.nextgis.maplib.map.SqliteVectorTileAdmissionTest --tests com.nextgis.maplib.map.SqliteVectorSourceBridgeTest --tests com.nextgis.maplib.map.SqliteVectorTileProviderTest --tests com.nextgis.maplib.map.LocalVectorTileFullContentTest --tests com.nextgis.maplib.map.RenderTileWorkGateTest",
+        "expected": "Real temporary filesystem cache fixtures assert no repeated hot-path directory inventory, shared canonical-root accounting/registry reuse, byte/file limits, loss/write/rename/delete/cancellation recovery and exact complete bytes. Concurrency units assert canceled waiters avoid IO dispatch, active noncooperative work owns permits until unwind, blocked Main does not retain completed IO permits, failures/retry/predispatch cancellation release once, and all original tile/lifecycle/geometry/label expectations stay green. These are source checks; no device speed or native acceptance claim."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-auto-local-tile-cache-admission"
+    ]
+  }
+}

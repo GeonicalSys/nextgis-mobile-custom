@@ -1,0 +1,49 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:fork-customizations-project-composition-backup-and-workspace-routes",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:fork-customizations"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the App architecture or upstream workflow topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/fork-customizations.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "| Collector metadata, complete snapshot, resumable import, form transaction и composition apply | [collector-projects.md](../architecture/collector-projects.md) | `CollectorResource`, `CollectorImportJournal`, `CollectorFormFileTransaction`, `CollectorProjectCompositionSync` |",
+        "| Backup перед удалением/перезаливкой | [collector-projects.md](../architecture/collector-projects.md) | `LayerBackupManager`, `GISApplication` |",
+        "| Изолированные и восстанавливаемые Collector workspaces | [collector-projects.md](../architecture/collector-projects.md) | `CollectorProjectRegistry`, `MainActivity` |",
+        "| Незавершённые Collector задачи | [collector.md](../roadmap/collector.md) | владельцы указаны в roadmap |"
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:fork-customizations-project-composition-backup-and-workspace-routes"
+    ]
+  }
+}

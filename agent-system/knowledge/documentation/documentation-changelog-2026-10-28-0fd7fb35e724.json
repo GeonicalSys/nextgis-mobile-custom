@@ -1,0 +1,64 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-28-0fd7fb35e724",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-28 — Последний private D101: physical reads и freshCURRENT RAM",
+        "",
+        "Normalall3 PASS62s/versionmatrixPASS/71focusedPASS/independent review без blockers,",
+        "sourcefp62de8740…59ec91 неизменен. ActualAPI30 cold1403 проверил inline+PFD reads,",
+        "same9counter121/110-feature BLOB stages83.57→13.28 и134.11→15.37ms; queue всё ещё",
+        "до3.374s в representative, whole paint не принят. Current787 data/config после",
+        "старойABBA изменились, actorUNKNOWN. Freshcab9→D10142+42samples дали lateRSS",
+        "820.42→643.06MiB(-21.62%), sampledpeak896.19→751.16(-16.18%); Graphicslate",
+        "143.36→210.14MiB вырос. Серии не объединены,2–3s/Full/2GiB/OOMfixed не заявлены.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-28",
+        "heading": "2026-10-28 — Последний private D101: physical reads и freshCURRENT RAM",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-28-0fd7fb35e724"
+    ]
+  }
+}

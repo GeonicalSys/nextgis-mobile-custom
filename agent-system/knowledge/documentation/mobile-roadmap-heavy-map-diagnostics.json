@@ -1,0 +1,108 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:mobile-roadmap-heavy-map-diagnostics",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "implemented",
+    "source_verification": "UNKNOWN",
+    "merge": "merged",
+    "runtime_verification": "UNKNOWN",
+    "release": "unknown",
+    "retention": "Keep distinct source, private artifact, physical identity, failed native runs and withdrawal evidence."
+  },
+  "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "Complete OS exit evidence and heavy-map acceptance remain open after the 224 investigation.",
+        "implementation": "The software-only admission, bounded diagnostic APK and OS-exit export are in the App 80/82 chain. Publisher withdrawal belongs to a separate owner action.",
+        "source_verification": "The guard and known diagnostic builds have source receipts. Runtime renderer loss and the Windows hang cause remain independent unknowns.",
+        "merge": "App 82 merged at 4bd9f7d9 with the fetched library revisions. The publisher reversal has its own receipt.",
+        "runtime_verification": "The software run completed gestures but failed final MVT rendering. Later b165046d A56 stress and the software failure do not establish physical SM-X115 acceptance.",
+        "release": "The diagnostic APK was private. Historical 224 withdrawal restored the prior public artifact.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/reference/mobile-crash-224-2026-10-27.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/reference/mobile-release-3.1.2.31-2026-11-01.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "4bd9f7d981ebd444a6821891b6a2b4ec962efcc8",
+            "path": "docs/roadmap/mobile.md"
+          }
+        ]
+      }
+    },
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## MOB-03 Приёмка тяжёлой карты и гарантии диагностического сбора",
+        "",
+        "Приоритет P1, по прямому поручению пользователя27 октября после инцидента224.",
+        "Состояние: В Draft PR app82/maplib61/publisher7; отзыв224 выполнен, диагностический",
+        "APK передан, полевой отчёт ожидается. Владельцы app/maplib и publisher для публичного отзыва.",
+        "Первая цель — получить OS native stack после реального SIGABRT и после kill,",
+        "не пережившего SDK envelope. Вторая — cold-process MVT карта и длительные жесты",
+        "с живыми UI/renderer и hardware identity. Критерии и аппаратная матрица —",
+        "[автотесты](../runbooks/automated-tests.md). Samsung SM-X115 обязателен до обычного",
+        "выпуска; emulator/другой планшет его не подменяют. Синтетическая техническая",
+        "нагрузка не объявляется приёмкой клиентской карты.",
+        ""
+      ]
+    },
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "MOB-03"
+    },
+    "priority": {
+      "role": "priority_at_pinned_roadmap_basis",
+      "value": "P1"
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "The named software Related run failed to complete MVT rendering. Diagnostic APK delivery, public withdrawal and hardware acceptance are separate."
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-heavy-map-public-withdrawal-224",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:mobile-roadmap-heavy-map-avd-software-checkpoint",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-heavy-map-diagnostics"
+    ]
+  }
+}

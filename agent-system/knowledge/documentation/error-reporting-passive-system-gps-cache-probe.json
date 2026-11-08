@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:error-reporting-passive-system-gps-cache-probe",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:error-reporting"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/error-reporting.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Только внутри уже отправляемого `reportGpsRecovery` app делает не более одного",
+        "`LocationManager.getLastKnownLocation(GPS_PROVIDER)`. API читает имеющийся cache,",
+        "не запускает датчики и не требует нового измерения. Из временного `Location`",
+        "извлекается только `elapsedRealtimeNanos`; объект не сохраняется, его координаты,",
+        "extras и строковое представление не читаются и не передаются в источник,",
+        "`processLocation` либо seed. Существующие platform permission/provider/background",
+        "поля сохраняют schema1; вложенный `platform.gps_fix_witness` имеет schema1.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:error-reporting-passive-system-gps-cache-probe"
+    ]
+  }
+}

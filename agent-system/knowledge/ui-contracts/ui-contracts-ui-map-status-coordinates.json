@@ -1,0 +1,119 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-map-status-coordinates",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-MAP-STATUS-COORDINATES"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-MAP-STATUS-COORDINATES",
+        "group": "location",
+        "title": "Координаты устройства в нижней панели",
+        "surface": "Map status panel",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [
+          "tv_latitude",
+          "tv_longitude",
+          "fl_status_panel"
+        ],
+        "meaning": "Latitude/longitude of the selected display Location, not camera centre, project extent centre or selected feature. mCurrentCenter is also a device-position field despite its name.",
+        "value_origin": "GpsEventSource.lastDisplayLocation -> callbacks -> fillTextViews -> formatCoordinate -> tv_latitude/tv_longitude",
+        "units": "WGS84 angular latitude/longitude; coordinates_format and coordinates_fraction_digits change presentation only.",
+        "updates": [
+          "GPS/display callback and updateLastLocation; resume reloads format preferences."
+        ],
+        "actions": [
+          "Pan/zoom separately; coordinate settings change representation."
+        ],
+        "conditions": [
+          "show_status_panel/mode visibility; available display Location; upstream permissions/provider eligibility."
+        ],
+        "saved_state": "Formatting/display preferences persist; camera scroll state and geometry are separate.",
+        "source_ids": [
+          "map-last-display",
+          "map-status-location",
+          "map-status-bind",
+          "map-format-coordinate",
+          "map-resume-settings",
+          "map-device-fix"
+        ],
+        "expectations": [
+          "With identical display fix and displaced camera, panel must identify that fix. Counterexample: reading map centre as phone coordinates is invalid.",
+          "Changing format must not modify underlying Location or feature geometry."
+        ],
+        "unknowns": [
+          "Runtime NOT_RUN: no GUI, device, emulator, build or APK resource merge acceptance in this task."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-map-last-display",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-map-status-location",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-map-status-bind",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-map-format-coordinate",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-map-resume-settings",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-map-device-fix",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-map-status-coordinates"
+    ]
+  }
+}

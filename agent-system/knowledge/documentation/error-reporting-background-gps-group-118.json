@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:error-reporting-background-gps-group-118",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:error-reporting"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/error-reporting.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Обработанный отказ фонового GPS — группа118, 2026-10-28",
+        "",
+        "Событие118 от27 октября17:03:22.891UTC относится к223/5050495 на Samsung/Android16,",
+        "имеет `failure_kind=handled` и цепочку SecurityException/RemoteException.",
+        "MainActivity уже получила stopped за48ms до отказа `startForeground`.",
+        "Это свидетельство гонки eligibility при доставке pending service launch,",
+        "а не подтверждённое падение или OOM. Отказ уже перехватывался сервисом.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "The handled 223 failure describes a delayed promotion race observation. It does not establish crash, OOM or a repair."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:error-reporting-background-gps-group-118"
+    ]
+  }
+}

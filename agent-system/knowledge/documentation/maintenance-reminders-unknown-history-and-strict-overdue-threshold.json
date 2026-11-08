@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:maintenance-reminders-unknown-history-and-strict-overdue-threshold",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:maintenance-reminders"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/maintenance-reminders.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Для истории, которую прежние версии не записывали, начало наблюдения",
+        "`first_observed` и `project_observed_<path-hash>` даёт неделю без предупреждений.",
+        "Это **не** время синхронизации или проверки; после недели текст честно говорит",
+        "об отсутствии подтверждения. Старый достоверный ProjectSyncState используется",
+        "сразу. Будущее время после перевода часов назад не считается просрочкой.",
+        "Порог строгий: ровно семь суток ещё не «больше недели».",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:maintenance-reminders-unknown-history-and-strict-overdue-threshold"
+    ]
+  }
+}

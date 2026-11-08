@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:map-rendering-sqlite-priority-t40-results",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-rendering",
+      "lisa:mobile:resource:map-rendering-canonical-layer-order-and-style-aliases"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original source frame, result and acceptance limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-rendering.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "формат проектов. Первый `sqlite-priority` native run выявил реальный relative-order",
+        "дефект. После canonical model исправления focused case1/1 PASS на T40/API30",
+        "(`priority-related-t40-02`), затем весь native класс10/10 distinct PASS",
+        "(`sqlite-related-t40-03/result.json`), final83 JVM/10classes PASS. UID logcat",
+        "collector `--uid` не поддержан этим vendor. Nested/recreation этим case не",
+        "проверены, real-project/Full acceptance остаются отдельными.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:map-rendering-sqlite-priority-t40-results"
+    ]
+  }
+}

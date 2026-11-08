@@ -1,0 +1,84 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:mobile-roadmap-peer-operation-and-trust-protocol",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "UNKNOWN",
+    "release": "unknown",
+    "retention": "Keep the alternative online dependency, offline revocation limit and distinct confirmation states."
+  },
+  "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "Protocol research follows REL-01 and SYNC-02 or an approved online equivalent.",
+        "implementation": "Define identity, operation UUIDs, gaps, base revisions, tombstones and quota-bound attachment transfer before selecting a transport.",
+        "source_verification": "The decisive prototype needs authorized PostgreSQL/NGW forwarding with authorship, permissions and duplicate protection. The evidence is still open.",
+        "merge": "Protocol and consumer delivery follow the accepted prototype.",
+        "runtime_verification": "Verify initial trust, expiry and revocation behavior while disconnected. Neighbor delivery and server acknowledgment remain independent.",
+        "release": "A future release depends on the accepted online and peer contracts."
+      }
+    },
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## P2P-01 Общий протокол операций и доверия",
+        "",
+        "Приоритет P1 для проектирования, после основного online контракта. Состояние: Исследование. Зависимости: REL-01, SYNC-02 либо согласованный эквивалент.",
+        "",
+        "Определить identity проекта/организации/слоя/объекта, UUID операций, порядок/пропуски операций, base revision, tombstones и серверные подтверждения. Доставка соседу и подтверждение сервером — разные состояния. Вложения передаются отдельно по проверяемым хешам, с возобновлением и квотами.",
+        "",
+        "Нужны первичное доверие, взаимная проверка устройства, предел прав на чужие операции, срок действия допуска и отзыв. Постоянный офлайн не позволяет мгновенно узнать серверный отзыв: ограничение и поведение после истечения допуска входят в контракт.",
+        "",
+        "Критический прототип: получить чужую правку на A и доставить её серверу стандартным разрешённым способом с сохранением авторства/прав и защитой от дублей. Пока это не доказано на нашем PostgreSQL/NGW пути, весь обмен не готов к реализации.",
+        ""
+      ]
+    },
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "P2P-01"
+    },
+    "priority": {
+      "role": "priority_at_pinned_roadmap_basis",
+      "value": "P1"
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "Research depends on the online contract. SYNC-02 may have an agreed equivalent."
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:task:mobile-roadmap-reliable-server-ack",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-peer-operation-and-trust-protocol"
+    ]
+  }
+}

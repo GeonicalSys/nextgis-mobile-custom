@@ -1,0 +1,67 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:invariants-inv-sqlite-bounded-original-reads",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "invariants",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "INV-SQLITE-BOUNDED-ORIGINAL-READS"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "title": "Bounded attribute cursors preserve every eligible full original and exact order",
+        "owners": [
+          "maplib",
+          "app"
+        ],
+        "statement": "Read only existing eligible RTree candidate IDs, deduplicated in original order, through attributes-only cursors of at most32 rows. On API28+ a separate explicit1MiB geometry window contains at most32 whole BLOBs<=16KiB (512KiB payload); API26/27, large originals and safely unsupported drivers retain full PFD reads. This is not a total RAM bound; SQLite sorters plus one Java full buffer/decoded original remain. SQL CASE typeof/length avoids large/TEXT payload materialization without truncation; exact ID/order/length/cardinality checks reject incomplete or reordered originals. One lazy compiled BLOB statement belongs to one visit, never a global/thread-shared cache. Preserve all typed fields/NULLs/geometry, hidden/excluded masks, source epochs, current/owner/content/style guards, free-only policy and existing style/clip/labels/PBF. Cancel/error closes both cursors/descriptor/statement; current is rechecked between queries. Mid-window capability fallback never repeats delivered IDs; cleanup and real SQL/resource errors remain failures and a bad/missing BLOB cannot become successful partial PBF/cache. Default Access fixtures and public original editor/sync APIs remain compatible. No all-layer features list, global GeoJSON cache, thinning or simplification. Existing phase boundaries stay comparable, with geometry query/prefill/refill in BLOB_READ and inline/PFD counts counting consumed full buffers rather than physical prefetched IO. Native readiness, PSS and sharp17to12/new-extent speed require actual tablet evidence.\n",
+        "related_code": [
+          "maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorFeatureReader.java",
+          "maplib/src/main/java/com/nextgis/maplib/map/VectorLayer.java",
+          "maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileProvider.java"
+        ],
+        "verify_smoke": [
+          "AUTO-SQLITE-ORIGINAL-BATCH-UNITS",
+          "SMOKE-SQLITE-PHASE-TABLET",
+          "AUTO-APP-DEBUG",
+          "AUTO-APP-RELEASES"
+        ],
+        "must_update_docs": [
+          "docs/architecture/map-performance.md",
+          "docs/architecture/map-rendering.md",
+          "docs/registry/dependencies.yaml",
+          "maplib/docs/README.md",
+          "maplib/docs/manifest.yaml"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:invariants-inv-sqlite-bounded-original-reads"
+    ]
+  }
+}

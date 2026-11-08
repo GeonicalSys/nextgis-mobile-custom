@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:config-keys-preferences-background-recording-sound",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "config-keys",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_registry_section",
+      "value": "preferences"
+    },
+    "registry-key": {
+      "role": "incumbent_mapping_or_list_key",
+      "value": "background_recording_sound"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "owner": "maplibui",
+        "type": "boolean",
+        "default": true,
+        "source": "maplibui/src/main/java/com/nextgis/maplibui/util/SettingsConstantsUI.java",
+        "ui": "app/src/main/res/xml/preferences_tracks.xml (Настройки → Треки)",
+        "consumer": "maplibui/src/main/java/com/nextgis/maplibui/util/BackgroundRecordingSoundMonitor.java",
+        "purpose": "While track or walk recording is active and the app UI is hidden, keep a fixed 10-second alarm-stream heartbeat as long as the shared GNSS stream supplies fresh validated measurements before point decimation, including unchanged stationary coordinates. Notification volume does not suppress it; zero or muted alarm volume selects short vibration, including a distinct double vibration for a throttled persistence failure. Silence all feedback when delivery stops or the setting is disabled. This switch does not own or disable the GPS recording wake lock.\n"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/sectioned-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:config-keys-preferences-background-recording-sound"
+    ]
+  }
+}

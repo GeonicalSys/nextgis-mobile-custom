@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:map-rendering-cursor-fixture-readiness",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-rendering"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the rendering subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-rendering.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Готовность graphics fixture курсора",
+        "",
+        "LocationOrbitTest перед прямым техническим fix ждёт завершения текущего app",
+        "layer apply и pending reload, готового Style и layout MapView. Post-load hook",
+        "штатно перечитывает GPS и может очистить преждевременно подставленную позицию.",
+        "При таймауте fixture сообщает camera, lifecycle/focus, loading flags, cached",
+        "fix и native source/rendered marker. Оба метода запускаются отдельно,",
+        "предел 30 секунд и pixel/heading/sector assertions сохранены. Настройки"
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:map-rendering-cursor-fixture-readiness"
+    ]
+  }
+}

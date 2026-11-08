@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:device-smoke-tests-august-21-multipart-measurement-and-undo-redo",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:device-smoke-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/device-smoke-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "   существующий",
+        "   MultiPolygon с несколькими частями/дыркой, передвинуть вершину и убедиться, что",
+        "   его структура не упрощена. Замкнуть контур линейки и проверить,",
+        "   что площадь подписана в гектарах (`га`), а не в квадратных метрах или километрах.",
+        "   У линейки проверить видимые Undo/Redo: добавить и перенести несколько точек,",
+        "   отменить их по одной, вернуть через Redo, затем после Undo добавить новую точку —",
+        "   Redo должен стать недоступен, а длина и площадь должны соответствовать контуру.",
+        "   Отдельно запустить новый MultiPolygon и сразу сохранить единственный стартовый",
+        "   узел: должно появиться «Недостаточно точек», а не ошибка исправления геометрии.",
+        "   Затем у линии и полигона создать не менее 15 вершин, несколько раз просто",
+        "   выбирать разные узлы и нажимать Undo до стартового состояния: каждое нажатие",
+        "   убирает ровно одну вершину. В HyperLog длина WKT должна меняться при каждом",
+        "   `reason=undo`, без соседних пар одинаковой длины из-за смены CRS. Redo возвращает",
+        "   также по одной вершине за нажатие; все 15 изменений доступны, пустых шагов нет."
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Dated package recipe for preserved shape, area units and Undo/Redo."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:device-smoke-tests-august-21-multipart-measurement-and-undo-redo"
+    ]
+  }
+}

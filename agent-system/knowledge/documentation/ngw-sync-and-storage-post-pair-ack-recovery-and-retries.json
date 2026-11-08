@@ -1,0 +1,89 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-post-pair-ack-recovery-and-retries",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### Окно после последнего pair ACK и реальные повторные запуски",
+        "",
+        "В `ProjectSyncRunner.run` вызов `SyncRecoveryJournal.complete` находится внутри",
+        "account loop. При успешной записи последнего ACK journal уже не содержит этих",
+        "пар, а `awaitChildren`, `session.close`, `closeSyncWorkspace` и",
+        "`prepareProjectSyncState` ещё впереди. Исключение финального cleanup снимает",
+        "`fullProjectComplete`, увеличивает `numIoExceptions` и добавляет проект в",
+        "`failedProjects`; пара обратно не ставится и `markComplete` не вызывается.",
+        "При старом исходном clock он остаётся старым. Это условный source-контрпример",
+        "утверждению «пустая очередь означает завершённый полный обмен», а не выполненный",
+        "crash-тест или доказанная потеря feature/outbox.",
+        "",
+        "| Событие | Recovery pairs | Full-project clock | Следующий запуск |",
+        "| --- | --- | --- | --- |",
+        "| Account pass отказал до ACK | Точная пара сохраняется | Не записывается этим проходом | Startup recovery может запросить сохранённую пару |",
+        "| Последний ACK сохранён, затем cleanup отказал | Завершённые пары уже удалены | `markComplete` не вызывается | Startup journal не воссоздаёт отсутствующую пару |",
+        "| Процесс погиб после durable ACK до clock | Удалённые пары не возвращаются от старого clock | На диске прежний clock, если новая запись ещё не началась | Восстанавливаются оставшиеся пары; новый обычный запуск строит новый план |",
+        "| Cleanup завершён, запись clock вернула false | Это отдельная запись после pair ACK | Память и диск могут различаться | Нельзя решать исход по одному cached getter или одному boolean |",
+        "",
+        "`MainApplication` планирует `schedulePendingIfNeeded` через3s после старта.",
+        "Этот метод разрешает только сохранённые пары через trusted inventory/accounts;",
+        "старый clock не является сканером пропущенной финализации. Не-manual пару с",
+        "выключенным automatic sync он не запускает. Обычное восстановление расписаний",
+        "в `GISApplication` — другой путь, а `SyncAccountWorker` вызывает `requestSync`",
+        "и планирует следующий tick только в соответствующей ветви. `Result.success()`",
+        "также возвращается без отправки при удалённом account или выключенном auto sync.",
+        "В ветви `requestSync` это результат доставки запроса, не завершение синхронизации.",
+        "",
+        "Ручной повтор из `LayersFragment.showSyncFailureDialog` идёт через",
+        "`startManualSync` и `OfflineSyncIntentService` с новым планом. Service передаёт",
+        "свой `new SyncResult()` непосредственно runner, поэтому framework не получает",
+        "этот объект для собственного retry. Scheduled `datasource.SyncAdapter` передаёт",
+        "настоящий framework `SyncResult`. Оба пути заново сохраняют выбранный план до",
+        "работы. Это возможность повторного прохода, не гарантия срока при выключенном",
+        "расписании, отсутствии сети или отсутствии нового ручного действия.",
+        "",
+        "Полный clock требует весь `LocalChangesWorker.projectAccounts(map)` в",
+        "`completedAccounts` **одного запуска**, без layer-only ограничения. Успешные",
+        "account-only ticks разных запусков не складываются в полный project completion.",
+        "`SYNC_FINISH` означает окончание очереди: runner может отправить его и при",
+        "ошибке cleanup/clock, используя `SYNC_CHANGES` для error notification.",
+        "`failedProjects` дополнительно даёт ручной incomplete alert; ошибка записи clock",
+        "попадает во внешний queue catch и сама по себе не добавляет туда имя проекта.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-post-pair-ack-recovery-and-retries"
+    ]
+  }
+}

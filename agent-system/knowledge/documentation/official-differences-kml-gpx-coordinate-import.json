@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-kml-gpx-coordinate-import",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### Упрощённый импорт координат KML и GPX",
+        "",
+        "**Что это.** Приложение принимает локальные `.kml` и `.gpx` как WGS 84. Каждый",
+        "tuple KML `coordinates`, а также каждый GPX `wpt`, `rtept` и `trkpt` становится",
+        "самостоятельной точкой одного редактируемого слоя в исходном порядке. В поля",
+        "попадают порядковый номер, тип источника и, при наличии, название, время и высота.",
+        "",
+        "**Для чего.** Полевые координаты из навигаторов и простых обменных файлов можно",
+        "быстро загрузить без предварительной конвертации в GeoJSON.",
+        "",
+        "**Ограничение.** Это намеренно не полноценный KML/GPX importer: линии, полигоны,",
+        "маршруты, треки и стили не восстанавливаются, KMZ и `gx:Track` не поддерживаются.",
+        "Повторная замыкающая координата полигона остаётся отдельной точкой, потому что",
+        "контракт требует сохранить каждую координату файла.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-kml-gpx-coordinate-import"
+    ]
+  }
+}

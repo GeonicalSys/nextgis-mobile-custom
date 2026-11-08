@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:collector-projects-composition-stack-osm-and-track-positions",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:collector-projects"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the App mobile project topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/collector-projects.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Единый смешанный порядок vector и raster-style элементов Collector сохраняется",
+        "с учётом того, что индекс `0` в",
+        "`LayerGroup` — низ стека. Каждая проектная карта содержит дефолтный",
+        "`OpenStreetMap Standard aka Mapnik` прямым дочерним слоем с индексом `0`;",
+        "он не является managed-слоем Collector и не удаляется composition sync.",
+        "Слой «Мои треки» резервирует последнюю внутреннюю позицию и поэтому остаётся",
+        "первой строкой списка слоёв; project-managed слои вставляются между OSM и",
+        "треком. При открытии старого workspace отсутствующий OSM создаётся, а неверные",
+        "позиции OSM и слоя треков нормализуются без сброса сохранённой видимости.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:collector-projects-composition-stack-osm-and-track-positions"
+    ]
+  }
+}

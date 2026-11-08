@@ -1,0 +1,81 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ecosystem-contracts-eco-offline-basemap-handoff",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ecosystem",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_registry_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_mapping_or_list_key",
+      "value": "ECO-OFFLINE-BASEMAP-HANDOFF"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "id": "ECO-OFFLINE-BASEMAP-HANDOFF",
+        "from": "qgis-plugins",
+        "to": "mobile-app",
+        "type": "portable_artifact_contract",
+        "transport": "Explicit user or release import of a supported offline basemap package.",
+        "statement": "qtiles_geonical produces completed raster MBTiles/ZIP but does not publish it automatically; confirmed MBTiles replacement happens only after successful export and preserves the prior file on cancel/failure, temporary .qtiles files are not import artifacts; the Android consumer accepts the unchanged tiles/metadata raster MBTiles contract with Web Mercator tile matrix, supported image format, zoom range and bounds, without sharing a desktop workspace path; vector MBTiles are out of scope. Legacy Debug-to-Geonical raster transfer remains a distinct signed read-only ContentProvider/URI stream, unrelated to the removed vector HTTP server. Client phase/elapsed/cancel changes do not alter desktop basemap formats or Debug originals; actual large-transfer acceptance is pending.",
+        "owners": [
+          "app",
+          "maplib",
+          "maplibui"
+        ],
+        "local_docs": [
+          "docs/architecture/lisa-ecosystem.md",
+          "docs/architecture/map-rendering.md",
+          "docs/architecture/collector-projects.md"
+        ],
+        "external_docs": [
+          {
+            "system": "qgis-plugins",
+            "path": "qtiles_geonical/docs/README.md"
+          },
+          {
+            "system": "qgis-plugins",
+            "path": "geonical-docs/architecture/mobile-client.md"
+          },
+          {
+            "system": "qgis-plugins",
+            "path": "geonical-docs/runbooks/06-ngw-webgis-deploy.md"
+          }
+        ],
+        "verify": [
+          "SMOKE-NGRC-PRESERVE",
+          "SMOKE-UPDATE-DATA-PRESERVE"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/sectioned-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:ecosystem-contracts-eco-offline-basemap-handoff"
+    ]
+  }
+}

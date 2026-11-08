@@ -1,0 +1,68 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-11-01-a21a454598a2",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-11-01 — Источники даты и времени в формах",
+        "",
+        "MOB-UI-01: отдельные UI-FORM-DATE-STANDARD-VALUE и UI-FORM-DATE-NGFP-VALUE",
+        "связывают реальные factory/control/layout/state/value handlers с nullable",
+        "millisecond carriers и записью ContentValues. Разные enum namespaces,",
+        "строка отображения, explicit null, cursor read и default/last carriers",
+        "не объединены.22 новых method guards и5file witnesses добавлены к прежним",
+        "полным44/191/64/49 наборам без обновления старых fingerprints/expectations.",
+        "Два условных carrier observations остаются policy UNKNOWN, не багами.",
+        "Actual zone/locale/private NGFP/SQL rows/device/Cancel/remote outcome неизвестны.",
+        "Продукт, библиотеки и версии не меняются; runtime NOT_RUN, merge/APK отдельно.",
+        "Адресные source/docs проверки и Git delivery подтверждаются actual receipts/PR,",
+        "а не датой этой записи.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-11-01",
+        "heading": "2026-11-01 — Источники даты и времени в формах",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-11-01-a21a454598a2"
+    ]
+  }
+}

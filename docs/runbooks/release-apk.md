@@ -1,7 +1,7 @@
 ---
 title: Выпуск Lisa и Belka APK
 type: runbook
-last_verified: 2026-11-01
+last_verified: 2026-11-06
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -66,6 +66,7 @@ token для отправки ошибок APK не нужны. Не печат�
 6. Обновить build/compatibility docs. Production `WHATS_NEW.md` меняется только
    для production release; для debug-only публикации достаточно её release
    notes, если пользователь не запросил иное.
+   Новый раздел добавьте по [порядку ведения истории](../guides/documentation-maintenance.md#пользовательская-история-выпусков).
 
 ## Обязательная сборка и проверка версии
 

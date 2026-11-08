@@ -1,0 +1,67 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-knowledge-policy",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          ".",
+          "docs/README.md",
+          "docs/registry/README.md",
+          "docs/guides/documentation-maintenance.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the established App documentation address and original Git range."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "agent-system/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "`policy-migration.json` maps every character of six complete original instruction",
+        "sources: root and app AGENTS plus all four Cursor entrances. It binds their exact",
+        "Git commit/blob and normalized source hashes to132 logical values/134 projections.",
+        "Two individually reviewed identical sync/label subjects each have one value, both",
+        "source projections and the complete root/app scope union. Four original Cursor",
+        "frontmatters retain every typed loading field. Historical retry commands and the",
+        "shared19 test result remain retained evidence, separately from lasting conditions.",
+        "",
+        "`migration/instruction-review.json` and three owner-local question records preserve",
+        "two Git wording conflicts and two distinct subjects sharing legacy MOB-02. The",
+        "current task's explicit routine Git authorization is external. Neither the old",
+        "Cursor wording nor a stored retry can authorize a new product/native operation.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-knowledge-policy"
+    ]
+  }
+}

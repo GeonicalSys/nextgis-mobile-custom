@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ui-contracts-ordinary-ui-source-checker-and-evidence-boundary",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:ui-contracts"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ui-contracts.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Что подтверждает проверка исходников",
+        "",
+        "Из Android root:",
+        "",
+        "```powershell",
+        "py -3.13 -B docs/scripts/check_ui_contracts.py",
+        "```",
+        "",
+        "Проверка сопоставляет декларации и тела методов с просмотренными anchors,",
+        "структуру каталога и заявленные XML IDs. Она не запускает приложение,",
+        "не обращается к NGW/БД и не принимает геометрию, содержимое карты, расположение",
+        "кнопок, восстановление после сбоя или работу устройства.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ui-contracts-ordinary-ui-source-checker-and-evidence-boundary"
+    ]
+  }
+}

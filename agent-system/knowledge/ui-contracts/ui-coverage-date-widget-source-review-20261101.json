@@ -1,0 +1,109 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:metadata:ui-coverage-date-widget-source-review-20261101",
+  "kind": "metadata",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "coverage"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "date_widget_source_review_20261101"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "reviewed_at": "2026-11-01",
+        "state": "bounded_source_review",
+        "runtime": "not_run",
+        "source_context": {
+          ".": "40d5292025a7911a0a2e840620be138d75f7cfe2",
+          "android_projects/android_gisapp": "57fb5dbabbc17afa136ec8ada1bbf927a600499a",
+          "android_projects/android_gisapp/maplib": "baa94f361101051b09f762d7eda1f36466436d5c",
+          "android_projects/android_gisapp/maplibui": "be0ed0c4933573b99752b4e447f088951b88120b"
+        },
+        "basis": "Two existing shared maplibui date implementations/resources; no product source change, native widget execution or current tenant schema claim.",
+        "source_packet_sha256": "209d2138667c4395cc7cdb86fd8039492e1bc9828b138c3c48b1ee587d2f3977",
+        "independent_source_peer_sha256": "acb7550eda62f825afece0f7ed5b40eaac16b677323744a719131dd56330488b",
+        "source_observations": {
+          "records": 8,
+          "routes": 5,
+          "selector_rows": 3,
+          "conditional_sequences": 2,
+          "unknowns": 9
+        },
+        "proof_scope": "Independent SOURCE peer supports the bounded source facts; its129 passive pin/bounds checks are separate. New catalogue lexical checks only detect source drift, not native behavior.",
+        "new_contract_ids": [
+          "UI-FORM-DATE-STANDARD-VALUE",
+          "UI-FORM-DATE-NGFP-VALUE"
+        ],
+        "no_android_id": "Both date layout roots lack android:id; contracts widgets[] is intentional. Their actual class/layout binding is guarded in non_method_evidence.",
+        "existing_guard_reused": "The existing ConstantsUI non-method row and every old source fingerprint/contract are retained whole. Field/date keys were manually traced; no old expectation update.",
+        "same_pin_supplemental_witness": "Source peer separately reobserved ControlHelper:97 nextgis_control_ under unchanged FACTORY pin.",
+        "official_api_documents": [
+          {
+            "id": "WAPI-CURSOR",
+            "url": "https://developer.android.com/reference/android/database/Cursor#getLong(int)",
+            "sections": "getLong; fetched page lines2235-2243",
+            "paraphrase": "The Cursor interface leaves null, nonintegral and out-of-range getLong results or exceptions to its implementation. Therefore this widget source alone cannot promise that SQL NULL becomes either null or zero.",
+            "limit": "No installed Cursor/SQLite/libcore implementation, actual row or native acceptance pinned."
+          },
+          {
+            "id": "WAPI-DATEPICKER",
+            "url": "https://developer.android.com/reference/android/app/DatePickerDialog.OnDateSetListener#onDateSet(android.widget.DatePicker,%20int,%20int,%20int)",
+            "sections": "onDateSet; fetched page lines1921-1935",
+            "paraphrase": "The callback supplies year, a zero-based month compatible with Calendar.MONTH, and day-of-month.",
+            "limit": "A public callback contract, not observed dialog behavior on a device."
+          },
+          {
+            "id": "WAPI-TIMEPICKER",
+            "url": "https://developer.android.com/reference/android/app/TimePickerDialog.OnTimeSetListener#onTimeSet(android.widget.TimePicker,%20int,%20int)",
+            "sections": "onTimeSet; fetched page lines1911-1934",
+            "paraphrase": "The callback reports the chosen hour and minute when time selection is completed.",
+            "limit": "No native callback/cancel/lifecycle delivery or OEM implementation verified."
+          },
+          {
+            "id": "WAPI-FORMAT",
+            "url": "https://developer.android.com/reference/java/text/DateFormat",
+            "sections": "getDateInstance()/getDateTimeInstance()/getTimeInstance(); fetched method sections2443-2447,2500-2504 plus official search result for getTimeInstance()",
+            "paraphrase": "The zero-argument display factories use the default FORMAT locale and default style. The selected widget source sets no explicit UTC timezone on its formatter.",
+            "limit": "The API read does not pin a device locale, associated formatter timezone or concrete formatter implementation. Date7 separately supplies the earlier parser leniency/prefix and Calendar initialization contracts."
+          }
+        ],
+        "limits": [
+          "Actual private forms/schema/cursor/preferences/zone/clock/device and remote roundtrip remain UNKNOWN.",
+          "NGFP seed/calendar and TIME date-component sequences remain conditional, not current bugs, native Cancel acceptance or fixed behavior.",
+          "Date7/held-form Save/required/cascade/draft/script/owner/provider/permissions constraints and all original catalogue coverage remain unchanged."
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:metadata:ui-coverage-date-widget-source-review-20261101"
+    ]
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-wf-settings-reset-delete",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "WF-SETTINGS-RESET-DELETE"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "WF-SETTINGS-RESET-DELETE",
+        "repository": "root",
+        "path": "app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java",
+        "marker": "protected static void deleteLayers(Activity activity)",
+        "requires": [
+          "MainApplication.LAYER_OSM",
+          "MainApplication.LAYER_TRACKS",
+          "layer.delete(false)",
+          "execSQL(\"VACUUM\")"
+        ],
+        "forbids": [],
+        "sha256": "bf2bb5f2c2fa271c4c26524ee7f1a2d4113239a6d335dbb9fe897e5b104b2bb0"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-wf-settings-reset-delete"
+    ]
+  }
+}

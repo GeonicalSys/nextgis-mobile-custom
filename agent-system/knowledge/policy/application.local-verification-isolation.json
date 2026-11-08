@@ -1,0 +1,64 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:instruction:application.local-verification-isolation",
+  "kind": "instruction",
+  "owner": "android_projects/android_gisapp",
+  "topic": "policy-application",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain editable logical subject and pinned provenance; product implementation/acceptance are separate records."
+  },
+  "facets": {
+    "body": {
+      "role": "permanent_rule",
+      "value": "Проверки без движения доступны на смартфоне только в opt-in verification APK:\n`-PfieldVerificationChecks=true`, отдельные application/provider/account IDs,\nVerificationTestRunner и синтетический workspace. Команды и полная release gate:\n[`../docs/runbooks/automated-tests.md`](../docs/runbooks/automated-tests.md).\nRelated на эмуляторе обязателен после доработки; Full на смартфоне и эмуляторе\nобязателен перед публикацией, Check-Publication сверяет актуальность результата.\nПо поручению пользователя26 октября2026 автоматические Android/docs Actions\nотключены ради лимитов GitHub. Эти проверки выполняются локально; workflow_dispatch\nсохраняется только для отдельно запрошенной облачной проверки. Не запускать,\nне перезапускать и не включать cloud workflows автоматически перед merge/publish.\n`tools/docs-check.ps1 -RunTests` включает report guard и change-impact; Full\nвключает бывшие cloud-only реальные окна620dpi/font200% в обоих orientations.\nНе менять системные настройки рабочего смартфона и не запускать mutating suites\nв production либо обычном Debug-профиле.\n"
+    },
+    "classification": {
+      "role": "reviewed_knowledge_class",
+      "value": "permanent_rule"
+    },
+    "review": {
+      "role": "classification_reason",
+      "value": "Full local-versus-cloud and Related/Full/freshness requirements, exact opt-in identities, real-window matrix and preserved working phone settings/data."
+    },
+    "source_section": {
+      "role": "source_document_context",
+      "value": [
+        "# app — инструкции для ИИ-агентов"
+      ]
+    },
+    "authority_limit": {
+      "role": "authority_and_acceptance_boundary",
+      "value": "Path applicability is reviewed separately from the rule's textual triggers. Every source condition and heading remains attached; no automatic predicate or lifecycle inference. Stored commands and dates do not grant current execution, freshness or product acceptance. Existing instruction clients/checkers remain effective until measured cutover."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/policy-migration.json",
+    "scopes": [
+      "lisa:mobile:instruction:application.local-verification-isolation"
+    ]
+  }
+}

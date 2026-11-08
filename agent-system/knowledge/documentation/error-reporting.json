@@ -1,0 +1,391 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:error-reporting",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/architecture/error-reporting.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/error-reporting.md"
+    },
+    "frontmatter": {
+      "role": "markdown_frontmatter_lines",
+      "value": [
+        "title: Доставка диагностических отчётов",
+        "type: architecture",
+        "last_verified: 2026-10-30",
+        "related_code:",
+        "  - app/src/main/java/com/nextgis/mobile/MainApplication.java",
+        "  - app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java",
+        "  - app/src/main/java/com/nextgis/mobile/util/DiagnosticsTransport.java",
+        "  - app/src/main/java/com/nextgis/mobile/util/DiagnosticsRetryWorker.java",
+        "  - app/src/main/java/com/nextgis/mobile/util/DiagnosticsPolicy.java",
+        "  - app/src/main/java/com/nextgis/mobile/util/DiagnosticsPayloadLimiter.java",
+        "  - app/src/main/java/com/nextgis/mobile/util/DiagnosticsHttpPolicy.java",
+        "  - app/src/main/java/com/nextgis/mobile/util/DiagnosticsProcessExitReporter.java",
+        "  - app/src/main/java/com/nextgis/mobile/util/DiagnosticsTracePolicy.java",
+        "  - app/src/main/java/com/nextgis/mobile/util/DiagnosticsNativeTrace.java",
+        "  - app/src/main/java/com/nextgis/mobile/util/DiagnosticsBackgroundLocationStart.java",
+        "  - app/src/main/java/com/nextgis/mobile/util/DiagnosticsGpsPlatform.java",
+        "  - app/src/main/java/com/nextgis/mobile/util/DiagnosticsGpsFixWitness.java",
+        "  - app/src/main/java/com/nextgis/mobile/location/BackgroundLocationController.kt",
+        "  - app/src/main/java/com/nextgis/mobile/location/BackgroundLocationService.kt",
+        "  - app/src/test/java/com/nextgis/mobile/util/DiagnosticsBackgroundLocationStartTest.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/LocalLogInitializer.java"
+      ]
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "",
+        "# Доставка диагностических отчётов",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-sqlite-phase-local-scope",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-sqlite-attributes-blob-and-sdk-boundaries",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-sqlite-scope-bounds-and-saturation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-sqlite-private-counter-fields-and-ownership",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:error-reporting-first-tablet-capture-saturation-limit",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:error-reporting-background-gps-group-118",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-background-gps-request-and-failure-snapshots",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-background-gps-stage-enum-and-budget",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-background-gps-diagnostic-observation-boundary",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-background-gps-delayed-promotion-test-oracle",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-explicit-zip-os-history-scope",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-zip-reporter-identity-and-history-availability",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-passive-gps-cache-raw-monotonic-timestamp",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-passive-system-gps-cache-probe",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-passive-gps-witness-fields-and-timing-bounds",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:error-reporting-october-29-gps-cache-evidence",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-automatic-gps-recovery-and-owner-stop",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-gps-recovery-reasons-and-report-policy",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-gps-snapshot-ages-and-history",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-same-listener-reregistration-conditions",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-durable-gps-pair-delivery",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-map-runtime-slow-operation-witness",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-map-runtime-writer-and-event-provenance",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-local-tile-reason-and-request-headers",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-app-diagnostics-receiver-and-build-secret",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-diagnostics-owner-and-startup-guards",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-sentry-fatal-delegation-and-draft-isolation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-local-log-initializer-and-legacy-url",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-diagnostic-cache-and-memory-bounds",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-durable-envelope-enqueue-and-ack",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-http-response-and-redirect-retry-policy",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-sdk-replay-worker-and-network-gate",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-delivery-identity-and-retention-limits",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-diagnostic-report-fields-and-safe-lifecycle",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-disabled-generic-attachments-and-log-separation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-diagnostics-contract-3-original-event-data",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-payload-and-priority-context-budgets",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-handled-failure-eligibility-and-limiter",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-local-tile-noise-and-http-limiter",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-http-source-and-provider-versus-transport",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-sdk-upgrade-native-delivery-gates",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-opt-in-delivery-runner-and-test-project",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-delivery-verification-phases",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:error-reporting-october-8-delivery-receipt-link",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-cold-start-noise-and-tile-http-oracle",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-historical-anr-section-heading",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-startup-observer-stage-witness",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-prior-process-journal-and-origin-snapshot",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-actual-ndk-scope-tags",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-cached-exit-history-matching-and-privacy",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:error-reporting-october-23-triage-reference",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-sync-journal-persistence-diagnostics",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-restart-fallback-owner-and-durable-ack",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-restart-fallback-unowned-history-and-android-gate",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-restart-trace-allowlist-and-post-start-read",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:error-reporting-october-28-signal-trace-api-evidence",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-signal-trace-auto-format-and-association",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-signal-trace-result-status-and-jvm-limit",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:error-reporting-delivery06-and-delivery01-native-evidence",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-gps-platform-context-and-addon-basis",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-private-profiling-opt-in-and-contract-links",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:error-reporting-rejected-sync-journal-report-and-restart-unknown",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:error-reporting"
+    ]
+  }
+}

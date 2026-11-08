@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:release-apk-independent-version-oracle-and-release-notes",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:release-apk"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/release-apk.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "5. Обновить ожидаемые package/version значения в",
+        "   `tools/verify-apk-version-matrix.ps1`: это намеренно независимый regression",
+        "   oracle, а не автоматическое чтение тех же Gradle constants.",
+        "6. Обновить build/compatibility docs. Production `WHATS_NEW.md` меняется только",
+        "   для production release; для debug-only публикации достаточно её release",
+        "   notes, если пользователь не запросил иное.",
+        "   Новый раздел добавьте по [порядку ведения истории](../guides/documentation-maintenance.md#пользовательская-история-выпусков).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:release-apk-independent-version-oracle-and-release-notes"
+    ]
+  }
+}

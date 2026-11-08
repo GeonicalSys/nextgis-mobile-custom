@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:collector-projects-database-owner-and-project-scoped-repair",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:collector-projects"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the App mobile project topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/collector-projects.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Target group теперь является также владельцем SQLite: новый слой получает parent",
+        "до `create()`/fill, `DatabaseContext` поднимается по parent chain до map, а сам",
+        "`MapContentProviderHelper` открывает `layers.db` рядом со своим map-файлом, не по",
+        "последней process-wide preference. Collector journal содержит project UID. Если",
+        "после restart открыт другой workspace, verify/repair не очищает journal и не",
+        "трогает его БД, а ждёт открытия целевого проекта. Это закрывает сценарий, при",
+        "котором каталог создавался в одном проекте, а таблицы и строки попадали в другой.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:collector-projects-database-owner-and-project-scoped-repair"
+    ]
+  }
+}

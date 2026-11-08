@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:config-keys-preferences-track-send",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "config-keys",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_registry_section",
+      "value": "preferences"
+    },
+    "registry-key": {
+      "role": "incumbent_mapping_or_list_key",
+      "value": "track_send"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "owner": "app",
+        "type": "boolean",
+        "default": true,
+        "user_configurable": true,
+        "source": "app/src/main/res/xml/preferences_tracks.xml",
+        "purpose": "Independent upload intent; registration and connectivity defer delivery without clearing this choice."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/sectioned-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:config-keys-preferences-track-send"
+    ]
+  }
+}

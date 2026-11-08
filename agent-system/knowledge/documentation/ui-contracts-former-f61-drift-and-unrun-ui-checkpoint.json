@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-contracts-former-f61-drift-and-unrun-ui-checkpoint",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:ui-contracts"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ui-contracts.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "`WF-SYNC-CLOCK-STORE` намеренно остаётся исходным F61 fingerprint: отдельный own",
+        "maplib clock fix ещё требует Merge Commit, app pointer и semantic pin review.",
+        "Предыдущая официальная проверка контура38/128/14 показала один известный",
+        "clock drift и **не являлась PASS**. Указанные39/134/17 относятся к сохранённому NGFP source-checkpoint. Дополнение",
+        "39/142/19 само по себе не является validator PASS: официальный полный запуск",
+        "должен сообщать реальные текущие результаты, включая отдельный F61 clock drift. Последний фактический запуск прежнего NGFP контура39/134/17 принят как",
+        "структурный source-каталог, но полный validator NOT_PASS ровно на прежнем",
+        "WF-SYNC-CLOCK-STORE;57 docs tests дали53 PASS/4 FAIL от того же clock guard.",
+        "Для нового39/142/19 полный запуск после интеграции ещё NOT_RUN. Actual lookup9",
+        "JVM относятся к отдельному cache producer, не к выполнению UI каталога. Другие app rows проверяются по текущим bytes;",
+        "альтернативных hashes, фильтра результата или обхода checker нет."
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "The reported NOT_PASS and missing integration evidence belong to the earlier 39-contract frames."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-contracts-former-f61-drift-and-unrun-ui-checkpoint"
+    ]
+  }
+}

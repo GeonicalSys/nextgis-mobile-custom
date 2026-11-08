@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:automated-tests-firefly-and-style-editor-native-routes",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Точечные стили и «Светлячок»",
+        "",
+        "`tools\\verify-mobile-tests.ps1 -Scope Related -Area styles` выполняет 16 native",
+        "rendering cases, сценарий редактора с 72 локальными профилями и отдельный переход",
+        "живого точечного tile-слоя к classic fallback (18 native cases). Явные",
+        "`-PhoneSerial <serial> -PhoneOnly` разрешают только неподвижные проверки в",
+        "verification APK. Тесты не меняют системные font/display настройки смартфона.",
+        "Pixel evidence сохраняется в `files/firefly-qa` изолированного приложения;",
+        "квитанция runner содержит точные исходы. [Контракт](../architecture/point-firefly.md).",
+        "Full по-прежнему выполняется отдельно перед публикацией.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:automated-tests-firefly-and-style-editor-native-routes"
+    ]
+  }
+}

@@ -1,0 +1,127 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-location-display-freshness",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-LOCATION-DISPLAY-FRESHNESS"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-LOCATION-DISPLAY-FRESHNESS",
+        "group": "location",
+        "title": "Свежая и сохранённая сетевая позиция",
+        "surface": "Status coordinates and source age",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [
+          "tv_latitude",
+          "tv_longitude",
+          "tv_source",
+          "tv_accuracy"
+        ],
+        "meaning": "Display can retain an eligible older Network fix; this does not make it a fresh measurement or recording point. No usable display value clears coordinates/accuracy to n/a.",
+        "value_origin": "getLastKnownLocation fresh GPS/Network policy -> getLastDisplayLocation optional Network retention/age extra -> fillTextViews/defaults",
+        "units": "Measurement age since boot; seconds rounded to5s after freshness limit. Source constants: fresh8s/future tolerance1s.",
+        "updates": [
+          "Current fixes and retained Network display age; unavailable callback clears panel/cursor."
+        ],
+        "actions": [
+          "Wait beyond freshness or remove eligibility; visible text alone does not prove recording availability."
+        ],
+        "conditions": [
+          "Location permissions/provider enabled; external input cannot use system Network retention."
+        ],
+        "saved_state": "Display retention preserves raw measurement timestamps and does not rewrite project/device records.",
+        "source_ids": [
+          "gps-current-fix",
+          "gps-display-retention",
+          "gps-recording-fix",
+          "fix-freshness",
+          "map-status-location",
+          "map-status-empty",
+          "map-location-unavailable"
+        ],
+        "expectations": [
+          "Old retained Network coordinates must be distinguished by source/age and never described as fresh GPS.",
+          "Without usable display fix show n/a. Counterexample: camera centre is not a fallback phone fix."
+        ],
+        "unknowns": [
+          "Runtime NOT_RUN: no GUI, device, emulator, build or APK resource merge acceptance in this task.",
+          "Periodic subscription/tick lifecycle and actual permission transitions not exhaustively audited."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-gps-current-fix",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-gps-display-retention",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-gps-recording-fix",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-fix-freshness",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-map-status-location",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-map-status-empty",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-map-location-unavailable",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-location-display-freshness"
+    ]
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-14-d49cd81d6136",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-14 — Общая история треков и native проверки стилей",
+        "",
+        "- SharedTrackStore переносит проектные истории/очереди в общую базу, сохраняя",
+        "  исходники и переключение-запрет при записи; один слой на каждой карте.",
+        "- Исправлены наследование всех optional labels и explicit false/default при",
+        "  rule JSON reload. Native styles матрица исключает configured local-vector-tiles.",
+        "- Native constant label/icon/line/fill settings получают фильтрованные rendering",
+        "  children; category curves и custom dashes проверяются реальной отрисовкой.",
+        "- Исправлен SDF-порог встроенных маркеров: тонкий крест больше не исчезает.",
+        "- Новые migration/common-history/style cases включены в Related/Full каталог.",
+        "  Ранее выполненный Full receipt больше не соответствует новому runtime.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-14",
+        "heading": "2026-10-14 — Общая история треков и native проверки стилей",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-14-d49cd81d6136"
+    ]
+  }
+}

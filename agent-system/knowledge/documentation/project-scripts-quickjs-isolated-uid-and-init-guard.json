@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:project-scripts-quickjs-isolated-uid-and-init-guard",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:project-scripts"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the NGFP or project-rule subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/project-scripts.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Изоляция и бюджеты",
+        "",
+        "QuickJS 2026-06-04 (MIT) собран из проверенного официального исходника; источник,",
+        "SHA-256 и лицензия находятся в `maplib/src/main/cpp/README.md`. JNI не включает",
+        "quickjs-libc, Java reflection или arbitrary host dispatch. Service",
+        "`exported=false`, `isolatedProcess=true`, отдельный Android UID; Binder принимает",
+        "выполнение только от основного UID приложения. Application обеих библиотек и",
+        "app выходит до чтения prefs, карт, accounts, GPS и логгеров в sandbox.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:project-scripts-quickjs-isolated-uid-and-init-guard"
+    ]
+  }
+}

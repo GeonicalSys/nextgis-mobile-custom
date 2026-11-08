@@ -1,0 +1,2087 @@
+{
+  "schema_version": 1,
+  "registries": {
+    "invariants": {
+      "source": {
+        "repository": "android_projects/android_gisapp",
+        "path": "docs/registry/invariants.yaml",
+        "revision": "6948b5c29361ab7b998db0609880a88078e92210",
+        "blob": "0d25da3907c3fe83e03c6663fbcd891116a334f0",
+        "sha256_utf8_lf": "038ac7aefc06cc8af0d79f495266aaac1abe5115ff0c29e25e71112df373a9ec"
+      },
+      "header": {
+        "lines": [
+          1,
+          2
+        ],
+        "sha256_utf8_lf": "a83ac25bbbcf680c26c16fbb0ece5591f4ec1f5a89172d3a9ab92f9754b8d918",
+        "target": "lisa:mobile:metadata:invariants-registry"
+      },
+      "entries": [
+        {
+          "key": "INV-UI-VALUE-PROVENANCE",
+          "lines": [
+            3,
+            17
+          ],
+          "sha256_utf8_lf": "59dae0e78e8a47c2cb8c7c3bc0c0926a3469d6574ad3bbd75fddad0681f0dd44",
+          "target": "lisa:mobile:contract:invariants-inv-ui-value-provenance"
+        },
+        {
+          "key": "INV-GPS-CACHE-WITNESS",
+          "lines": [
+            18,
+            39
+          ],
+          "sha256_utf8_lf": "0c0833f9217791c7b8f79855348b20cbed1b91c491f59ff3d2ad225dc99a9180",
+          "target": "lisa:mobile:contract:invariants-inv-gps-cache-witness"
+        },
+        {
+          "key": "INV-LOCAL-TILE-CACHE-ADMISSION",
+          "lines": [
+            40,
+            74
+          ],
+          "sha256_utf8_lf": "5efa103fa73b930c225e57a806ed23465f7a44e86f16b1915482f0a3f025ba41",
+          "target": "lisa:mobile:contract:invariants-inv-local-tile-cache-admission"
+        },
+        {
+          "key": "INV-SQLITE-NATIVE-VECTORS",
+          "lines": [
+            75,
+            136
+          ],
+          "sha256_utf8_lf": "7473d3bcb378d0843e01e4a0b1890f5f08cbf9233f2ab0da073dfa050da2c17e",
+          "target": "lisa:mobile:contract:invariants-inv-sqlite-native-vectors"
+        },
+        {
+          "key": "INV-RENDER-MEMORY-PRESSURE",
+          "lines": [
+            137,
+            178
+          ],
+          "sha256_utf8_lf": "3243d907d92d56d85280b6b6fd94e1d466c191442ef964a30abac5c1c4629f26",
+          "target": "lisa:mobile:contract:invariants-inv-render-memory-pressure"
+        },
+        {
+          "key": "INV-NATIVE-GEOJSON-PAYLOAD",
+          "lines": [
+            179,
+            207
+          ],
+          "sha256_utf8_lf": "a37e00f756c2265b8d3f461c71c3dcab4f8f77dab75d632042bdc52ce725da06",
+          "target": "lisa:mobile:contract:invariants-inv-native-geojson-payload"
+        },
+        {
+          "key": "INV-RENDER-MEMORY-NOTICE",
+          "lines": [
+            208,
+            231
+          ],
+          "sha256_utf8_lf": "19da701233711d76d20d1836d1832a36e7b22f66c8ab6c0c0516de960924aa3e",
+          "target": "lisa:mobile:contract:invariants-inv-render-memory-notice"
+        },
+        {
+          "key": "INV-LOCAL-VECTOR-TILE-OFFLINE-TRANSPORT",
+          "lines": [
+            232,
+            251
+          ],
+          "sha256_utf8_lf": "76e610a9df8d98f2b1712f7af3b93c7f1c70e623481aa993d590dc5a6025db79",
+          "target": "lisa:mobile:contract:invariants-inv-local-vector-tile-offline-transport"
+        },
+        {
+          "key": "INV-MIXED-MAP-CANDIDATES",
+          "lines": [
+            252,
+            258
+          ],
+          "sha256_utf8_lf": "61f2adeea2c5c182ee08549bb065e3aeb5e4d1397b150ddb450eec4719741d10",
+          "target": "lisa:mobile:contract:invariants-inv-mixed-map-candidates"
+        },
+        {
+          "key": "INV-FIELD-LINE-DISPLAY-PRIORITY",
+          "lines": [
+            259,
+            265
+          ],
+          "sha256_utf8_lf": "b9bfc6608d8b3fc7a7679dae7a93a1d1585aa4f5edeea243b183c44dee671136",
+          "target": "lisa:mobile:contract:invariants-inv-field-line-display-priority"
+        },
+        {
+          "key": "INV-MAINTENANCE-REMINDERS",
+          "lines": [
+            266,
+            277
+          ],
+          "sha256_utf8_lf": "1240884d61344f68995ada9aab1aa3c5173deccd05a8542236b78bc998f8c3ca",
+          "target": "lisa:mobile:contract:invariants-inv-maintenance-reminders"
+        },
+        {
+          "key": "INV-POLYGON-STYLE-CONTROLS",
+          "lines": [
+            278,
+            290
+          ],
+          "sha256_utf8_lf": "45376ca91532fad0de5839291667c2ebe30e5bfff648af3c7800859ea2a46023",
+          "target": "lisa:mobile:contract:invariants-inv-polygon-style-controls"
+        },
+        {
+          "key": "INV-POINT-FIREFLY",
+          "lines": [
+            291,
+            315
+          ],
+          "sha256_utf8_lf": "d212206d583a84f2750b9e0123b359e9875799b53c47c0c39b207369586893b4",
+          "target": "lisa:mobile:contract:invariants-inv-point-firefly"
+        },
+        {
+          "key": "INV-FEATURE-COPY",
+          "lines": [
+            316,
+            325
+          ],
+          "sha256_utf8_lf": "5679dac4e7e154d2aeb9afb28799bd113f23d94817ab4728852f46c32b2373b2",
+          "target": "lisa:mobile:contract:invariants-inv-feature-copy"
+        },
+        {
+          "key": "INV-WHOLE-OBJECT-TRANSFORM",
+          "lines": [
+            326,
+            336
+          ],
+          "sha256_utf8_lf": "6d72456172514c20fa85ec393b47612c10a109652656e6f6cafe8680a9416cd3",
+          "target": "lisa:mobile:contract:invariants-inv-whole-object-transform"
+        },
+        {
+          "key": "INV-MOBILE-USAGE",
+          "lines": [
+            337,
+            343
+          ],
+          "sha256_utf8_lf": "4d0e535301dd3a4c832ba093abe5b10542ed3aad517d61bce8c1ba2712eb219c",
+          "target": "lisa:mobile:contract:invariants-inv-mobile-usage"
+        },
+        {
+          "key": "INV-VISIBLE-LINE-LABELS",
+          "lines": [
+            344,
+            350
+          ],
+          "sha256_utf8_lf": "8ea73dbc4dc2afb0204bca426b635abd4d7bde947a8ff3898e23e5bdd0a1a6b2",
+          "target": "lisa:mobile:contract:invariants-inv-visible-line-labels"
+        },
+        {
+          "key": "INV-SHARED-TRACKS",
+          "lines": [
+            351,
+            357
+          ],
+          "sha256_utf8_lf": "2efa14b13dbc4aa79c3a1387f1d528ab2b38536bcea7eeab40a71d631fd6d602",
+          "target": "lisa:mobile:contract:invariants-inv-shared-tracks"
+        },
+        {
+          "key": "INV-CLASSIC-RULE-LABELS",
+          "lines": [
+            358,
+            364
+          ],
+          "sha256_utf8_lf": "d9cec2cecdd12361cc0df32e21edd31e87b03b5dbd353f6cb7acedc75d903be0",
+          "target": "lisa:mobile:contract:invariants-inv-classic-rule-labels"
+        },
+        {
+          "key": "INV-SCROLLING-DIALOG-VIEWPORT",
+          "lines": [
+            365,
+            371
+          ],
+          "sha256_utf8_lf": "b7d0d9362a865ba8c3fd5ed7b9e7a7bc14543371e8430be8d72fdd40f36634aa",
+          "target": "lisa:mobile:contract:invariants-inv-scrolling-dialog-viewport"
+        },
+        {
+          "key": "INV-MOBILE-PUBLICATION-ACCEPTANCE",
+          "lines": [
+            372,
+            379
+          ],
+          "sha256_utf8_lf": "062cafc313117fe8de81eab3cd18feeee67f8162eb2de293b5f7589f439b18de",
+          "target": "lisa:mobile:contract:invariants-inv-mobile-publication-acceptance"
+        },
+        {
+          "key": "INV-PROJECT-SYNC-COMPLETION",
+          "lines": [
+            380,
+            409
+          ],
+          "sha256_utf8_lf": "f476e2ce5d41caa91c89017fb2090b648dfb5759c2b0422e099f18efa527713a",
+          "target": "lisa:mobile:contract:invariants-inv-project-sync-completion"
+        },
+        {
+          "key": "INV-UI-VISIBLE-BOUNDS",
+          "lines": [
+            410,
+            427
+          ],
+          "sha256_utf8_lf": "12b1781b41d10024992aaeeb38f28021d286680fe35062309a7df96b179d2076",
+          "target": "lisa:mobile:contract:invariants-inv-ui-visible-bounds"
+        },
+        {
+          "key": "INV-TRACK-DELIVERY",
+          "lines": [
+            428,
+            434
+          ],
+          "sha256_utf8_lf": "2a1eeaed242e9546b9c0c387378c5a47339f50c43d4fe58538248baca63988ad",
+          "target": "lisa:mobile:contract:invariants-inv-track-delivery"
+        },
+        {
+          "key": "INV-FEATURE-TYPE-CREATION",
+          "lines": [
+            435,
+            441
+          ],
+          "sha256_utf8_lf": "e675e91410eaa276bb324762e23f2c5c1a70fd2f9b59c4d4801c339bf817a4ef",
+          "target": "lisa:mobile:contract:invariants-inv-feature-type-creation"
+        },
+        {
+          "key": "INV-CONDITIONAL-REQUIRED",
+          "lines": [
+            442,
+            448
+          ],
+          "sha256_utf8_lf": "3959000827e59eaf9a127a5236d8e3c12f0614f56bbbb0f0f9a28ca7f40e5d5f",
+          "target": "lisa:mobile:contract:invariants-inv-conditional-required"
+        },
+        {
+          "key": "INV-CASCADING-FORM-LISTS",
+          "lines": [
+            449,
+            467
+          ],
+          "sha256_utf8_lf": "fcebf230a529e9b8bace642b8dab765a891172a5df6fb3373bfc20d5b95bef38",
+          "target": "lisa:mobile:contract:invariants-inv-cascading-form-lists"
+        },
+        {
+          "key": "INV-PROJECT-SCRIPTS",
+          "lines": [
+            468,
+            480
+          ],
+          "sha256_utf8_lf": "8880927e583d44086f8314cdf57abb79a48a1e5e7b6479a6a0c3426784b8137c",
+          "target": "lisa:mobile:contract:invariants-inv-project-scripts"
+        },
+        {
+          "key": "INV-REQUIRED-FIELDS",
+          "lines": [
+            481,
+            503
+          ],
+          "sha256_utf8_lf": "f408a4f1bdb0dddbebdb9f0ff954dfadabdf85a0cba335f61fef4ea982740e24",
+          "target": "lisa:mobile:contract:invariants-inv-required-fields"
+        },
+        {
+          "key": "INV-LOCAL-WRITE-COMMIT",
+          "lines": [
+            504,
+            519
+          ],
+          "sha256_utf8_lf": "53d3d1ec6dfaa948956fa93353b727d5a49fa0008d13948616576427f91f9263",
+          "target": "lisa:mobile:contract:invariants-inv-local-write-commit"
+        },
+        {
+          "key": "INV-TRACK-RETRY",
+          "lines": [
+            520,
+            534
+          ],
+          "sha256_utf8_lf": "63bb55a009660a29c7277d4bf6e4f908526734573e2c5d47bc2bbd859e1079fc",
+          "target": "lisa:mobile:contract:invariants-inv-track-retry"
+        },
+        {
+          "key": "INV-TOOL-TAP-TOLERANCE",
+          "lines": [
+            535,
+            549
+          ],
+          "sha256_utf8_lf": "11a3a68f98f0d6b33e57fc3dc7a01d6191bb1f806fe003dc46f2fff545d45ecb",
+          "target": "lisa:mobile:contract:invariants-inv-tool-tap-tolerance"
+        },
+        {
+          "key": "INV-NGID-LOGIN",
+          "lines": [
+            550,
+            561
+          ],
+          "sha256_utf8_lf": "eefcf385fb689942558df6f64164dc6d979bde86eae5f76d35e235fbf631f6de",
+          "target": "lisa:mobile:contract:invariants-inv-ngid-login"
+        },
+        {
+          "key": "INV-SHARED-UNDERLAYS",
+          "lines": [
+            562,
+            573
+          ],
+          "sha256_utf8_lf": "6fc3112779e735d086393a35a91579efaa1183e1f28137af4c0dab0655c9604d",
+          "target": "lisa:mobile:contract:invariants-inv-shared-underlays"
+        },
+        {
+          "key": "INV-DEBUG-COMPANION",
+          "lines": [
+            574,
+            583
+          ],
+          "sha256_utf8_lf": "a91ea6e125f30d3b4e7b5fa9e84111e88dcdd47cd037eb51c1fb6cc9426b1a9e",
+          "target": "lisa:mobile:contract:invariants-inv-debug-companion"
+        },
+        {
+          "key": "INV-FLAVORS",
+          "lines": [
+            584,
+            596
+          ],
+          "sha256_utf8_lf": "48f8f0be17584b8071d8f2f902989aacc591b5ef3077b5fcb5340bf53298c69e",
+          "target": "lisa:mobile:contract:invariants-inv-flavors"
+        },
+        {
+          "key": "INV-VERSION-COUPLING",
+          "lines": [
+            597,
+            608
+          ],
+          "sha256_utf8_lf": "7d70d7a02c1168a9cf43ec7c5ba63e12f09f8c57efb8cddc2de6d1d790d2d5ba",
+          "target": "lisa:mobile:contract:invariants-inv-version-coupling"
+        },
+        {
+          "key": "INV-MAPLIBRE-BACKEND-COMPATIBILITY",
+          "lines": [
+            609,
+            624
+          ],
+          "sha256_utf8_lf": "ddfea9d47931787d5ac0ba16610b765ec8c3529afacc52e4fc93d2eba51e7890",
+          "target": "lisa:mobile:contract:invariants-inv-maplibre-backend-compatibility"
+        },
+        {
+          "key": "INV-MAPLIBRE-VIEW-LIFECYCLE",
+          "lines": [
+            625,
+            658
+          ],
+          "sha256_utf8_lf": "c53d29ee0ab244ef2145c14685c73a5b080e0d1b5a5c4a47d0e0849db1095c67",
+          "target": "lisa:mobile:contract:invariants-inv-maplibre-view-lifecycle"
+        },
+        {
+          "key": "INV-NGW-ACCOUNT-IDENTITY",
+          "lines": [
+            659,
+            675
+          ],
+          "sha256_utf8_lf": "ab682f96ed58354e9792561e6862a0e532a4e1d17537892d2d43389a7162dcd8",
+          "target": "lisa:mobile:contract:invariants-inv-ngw-account-identity"
+        },
+        {
+          "key": "INV-NGW-RESOURCE-DIALOG-LIFECYCLE",
+          "lines": [
+            676,
+            690
+          ],
+          "sha256_utf8_lf": "a03e7d7cf05419d7c27f7e3b0d9f50cfb89d318a3532b2be9a1f82cc4089fa44",
+          "target": "lisa:mobile:contract:invariants-inv-ngw-resource-dialog-lifecycle"
+        },
+        {
+          "key": "INV-LAYER-ORDER",
+          "lines": [
+            691,
+            700
+          ],
+          "sha256_utf8_lf": "eed03dc033383d36b166d67e8fd3b669b60dac467b3035c3eece011e72531061",
+          "target": "lisa:mobile:contract:invariants-inv-layer-order"
+        },
+        {
+          "key": "INV-DEFAULT-OSM-BOTTOM",
+          "lines": [
+            701,
+            712
+          ],
+          "sha256_utf8_lf": "976eed866ba6e9abf43416d311f4008e8cff3bef7d36149c218d714781027074",
+          "target": "lisa:mobile:contract:invariants-inv-default-osm-bottom"
+        },
+        {
+          "key": "INV-TRACK-LAYER-TOP",
+          "lines": [
+            713,
+            724
+          ],
+          "sha256_utf8_lf": "d8ed593a5079a01b5bac9fad1c604aee0904cb44f5723f68f16f35710cac8682",
+          "target": "lisa:mobile:contract:invariants-inv-track-layer-top"
+        },
+        {
+          "key": "INV-HOT-ADD-CONSISTENCY",
+          "lines": [
+            725,
+            736
+          ],
+          "sha256_utf8_lf": "a83987836b392c3faf36d03fa5b7f016763059bd614e1e5a18ecc48b321db6ca",
+          "target": "lisa:mobile:contract:invariants-inv-hot-add-consistency"
+        },
+        {
+          "key": "INV-NO-TRACK-FLAGS",
+          "lines": [
+            737,
+            746
+          ],
+          "sha256_utf8_lf": "b799676dee5027b4c90181ece16e78d746846e339d0a5a1d7830b1d23aecc43d",
+          "target": "lisa:mobile:contract:invariants-inv-no-track-flags"
+        },
+        {
+          "key": "INV-LOCATION-CURSOR-TOP",
+          "lines": [
+            747,
+            761
+          ],
+          "sha256_utf8_lf": "43a4952d63ed5eca6e1fa5f9997a51474bd3d6182755f8fa89ef14a6cf5ba230",
+          "target": "lisa:mobile:contract:invariants-inv-location-cursor-top"
+        },
+        {
+          "key": "INV-MAP-CAMERA-CONTROLS",
+          "lines": [
+            762,
+            794
+          ],
+          "sha256_utf8_lf": "9b89554c1a32d3b131f62294cce5434c8d4d1fb4a362c5053e3b98b9b0646c63",
+          "target": "lisa:mobile:contract:invariants-inv-map-camera-controls"
+        },
+        {
+          "key": "INV-UNDERLAY-DISPLAY",
+          "lines": [
+            795,
+            812
+          ],
+          "sha256_utf8_lf": "99de8eec8b02c69c5d61332c64cb317c971e6e837920f501f4720a10af1a4a40",
+          "target": "lisa:mobile:contract:invariants-inv-underlay-display"
+        },
+        {
+          "key": "INV-COLLECTOR-RESOURCE",
+          "lines": [
+            813,
+            823
+          ],
+          "sha256_utf8_lf": "2f375b6245ddcfce741ae5b0320ad57fc2ea1279bd5ab63bc4a495759ded9a25",
+          "target": "lisa:mobile:contract:invariants-inv-collector-resource"
+        },
+        {
+          "key": "INV-COLLECTOR-LAYER-IDENTITY",
+          "lines": [
+            824,
+            847
+          ],
+          "sha256_utf8_lf": "eef5580d079524fd106e9b4efb2a4d6145385df9681c3e4c04c8b9af75ef15d9",
+          "target": "lisa:mobile:contract:invariants-inv-collector-layer-identity"
+        },
+        {
+          "key": "INV-COLLECTOR-RASTER-STYLES",
+          "lines": [
+            848,
+            863
+          ],
+          "sha256_utf8_lf": "ecb25740e1f361d7f11ab7658c00395c2c15500bff1f405beeff2462cb24008f",
+          "target": "lisa:mobile:contract:invariants-inv-collector-raster-styles"
+        },
+        {
+          "key": "INV-COLLECTOR-ISOLATION",
+          "lines": [
+            864,
+            889
+          ],
+          "sha256_utf8_lf": "dab7d61cf827de810968d0806418f97a098bccd60cc91d28b275ac594e6ddd4d",
+          "target": "lisa:mobile:contract:invariants-inv-collector-isolation"
+        },
+        {
+          "key": "INV-COLLECTOR-EDITABILITY",
+          "lines": [
+            890,
+            911
+          ],
+          "sha256_utf8_lf": "6dfb79217ec2b756814d0f7243175873032d4fb04e92e7799d8748724afd67c1",
+          "target": "lisa:mobile:contract:invariants-inv-collector-editability"
+        },
+        {
+          "key": "INV-COLLECTOR-RESUMABLE",
+          "lines": [
+            912,
+            931
+          ],
+          "sha256_utf8_lf": "7ce6bb6147cffb7fe7ba58f9f21cf71c7140689a95c9b92484c4bd3bdcc36bfe",
+          "target": "lisa:mobile:contract:invariants-inv-collector-resumable"
+        },
+        {
+          "key": "INV-COLLECTOR-FORM-ATOMIC",
+          "lines": [
+            932,
+            942
+          ],
+          "sha256_utf8_lf": "4a14335fb3781b3c806b20b5e13cd16f5e86d9834f76bc16259af5cac7c4a157",
+          "target": "lisa:mobile:contract:invariants-inv-collector-form-atomic"
+        },
+        {
+          "key": "INV-NGRC-PRESERVE",
+          "lines": [
+            943,
+            953
+          ],
+          "sha256_utf8_lf": "82f451f3ab947acbb76702bded6ad2d0d1cb9a8a355afed619c0c3855a1e5b9b",
+          "target": "lisa:mobile:contract:invariants-inv-ngrc-preserve"
+        },
+        {
+          "key": "INV-LEGACY-UNDERLAY-MIGRATION",
+          "lines": [
+            954,
+            1001
+          ],
+          "sha256_utf8_lf": "e0c90c774e4268bbad8573cd303ac62e0e84ec26e25312b21bdc376e6d3cdee3",
+          "target": "lisa:mobile:contract:invariants-inv-legacy-underlay-migration"
+        },
+        {
+          "key": "INV-BACKUP-BEFORE-DESTRUCTION",
+          "lines": [
+            1002,
+            1034
+          ],
+          "sha256_utf8_lf": "c2bdad0216b345fe08f330f3fb12dee50519aa3af6780959976ff2b6318dd931",
+          "target": "lisa:mobile:contract:invariants-inv-backup-before-destruction"
+        },
+        {
+          "key": "INV-MULTIPOLYGON-REPAIR",
+          "lines": [
+            1035,
+            1059
+          ],
+          "sha256_utf8_lf": "06c1c877bfd3cd7d61e7f9f6ae3700003def62e6127cf64abf5b1b10ac21fd66",
+          "target": "lisa:mobile:contract:invariants-inv-multipolygon-repair"
+        },
+        {
+          "key": "INV-GEOMETRY-SKETCH-WORKFLOW",
+          "lines": [
+            1060,
+            1139
+          ],
+          "sha256_utf8_lf": "d7f04cb64dbbad5638bdb7f9f4537693b1e90174e09c7f597d76a44bbcb96ec0",
+          "target": "lisa:mobile:contract:invariants-inv-geometry-sketch-workflow"
+        },
+        {
+          "key": "INV-GPS-TRACK-FILTER",
+          "lines": [
+            1140,
+            1244
+          ],
+          "sha256_utf8_lf": "8f5380252eab5ff2fc824c10497d815fa3d806be3992f8e632503260dcf8c4ec",
+          "target": "lisa:mobile:contract:invariants-inv-gps-track-filter"
+        },
+        {
+          "key": "INV-STAKEOUT-GUIDANCE",
+          "lines": [
+            1245,
+            1314
+          ],
+          "sha256_utf8_lf": "cfabaed13356a6da03d304609b3b0ca8839afecbfba480c810ced5b059fe685f",
+          "target": "lisa:mobile:contract:invariants-inv-stakeout-guidance"
+        },
+        {
+          "key": "INV-LOCAL-LOG-STARTUP",
+          "lines": [
+            1315,
+            1325
+          ],
+          "sha256_utf8_lf": "a02c7470670a256716885507622bf04b339370790c04dfcde5cbfcaaf5274d1b",
+          "target": "lisa:mobile:contract:invariants-inv-local-log-startup"
+        },
+        {
+          "key": "INV-BACKGROUND-LOCATION-WARNING",
+          "lines": [
+            1326,
+            1342
+          ],
+          "sha256_utf8_lf": "bcc82d6894917ef541688f016edcd2e7c64178108e4f19ae863d3aee005ee75c",
+          "target": "lisa:mobile:contract:invariants-inv-background-location-warning"
+        },
+        {
+          "key": "INV-SQLITE-BOUNDED-ORIGINAL-READS",
+          "lines": [
+            1343,
+            1371
+          ],
+          "sha256_utf8_lf": "1a61dd9332b08c29c88b0403b9921f181f5cc409dcae6f7656996267e3c07047",
+          "target": "lisa:mobile:contract:invariants-inv-sqlite-bounded-original-reads"
+        },
+        {
+          "key": "INV-SQLITE-PHASE-DIAGNOSTICS",
+          "lines": [
+            1372,
+            1395
+          ],
+          "sha256_utf8_lf": "6b1ad89dba92667ef95c99bf2bb6abe0eb0c30eb83b362703a51d4e2b5820f45",
+          "target": "lisa:mobile:contract:invariants-inv-sqlite-phase-diagnostics"
+        },
+        {
+          "key": "INV-DIAGNOSTIC-DELIVERY",
+          "lines": [
+            1396,
+            1438
+          ],
+          "sha256_utf8_lf": "f429ce33ed0de65f1152dd6205177543ebb2db60e10e85534326c88dcbf42e30",
+          "target": "lisa:mobile:contract:invariants-inv-diagnostic-delivery"
+        },
+        {
+          "key": "INV-CRASH-DRAFT-RECOVERY",
+          "lines": [
+            1439,
+            1492
+          ],
+          "sha256_utf8_lf": "0f2c7c1b646973a646aaf0c492884e506dd8c03ce0c0f97f24ac7fd925d74f1d",
+          "target": "lisa:mobile:contract:invariants-inv-crash-draft-recovery"
+        },
+        {
+          "key": "INV-UPDATER-IDENTITY",
+          "lines": [
+            1493,
+            1506
+          ],
+          "sha256_utf8_lf": "f9b4224c8ce77528c50a22d8a641806cd927ed180d5290d32ee46c06ae5cb837",
+          "target": "lisa:mobile:contract:invariants-inv-updater-identity"
+        },
+        {
+          "key": "INV-UPDATER-PERMISSION-RESUME",
+          "lines": [
+            1507,
+            1518
+          ],
+          "sha256_utf8_lf": "0979d47a8976042da2d41a6b33cf4ccddb7a2f8d26308030cef7b70e37f642d6",
+          "target": "lisa:mobile:contract:invariants-inv-updater-permission-resume"
+        },
+        {
+          "key": "INV-UPDATER-BACKGROUND",
+          "lines": [
+            1519,
+            1531
+          ],
+          "sha256_utf8_lf": "053809c66933490b037624b5e169a4270400ee8305498993f2bc5667a3a2e504",
+          "target": "lisa:mobile:contract:invariants-inv-updater-background"
+        },
+        {
+          "key": "INV-UPDATER-AUTO-RETRY",
+          "lines": [
+            1532,
+            1547
+          ],
+          "sha256_utf8_lf": "1cf021a791c1c631980c0281e5dcd8a6befd7a97b1af730a1653bc191519c82b",
+          "target": "lisa:mobile:contract:invariants-inv-updater-auto-retry"
+        },
+        {
+          "key": "INV-NGW-URL-IMPORT",
+          "lines": [
+            1548,
+            1561
+          ],
+          "sha256_utf8_lf": "24cb3a8176f567ac58f35e5b7d439c07e8fc0d1a831284bbba776a67164402a6",
+          "target": "lisa:mobile:contract:invariants-inv-ngw-url-import"
+        },
+        {
+          "key": "INV-SYNC-NOTIFICATIONS",
+          "lines": [
+            1562,
+            1582
+          ],
+          "sha256_utf8_lf": "a0beed93b767cb300816806aff55662870f97a336d6951ec7b3a0f61fecf154b",
+          "target": "lisa:mobile:contract:invariants-inv-sync-notifications"
+        },
+        {
+          "key": "INV-SYNC-ACCOUNT-ISOLATION",
+          "lines": [
+            1583,
+            1594
+          ],
+          "sha256_utf8_lf": "025c0c4e26e47dcaebe61b1262c9e3ed6ed04699ff71bedd643d9e271cb03586",
+          "target": "lisa:mobile:contract:invariants-inv-sync-account-isolation"
+        },
+        {
+          "key": "INV-PROJECT-OPERATION-EXCLUSION",
+          "lines": [
+            1595,
+            1656
+          ],
+          "sha256_utf8_lf": "eed2a08a8f9fb5cdfc9d6fd0a8ce32d2eef102e722eb6aca6aaffd7491ea296b",
+          "target": "lisa:mobile:contract:invariants-inv-project-operation-exclusion"
+        },
+        {
+          "key": "INV-SPATIAL-CACHE-CONSISTENCY",
+          "lines": [
+            1657,
+            1685
+          ],
+          "sha256_utf8_lf": "fe47a96f1a5c20cbde9ae86510f3e20488e2c08e208a556d8dcb4ac6beebeeb0",
+          "target": "lisa:mobile:contract:invariants-inv-spatial-cache-consistency"
+        },
+        {
+          "key": "INV-ECOSYSTEM-SERVER-BOUNDARY",
+          "lines": [
+            1686,
+            1698
+          ],
+          "sha256_utf8_lf": "096d4c1168fe13b06be1f3d63c827a5976f9bb4fe75bcaf896c5fdb44747912c",
+          "target": "lisa:mobile:contract:invariants-inv-ecosystem-server-boundary"
+        },
+        {
+          "key": "INV-LOCAL-VECTOR-LAYERS",
+          "lines": [
+            1699,
+            1729
+          ],
+          "sha256_utf8_lf": "fec3d5b4103cf950ee4d8bb280bba7d8d1a1f1ab3d25b8e2f69451fef824c2f7",
+          "target": "lisa:mobile:contract:invariants-inv-local-vector-layers"
+        },
+        {
+          "key": "INV-HIDDEN-VECTOR-TILE-IDENTIFY",
+          "lines": [
+            1730,
+            1750
+          ],
+          "sha256_utf8_lf": "996411b775c63874a0a7946ea904e4cbd74e6afd8788f5e5e39e317cbb407b5e",
+          "target": "lisa:mobile:contract:invariants-inv-hidden-vector-tile-identify"
+        },
+        {
+          "key": "INV-LOCAL-VECTOR-TILE-RESOURCE-BOUNDS",
+          "lines": [
+            1751,
+            1775
+          ],
+          "sha256_utf8_lf": "95abac5b9658eaacf81df5a2a060f5f30e8559a37b34fa3a35712aea40106778",
+          "target": "lisa:mobile:contract:invariants-inv-local-vector-tile-resource-bounds"
+        },
+        {
+          "key": "INV-LOCAL-VECTOR-TILE-LABELS",
+          "lines": [
+            1776,
+            1802
+          ],
+          "sha256_utf8_lf": "de0d8353ae60b2b387f7c4b5d373464efe1468192dfc1f2625971ce0fcef6822",
+          "target": "lisa:mobile:contract:invariants-inv-local-vector-tile-labels"
+        },
+        {
+          "key": "INV-PRIVATE-RESOURCE-PROFILING",
+          "lines": [
+            1803,
+            1824
+          ],
+          "sha256_utf8_lf": "07df4e6d7a64440de0ac4edf5932785938fccfe4883d666143703c780cf83a34",
+          "target": "lisa:mobile:contract:invariants-inv-private-resource-profiling"
+        },
+        {
+          "key": "INV-NGW-LOOKUP-CACHE-CONTENT",
+          "lines": [
+            1825,
+            1849
+          ],
+          "sha256_utf8_lf": "58decfcfc75b54dd8743bf6f69039d68d5c1d33fadae89612c8d049640c9ddab",
+          "target": "lisa:mobile:contract:invariants-inv-ngw-lookup-cache-content"
+        },
+        {
+          "key": "INV-NGFP-LOOKUP-PREFETCH-SCOPE",
+          "lines": [
+            1850,
+            1883
+          ],
+          "sha256_utf8_lf": "c24518e85970fbc12ef380a59009dc6f8c96a2f34b3cf7cce8222c72a5d64877",
+          "target": "lisa:mobile:contract:invariants-inv-ngfp-lookup-prefetch-scope"
+        },
+        {
+          "key": "INV-NGW-FULL-SNAPSHOT-ADMISSION",
+          "lines": [
+            1884,
+            1908
+          ],
+          "sha256_utf8_lf": "01b802f8d23a85cb92889393046143792f2007a339bedce2719ae16e1e717472",
+          "target": "lisa:mobile:contract:invariants-inv-ngw-full-snapshot-admission"
+        },
+        {
+          "key": "INV-NGW-USER-MESSAGES",
+          "lines": [
+            1909,
+            1931
+          ],
+          "sha256_utf8_lf": "b54e2c90b46bc38bf573c4fe90b535c1bcbef1b6c7d45c94e6776e99baf230e6",
+          "target": "lisa:mobile:contract:invariants-inv-ngw-user-messages"
+        },
+        {
+          "key": "INV-NGW-RESOURCE-CHECKBOX-SELECTION",
+          "lines": [
+            1932,
+            1956
+          ],
+          "sha256_utf8_lf": "ef914eada478f0a95f5671a7b4975342037788938b1e9da6273801cbdac5bd1c",
+          "target": "lisa:mobile:contract:invariants-inv-ngw-resource-checkbox-selection"
+        },
+        {
+          "key": "INV-VECTOR-SPATIAL-CACHE-RECOVERY",
+          "lines": [
+            1957,
+            1991
+          ],
+          "sha256_utf8_lf": "288fa0a7f82b9131c917f55cd8633d0a26d4c29e49a661a1a7d063868580fe78",
+          "target": "lisa:mobile:contract:invariants-inv-vector-spatial-cache-recovery"
+        },
+        {
+          "key": "INV-NGW-RESOURCE-ROW-TEXT-FIT",
+          "lines": [
+            1992,
+            2023
+          ],
+          "sha256_utf8_lf": "4f873c5bf1ff73e1d15227cac90416e353c0c578713edb6e2b7b7d935d4d53e3",
+          "target": "lisa:mobile:contract:invariants-inv-ngw-resource-row-text-fit"
+        },
+        {
+          "key": "INV-TRACK-SELECTED-GPX-SHARE",
+          "lines": [
+            2024,
+            2053
+          ],
+          "sha256_utf8_lf": "ef897b972f8c594b859ef9898ecebbc0d1ae86d63b92b12c7ea8ab1aff6d0f84",
+          "target": "lisa:mobile:contract:invariants-inv-track-selected-gpx-share"
+        }
+      ],
+      "complete_ordered_value_sha256": "f86a8a035c307ab722e635e9c2ab3f86822d89c831ba9cb338d6ed025708428b",
+      "source_line_count": 2053,
+      "mapping_field": "invariants"
+    },
+    "upstream-overlaps": {
+      "source": {
+        "repository": "android_projects/android_gisapp",
+        "path": "docs/registry/upstream-overlaps.yaml",
+        "revision": "6948b5c29361ab7b998db0609880a88078e92210",
+        "blob": "43e4b2e0a0ea825eaceda444ee1ff75065435e70",
+        "sha256_utf8_lf": "eed09b716883e57c6e8b93a2f5c6ba519717a3e2883d550737cc777feadb94c4"
+      },
+      "header": {
+        "lines": [
+          1,
+          2
+        ],
+        "sha256_utf8_lf": "7cc142fe85e4f5ead8812142a6cb94349b65502d9b9b59c802864c621bc60c28",
+        "target": "lisa:mobile:metadata:upstream-overlaps-registry"
+      },
+      "entries": [
+        {
+          "key": "POLYGON-STYLE-CONTROLS",
+          "lines": [
+            3,
+            9
+          ],
+          "sha256_utf8_lf": "7784aff63aa4fbb6007779f790af18a12b3af102253f4cfe31c61c3efbb39e47",
+          "target": "lisa:mobile:contract:upstream-overlaps-polygon-style-controls"
+        },
+        {
+          "key": "POINT-FIREFLY",
+          "lines": [
+            10,
+            16
+          ],
+          "sha256_utf8_lf": "995eaf99c4b4281024b80d25882383b50e61cff065cec36804ffa528c6aa84fa",
+          "target": "lisa:mobile:contract:upstream-overlaps-point-firefly"
+        },
+        {
+          "key": "GPS-PIPELINE",
+          "lines": [
+            17,
+            26
+          ],
+          "sha256_utf8_lf": "b46b2d8adcc7f8e7033eaa982a332e45f1104bbce181a5ad35fb4000718fd7f5",
+          "target": "lisa:mobile:contract:upstream-overlaps-gps-pipeline"
+        },
+        {
+          "key": "MAP-DRAWABLE",
+          "lines": [
+            27,
+            33
+          ],
+          "sha256_utf8_lf": "a18ce73b2e3e637537a00cea7c48b5879e3294f1fe2027e7ca596643dd4e16fe",
+          "target": "lisa:mobile:contract:upstream-overlaps-map-drawable"
+        },
+        {
+          "key": "RASTER-ANCHOR",
+          "lines": [
+            34,
+            40
+          ],
+          "sha256_utf8_lf": "d6bc3b9115a43cc5bd0cf8ad9ed8c10557dcf63d1f828ad330f97fe23aaf5884",
+          "target": "lisa:mobile:contract:upstream-overlaps-raster-anchor"
+        },
+        {
+          "key": "LAYER-FILL",
+          "lines": [
+            41,
+            55
+          ],
+          "sha256_utf8_lf": "17d82e626c0601a6b3ff06c07a2c02724a59dc21890a959011a48df52fb512ee",
+          "target": "lisa:mobile:contract:upstream-overlaps-layer-fill"
+        },
+        {
+          "key": "MAP-HOST",
+          "lines": [
+            56,
+            64
+          ],
+          "sha256_utf8_lf": "d63b8a53232283c850385478ac8b5653f22318df5449c7fec619aefe7f311f74",
+          "target": "lisa:mobile:contract:upstream-overlaps-map-host"
+        },
+        {
+          "key": "MAPLIBRE-BACKEND",
+          "lines": [
+            65,
+            71
+          ],
+          "sha256_utf8_lf": "ada2036c23cf51659b048ba211e9e83fe40d1465c2ebc319e42e3505d503e3f9",
+          "target": "lisa:mobile:contract:upstream-overlaps-maplibre-backend"
+        },
+        {
+          "key": "GEOMETRY-EDIT-HISTORY",
+          "lines": [
+            72,
+            79
+          ],
+          "sha256_utf8_lf": "64f2a6ab6cc747853f4a07863ef124aae497a9d2c13ed0fc225175711202e561",
+          "target": "lisa:mobile:contract:upstream-overlaps-geometry-edit-history"
+        },
+        {
+          "key": "COLLECTOR-RESOURCE",
+          "lines": [
+            80,
+            88
+          ],
+          "sha256_utf8_lf": "18629511cc3c08261340b4c662a96b9eb1ae54d119c4de8a2649f98d5bb23664",
+          "target": "lisa:mobile:contract:upstream-overlaps-collector-resource"
+        },
+        {
+          "key": "APP-FLAVORS",
+          "lines": [
+            89,
+            95
+          ],
+          "sha256_utf8_lf": "5970ac5bd179f757def075e13f43a74e959c919cc9b4364f943cb13e227c08be",
+          "target": "lisa:mobile:contract:upstream-overlaps-app-flavors"
+        },
+        {
+          "key": "RASTER-MBTILES",
+          "lines": [
+            96,
+            107
+          ],
+          "sha256_utf8_lf": "9043b6e801515dea0fd9af7e9954234605df3e7632ddefb1576cf5a92d3542da",
+          "target": "lisa:mobile:contract:upstream-overlaps-raster-mbtiles"
+        }
+      ],
+      "complete_ordered_value_sha256": "14b11f0dc1396c61ce87c8bde82aaf89e2c5aea69c92bc356e48eae40f23ca59",
+      "source_line_count": 107,
+      "mapping_field": "hotspots"
+    },
+    "smoke-tests": {
+      "source": {
+        "repository": "android_projects/android_gisapp",
+        "path": "docs/registry/smoke-tests.yaml",
+        "revision": "6948b5c29361ab7b998db0609880a88078e92210",
+        "blob": "38074d69c6c216b94ea5d730f83bc9fffc2cd51c",
+        "sha256_utf8_lf": "bef938d032cf57e5f55a143249a4747349cabbddb814f456e25beb03b4ab2f68"
+      },
+      "header": {
+        "lines": [
+          1,
+          2
+        ],
+        "sha256_utf8_lf": "f9be2ce77149f2db27779d6ba9d3a78eaceb57acc1e3bd0f84da1fc5d2d61752",
+        "target": "lisa:mobile:metadata:smoke-tests-registry"
+      },
+      "entries": [
+        {
+          "key": "AUTO-SYNC-JOURNAL-CONFIRMATION",
+          "lines": [
+            3,
+            7
+          ],
+          "sha256_utf8_lf": "4c7d1ccba14e5141955ace9468aeeb9591e78c4447cfc1f190d8773238f2f086",
+          "target": "lisa:mobile:contract:smoke-tests-auto-sync-journal-confirmation"
+        },
+        {
+          "key": "AUTO-UI-SOURCE-CONTRACTS",
+          "lines": [
+            8,
+            12
+          ],
+          "sha256_utf8_lf": "5f1b16123d7c223c8cd6eec59aa277025bb3a39885dd9546638e975058ad00b9",
+          "target": "lisa:mobile:contract:smoke-tests-auto-ui-source-contracts"
+        },
+        {
+          "key": "SMOKE-UI-VALUE-PROVENANCE",
+          "lines": [
+            13,
+            22
+          ],
+          "sha256_utf8_lf": "ee7176b3b9eb5cf000c608c6e117a718d683f46fd4f1d82c1fece8aaf92e6446",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-ui-value-provenance"
+        },
+        {
+          "key": "AUTO-GPS-CACHE-WITNESS",
+          "lines": [
+            23,
+            27
+          ],
+          "sha256_utf8_lf": "2451c76ea3a583455205a77791a0dd7bbd18133bede09ef1a7db6efff20a3c31",
+          "target": "lisa:mobile:contract:smoke-tests-auto-gps-cache-witness"
+        },
+        {
+          "key": "AUTO-SQLITE-LAYER-PRIORITY",
+          "lines": [
+            28,
+            32
+          ],
+          "sha256_utf8_lf": "1a8e842c29ed8b3ffc547fab5de1d578aaf8001741a257f9a0d512d4be15a958",
+          "target": "lisa:mobile:contract:smoke-tests-auto-sqlite-layer-priority"
+        },
+        {
+          "key": "AUTO-LOCAL-TILE-CACHE-ADMISSION",
+          "lines": [
+            33,
+            37
+          ],
+          "sha256_utf8_lf": "4508c0229dfd37c76e91f561b5ea536b753034e1af318af389c3c2cfd14ad139",
+          "target": "lisa:mobile:contract:smoke-tests-auto-local-tile-cache-admission"
+        },
+        {
+          "key": "AUTO-SQLITE-NATIVE-VECTORS",
+          "lines": [
+            38,
+            42
+          ],
+          "sha256_utf8_lf": "b799604988b929ef34fcb5752503e442731c446feade96e25f128d55007c1311",
+          "target": "lisa:mobile:contract:smoke-tests-auto-sqlite-native-vectors"
+        },
+        {
+          "key": "AUTO-RENDER-MEMORY-UNITS",
+          "lines": [
+            43,
+            47
+          ],
+          "sha256_utf8_lf": "fab0cba0c304866cd76b2611dedb8112f979b2065aeaf48ff250ab1b82755e35",
+          "target": "lisa:mobile:contract:smoke-tests-auto-render-memory-units"
+        },
+        {
+          "key": "AUTO-RENDER-MEMORY",
+          "lines": [
+            48,
+            52
+          ],
+          "sha256_utf8_lf": "cdeee4674a5951c88a1cc8b564d0d5c132c47042e560abcde18ef916cec73c46",
+          "target": "lisa:mobile:contract:smoke-tests-auto-render-memory"
+        },
+        {
+          "key": "SMOKE-RENDER-MEMORY-NATIVE",
+          "lines": [
+            53,
+            61
+          ],
+          "sha256_utf8_lf": "8c6855bce3bcbe538241de7f370a2a91a3d7ea597136699aa4ca39bb7d41b6bc",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-render-memory-native"
+        },
+        {
+          "key": "SMOKE-NATIVE-HEAP-DIAGNOSTIC",
+          "lines": [
+            62,
+            70
+          ],
+          "sha256_utf8_lf": "c9026d63098c6ce22b3e4a52ed1c1c96e8e4ba92169ed755891ec7958ce4e946",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-native-heap-diagnostic"
+        },
+        {
+          "key": "AUTO-LOCAL-VECTOR-TILE-OFFLINE",
+          "lines": [
+            71,
+            80
+          ],
+          "sha256_utf8_lf": "c86062349ef13486217b533b8473bac438f586711579ac306308079c960c38ea",
+          "target": "lisa:mobile:contract:smoke-tests-auto-local-vector-tile-offline"
+        },
+        {
+          "key": "AUTO-MAINTENANCE-REMINDERS",
+          "lines": [
+            81,
+            85
+          ],
+          "sha256_utf8_lf": "bea99eb90cd5838afbcf9664fb84db11d0aef62d8bfbfc8b3a9408b19d5d5a7a",
+          "target": "lisa:mobile:contract:smoke-tests-auto-maintenance-reminders"
+        },
+        {
+          "key": "AUTO-POLYGON-STYLE-CONTROLS",
+          "lines": [
+            86,
+            97
+          ],
+          "sha256_utf8_lf": "24d645345112a616c09ad1193909737aed2ca0568927b0db84a687c9c35257c2",
+          "target": "lisa:mobile:contract:smoke-tests-auto-polygon-style-controls"
+        },
+        {
+          "key": "AUTO-POINT-FIREFLY",
+          "lines": [
+            98,
+            102
+          ],
+          "sha256_utf8_lf": "32988063d4207734e87cd25e4c416540cf5ec0bd62064824933390554125e9e5",
+          "target": "lisa:mobile:contract:smoke-tests-auto-point-firefly"
+        },
+        {
+          "key": "AUTO-FEATURE-EDITING",
+          "lines": [
+            103,
+            107
+          ],
+          "sha256_utf8_lf": "cd3cc68e8ec7ec17829102a1c95d74f6cadd5ab23b61d78a0984190b8969c4ff",
+          "target": "lisa:mobile:contract:smoke-tests-auto-feature-editing"
+        },
+        {
+          "key": "SMOKE-FEATURE-COPY-TRANSFORM",
+          "lines": [
+            108,
+            116
+          ],
+          "sha256_utf8_lf": "923b7034067cb713a468769f4b36ded4deaccadadea2a4d64e9bdcf3263f6fb4",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-feature-copy-transform"
+        },
+        {
+          "key": "AUTO-MOBILE-USAGE",
+          "lines": [
+            117,
+            121
+          ],
+          "sha256_utf8_lf": "8ec3c7c725bb0b5b73e8a8a4bdd44eea565b9ce6fec409fda4636fdd25b87314",
+          "target": "lisa:mobile:contract:smoke-tests-auto-mobile-usage"
+        },
+        {
+          "key": "AUTO-MOBILE-RELATED",
+          "lines": [
+            122,
+            126
+          ],
+          "sha256_utf8_lf": "25f2bce714d6609bd1af46190c3597261469393132d880c1952db62a9b08bdbf",
+          "target": "lisa:mobile:contract:smoke-tests-auto-mobile-related"
+        },
+        {
+          "key": "AUTO-MOBILE-FULL",
+          "lines": [
+            127,
+            131
+          ],
+          "sha256_utf8_lf": "99fed2be16d909678bb3f4064fc4681316711f59d550da6a42e4d0b14d3d22c7",
+          "target": "lisa:mobile:contract:smoke-tests-auto-mobile-full"
+        },
+        {
+          "key": "AUTO-MOBILE-PUBLICATION-GATE",
+          "lines": [
+            132,
+            136
+          ],
+          "sha256_utf8_lf": "e2b3a16f680083826f9243b7d1ca85bc77f308a5f02c33bdac6d016231a48919",
+          "target": "lisa:mobile:contract:smoke-tests-auto-mobile-publication-gate"
+        },
+        {
+          "key": "SMOKE-LAYER-CHOOSER",
+          "lines": [
+            137,
+            144
+          ],
+          "sha256_utf8_lf": "ae562a363bc14bf9ad712537b1f758a5a6b1f02b04a512a72084f31196d4937f",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-layer-chooser"
+        },
+        {
+          "key": "AUTO-UPDATER-CHECKS",
+          "lines": [
+            145,
+            149
+          ],
+          "sha256_utf8_lf": "a2d73403b7b67e5861d8eeea760b7278be80e6c351a5c4e686d52fed72703518",
+          "target": "lisa:mobile:contract:smoke-tests-auto-updater-checks"
+        },
+        {
+          "key": "SMOKE-LARGE-TEXT-UI",
+          "lines": [
+            150,
+            161
+          ],
+          "sha256_utf8_lf": "5dd69cd3700e95b7db96961d95bc85d70c4105195da3cefc5923fcb97794d094",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-large-text-ui"
+        },
+        {
+          "key": "SMOKE-SYNC-OFFLINE",
+          "lines": [
+            162,
+            169
+          ],
+          "sha256_utf8_lf": "31fcb001c37c1fde8b1808858382fd38376f118ccad2fba9c8842e4c5ae87cf4",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-sync-offline"
+        },
+        {
+          "key": "SMOKE-SYNC-NOTIFICATIONS",
+          "lines": [
+            170,
+            177
+          ],
+          "sha256_utf8_lf": "28d790825cd55fe4ec3054a17c256fd10afe4baf3b7eee870eabad2bcf37070b",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-sync-notifications"
+        },
+        {
+          "key": "SMOKE-BACKGROUND-LOCATION-WARNING",
+          "lines": [
+            178,
+            187
+          ],
+          "sha256_utf8_lf": "43c543d7c870745c1d5a736d1471ad1ad1e7016d3d9e096a6a3268c9f13ce10a",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-background-location-warning"
+        },
+        {
+          "key": "SMOKE-DIAGNOSTIC-NOISE",
+          "lines": [
+            188,
+            196
+          ],
+          "sha256_utf8_lf": "efc4865ead51b33a8316f7d865e3581cdc1e301d3fa422893108749beee0ddc8",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-diagnostic-noise"
+        },
+        {
+          "key": "SMOKE-FEATURE-TYPE-CREATION",
+          "lines": [
+            197,
+            201
+          ],
+          "sha256_utf8_lf": "efeeb5f871cb2c7155cb01521e7e6ed6b6614224c41b8d0831ec43bedc94df13",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-feature-type-creation"
+        },
+        {
+          "key": "SMOKE-SYNC-JOURNAL-CANCELLATION",
+          "lines": [
+            202,
+            206
+          ],
+          "sha256_utf8_lf": "5aaddab798afee256507e809717af4f551c6915adb46ed4cb9ae422544b7be0b",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-sync-journal-cancellation"
+        },
+        {
+          "key": "AUTO-SQLITE-ORIGINAL-BATCH-UNITS",
+          "lines": [
+            207,
+            211
+          ],
+          "sha256_utf8_lf": "680a74f61f6a9076b715ce7cb1da2197d133e190953fbbaf84a70be729d736df",
+          "target": "lisa:mobile:contract:smoke-tests-auto-sqlite-original-batch-units"
+        },
+        {
+          "key": "AUTO-SQLITE-PHASE-UNITS",
+          "lines": [
+            212,
+            216
+          ],
+          "sha256_utf8_lf": "b492aba8e7a9272b07860585c5e77652c4a8b6f3e7f8d9ab3f28745a5e0d614c",
+          "target": "lisa:mobile:contract:smoke-tests-auto-sqlite-phase-units"
+        },
+        {
+          "key": "SMOKE-SQLITE-PHASE-TABLET",
+          "lines": [
+            217,
+            225
+          ],
+          "sha256_utf8_lf": "9df047109acc01275513968b4ef801c652e618f662ad299bc87e4da5b8355262",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-sqlite-phase-tablet"
+        },
+        {
+          "key": "SMOKE-MAP-RUNTIME-DIAGNOSTICS",
+          "lines": [
+            226,
+            234
+          ],
+          "sha256_utf8_lf": "ae6a316be4d95a3c848835ae7c69f86ae0da181a27866a160aef807898212ed6",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-map-runtime-diagnostics"
+        },
+        {
+          "key": "SMOKE-DIAGNOSTIC-DELIVERY",
+          "lines": [
+            235,
+            239
+          ],
+          "sha256_utf8_lf": "6b87d6cc7f87b9da62ff57e671c31b3a6a4ae2846260f8e38c9931da5079fc76",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-diagnostic-delivery"
+        },
+        {
+          "key": "SMOKE-STAKEOUT-PERMISSIONS",
+          "lines": [
+            240,
+            244
+          ],
+          "sha256_utf8_lf": "faffc40c276cb3b6bb971b183fc253736ada4c07ca9d0cc53a1201eeb3b33706",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-stakeout-permissions"
+        },
+        {
+          "key": "SMOKE-FORM-APPEARANCE",
+          "lines": [
+            245,
+            249
+          ],
+          "sha256_utf8_lf": "662d709c97e9ce5b40264d969b2a88363192b5546873092fa196d81f65a5fdcb",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-form-appearance"
+        },
+        {
+          "key": "SMOKE-ALL-PROJECT-SYNC",
+          "lines": [
+            250,
+            254
+          ],
+          "sha256_utf8_lf": "0aaf83c56be318ba742d9927e39c4b188f40f631aad4014a0f0fc6bfc8d6d31b",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-all-project-sync"
+        },
+        {
+          "key": "SMOKE-CONDITIONAL-REQUIRED",
+          "lines": [
+            255,
+            259
+          ],
+          "sha256_utf8_lf": "674c1f17618fb95a1ad4831f3af3fd0cca6219dc428472d1c597a1ae66f91ddf",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-conditional-required"
+        },
+        {
+          "key": "SMOKE-FORM-NAVIGATION",
+          "lines": [
+            260,
+            264
+          ],
+          "sha256_utf8_lf": "372739cf971c543595de1a08d097fcb47ff2405a2314df2b4b5dc49e73e2a00d",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-form-navigation"
+        },
+        {
+          "key": "SMOKE-LAYER-PENDING-INDICATOR",
+          "lines": [
+            265,
+            269
+          ],
+          "sha256_utf8_lf": "ac7cac5b18c957b04b3a42250952b0fde9019dac64427ae24bf9045435d5107a",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-layer-pending-indicator"
+        },
+        {
+          "key": "SMOKE-CASCADING-FORM-LISTS",
+          "lines": [
+            270,
+            274
+          ],
+          "sha256_utf8_lf": "b30219f22b0072058c4de3b29d585d95874349d100e8f43d207666b837f44053",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-cascading-form-lists"
+        },
+        {
+          "key": "SMOKE-PROJECT-SCRIPTS",
+          "lines": [
+            275,
+            279
+          ],
+          "sha256_utf8_lf": "2594805c781a523434dd2c3d67e21b0bcc1085c18473c6d6a2a9384f0e20d320",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-project-scripts"
+        },
+        {
+          "key": "SMOKE-REQUIRED-FIELDS",
+          "lines": [
+            280,
+            284
+          ],
+          "sha256_utf8_lf": "edb2b4b8486fc89dcce76332f2bdf04da17b89acec1e8d941d4a5b0d81a55160",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-required-fields"
+        },
+        {
+          "key": "AUTO-RELIABILITY-NATIVE",
+          "lines": [
+            285,
+            291
+          ],
+          "sha256_utf8_lf": "841866b1b48fcf434d649cdd14715393ffd16f755fc232eee14211862cc9185f",
+          "target": "lisa:mobile:contract:smoke-tests-auto-reliability-native"
+        },
+        {
+          "key": "SMOKE-RELIABILITY-FAILURES",
+          "lines": [
+            292,
+            301
+          ],
+          "sha256_utf8_lf": "e0c2d3d167667726eaf75dc1afcbd0aa89c95a61f7f68f63b8fcffa41c8bb6af",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-reliability-failures"
+        },
+        {
+          "key": "SMOKE-TOOL-TAP",
+          "lines": [
+            302,
+            310
+          ],
+          "sha256_utf8_lf": "00c5b62101d68c7c8aa4eaa77007c2951b55c7ab4046106cdb926d3e7d7ab895",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-tool-tap"
+        },
+        {
+          "key": "SMOKE-NGID-AND-RESOURCE-ICONS",
+          "lines": [
+            311,
+            317
+          ],
+          "sha256_utf8_lf": "8828a4f5c90d3d061bfa0b0752b8dbed75604b367d61721df9070f1c3bee71fb",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-ngid-and-resource-icons"
+        },
+        {
+          "key": "SMOKE-NGW-SYNC-RECOVERY",
+          "lines": [
+            318,
+            332
+          ],
+          "sha256_utf8_lf": "2fc5f308d2516e2fc1d5ff987f4385944091c6c4ac3db3105a8e78d4cc8cbd6c",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-ngw-sync-recovery"
+        },
+        {
+          "key": "SMOKE-NGW-SELECTOR-RESTORE",
+          "lines": [
+            333,
+            345
+          ],
+          "sha256_utf8_lf": "06c78d2ffe93f0951e47978d9cc06e065fcc39151fbb57e58a3796df5ceb2288",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-ngw-selector-restore"
+        },
+        {
+          "key": "SMOKE-SHARED-UNDERLAYS",
+          "lines": [
+            346,
+            362
+          ],
+          "sha256_utf8_lf": "7bbabd7110509f978339079015f0a3c9c46bdeb612e8d5c2de1c88f54b728ba1",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-shared-underlays"
+        },
+        {
+          "key": "SMOKE-DEBUG-COMPANION",
+          "lines": [
+            363,
+            375
+          ],
+          "sha256_utf8_lf": "e55068b9e9ff35da2ac8bbde29da4672a058b033792b84e70ddb27dced7e14bb",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-debug-companion"
+        },
+        {
+          "key": "AUTO-DOCS-VALIDATE",
+          "lines": [
+            376,
+            380
+          ],
+          "sha256_utf8_lf": "38198b09e0ba3168833563d03ee3c000c72963e6104ff2b952ffc15b329762f4",
+          "target": "lisa:mobile:contract:smoke-tests-auto-docs-validate"
+        },
+        {
+          "key": "AUTO-MAPLIB-UNIT",
+          "lines": [
+            381,
+            385
+          ],
+          "sha256_utf8_lf": "b5cb074dfd44f86db843af740993c0a5935b56d699e77cb8b21ed58908d51c45",
+          "target": "lisa:mobile:contract:smoke-tests-auto-maplib-unit"
+        },
+        {
+          "key": "AUTO-MAPLIBUI-ASSEMBLE",
+          "lines": [
+            386,
+            390
+          ],
+          "sha256_utf8_lf": "e9ab7413ec34b08e365b15a72a18d261f36193083c09e24d916bebaa9bce764e",
+          "target": "lisa:mobile:contract:smoke-tests-auto-maplibui-assemble"
+        },
+        {
+          "key": "AUTO-MAPLIBUI-UNIT",
+          "lines": [
+            391,
+            395
+          ],
+          "sha256_utf8_lf": "aabd514849efe0d7368e116619cf135ffbd1dbfa90650bcd4c98feb9746882bb",
+          "target": "lisa:mobile:contract:smoke-tests-auto-maplibui-unit"
+        },
+        {
+          "key": "AUTO-APP-DEBUG",
+          "lines": [
+            396,
+            400
+          ],
+          "sha256_utf8_lf": "e102c5db2ecd54894dc75db333a57cbf67bb99f4d06995c6512089e44e8c5832",
+          "target": "lisa:mobile:contract:smoke-tests-auto-app-debug"
+        },
+        {
+          "key": "AUTO-APP-RELEASES",
+          "lines": [
+            401,
+            405
+          ],
+          "sha256_utf8_lf": "9831d9447b1c41cfd47fd5b7f7ca1f3b0e98ccf3bda4e8ec879c3fe16584373f",
+          "target": "lisa:mobile:contract:smoke-tests-auto-app-releases"
+        },
+        {
+          "key": "AUTO-APP-VERSION-MATRIX",
+          "lines": [
+            406,
+            410
+          ],
+          "sha256_utf8_lf": "0178a90c5f5b2b831d95f4e1f96154b7d467c1d9ca81ea8258b89b16f5b4a018",
+          "target": "lisa:mobile:contract:smoke-tests-auto-app-version-matrix"
+        },
+        {
+          "key": "SMOKE-MAP-COLD-START",
+          "lines": [
+            411,
+            415
+          ],
+          "sha256_utf8_lf": "6a4052b738daf05fec817f73c337b0864e01d3174612d22f5db3cc23bdd47891",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-map-cold-start"
+        },
+        {
+          "key": "SMOKE-POLYGON-LABEL-ANCHOR",
+          "lines": [
+            416,
+            427
+          ],
+          "sha256_utf8_lf": "f71a1dfa71568c64642d7a59508ddb0f1f5435e556227d50069146f70446da0b",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-polygon-label-anchor"
+        },
+        {
+          "key": "SMOKE-MAP-OPENGL-COMPATIBILITY",
+          "lines": [
+            428,
+            435
+          ],
+          "sha256_utf8_lf": "62e9828faa61a9c8c97af4e99aada8adcd6ee10861648bbf846f6b01cb379902",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-map-opengl-compatibility"
+        },
+        {
+          "key": "SMOKE-MAP-SURFACE-LIFECYCLE",
+          "lines": [
+            436,
+            448
+          ],
+          "sha256_utf8_lf": "86e54044cf3029347357e164d90b0d75e6b3beb960302d438e2f9365490898f0",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-map-surface-lifecycle"
+        },
+        {
+          "key": "SMOKE-LOCATION-CURSOR-TOP",
+          "lines": [
+            449,
+            478
+          ],
+          "sha256_utf8_lf": "19d2ccba96bbba2a3cd45c7c914778ccc99eaf44ba5bf86a6c3b89d41cbf382d",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-location-cursor-top"
+        },
+        {
+          "key": "SMOKE-MAP-CAMERA-CONTROLS",
+          "lines": [
+            479,
+            498
+          ],
+          "sha256_utf8_lf": "84014cd57499d5ac8054e111502ac00110ae2f2331c94ce181813e1426594e37",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-map-camera-controls"
+        },
+        {
+          "key": "SMOKE-UNDERLAY-DISPLAY",
+          "lines": [
+            499,
+            511
+          ],
+          "sha256_utf8_lf": "627e190a0d21877cebcc783a27da2f807172cb8b2209456be0833134f87801fa",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-underlay-display"
+        },
+        {
+          "key": "SMOKE-NGRC-ORDER",
+          "lines": [
+            512,
+            516
+          ],
+          "sha256_utf8_lf": "60e6ad44ea8afa5bbeebd8dda5b3f9b291980a792c19ea59cae54df68905befd",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-ngrc-order"
+        },
+        {
+          "key": "SMOKE-NGRC-PRESERVE",
+          "lines": [
+            517,
+            521
+          ],
+          "sha256_utf8_lf": "bc6ef6c2589f5fe739a8c836f0e2315c4860202d73d5df7a62a4f4a9f8578230",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-ngrc-preserve"
+        },
+        {
+          "key": "SMOKE-UPDATE-DATA-PRESERVE",
+          "lines": [
+            522,
+            526
+          ],
+          "sha256_utf8_lf": "1cd16d073e575a4ebd69cdeadf1260236717ddb9de1b054fb138c3becbea3d74",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-update-data-preserve"
+        },
+        {
+          "key": "SMOKE-DEBUG-UNDERLAY-MIGRATION",
+          "lines": [
+            527,
+            568
+          ],
+          "sha256_utf8_lf": "d68669b2b22a0875513d593437995c057b7adf14cfb80b82394eac18f8c51f56",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-debug-underlay-migration"
+        },
+        {
+          "key": "SMOKE-HOT-RASTER",
+          "lines": [
+            569,
+            573
+          ],
+          "sha256_utf8_lf": "9c9cf0c7c67e497ee1bed222aab904c2767c68323889b0af62292d378e9d0063",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-hot-raster"
+        },
+        {
+          "key": "SMOKE-LAYER-REORDER",
+          "lines": [
+            574,
+            578
+          ],
+          "sha256_utf8_lf": "678f7d65bf74277384bd7d02ad5fb638e9ebe091bace7de78c3d91d5d3682e07",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-layer-reorder"
+        },
+        {
+          "key": "SMOKE-LAYER-VISIBILITY-ICON",
+          "lines": [
+            579,
+            585
+          ],
+          "sha256_utf8_lf": "7a0df3ae0d52ad260dd0dd5782898a0290b4037d4635f18fb3c6e6d64ba1dbb3",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-layer-visibility-icon"
+        },
+        {
+          "key": "SMOKE-COLLECTOR-IMPORT",
+          "lines": [
+            586,
+            614
+          ],
+          "sha256_utf8_lf": "ff52a2d5208a9c79a3b574a372e856083e700d5b6ceaf7727c3e10445ac22168",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-collector-import"
+        },
+        {
+          "key": "SMOKE-LAYER-SYNC-SETTINGS",
+          "lines": [
+            615,
+            623
+          ],
+          "sha256_utf8_lf": "e8b82386421b5a354169b2ecd0665e34711640d3b2b73f08af3c92b6c7829bc8",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-layer-sync-settings"
+        },
+        {
+          "key": "SMOKE-COLLECTOR-RESUME",
+          "lines": [
+            624,
+            638
+          ],
+          "sha256_utf8_lf": "b6243fca9b91a1320822aa37a6b9b742934a907bdc1452480b0ddf4b4af9422e",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-collector-resume"
+        },
+        {
+          "key": "SMOKE-COLLECTOR-INCOMPLETE",
+          "lines": [
+            639,
+            643
+          ],
+          "sha256_utf8_lf": "e162a8e92fe9c2846ccdbc962d0f8f2947b77f6cf29ca18f218b4919125dac64",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-collector-incomplete"
+        },
+        {
+          "key": "SMOKE-COLLECTOR-IDENTITY",
+          "lines": [
+            644,
+            656
+          ],
+          "sha256_utf8_lf": "65856bdd70d0c09e5b3810cfce060e6650a054168e38e915c25e44d45ba5218a",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-collector-identity"
+        },
+        {
+          "key": "SMOKE-FORM-ROLLBACK",
+          "lines": [
+            657,
+            661
+          ],
+          "sha256_utf8_lf": "d52d409b5f52f89f86675e6c684b8af1e26f1c4e9a3c5716d4b1888d7042cf91",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-form-rollback"
+        },
+        {
+          "key": "SMOKE-COLLECTOR-SWITCH",
+          "lines": [
+            662,
+            666
+          ],
+          "sha256_utf8_lf": "5c5206dd898115d191cd227f32c947055f54f3e5ddc675e6582f205b99145c56",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-collector-switch"
+        },
+        {
+          "key": "SMOKE-PROJECT-MANAGEMENT",
+          "lines": [
+            667,
+            671
+          ],
+          "sha256_utf8_lf": "8f0c0a18984f4696b220b477cf5bb017c4c231703b5c34aa1f6aae379fc400e3",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-project-management"
+        },
+        {
+          "key": "SMOKE-SCHEMA-REBUILD-GUARD",
+          "lines": [
+            672,
+            676
+          ],
+          "sha256_utf8_lf": "d7104306faeb5bceedd1f78f089ff4a51c9d88ce874401f57b734ee968b7989c",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-schema-rebuild-guard"
+        },
+        {
+          "key": "SMOKE-BACKUP-GATE",
+          "lines": [
+            677,
+            689
+          ],
+          "sha256_utf8_lf": "639978a1c07669a2dbc46c77113550e5ea9e35f9f5c385d99a2b097cc03144b1",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-backup-gate"
+        },
+        {
+          "key": "SMOKE-CRASH-DRAFT-RECOVERY",
+          "lines": [
+            690,
+            729
+          ],
+          "sha256_utf8_lf": "94aaeaf2fb583e90f37bfbd7f7712f9de61fd81d7d8a3bf0d721aa9c05cb93be",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-crash-draft-recovery"
+        },
+        {
+          "key": "SMOKE-SYNC-OFF-CONFIG",
+          "lines": [
+            730,
+            734
+          ],
+          "sha256_utf8_lf": "78f2e4dc51652b24053d53edbed5357ff5876cd4ea61f62e81f4371b22401478",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-sync-off-config"
+        },
+        {
+          "key": "SMOKE-SYNC-INTERRUPT-ACTION",
+          "lines": [
+            735,
+            739
+          ],
+          "sha256_utf8_lf": "4831cd862cbea780f9763fb765d8ca56bf440184f3c3dfdd884e1ec0875114de",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-sync-interrupt-action"
+        },
+        {
+          "key": "SMOKE-MULTI-ACCOUNT-SYNC",
+          "lines": [
+            740,
+            744
+          ],
+          "sha256_utf8_lf": "039240672ef3fe13800afe91ba28a06b155d5fe5d30493f30824b0a3dc505af5",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-multi-account-sync"
+        },
+        {
+          "key": "SMOKE-SYNC-OWNER-ACK-BOUNDARY",
+          "lines": [
+            745,
+            758
+          ],
+          "sha256_utf8_lf": "7fe132b4a81221bc32f49c65cd32cf1263323aed284c46026233f7cf9440d04f",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-sync-owner-ack-boundary"
+        },
+        {
+          "key": "SMOKE-NGW-LARGE-PULL-CACHE",
+          "lines": [
+            759,
+            771
+          ],
+          "sha256_utf8_lf": "b476381358688544091b8cd3162b2c61f714b5d2a1e2917e15786b7822f861d6",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-ngw-large-pull-cache"
+        },
+        {
+          "key": "SMOKE-NGW-ACCOUNT-ADD",
+          "lines": [
+            772,
+            776
+          ],
+          "sha256_utf8_lf": "bc37401155711473e15563f16a37078c0752cea6b8561616c9789d5a6e28e03b",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-ngw-account-add"
+        },
+        {
+          "key": "SMOKE-NGW-CONNECTION-FAILURE",
+          "lines": [
+            777,
+            787
+          ],
+          "sha256_utf8_lf": "b094d4029c2bda8c4cb7783f866d0a52965f23a44eae0abf7139d43673b89310",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-ngw-connection-failure"
+        },
+        {
+          "key": "SMOKE-WALK-POINT-SESSION",
+          "lines": [
+            788,
+            802
+          ],
+          "sha256_utf8_lf": "57695916e193931adb29df54464268ca1e48773a8fe5b78e8000cf01a654c642",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-walk-point-session"
+        },
+        {
+          "key": "SMOKE-WALK",
+          "lines": [
+            803,
+            833
+          ],
+          "sha256_utf8_lf": "5b1bfd778e5d6463ca242114f966a15def367254a726bd9fcb03c660fd67a102",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-walk"
+        },
+        {
+          "key": "SMOKE-GPS-RECORDING",
+          "lines": [
+            834,
+            894
+          ],
+          "sha256_utf8_lf": "e4307966ffa07d23a2ecc197d29c3c0a0d4903d494bcf870267843e22bb8dded",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-gps-recording"
+        },
+        {
+          "key": "SMOKE-STAKEOUT",
+          "lines": [
+            895,
+            941
+          ],
+          "sha256_utf8_lf": "cb014b663a99b58521b996824a1ba9b63254bf5d32d1d12508185c1135356724",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-stakeout"
+        },
+        {
+          "key": "SMOKE-MULTIPOLYGON-REPAIR",
+          "lines": [
+            942,
+            959
+          ],
+          "sha256_utf8_lf": "b6dd4799c9826e607ed984b8499586a8acbbc39e34e1d1c89f54fcbe163d32bd",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-multipolygon-repair"
+        },
+        {
+          "key": "SMOKE-GEOMETRY-SKETCH-WORKFLOW",
+          "lines": [
+            960,
+            1009
+          ],
+          "sha256_utf8_lf": "b9b9c3c67b313cad146db1c0c28390a70eda1655bef2fb78fa1c2147a3e49ae5",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-geometry-sketch-workflow"
+        },
+        {
+          "key": "SMOKE-TRACK-NO-FLAGS",
+          "lines": [
+            1010,
+            1014
+          ],
+          "sha256_utf8_lf": "6513a4da2cdc5e345a7cd688f57889c9315460f0a0b5e111108aa4c75581c886",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-track-no-flags"
+        },
+        {
+          "key": "SMOKE-LISA-RELEASE",
+          "lines": [
+            1015,
+            1019
+          ],
+          "sha256_utf8_lf": "524be71f66e325c5cabb197f01d8d6efb8155df745b78aafe133b3d4ea225003",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-lisa-release"
+        },
+        {
+          "key": "SMOKE-BELKA-RELEASE",
+          "lines": [
+            1020,
+            1024
+          ],
+          "sha256_utf8_lf": "0b6f58449d751c53d1f1f30c4515280e4aea27b2aacf3e01661ea2498896e697",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-belka-release"
+        },
+        {
+          "key": "SMOKE-SELF-UPDATE",
+          "lines": [
+            1025,
+            1029
+          ],
+          "sha256_utf8_lf": "3ab93edf0d3571f86c1336bdab7d498cde920c42be92b84a5d040aa3e6584d62",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-self-update"
+        },
+        {
+          "key": "SMOKE-NGW-URL-IMPORT",
+          "lines": [
+            1030,
+            1034
+          ],
+          "sha256_utf8_lf": "5c98f9237310fe0d68ba8483139dceb115bae3f53bd967b66dddaa7ea9dbe207",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-ngw-url-import"
+        },
+        {
+          "key": "SMOKE-NGW-IMPORT-BACK",
+          "lines": [
+            1035,
+            1039
+          ],
+          "sha256_utf8_lf": "ba5dea62ea79eeefa451574c3356a7f5d97153d841aadd38fcbe139b9e056db3",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-ngw-import-back"
+        },
+        {
+          "key": "SMOKE-LOCAL-VECTOR-LAYERS",
+          "lines": [
+            1040,
+            1062
+          ],
+          "sha256_utf8_lf": "8672bb08e7671d3a18b5879d929859ed10d780ecb715b70bb6c6a8895da805e7",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-local-vector-layers"
+        },
+        {
+          "key": "SMOKE-HIDDEN-VECTOR-TILE-IDENTIFY",
+          "lines": [
+            1063,
+            1074
+          ],
+          "sha256_utf8_lf": "da92a87b48e877994e3b3d51c4ef3f16a6227d8a6d04b7a50e469132fa79e4c8",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-hidden-vector-tile-identify"
+        },
+        {
+          "key": "SMOKE-LOCAL-VECTOR-TILE-STRESS",
+          "lines": [
+            1075,
+            1089
+          ],
+          "sha256_utf8_lf": "e6c57ae5502f88390cd6c86c7c13fbd857af3a35b241fbe95eceb8f077f54660",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-local-vector-tile-stress"
+        },
+        {
+          "key": "SMOKE-TRACK-DELIVERY",
+          "lines": [
+            1090,
+            1100
+          ],
+          "sha256_utf8_lf": "1639b95294cfbfe72aa2a8433082f26ea0d29de35ceead127eb3f42391ed85c8",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-track-delivery"
+        },
+        {
+          "key": "AUTO-PRIVATE-RESOURCE-PROFILER",
+          "lines": [
+            1101,
+            1105
+          ],
+          "sha256_utf8_lf": "a306704da1c6c88e4b46ea529a735c0a31a5572dc8f7871e63253f354536e108",
+          "target": "lisa:mobile:contract:smoke-tests-auto-private-resource-profiler"
+        },
+        {
+          "key": "SMOKE-PRIVATE-RESOURCE-PROFILER",
+          "lines": [
+            1106,
+            1114
+          ],
+          "sha256_utf8_lf": "db7b9dfe813c4c0b6beb44cfac70f3b593c43e32d98112c36e1090b4b628ea98",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-private-resource-profiler"
+        },
+        {
+          "key": "SMOKE-WORKSPACE-STORAGE-MUTATION",
+          "lines": [
+            1115,
+            1147
+          ],
+          "sha256_utf8_lf": "20e660ad93944c492d96a3bc47c4e7dd18f763592705ca9d42e1f94cf29880bb",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-workspace-storage-mutation"
+        },
+        {
+          "key": "AUTO-NGW-LOOKUP-CACHE-SYNC",
+          "lines": [
+            1148,
+            1157
+          ],
+          "sha256_utf8_lf": "248e8193f8b3226fc2d695aa49dfce97fce37dd98f95154f406b384cd0214343",
+          "target": "lisa:mobile:contract:smoke-tests-auto-ngw-lookup-cache-sync"
+        },
+        {
+          "key": "AUTO-NGFP-LOOKUP-PREFETCH",
+          "lines": [
+            1158,
+            1173
+          ],
+          "sha256_utf8_lf": "1c9d6a9d92e65aec28adf0219b2790beb51690c3adc232161f8a380078e52f6f",
+          "target": "lisa:mobile:contract:smoke-tests-auto-ngfp-lookup-prefetch"
+        },
+        {
+          "key": "SMOKE-NGFP-LOOKUP-PREFETCH",
+          "lines": [
+            1174,
+            1192
+          ],
+          "sha256_utf8_lf": "479ca36ba2b76fd0a7e0b9df8b2e1fb043ef85ee184768ee7da44232838a8a81",
+          "target": "lisa:mobile:contract:smoke-tests-smoke-ngfp-lookup-prefetch"
+        },
+        {
+          "key": "AUTO-NGW-SYNC-ADMISSION",
+          "lines": [
+            1193,
+            1208
+          ],
+          "sha256_utf8_lf": "1f59ede32dbd2644f66739eff46990b2be6e53c2a1397776efc5a03ce41eb439",
+          "target": "lisa:mobile:contract:smoke-tests-auto-ngw-sync-admission"
+        },
+        {
+          "key": "AUTO-NGW-USER-MESSAGES",
+          "lines": [
+            1209,
+            1225
+          ],
+          "sha256_utf8_lf": "b9af6204addf7db75a60fb90286b16f8369c489fa1712e6cb57644212957ffc6",
+          "target": "lisa:mobile:contract:smoke-tests-auto-ngw-user-messages"
+        },
+        {
+          "key": "AUTO-NGW-RESOURCE-CHECKBOX-SELECTION",
+          "lines": [
+            1226,
+            1265
+          ],
+          "sha256_utf8_lf": "8b9a4184484a2327ed5518168ea63a556d383e92941646957d5ab4fb19c1ad48",
+          "target": "lisa:mobile:contract:smoke-tests-auto-ngw-resource-checkbox-selection"
+        },
+        {
+          "key": "AUTO-VECTOR-SPATIAL-CACHE-RECOVERY",
+          "lines": [
+            1266,
+            1287
+          ],
+          "sha256_utf8_lf": "af4f70c0de4c18ea56a6730ec53eefdac4f3d67d0206f20c79a4ed46f8d3fd49",
+          "target": "lisa:mobile:contract:smoke-tests-auto-vector-spatial-cache-recovery"
+        },
+        {
+          "key": "AUTO-NGW-RESOURCE-ROW-TEXT-FIT",
+          "lines": [
+            1288,
+            1315
+          ],
+          "sha256_utf8_lf": "7d0eb46ec3630848c102de8e57d7575920e4896ff45ae075cde9d69181d547a7",
+          "target": "lisa:mobile:contract:smoke-tests-auto-ngw-resource-row-text-fit"
+        },
+        {
+          "key": "AUTO-TRACK-SELECTED-GPX-SHARE",
+          "lines": [
+            1316,
+            1335
+          ],
+          "sha256_utf8_lf": "aceff79e386416eedfb28b7e285921693072183ea4ace9918e55b79f03c0d8cc",
+          "target": "lisa:mobile:contract:smoke-tests-auto-track-selected-gpx-share"
+        },
+        {
+          "key": "AUTO-DEBUG-UNDERLAY-PROGRESS",
+          "lines": [
+            1336,
+            1343
+          ],
+          "sha256_utf8_lf": "3263ab68197b9dcfc4993e03f2d71ca251146c2c3592c1777b5c399858ed5b44",
+          "target": "lisa:mobile:contract:smoke-tests-auto-debug-underlay-progress"
+        }
+      ],
+      "complete_ordered_value_sha256": "6c7b81774f7471a9edd664a789a45fed8c9726c69de0bab3275625a8292ccd67",
+      "source_line_count": 1343,
+      "mapping_field": "tests"
+    }
+  }
+}

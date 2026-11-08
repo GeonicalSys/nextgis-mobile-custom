@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:instruction:application.version-variant-verification",
+  "kind": "instruction",
+  "owner": "android_projects/android_gisapp",
+  "topic": "policy-application",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain editable logical subject and pinned provenance; product implementation/acceptance are separate records."
+  },
+  "facets": {
+    "body": {
+      "role": "permanent_rule",
+      "value": "- Production Lisa/Belka получают `versionCode`/`versionName` из\n  `defaultConfig`.\n- Единственный debug variant — `lisaDebug`; его версия задаётся через\n  `androidComponents.onVariants(selector().withBuildType(\"debug\"))`.\n- На AGP 9.x не добавляй `versionCode` или `versionName` в `buildTypes`.\n- В `maplib` debug coupling задаётся override поля\n  `BuildConfig.VERSION_NAME`; не используй `buildTypes.debug.versionName`.\n- Debug-only bump не должен менять metadata Lisa/Belka Release. Обязательная\n  проверка из корня репозитория:\n\n  ```powershell\n  powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\\verify-apk-version-matrix.ps1\n  ```\n\n  Она должна реально завершиться успешно до handoff. Не считай имя файла\n  доказательством версии: проверяй APK metadata, а публикацию начинай только с\n  `--dry-run`. При намеренном bump обновляй ожидаемую matrix в verification\n  script вместе с Gradle constants.\n"
+    },
+    "classification": {
+      "role": "reviewed_knowledge_class",
+      "value": "permanent_rule"
+    },
+    "review": {
+      "role": "classification_reason",
+      "value": "Complete AGP production/debug/library rules and real aapt matrix with dry-run publication boundary and independent version expectations."
+    },
+    "source_section": {
+      "role": "source_document_context",
+      "value": [
+        "# app — инструкции для ИИ-агентов",
+        "## Версионирование variants"
+      ]
+    },
+    "authority_limit": {
+      "role": "authority_and_acceptance_boundary",
+      "value": "Path applicability is reviewed separately from the rule's textual triggers. Every source condition and heading remains attached; no automatic predicate or lifecycle inference. Stored commands and dates do not grant current execution, freshness or product acceptance. Existing instruction clients/checkers remain effective until measured cutover."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/policy-migration.json",
+    "scopes": [
+      "lisa:mobile:instruction:application.version-variant-verification"
+    ]
+  }
+}

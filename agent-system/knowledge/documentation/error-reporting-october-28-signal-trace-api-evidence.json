@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:error-reporting-october-28-signal-trace-api-evidence",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:error-reporting"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/error-reporting.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Уточнение28 октября: `REASON_SIGNALED` тоже запрашивает trace начиная с API30.",
+        "Прежний reason gate пропускал эти записи целиком и выдавал",
+        "`not_available_for_reason`, хотя публичный Android API не гарантирует отсутствие",
+        "trace. Javadoc/implementation `ApplicationExitInfo.getTraceInputStream()` в",
+        "установленных Android36 SDK sources допускает сохранённый прежний ANR после",
+        "восстановления процесса и последующей смерти по другой причине; getter не имеет",
+        "проверки reason. Native protobuf документирован с API31; null допустим, в том",
+        "числе после перезаписи системного circular buffer.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "The prior reason gate and installed Android 36 API evidence motivate the signal trace path."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:error-reporting-october-28-signal-trace-api-evidence"
+    ]
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:device-smoke-tests-august-21-heavy-layer-rebuild",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:device-smoke-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/device-smoke-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "3. **Сломанная схема тяжёлого слоя.** На неизменном mismatch запустить sync,",
+        "   оборвать/сломать staged fill и убедиться, что старый слой остаётся рабочим.",
+        "   После cooldown повторить: за 24 часа допускаются не более двух попыток одного",
+        "   fingerprint, третья подавляется. В настройках проекта виден остановленный",
+        "   rebuild и доступен reset. После исправления server config/reset слой должен",
+        "   замениться только после успешной загрузки."
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Dated package scenario for staged schema recovery."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:device-smoke-tests-august-21-heavy-layer-rebuild"
+    ]
+  }
+}

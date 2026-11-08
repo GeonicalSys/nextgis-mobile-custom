@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:classic-style-verification-style-snapshot-fingerprint-and-native-frame",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:classic-style-verification"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the style or label subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/classic-style-verification.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Style snapshots prepared by hot add/full/style reloads carry the renderer",
+        "fingerprint. A changed renderer prevents their native commit; a stale hot-add",
+        "snapshot retries current data so its source cannot be lost. The delayed",
+        "4.5-second GeoJSON reapply refreshes current props instead of restoring old rules.",
+        "Native fixtures compare current source style properties (with numeric float",
+        "tolerance), await native idle for camera/placement and then a fresh fully rendered",
+        "frame, keeping pipeline completion distinct",
+        "from the SDK paint transition duration.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:classic-style-verification-style-snapshot-fingerprint-and-native-frame"
+    ]
+  }
+}

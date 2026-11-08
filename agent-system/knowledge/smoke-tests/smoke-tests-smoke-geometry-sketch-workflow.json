@@ -1,0 +1,75 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-smoke-geometry-sketch-workflow",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "SMOKE-GEOMETRY-SKETCH-WORKFLOW"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "device",
+        "scope": [
+          "app",
+          "maplib",
+          "maplibui"
+        ],
+        "steps": [
+          "Create new Point, LineString, Polygon and MultiPolygon features and inspect the attribute action as soon as starter geometry exists",
+          "Verify layer selection immediately places a point or first line/polygon node at map centre without an intermediate plus action",
+          "Cancel a new line/polygon sketch with the bottom cross, first keep editing in the confirmation dialog, then confirm cancellation",
+          "Close a ruler polygon and inspect the displayed area unit",
+          "Add line and polygon nodes with map taps; select another node and verify the next tap inserts after it",
+          "Verify the selected node is red, its ordered successor and connecting segment are orange, an open line endpoint has no direction, and a polygon ring wraps last to first",
+          "Repeat direction selection inside separate MultiLineString parts, Polygon holes and MultiPolygon parts/rings",
+          "Insert midpoint nodes in LineString, Polygon, MultiPolygon and ruler geometry, then move the inserted nodes",
+          {
+            "Inspect line and polygon toolbars": "no overflow trigger or touch-append action; polygon add/delete part/hole actions are absent"
+          },
+          "In an initial one-node line/polygon sketch start walk append; in an existing shape select a middle node and start walk append",
+          "During polygon walk verify the live tail reaches the current location and recorded nodes stay between the selected node and its former successor",
+          "While walk recording is active inspect the separate panel and finish using its acknowledged action",
+          "Move, insert and delete vertices, then press the attribute action instead of Save and complete the form",
+          "Verify the successful new-feature form returns to the standard map with no selected feature or edit/action toolbar",
+          "Edit an existing feature, save once with the geometry Save action and once through the attribute form",
+          "Repeat a rapid double tap on the attribute action and cancel one new-feature form",
+          "Reopen an existing multi-part MultiPolygon with a valid hole and edit one vertex without changing its part/ring count",
+          "Interrupt a partly drawn Polygon, restart the process, choose Continue and inspect its fill, holes and vertex count",
+          "Draw a self-intersecting simple Polygon and press Save",
+          "Draw a line and polygon with more than ten nodes, select nodes without moving them, then Undo every added node and Redo them",
+          "In the ruler add and move several points, Undo and Redo each change, then Undo once and add a new point"
+        ],
+        "expected": "Creation starts immediately with one node at the projected screen centre; taps and midpoint actions build the geometry without a generated segment or square. A new MultiPolygon contains exactly one polygon part and no sketch action can add or delete a part or hole. Standard line and polygon toolbars contain neither touch append nor an overflow trigger. Walk append is available from the initial sketch, inserts after the selected node and previews current GPS; before insertion the selected node is red and only its ordered successor and connecting segment inside the same part/ring are orange; an open endpoint has no target and a closed ring wraps to its own first node. Multi geometry never points into another part or ring. its separate panel finishes recording only after the service persists and acknowledges the final snapshot. For every supported geometry type the attribute action becomes enabled with geometry and follows the same validation, topology repair and single-form handoff as Save. Existing multipart geometry and holes remain intact unless their vertices are explicitly edited. Every successful new/existing geometry or attribute save ends editing, clears selection, closes the attributes panel and restores the standard map controls. Failed writes retain their edit context; explicit form cancellation follows its normal cancellation path. Cancelling a new sketch first requires confirmation; continuing leaves the sketch intact, while confirmed cancellation returns to normal map mode without a disabled action panel or a duplicate plus button. Ruler area is displayed in hectares. A restored Polygon has one outer fill, the original vertex count and no invented hole. A self-intersecting simple Polygon remains in editing and reports self-intersection rather than insufficient points. Each Undo or Redo press changes exactly one node even after selection and map callbacks that only refresh CRS metadata, and more than ten real changes remain available without a no-op boundary step. The ruler exposes the same enabled-at-boundaries Undo/Redo controls; each press restores one measurement-point change and a new point after Undo clears the Redo branch.\n"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-smoke-geometry-sketch-workflow"
+    ]
+  }
+}

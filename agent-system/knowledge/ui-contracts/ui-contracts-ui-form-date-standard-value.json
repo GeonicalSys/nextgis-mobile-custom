@@ -1,0 +1,175 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-form-date-standard-value",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-FORM-DATE-STANDARD-VALUE"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-FORM-DATE-STANDARD-VALUE",
+        "group": "forms",
+        "title": "Дата и время в стандартной форме",
+        "surface": "Стандартная форма атрибутов: template_datetime, корневой control.DateTime без отдельного android:id",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [],
+        "meaning": "Локализованный текст даты/времени показывает числовой carrier; getValue возвращает nullable Long, а не текст и не гарантированный день UTC.",
+        "value_origin": "Field FTDate/FTTime/FTDateTime → ModifyAttributesActivity.fillControls/template_datetime → setPickerType/init → DatePicker/TimePicker callbacks → mValue/getValue → putFieldValue/ContentValues. Schema type, локальная политика редактирования и разрешение NGW — разные границы.",
+        "units": "Long — миллисекунды эпохи. DatePicker month0–11 совместим с Calendar.MONTH; time callback передаёт hour/minute. Calendar.getInstance вызывается без явной зоны; фактическая зона/FORMAT locale и разрешение locale tz extension остаются неизвестны. Явной нормализации DATE в UTC-midnight или TIME в seconds-only здесь нет.",
+        "updates": [
+          "Saved-state key nextgis_control_<field> имеет приоритет, включая explicit null; иначе существующая колонка читается getLong, без собственного isNull. При отсутствии state/колонки остаётся инициализированное текущее значение.",
+          "Click подготавливает listener-local Calendar. DATE callback меняет Y/M/D свежего Calendar, не обнуляя скрытое время; TIME callback использует сохранённые/нулевые date ints, H/M и SECOND=0, не обнуляя milliseconds.",
+          "getText использует DateFormat factory; getValue возвращает mValue. setValue(Long/Date/Calendar/String) — отдельный программный API; ошибка разбора String присваивает0L, неподдержанный/null объект не меняет carrier."
+        ],
+        "actions": [
+          "Открыть picker и выбрать дату либо время; это не свободный ввод отображаемой строки.",
+          "Передать числовой getter в существующий Save gate; не считать выбор подтверждением локальной записи или отправки."
+        ],
+        "conditions": [
+          "View-only и остальные owner/required/cascade/script/provider gates остаются существующим UI-FORM-SAVE/REQUIRED контрактом.",
+          "Cursor.getLong(NULL/nonintegral) имеет implementation-defined результат/исключение по официальному API; blank/null/zero на устройстве здесь не подтверждены.",
+          "Точный native результат прямого TIME callback с неинициализированными date ints и политика такого представления неизвестны."
+        ],
+        "saved_state": "saveState сохраняет Long либо явный null по nextgis_control_<field> и dismiss held DatePicker. Absent control, null getter, explicit-null ContentValues и copy-preserved empty — разные состояния: base putFieldValue сам не добавляет putNull для null getter; copied defaults могут сохранить отдельное значение.",
+        "source_ids": [
+          "WF-DATE-STD-INIT",
+          "WF-DATE-STD-VALUE",
+          "WF-DATE-STD-STATE",
+          "WF-DATE-STD-OPEN",
+          "WF-DATE-STD-DATE-CALLBACK",
+          "WF-DATE-STD-TIME-CALLBACK",
+          "WF-DATE-STD-SET-VALUE",
+          "WF-DATE-STD-BINDING",
+          "WF-DATE-CAPTURE-VALUES",
+          "WF-DATE-COPY-VALUES",
+          "WF-DATE-COPY-EMPTY",
+          "WF-DATE-SCRIPT-SNAPSHOT",
+          "WF-FORM-SAVE",
+          "WF-FORM-DRAFT",
+          "WF-FORM-ABSENT-FIELD"
+        ],
+        "expectations": [
+          "Oracle: проверять отдельно bound field type, числовой getValue, отображаемый текст, Bundle key/value и итоговый ContentValues; изменение source fingerprint требует semantic review, не автоматической замены ожидания.",
+          "Контрпример: объявить DATE значением UTC-midnight, TIME секундами либо очистку поля только по пустому отображению/nullable getter без доказанного producer и downstream state."
+        ],
+        "unknowns": [
+          "Фактические tenant schema/значения, default zone/locale/clock и installed Cursor/formatter/API не наблюдались.",
+          "Native picker/cancel/rotation/durable-draft/Save и remote roundtrip не исполнялись; source guards не являются device acceptance."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-std-init",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-std-value",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-std-state",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-std-open",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-std-date-callback",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-std-time-callback",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-std-set-value",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-std-binding",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-capture-values",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-copy-values",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-copy-empty",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-script-snapshot",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-save",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-draft",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-absent-field",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-form-date-standard-value"
+    ]
+  }
+}

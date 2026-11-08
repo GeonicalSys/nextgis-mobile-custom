@@ -1,0 +1,72 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-09-18-cbdbacf80be9",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-09-18",
+        "",
+        "- Камера MapLibre не опускается ниже `7.5`, все включённые raster-подложки",
+        "  доступны с zoom `7`, а режим фона карты «Светлый» теперь строго белый",
+        "  (`#FFFFFF`). Экспериментальные proxy и преобразования raster-тайлов удалены;",
+        "  локальные MBTiles снова подключаются напрямую.",
+        "",
+        "- Подготовлен выпуск Lisa/Belka `3.1.2.21` / `versionCode 215` и Lisa Debug",
+        "  `3.1.2.21` / `versionCode 216`. В выпуск входят восстановление после зависаний",
+        "  sync, compact NGW selector и PiGoLite CNB BESTPOSB. Root закрепляет Merge",
+        "  Commit maplib PR #29 `18e7e00` и maplibui PR #18 `53f9fc9a`.",
+        "",
+        "- На Samsung Android 16 воспроизведён ANR Debug: GPS callback ждал SQLite во",
+        "  время snapshot comparison. Убрана SQL-проверка из callback, incremental",
+        "  отрисовка треков перенесена в coalesced worker с workspace/view/style guard;",
+        "  сравнение широких linked field schemas не выполняет вложенные indexed scans.",
+        "  Результаты и незакрытые device gates: `reference/sync-hang-verification.md`.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-09-18",
+        "heading": "2026-09-18",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-09-18-cbdbacf80be9"
+    ]
+  }
+}

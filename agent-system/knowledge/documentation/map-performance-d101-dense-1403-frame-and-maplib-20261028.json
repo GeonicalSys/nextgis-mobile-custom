@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:map-performance-d101-dense-1403-frame-and-maplib-20261028",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-performance",
+      "lisa:mobile:resource:map-performance-open-tablet-replay"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original measurement or checkpoint and its acceptance limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-performance.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Final same-dense1403/11.7z strict video content gate (включая последнюю верхнюю",
+        "розовую полосу):843d32.45–34.09s,6039 13.68–15.65s,D10110.33–12.27s с clock/",
+        "launch margin. Late map ROI вне HUD/controls попиксельно совпала с обоими(MAE0).",
+        "Один processcold run/build с сохранённым disk/system cache, не FPS/CI/проверка",
+        "всех объектов/стилей. Это отдельное positive native scene witness, не сумма",
+        "phase timings. Target2–3s пока не достигнут. Final ALLmaplib750PASS/132classes/",
+        "0fail/error/skip за59s; sourcefp62de8740…59ec91 неизменен.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:map-performance-d101-dense-1403-frame-and-maplib-20261028"
+    ]
+  }
+}

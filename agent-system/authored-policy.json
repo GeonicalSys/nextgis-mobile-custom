@@ -1,0 +1,39 @@
+{
+  "format": "lisa.agent-system.authored-policy.v2",
+  "owner": "android_projects/android_gisapp",
+  "units": [
+    {
+      "id": "lisa:mobile:instruction:application.required-entry",
+      "review": "Route existing obligations through the maintained owner policy and documentation. Keep the pinned original body, applicability and execution limits.",
+      "base_revision": "80e1423d4912908e4b4174fb201249387051df17",
+      "record_sha256": "0042c0cbe6f20d263b661a98916ccc2425b6e59f38d60f765e62da2050e50e4f",
+      "base_proof": {
+        "record_sha256": "3a57f592a5f0b21906f197458f0b13db0398732b21dd7155cb6a1b341b3d8e65",
+        "body_sha256": "7bdd1f2c9dc4a3d138e273ea581fde76b2277a53690e10b125ed766bff0c75f8",
+        "other_fields_sha256": "55f98196c5beb0cd1b4e6fa17a5a73a3f7737ee0d9f700fb7f60f69a12c22343"
+      }
+    },
+    {
+      "id": "lisa:mobile:instruction:cursor-android-development-contracts.required-entry",
+      "review": "Route existing obligations through the maintained owner policy and documentation. Keep the pinned original body, applicability and execution limits.",
+      "base_revision": "80e1423d4912908e4b4174fb201249387051df17",
+      "record_sha256": "6e681f5392e1a3023fb2025a4e827a952b0e525e013d6517cf3f02b24a7cfae7",
+      "base_proof": {
+        "record_sha256": "357fee160c30f08b1ce86610b7ccbb2800bbe760d8c271f9f29570e8876252ac",
+        "body_sha256": "db59d5fbf8547fc6f64bc277c89b5a144905e4bcc319a191f1d6aaef881b341b",
+        "other_fields_sha256": "adf739237d0f00aa6a386350207d3d5255cdd94a267b06997905d8aa43681f1d"
+      }
+    },
+    {
+      "id": "lisa:mobile:instruction:workspace.required-entry",
+      "review": "Route existing obligations through the maintained owner policy and documentation. Keep the pinned original body, applicability and execution limits.",
+      "base_revision": "80e1423d4912908e4b4174fb201249387051df17",
+      "record_sha256": "9ff0111b26c774c77cc59a4230154f7a224a980fedbc7bb655bce95afeb5859f",
+      "base_proof": {
+        "record_sha256": "daac88c3336049d7f5fe7c2083230ba7ef68ef1e78477b907a69eaf5748692fc",
+        "body_sha256": "78cbfa7b37d7caf07f6f9d8694ed798b359a5cfb24c184633ca5be662555bdb7",
+        "other_fields_sha256": "43bcce76674ac9d643233f598e9b3a7a076989f8c13556bc2458a7ffa2456e28"
+      }
+    }
+  ]
+}

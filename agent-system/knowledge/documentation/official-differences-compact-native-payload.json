@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-compact-native-payload",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Текущая доработка fork отделяет полный rich Java снимок редактора от компактного",
+        "`NativeFeaturePayload`, передаваемого SDK. Геометрия/bbox/IDs/unknowns и нужные",
+        "paint/label/zoom свойства сохраняются; константы native layout не дублируются",
+        "в каждом объекте. Polygon label points создаются только для непустого текста",
+        "и несут нужные label поля, line fallback query сохраняет свои inputs.",
+        "Штриховки используют меньший bitmap только при полном попиксельном совпадении",
+        "повторяемого мотива исходной512×512ARGB решётки. Исходные данные и стиль не",
+        "переписываются; новые LOD, отбор ID или отключение слоёв не вводятся.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-compact-native-payload"
+    ]
+  }
+}

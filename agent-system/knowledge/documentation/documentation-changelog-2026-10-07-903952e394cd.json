@@ -1,0 +1,107 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-07-903952e394cd",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-07",
+        "",
+        "- Добавлена опциональная синхронизация всех загруженных проектов, включённая",
+        "  по умолчанию для ручного и автоматического запуска. Базы, provider URI,",
+        "  callbacks и сервисы изолированы по owning session; очередь пар и Collector",
+        "  journals переживают прерывание без переключения карты и потери черновика.",
+        "  Псевдонимы разделённых списков читаются из NGFP metadata перед alias слоя.",
+        "  [Отчёт проверки](history/project-sync-verification-2026-10-07.md) фиксирует",
+        "  результаты, точные commits и порядок закрытия трёх PR.",
+        "",
+        "- Каскадные сдвоенные элементы отображаются отдельными подписанными списками",
+        "  с полной шириной и отступами. Свайпы работают над обычными полями и пустой",
+        "  областью; вертикальная прокрутка, выделение текста и подпись сохраняют свои",
+        "  жесты. Обновлены пользовательские/агентские инструкции и native regressions.",
+        "",
+        "- Исправлена потеря NGFP metadata при штатном автоматическом выборе формы.",
+        "  Вкладки закреплены и переключаются горизонтальным взмахом. Добавлен общий",
+        "  lisa_form_rules для условной обязательности с native parser, динамическими",
+        "  маркерами, единым Save gate и SHA-256 pin черновика; desktop clone сохраняет",
+        "  условия без remap литералов. Версии не меняются.",
+        "",
+        "- Для Debug без изменения версии приложение закрепляет удалённые Merge Commits",
+        "  maplib #41 и maplibui #29. Проверены ancestry и совпадение деревьев библиотек;",
+        "  документация каскадов фиксирует PR, pins и порядок итоговой проверки до сборки.",
+        "",
+        "- Индикатор несинхронизированных изменений добавлен к соответствующей строке",
+        "  слоя. Общая кнопка sync и строки используют один фоновый снимок outbox;",
+        "  учтены удаления, поворот экрана и переиспользование строк.",
+        "",
+        "- Добавлены декларативные зависимые NGFP-списки: несколько родителей, общие",
+        "  таблицы, произвольная глубина, explicit SQL NULL, исторические значения и pin",
+        "  черновика. Добавлены архитектура, пользовательская инструкция, agent contract,",
+        "  registries и проверки Android/Access/desktop clone. Версии не меняются.",
+        "",
+        "- Добавлены project scripts API v1: source-only ZIP/Collector reference, isolated",
+        "  QuickJS, встроенные read-only GIS/date функции, pin формы/черновика и warning/block",
+        "  перед Save. Первый пакет проверяет историю аудитов подрядчика за месяц.",
+        "  Документированы пользовательский workflow, agent ownership, будущие capabilities,",
+        "  desktop publisher/collect/clone и порядок cross-repository интеграции.",
+        "",
+        "- После Merge Commit maplib #39 и maplibui #27 приложение закрепляет их удалённые",
+        "  merge commits; описание отличий повторно сверено с официальными HEAD.",
+        "  Обязательные поля и предупреждение GPS сохранены без изменения версий.",
+        "",
+        "- Добавлены правила штатного NGW required: локальное JSON/Parcel-хранение,",
+        "  metadata-only refresh без refill, общий Save gate для стандартных/NGFP форм,",
+        "  заглушка «Нет значения», допустимое «не применимо» и сохранение черновиков.",
+        "  Обновлены packs трёх owners, crash/sync/Collector docs, registries и текущие",
+        "  official differences; native сценарии используют синтетические формы.",
+        "  Доработка по указанию пользователя продолжает существующую ветку",
+        "  codex/track-power-warning; Merge Commit библиотек предшествует финальному",
+        "  pin root и выпуску APK.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-07",
+        "heading": "2026-10-07",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-07-903952e394cd"
+    ]
+  }
+}

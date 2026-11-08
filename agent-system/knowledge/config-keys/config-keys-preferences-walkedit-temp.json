@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:config-keys-preferences-walkedit-temp",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "config-keys",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_registry_section",
+      "value": "preferences"
+    },
+    "registry-key": {
+      "role": "incumbent_mapping_or_list_key",
+      "value": "walkedit_temp"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "owner": "maplibui",
+        "type": "shared_preferences_file",
+        "source": "maplibui/src/main/java/com/nextgis/maplibui/service/WalkEditService.java",
+        "purpose": "Durable full-geometry walk owner with map path, session UUID, RECORDING/FINISHING/FINISHED phase, revision and optional point owner/stage/layer/tool; preserves legacy part WKT, insertion target and user-controlled gps_paused. GPS loss and sticky recovery never infer a new pause; the next usable fix continues automatically. Every manual command is locked until point Save/Cancel. Finish acknowledges the final snapshot; successful feature Save or explicit Discard clears it.\n",
+        "session_source": "maplibui/src/main/java/com/nextgis/maplibui/util/WalkSessionStore.java"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/sectioned-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:config-keys-preferences-walkedit-temp"
+    ]
+  }
+}

@@ -20,9 +20,8 @@ related_code:
 затем разбирает затронутое замыкание в обе стороны. Registry, условие «это задача
 на границе» и перечисленные пользователем цепочки не заменяют поиска.
 
-Единственный общий механизм находится в LISA tooling: модуль
-`tools.ecosystem_tests.dependency_discovery`, source index
-`plugins/geonical-docs/registry/discovered-dependencies.json` и процедура
+Общий механизм LISA строит локальный граф из объявленного среза источников
+через `tools.ecosystem_tests.dependency_discovery`. Порядок проверки описан в
 `plugins/geonical-docs/guides/scenario-dependencies.md`. Registry links —
 `ECO-DEPENDENCY-DISCOVERY` в [ecosystem.yaml](../registry/ecosystem.yaml).
 Android не хранит копию scanner/index и не делает их runtime-зависимостью APK.
@@ -64,12 +63,12 @@ observations; volatile live HEAD/dirty остаются наблюдением C
 Перед source commit:
 
 ```powershell
-py -3.13 -B -m tools.ecosystem_tests.dependency_discovery --check
+py -3.13 -B -m tools.ecosystem_tests.dependency_discovery --check --live-repository . --live-repository android_projects/android_gisapp
 ```
 
-`--check` повторяет stored basis/live-owner selection. Новый foreign commit
-даёт drift; foreign uncommitted рабочие изменения не считаются покрытыми HEAD
-snapshot. Они остаются source-backed provisional observations с next step,
+`--check` строит граф по указанным рабочим деревьям и commit SHA остальных
+владельцев. Новый foreign commit входит в новый срез. Незафиксированные
+изменения других владельцев остаются source-backed observations с next step,
 не отбрасываются и не разрешают переписывать чужие semantic owner contracts.
 `--write` автоматически сохраняет их в единой LISA history
 `plugins/geonical-docs/registry/dependency-observations.json`: source/hash/HEAD
@@ -79,7 +78,7 @@ proof, definitions/references/dynamic refs/render facts, статус и next st
 config values не копируются; чувствительные literal targets хэшируются.
 Caps/errors остаются UNKNOWN и не удаляют сохранённых кандидатов молча.
 Новые подтверждённые/scope-owned связи сохраняются в той же задаче автоматически
-в generated index/curated contracts, без отдельной команды. Независимые ожидания
+в локально собранном графе и курируемых контрактах владельцев. Независимые ожидания
 не перегенерировать под дефект. Изменившиеся пути и условия требуют нового impact;
 working-tree impact в памяти отличать от сохранённого basis.
 
@@ -105,13 +104,13 @@ shared source index или полноты смыслового разбора.
 
 Межкомпонентный разбор не ограничен цепочкой PostgreSQL/NGW: launcher/roles,
 шаблоны и overlays, SQL/QLR, diagnostics, build/release и сохранённое состояние
-имеют собственных производителей, потребителей и условия. Точные общие записи
-находятся в доступном `qgis-plugins` source root:
+имеют собственных производителей, потребителей и условия. Руководство для
+канонических записей LISA — `plugins/geonical-docs/guides/scenario-dependencies.md`.
 
-- `geonical-docs/registry/scenario-contracts.yaml` — сценарии, owners/consumers,
-  applicability, защищённые режимы и ожидаемые результаты;
-- `geonical-docs/registry/dependencies.yaml` — imports и resource contracts;
-- `geonical-docs/registry/layer-resource-audit.json` — source hashes, QLR/provider
+- `agent-system/knowledge/dependency-registry-layout/scenario-contracts.json` — сценарии,
+  owners/consumers, applicability, защищённые режимы и ожидаемые результаты.
+- `agent-system/knowledge/dependency-registry-layout/dependencies.json` — imports и resource contracts.
+- `plugins/geonical-docs/registry/layer-resource-audit.json` — source hashes, QLR/provider
   поля и выражения, relations, trigger→table/view/function связи и явные unknowns.
 
 Ссылки проверяются через `ECO-SHARED-SOURCE-CONTRACTS` в
@@ -283,9 +282,9 @@ version, artifact hash и signing certificate. Совместимость с с�
 
 | Изменение | Проект-владелец | Дополнительный контекст |
 |---|---|---|
-| launcher, QGIS runtime, role, brand profile | `standart_profiles` | его `AGENTS.md` и `docs/START-HERE.md` |
+| launcher, QGIS runtime, role, brand profile | `standart_profiles` | применимые правила для `standart_profiles` и `docs/START-HERE.md` |
 | исходник QGIS-плагина или WebGIS publisher | `C:\dev\lisa\plugins` | root `AGENTS.md`, `geonical-docs/START-HERE.md`, pack плагина |
-| Android import, Collector, sync, storage, updater | этот workspace | root/module `AGENTS.md`, Android registries |
+| Android import, Collector, sync, storage, updater | этот workspace | `AGENTS.md` владельца, правила по путям изменения и Android registries |
 | общий NGW resource contract | publisher и consumer | docs/registry обоих владельцев + end-to-end smoke |
 | offline basemap для Android | QGIS plugin + Android importer | qtiles pack, app rendering/storage docs и import smoke |
 

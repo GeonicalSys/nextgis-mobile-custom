@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-profiler-frame-readiness-and-writer-bounds",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Frame stats агрегируются раз в секунду, первый fully callback и ограниченное",
+        "число slow frames сохраняются отдельно. `fully`, camera-idle, SDK-idle и",
+        "returned-to-SDK различаются; они не принимают полноту бизнес-содержимого.",
+        "Writer работает в фоне: очередь до 512 записей/2 МиБ estimated data, файл до",
+        "64 МиБ, до 60 минут без wakelock (file limit может наступить раньше).",
+        "Первые ручные сеансы планируются примерно на 30 минут. Потери очереди, file limit, probe/writer/frame",
+        "overhead и интервалы сна явны. Итоговые maplib totals хранятся в footer вне",
+        "raw очереди с резервом 256 КиБ. Убийство процесса может оставить JSONL без",
+        "footer; такой сегмент неполон. При MediaStore failure приватный fallback явно",
+        "помечается `export_available=false`, это не успешный доступный export."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-profiler-frame-readiness-and-writer-bounds"
+    ]
+  }
+}

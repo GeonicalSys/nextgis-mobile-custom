@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ngw-sync-and-storage-lookup-and-snapshot-source-verification",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original source frame, dated result and acceptance limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Те же19 SDK28 technical methods: baseline4 named AssertionFAIL/15controls/0technical,",
+        "затем19PASS/0fail/error/skips — Core4 XML1.905с и App15 XML2.298с, Gradle0/35с.",
+        "Core baseline остановился на первом assertNull; прочие206 guards исполнились только",
+        "в GREEN. App15 включает8 старых controls, revised false-save и6 новых; standalone15",
+        "отдельно не запускался. LisaDebug compile входит в unit graph; Belka source compile",
+        "0/39с,100 unique task SET равен reviewed100, порядок иной;7 owned PID завершились.",
+        "Первый compile dry observer потерял native-exit capture после Get-FileHash postprocess:",
+        "его UNKNOWN/NOT_PASS сохранён. Root исправил только owned Q helper, повторил dry0/11с,",
+        "после чего actual compile исполнен один раз. Это не retroactive/allgates PASS.",
+        "",
+        "Полная public recipe находится в Core PR #63, файл",
+        "`update-reports/entries/maplib-20261030-full-snapshot-http206.md`.",
+        "[App internal свидетельства](../../update-reports/entries/android-20261030-sync-admission-regression.md)",
+        "сохраняют exact fixtures/baseline/GREEN. Старые keyset9/clock19/journal22/storage21/",
+        "prefetch12 и desktop1117/1192 не перезапускались. UI39/142/19/F61 не перепривязан;",
+        "новые metadata checks после этой записи ещё NOT_RUN. Прежние App clock drift и",
+        "исключённый Root wiki frontmatter остаются: общего validation/native/device/APK",
+        "acceptance нет. Merge Commit Core до App pointer; source Draft не равен release.",
+        "",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:ngw-sync-and-storage-lookup-and-snapshot-source-verification"
+    ]
+  }
+}

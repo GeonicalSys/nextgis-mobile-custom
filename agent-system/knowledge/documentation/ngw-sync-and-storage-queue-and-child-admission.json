@@ -1,0 +1,72 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-queue-and-child-admission",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### От очереди к дочерним работам",
+        "",
+        "[`ProjectSyncRunner.run`](../../app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java)",
+        "получает собственный DATA_SYNC lease либо использует уже удерживаемый lease",
+        "вызывающей очереди, строит trusted inventory и сохраняет полный план",
+        "project/account pairs **до первого прохода**. Фоновая `MapDrawable(..., false)`",
+        "не активирует UI singleton. Scope направляет `MapBase.getInstance()` и",
+        "`GISApplication.getMap()` к owning map; `MapBase.getActiveInstance()` остаётся",
+        "источником видимой карты. `DatabaseContext.getMapForLayer` сначала проходит",
+        "parent chain слоя и только затем использует scoped fallback.",
+        "",
+        "Scope должен переходить через каждую async границу. `SyncWorkspaceSession`",
+        "capture/post/execute/start учитывают pending children и наследуют исходную",
+        "cancellation generation. Rejected/discarded task освобождает pending ровно",
+        "один раз; удаление задачи из executor без `discard` не равно её завершению.",
+        "`ProjectSyncRunner.onMain` переносит scope на main thread через tracked post,",
+        "а `awaitChildren` допускает только принадлежащие session fill/rebuild стадии.",
+        "Обычный новый callback без owner propagation может разрешить совпавший layer",
+        "path в A вместо B; совпадение ID не является oracle владения.",
+        "",
+        "`LayerFillService.startFillIntent` резервирует operation lease и external ticket",
+        "до отправки foreground-service intent. `onStartCommand` проверяет live token,",
+        "отмену и однократное claim ticket; чужой import не заимствует уже занятую",
+        "фоновую карту. Worker исполняется в tracked scope. Drain, завершение callback,",
+        "release ticket, release lease и закрытие background map — отдельные события,",
+        "которые нельзя заменить одним флагом «сервис не busy».",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-queue-and-child-admission"
+    ]
+  }
+}

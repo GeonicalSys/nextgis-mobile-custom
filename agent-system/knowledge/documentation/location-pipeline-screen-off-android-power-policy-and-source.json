@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:location-pipeline-screen-off-android-power-policy-and-source",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:location-pipeline"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/location-pipeline.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Энергосбережение и выключенный экран — 2026-10-06",
+        "",
+        "`PARTIAL_WAKE_LOCK` и foreground service не отменяют глобальную политику GPS",
+        "в Battery Saver. `LocationPowerPolicy` проверяет `getLocationPowerSaveMode()`:",
+        "режимы 1/2/4 отключают или ограничивают GPS при выключенном экране; 0/3 не",
+        "требуют такого предупреждения для location foreground service. На API 26–27",
+        "включённый Battery Saver даёт предупреждение о возможном прерывании, поскольку",
+        "точная политика недоступна. Native external GNSS не получает предупреждение",
+        "об отключении системного GPS; Mock Location через GPS_PROVIDER получает.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:location-pipeline-screen-off-android-power-policy-and-source"
+    ]
+  }
+}

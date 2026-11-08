@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-project-form-metadata-and-rules",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Collector import/composition sync на worker читает только namespaced ссылку",
+        "`mobile_json_config.lisa_project_scripts`, проверяет ZIP/SHA-256 и активирует",
+        "проверенный кеш своей карты. Ошибка обновления оставляет старую версию с явным",
+        "статусом. Broker читает SQLite через owning layer/map и grants manifest; он не",
+        "вызывает NGW, не меняет feature/outbox и не получает Android accounts в sandbox.",
+        "[Формат и ограничения](project-scripts.md).",
+        "",
+        "`meta.json.lisa_form_rules` доставляется вместе с NGFP и задаёт",
+        "[зависимую обязательность](conditional-form-rules.md) без изменения схемы слоя",
+        "или feature/outbox. Для видимого поля статический required остаётся обязательным",
+        "при любом условии. V2 того же namespace добавляет visible для field/element;",
+        "скрытый контейнер не блокирует UI required/cascade gate, но его значение",
+        "сохраняется в контролах, draft и обычном Save. Схема/flag слоя не меняются.",
+        "Default launch передаёт парные numbered или legacy form/meta файлы.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-project-form-metadata-and-rules"
+    ]
+  }
+}

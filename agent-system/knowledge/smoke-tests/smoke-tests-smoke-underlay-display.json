@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-smoke-underlay-display",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "SMOKE-UNDERLAY-DISPLAY"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "device",
+        "scope": [
+          "app",
+          "maplib",
+          "maplibui"
+        ],
+        "steps": [
+          "Cold-open a map, pinch and zoom-out until the camera stops; confirm zoom is at least 7.5",
+          "Enable a raster underlay and confirm it remains available at zoom 7.5; disable it and confirm it remains hidden",
+          "Select the Light map background and inspect an uncovered map area at several zoom levels",
+          "Switch to Neutral and back to Light; inspect the same area for gray dots or texture artifacts"
+        ],
+        "expected": "Camera floor is 7.5 and each enabled raster underlay has style minzoom 7. Visibility remains authoritative, raster sources use their direct URLs without a display proxy or tile transformation, and the Light background is uniformly #FFFFFF at every checked zoom with no gray dots after mode changes.\n"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-smoke-underlay-display"
+    ]
+  }
+}

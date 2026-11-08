@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-maintenance-reminder-clock-boundary",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "MaintenanceReminders предупреждает о недельной давности полного успешного sync",
+        "онлайн-проекта, проверки updater и известного обновления до/после загрузки.",
+        "Локальным картам sync не нужен. Offline/частичная отправка не обновляют часы;",
+        "новое издание не сбрасывает срок. Старой неизвестной истории дана неделя",
+        "наблюдения; нет выдуманного успеха. В постоянно живом процессе следующее",
+        "открытие через сутки повторяет review без нового фонового job.",
+        "Контракт: consuming docs/architecture/maintenance-reminders.md; Related maintenance.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-maintenance-reminder-clock-boundary"
+    ]
+  }
+}

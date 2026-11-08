@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:shared-underlays-september-14-source-and-package-checks",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:shared-underlays"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/shared-underlays.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "На 2026-09-14 прошли 241 maplib + 62 maplibui + 10 app unit-тестов, docs-check",
+        "и его 7 тестов; Lisa Debug/Release и Belka Release собраны, подписи, ZIP CRC,",
+        "выравнивание и version matrix проверены. Маркеры `turn`/`wood_truck` в APK — 64×64.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "The source and package checks belong to the September 14 build frame."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:shared-underlays-september-14-source-and-package-checks"
+    ]
+  }
+}

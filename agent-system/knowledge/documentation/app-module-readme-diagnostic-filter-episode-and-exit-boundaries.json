@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-diagnostic-filter-episode-and-exit-boundaries",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Подтверждённый local GET /tiles/...pbf 503 с queue_full/heap_headroom остаётся",
+        "в bounded MapRuntime journal. Неизвестные причины и remote HTTP failures сохраняются.",
+        "GPS snapshot v3 добавляет длительность текущей причины и разрывы проверок/сна;",
+        "обычный no-fix/acquisition/filter wait больше не отправляется как bug report.",
+        "Длительные сбои доставки GPS остаются с парным исходом.",
+        "Native scope сохраняет operation/phase; historical events получают близкую",
+        "по времени OS process_exit metadata только вне главного потока, с проверкой",
+        "имени процесса. На Android ниже 11 этих OS сведений нет."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-diagnostic-filter-episode-and-exit-boundaries"
+    ]
+  }
+}

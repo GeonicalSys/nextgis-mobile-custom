@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:map-performance-private-profile-route-20261028",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-performance",
+      "lisa:mobile:resource:map-performance-private-profiler-aggregation"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original measurement or checkpoint and its acceptance limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-performance.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Приватное исследование холодной отрисовки, 28 октября 2026",
+        "",
+        "Внеплановый этап MOB-04 по прямому поручению владельца: собрать подробные локальные",
+        "данные во время ручного прогона на T40, затем выбирать оптимизации по измерениям.",
+        "Долговременный кеш не рассматривается и этим этапом не реализуется. Обычный",
+        "производственный путь сохраняется: `privateResourceProfiling` по умолчанию false.",
+        "Отдельная приватная Release-сборка включает `PRIVATE_RESOURCE_PROFILING`; только",
+        "её копия получает profileable/shell через существующий manifest-only signing helper.",
+        "Она сохраняет package/signing/data, не является новым публичным выпуском.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:map-performance-private-profile-route-20261028"
+    ]
+  }
+}

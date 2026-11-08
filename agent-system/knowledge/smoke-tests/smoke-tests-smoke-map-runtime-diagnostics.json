@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-smoke-map-runtime-diagnostics",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "SMOKE-MAP-RUNTIME-DIAGNOSTICS"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "device",
+        "scope": [
+          "app",
+          "maplib"
+        ],
+        "command": "On an isolated Debug emulator run MapRuntimeDiagnosticsNativeTest via DiagnosticsTestRunner with an explicit synthetic DSN.",
+        "steps": [
+          "Block the main looper with a synthetic query and verify the observer persists a bounded snapshot before the main thread returns and BeforeSend includes it.",
+          "Saturate the real local tile server with two blocked workers and sixteen queued requests; verify the next request returns 503 with queue_full and a request id.",
+          "Run ProjectSyncRunnerTest and the unit parsing/commit-failure fixtures; retain the original pending queue and check the precise phase/cause."
+        ],
+        "expected": "Fast operations do not write, slow/failed operations remain observable with bounded overhead, HTTP reasons survive SDK context and sync failure never clears recovery state."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-smoke-map-runtime-diagnostics"
+    ]
+  }
+}

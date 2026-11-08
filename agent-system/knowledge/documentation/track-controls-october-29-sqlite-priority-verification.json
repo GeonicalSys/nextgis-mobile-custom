@@ -1,0 +1,66 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:track-controls-october-29-sqlite-priority-verification",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:track-controls"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/track-controls.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Новая регрессия `Related -Area sqlite-priority` проходит production SQLite",
+        "reload с CustomVectorSource и пустым global feature cache: две field-line,",
+        "Point/Firefly, MultiPoint/rule icon, обычная линия и polygon-label negative",
+        "контроль, saved/current tracks. Она требует literal placed labels, полные SQL",
+        "геометрии/row hashes, все SDK pass ranges, background pixels и сохранение",
+        "bindings/filters при order repair и hide/Undo. Firefly body — Symbol sprite,",
+        "его Circle baseline намеренно исключает Firefly; body query учитывает реальный",
+        "sprite отдельно от label/icon roles. Первый native запуск29 октября выявил",
+        "реальный дефект relative order из reverse source-cache insertion; oracle не",
+        "ослаблялся. Первые81 JVM/20 Python PASS относятся к исходному варианту;",
+        "canonical traversal затем получил13 planner unit PASS; final83 JVM/10classes",
+        "PASS, 0fail/error/skip. Focused native case1/1 PASS на T40/API30",
+        "(`priority-related-t40-02`), затем весь native класс10 distinct методов PASS",
+        "(`sqlite-related-t40-03/result.json`). T40 logcat не поддержал UID collector `--uid`; это diagnostic gap,",
+        "не повод объявлять весь Related/Full зелёным. Corpus содержит прямых детей root:",
+        "nested groups и Activity recreation пока не проверены.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "The original paragraph combines the regression oracle and its dated results. The T40 runs and diagnostic gap leave nested groups, Activity recreation and full suite acceptance open."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:track-controls-october-29-sqlite-priority-verification"
+    ]
+  }
+}

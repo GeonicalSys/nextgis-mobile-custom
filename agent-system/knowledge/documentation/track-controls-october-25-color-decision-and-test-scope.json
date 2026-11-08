@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:track-controls-october-25-color-decision-and-test-scope",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:track-controls"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/track-controls.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Эти значения выбраны пользователем 25 октября в интерактивном сравнении;",
+        "масштаб образца ×1 и его фон не являются параметрами Android. Для этой",
+        "правки пользователь разрешил пропустить тестовые прогоны. Предыдущие native",
+        "результаты относятся к прежним параметрам, а не подтверждают новый вид.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Preserves the exact interactive decision and test exception for that change. The current derived color and layer rules are in separate resource records."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:track-controls-october-25-color-decision-and-test-scope"
+    ]
+  }
+}

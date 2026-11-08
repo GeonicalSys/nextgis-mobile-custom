@@ -1,0 +1,66 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-12-3b2e8a2ca255",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-12 — Прямой переход к единственной настройке батареи",
+        "",
+        "- «Настроить» в предупреждении о фоновом GPS сразу открывает системный запрос",
+        "  или страницу, когда доступно одно действие. Список остаётся только при",
+        "  нескольких ограничениях; настройки подтверждает пользователь в Android.",
+        "- Обновлены location/settings contracts, module pack, invariant и native smoke.",
+        "  BackgroundLocationWarningTest проверяет прямые переходы для трёх отдельных",
+        "  ограничений и выбор при одновременном Battery Saver и Doze optimization.",
+        "- Official app HEAD и MainActivity повторно сверены через GitHub API:",
+        "  `542f69f904f938dbaca385ecbd688446248827ad`; launch/resume проверки форка",
+        "  отсутствуют в upstream.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-12",
+        "heading": "2026-10-12 — Прямой переход к единственной настройке батареи",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-12-3b2e8a2ca255"
+    ]
+  }
+}

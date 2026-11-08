@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:mobile-roadmap-map-memory-t40-resource-profile-20261028",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout",
+      "lisa:mobile:task:mobile-roadmap-map-memory"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the pinned checkpoint and keep its results within the stated source and runtime bounds."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "28 октября: новый адресный этап по поручению владельца — приватный opt-in сборщик",
+        "ресурсов для ручного прогона T40 по масштабам/плотности/подписям. Приоритет —",
+        "корневые расходы холодного пути; долговременный кеш исключён. Состояние: приватная",
+        "сборка установлена на T40, ручной сеанс завершён пользователем через19мин,",
+        "3×180с CPU/native и полный app export проверены. Подтверждены расходы полного",
+        "scan/sort/stat текущего disk cache и очередь; геометрия дешевле. Overhead heap",
+        "profiler существенен, native owners частично UNKNOWN; оптимизации ещё не выполнены.",
+        "Результаты и ограничения: [разбор T40](../reference/mobile-resource-profile-t40-2026-10-28.md).",
+        "Full/публикация остаются отложены. Контракт и ограничения:",
+        "[map-performance](../architecture/map-performance.md#приватное-исследование-холодной-отрисовки-28-октября-2026),",
+        "[manual runbook](../runbooks/manual-resource-profiling.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:mobile-roadmap-map-memory-t40-resource-profile-20261028"
+    ]
+  }
+}

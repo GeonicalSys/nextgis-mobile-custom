@@ -1,0 +1,62 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:invariants-inv-background-location-warning",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "invariants",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "INV-BACKGROUND-LOCATION-WARNING"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "title": "Background GPS restrictions are checked without starting a recorder",
+        "owners": [
+          "app"
+        ],
+        "statement": "Check launch/resume for screen-off GPS Battery Saver policy, user background restriction and battery optimization. Open the applicable public system setting directly when there is one action; retain a choice when multiple restrictions apply, without changing settings or starting a recorder automatically. Retain one acknowledgement per unchanged launch state across rotation; a changed risk warns again and clearing restrictions removes the warning. Legacy Doze prompt suppression does not hide it. Missing Doze exemption means a possible risk, not proof of current GPS failure.\n",
+        "related_code": [
+          "app/src/main/java/com/nextgis/mobile/location/BackgroundLocationWarning.kt",
+          "app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt",
+          "app/src/androidTest/java/com/nextgis/mobile/reliability/BackgroundLocationWarningTest.java"
+        ],
+        "verify_smoke": [
+          "SMOKE-BACKGROUND-LOCATION-WARNING",
+          "AUTO-APP-RELEASES"
+        ],
+        "must_update_docs": [
+          "docs/architecture/location-pipeline.md",
+          "docs/reference/settings-and-config.md",
+          "app/docs/README.md"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:invariants-inv-background-location-warning"
+    ]
+  }
+}

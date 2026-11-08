@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-local-attachment-retention-after-push",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Вложения после push",
+        "",
+        "После успешной загрузки вложения на сервер локальный файл **не удаляется**:",
+        "`setNewAttachId` переименовывает его под server attach id, и сразу пишется",
+        "строка в `FeatureAttachments`. Идентификация/галерея видит фото уже после",
+        "первой sync (offline + online без дубля одного id). Раньше файл удалялся без",
+        "online-meta, поэтому UI «оживал» только после второго pull — это не замена",
+        "текущему контракту.",
+        "",
+        "ID контракта: `INV-BACKUP-BEFORE-DESTRUCTION`.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-local-attachment-retention-after-push"
+    ]
+  }
+}

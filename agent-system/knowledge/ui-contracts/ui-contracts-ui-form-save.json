@@ -1,0 +1,90 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-form-save",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-FORM-SAVE"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-FORM-SAVE",
+        "group": "forms",
+        "title": "Сохранение формы в owning workspace",
+        "surface": "Форма объекта",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [
+          "form_save"
+        ],
+        "meaning": "Save проходит checkpoint и validation, проверяет owning map и применяет локальный insert/update; успех локального Save отличается от sync ACK.",
+        "value_origin": "Controls/copy defaults → ContentValues; FeatureSaveJournal по map/layer/operationId; provider выбранного слоя.",
+        "units": "Типы и единицы берутся из схемы полей.",
+        "updates": [
+          "Перед записью готовится checkpoint и выполняются validators/scripts.",
+          "Найденная операция повторно использует уже сохранённый feature ID."
+        ],
+        "actions": [
+          "Сохранить допустимый объект"
+        ],
+        "conditions": [
+          "View-only и неинициализированный слой отказывают.",
+          "app.getMap должен совпадать с DatabaseContext owning map.",
+          "Ошибка validation/provider не должна становиться успехом."
+        ],
+        "saved_state": "Operation journal позволяет сопоставить повторную попытку; очередь синхронизации и remote ACK отдельны.",
+        "source_ids": [
+          "WF-FORM-SAVE"
+        ],
+        "expectations": [
+          "Oracle: повтор Save одной операции не создаёт второй объект; при смене owning map запись отклоняется без изменения чужой карты.",
+          "Контрпример: закрытие формы после provider error, создание дубликата при retry или запись в новый активный проект."
+        ],
+        "unknowns": [
+          "Атомарность transaction/journal, полный attachment workflow и server acknowledgement требуют отдельного исполнения."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-save",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-form-save"
+    ]
+  }
+}

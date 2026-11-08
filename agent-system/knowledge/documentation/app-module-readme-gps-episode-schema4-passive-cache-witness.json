@@ -1,0 +1,67 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-gps-episode-schema4-passive-cache-witness",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## GPS diagnostic episodes",
+        "",
+        "Snapshot v4 сохраняет прежние причины, пороги,24-sample history, episode UUID и",
+        "парные recovery/cancel, добавляя время текущего rawGps измерения и пассивное",
+        "сравнение с системным GPS cache. RawGps может происходить из существующего seed;",
+        "это не точное время входа callback. Только при уже отправляемом recovery report",
+        "app читает системный GPS cache не более одного раза и сохраняет10 фиксированных",
+        "numeric/enum полей без координат, extras или текста исключений. Clock/read/",
+        "permission failures остаются явными unknown; старые replay события не получают",
+        "новое наблюдение задним числом. Ни классификация no-fix/callback_stalled, ни",
+        "retry, фильтр, recording/Network/precision leases/wake lock не меняются.",
+        "Показания usedInFix и более новый cache не устанавливают причину сбоя. Это",
+        "улучшение диагностики, не исправленная GPS-пауза и не выполненная vendor/native",
+        "приёмка. Контракт и границы синхронного чтения —",
+        "[диагностика GPS](../../docs/architecture/error-reporting.md#пассивное-сравнение-с-системным-gps-cache--29-октября-2026).",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:error-reporting",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-gps-episode-schema4-passive-cache-witness"
+    ]
+  }
+}

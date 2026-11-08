@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:overview-desktop-ngw-and-offline-import-boundaries",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:overview"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the App architecture or upstream workflow topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/overview.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Внешняя граница экосистемы",
+        "",
+        "Desktop-профиль ЛИСА и QGIS-плагины находятся в отдельных проектах и не",
+        "являются Gradle/runtime-зависимостями приложения. Они подготавливают и",
+        "публикуют ресурсы в NextGIS Web; Android получает их через NGW API, Collector",
+        "import и sync. Отдельные offline-артефакты передаются только через явный",
+        "пользовательский import поддерживаемого формата. Поэтому изменение общего",
+        "resource contract проверяется с обеих сторон, а файлы `<central-root>`,",
+        "QGIS plugin mirrors и `variables.py` никогда не читаются APK напрямую.",
+        "",
+        "Владельцы, канонические входы документации и end-to-end поток описаны в",
+        "[`lisa-ecosystem.md`](lisa-ecosystem.md) и",
+        "[`../registry/ecosystem.yaml`](../registry/ecosystem.yaml).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:overview-desktop-ngw-and-offline-import-boundaries"
+    ]
+  }
+}

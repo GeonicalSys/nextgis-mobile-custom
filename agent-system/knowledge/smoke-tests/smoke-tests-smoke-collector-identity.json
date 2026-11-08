@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-smoke-collector-identity",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "SMOKE-COLLECTOR-IDENTITY"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "device",
+        "scope": [
+          "maplib",
+          "maplibui"
+        ],
+        "steps": [
+          "Import a Collector project and record each layer account, remote id and managed origin",
+          "Corrupt or remove one vector R-tree file, then cold-open the project and run sync",
+          "Return 404 for one managed layer while it is still referenced by the project snapshot",
+          "Remove layer_origin and that layer's ngw_identity_backup from one otherwise valid legacy-style config, then reopen and sync",
+          "Create a second physical layer with the same account and remote id, then run composition sync"
+        ],
+        "expected": "Cache repair preserves NGW identity; a managed 404 does not convert the layer to local; one unowned physical match is adopted without redownload; an ambiguous duplicate identity records local_identity_conflict, blocks composition apply and never creates another layer.\n"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-smoke-collector-identity"
+    ]
+  }
+}

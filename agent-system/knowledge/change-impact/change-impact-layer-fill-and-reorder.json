@@ -1,0 +1,71 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:change-impact-layer-fill-and-reorder",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "change-impact",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "definition": {
+      "role": "complete_change_impact_definition",
+      "value": {
+        "id": "LAYER-FILL-AND-REORDER",
+        "paths": [
+          "maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/util/LayerFillStaging.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/fragment/ReorderedLayerView.java"
+        ],
+        "owners": [
+          "maplibui",
+          "maplib",
+          "app"
+        ],
+        "read": [
+          "docs/architecture/map-rendering.md",
+          "docs/architecture/collector-projects.md"
+        ],
+        "invariants": [
+          "INV-LAYER-ORDER",
+          "INV-HOT-ADD-CONSISTENCY",
+          "INV-COLLECTOR-ISOLATION",
+          "INV-COLLECTOR-RESUMABLE",
+          "INV-NGRC-PRESERVE"
+        ],
+        "must_update_docs": [
+          "maplibui/docs/manifest.yaml",
+          "docs/architecture/map-rendering.md"
+        ],
+        "verify": [
+          "SMOKE-NGRC-ORDER",
+          "SMOKE-HOT-RASTER",
+          "SMOKE-COLLECTOR-IMPORT"
+        ],
+        "strict_docs": false
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/change-impact.json",
+    "scopes": [
+      "lisa:mobile:contract:change-impact-layer-fill-and-reorder"
+    ]
+  }
+}

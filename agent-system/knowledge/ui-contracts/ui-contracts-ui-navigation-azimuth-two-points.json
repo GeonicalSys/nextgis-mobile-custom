@@ -1,0 +1,115 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-navigation-azimuth-two-points",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-NAVIGATION-AZIMUTH-TWO-POINTS"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-NAVIGATION-AZIMUTH-TWO-POINTS",
+        "group": "navigation",
+        "title": "Азимут A→B и коррекция",
+        "surface": "Measurements two-point azimuth",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [
+          "measurement_azimuth_points",
+          "azimuth_panel",
+          "azimuth_distance",
+          "azimuth_bearing",
+          "stakeout_correction_value"
+        ],
+        "meaning": "Two map taps define A/B independently from GPS. Magnetic azimuth subtracts WMM declination plus saved correction at A; near-zero range is undefined.",
+        "value_origin": "Map projection -> A then B -> geodesic result -> WMM2025(A,time)+correction -> true-minus-declination normalize -> fields",
+        "units": "WGS84 points, metres, clockwise magnetic degrees; distance<=0.01m undefined; correction degrees clamp[-180,180].",
+        "updates": [
+          "Second tap computes; next tap resets A; correction change recomputes."
+        ],
+        "actions": [
+          "Pick A/B; adjust/reset correction; Close clears temporary measurement."
+        ],
+        "conditions": [
+          "Two-point azimuth mode/projection; input coordinates need no live GPS."
+        ],
+        "saved_state": "Clamped correction string persists; temporary A/B separate from project features.",
+        "source_ids": [
+          "map-screen-wgs84",
+          "azimuth-two-points",
+          "azimuth-two-point-result",
+          "azimuth-magnetic-transform",
+          "azimuth-correction-save"
+        ],
+        "expectations": [
+          "Phone movement cannot redefine fixed A/B. True90/effective declination10 yields magnetic80.",
+          "Counterexample: adding declination or taking GPS as A changes semantics; coincident A/B gives undefined bearing."
+        ],
+        "unknowns": [
+          "Runtime NOT_RUN: no GUI, device, emulator, build or APK resource merge acceptance in this task."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-map-screen-wgs84",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-azimuth-two-points",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-azimuth-two-point-result",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-azimuth-magnetic-transform",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-azimuth-correction-save",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-navigation-azimuth-two-points"
+    ]
+  }
+}

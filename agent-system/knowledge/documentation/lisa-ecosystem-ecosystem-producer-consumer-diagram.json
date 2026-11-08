@@ -1,0 +1,66 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:lisa-ecosystem-ecosystem-producer-consumer-diagram",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:lisa-ecosystem"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/lisa-ecosystem.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "```mermaid",
+        "flowchart LR",
+        "    source[\"plugins workspace<br/>исходники QGIS-плагинов\"]",
+        "    profiles[\"standart_profiles<br/>launcher, roles, profile\"]",
+        "    mirror[\"brand plugin mirror\"]",
+        "    qgis[\"Desktop QGIS ЛИСА/БЕЛКА\"]",
+        "    ngw[\"NextGIS Web<br/>resources, permissions, Collector\"]",
+        "    package[\"Portable offline package<br/>MBTiles / ZIP / supported import\"]",
+        "    mobile[\"Android ЛИСА/БЕЛКА<br/>offline workspace и sync\"]",
+        "    release[\"apps-geonical.ru<br/>APK manifests и artifacts\"]",
+        "",
+        "    source -->|\"явная синхронизация\"| mirror",
+        "    profiles --> qgis",
+        "    mirror -->|\"launch delivery\"| qgis",
+        "    qgis -->|\"stand_project / sync_ngw / nextgis_connect\"| ngw",
+        "    ngw <-->|\"NGW API, Collector import, feature sync\"| mobile",
+        "    qgis -->|\"qtiles_geonical, explicit export\"| package",
+        "    package -->|\"явный пользовательский import\"| mobile",
+        "    release -->|\"identity-checked update\"| mobile",
+        "```",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:lisa-ecosystem-ecosystem-producer-consumer-diagram"
+    ]
+  }
+}

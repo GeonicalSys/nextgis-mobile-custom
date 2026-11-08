@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:overview-gradle-api-and-transitive-consumers",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:overview"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the App architecture or upstream workflow topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/overview.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Gradle-зависимости",
+        "",
+        "```text",
+        "app ───────────────► maplibui ─────────────► maplib",
+        " │                       │",
+        " ├───────────────────────┴───────────────► easypicker-module",
+        " └───────────────────────────────────────► wizardpager",
+        "```",
+        "",
+        "`maplibui` экспортирует `maplib` как `api`, поэтому часть типов `maplib`",
+        "доступна `app` транзитивно. Изменение публичного API в `maplib` нужно проверять",
+        "как минимум в `maplibui` и `app`.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:overview-gradle-api-and-transitive-consumers"
+    ]
+  }
+}

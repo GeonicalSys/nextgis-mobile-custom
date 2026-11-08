@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-27-738da2c40b3f",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-27 — Отзыв224 и завершение мобильного разбора",
+        "",
+        "Зафиксированы фактический rollback на223, исправление withdrawn фильтра портала,",
+        "передача подписанного приватного APK030f303 и связанные Draft PR61/82/7.",
+        "Все исходные мобильные группы получили индивидуальные решения; новый69 разобран",
+        "как отдельное неподтверждённое native завершение223. Приведены реальные результаты",
+        "и неуспешные попытки Related, новый аппаратный gate и оставшаяся Samsung приёмка.",
+        "[Свидетельства и границы](reference/mobile-crash-224-2026-10-27.md).",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-27",
+        "heading": "2026-10-27 — Отзыв224 и завершение мобильного разбора",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-27-738da2c40b3f"
+    ]
+  }
+}

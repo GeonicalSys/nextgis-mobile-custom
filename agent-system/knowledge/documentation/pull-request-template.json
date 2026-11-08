@@ -1,0 +1,92 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:pull-request-template",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          ".github/PULL_REQUEST_TEMPLATE.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the published GitHub template address and pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": ".github/PULL_REQUEST_TEMPLATE.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Проблема и результат",
+        "",
+        "Что изменилось для пользователя или разработчика и почему это нужно.",
+        "",
+        "## Связь с дорожной картой",
+        "",
+        "- ID из [дорожной карты](../docs/roadmap/mobile.md):",
+        "- Связь изменения с целью и критериями этого пункта:",
+        "- Для внеплановой работы: причина, влияние на очередь и сдвигаемые задачи:",
+        "- Решение владельца продукта при изменении приоритетов или объёма:",
+        "- ID карточки update-reports (отдельный ID; для чистой Markdown-правки: «не требуется — документация»):",
+        "",
+        "Если подходящего пункта нет, добавьте новый в карту. Срочный инцидент оформляется",
+        "до merge. Заполнение ID не заменяет содержательную проверку соответствия.",
+        "",
+        "## Влияние и зависимости",
+        "",
+        "- Данные, локальные правки и восстановление:",
+        "- Синхронизация и серверные контракты:",
+        "- Карта и совместимость режимов/ЛИСА/БЕЛКА:",
+        "- Фоновая работа, память, диск и батарея:",
+        "- Зависимые PR, порядок слияния и submodule pins:",
+        "",
+        "Для неприменимого пункта кратко объясните причину.",
+        "",
+        "## Проверки и доставка",
+        "",
+        "- Выполненные проверки и ссылки на результаты:",
+        "- Непроверенные сценарии и ограничения:",
+        "- Обновлённые документы и статусы карты:",
+        "- Текущее состояние: в PR / слито / проверено на устройстве / выпущено:",
+        "",
+        "Регламент review обязателен. Автоматический roadmap check и обязательное правило",
+        "слияния пока не внедрены. Карта и этот PR сами по себе не разрешают выпуск APK.",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:mobile-roadmap-layout",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:pull-request-template"
+    ]
+  }
+}

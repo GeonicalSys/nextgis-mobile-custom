@@ -1,0 +1,1303 @@
+{
+  "schema_version": 1,
+  "owner": "android_projects/android_gisapp",
+  "source": {
+    "path": "app/docs/manifest.yaml",
+    "revision": "59cbcc50645950725d44d6f56f24f09af629471b",
+    "blob": "bb422a0f9e684eca8167bf29afa9d07fabe1e89b",
+    "sha256": "d2007c2594f2db18d71d82babd5c0130d7643228c1515311b5537d6824a72bb0",
+    "bytes": 72663
+  },
+  "spans": [
+    {
+      "id": "lisa:mobile:metadata:app-module-manifest",
+      "start_byte": 0,
+      "end_byte": 100,
+      "sha256": "93d9eedae1a35b09981c348760d5de815743bab380faf4128821607d09e8c500"
+    },
+    {
+      "id": "lisa:mobile:resource:app-module-entrypoints",
+      "start_byte": 100,
+      "end_byte": 343,
+      "sha256": "7a13cfb90483c323a186337e622042fcfc3815ac834726fff82227e8a951ded0"
+    },
+    {
+      "id": "lisa:mobile:metadata:app-module-manifest",
+      "start_byte": 343,
+      "end_byte": 359,
+      "sha256": "5e5f5ad8c3b7caf34f34feec09558a1c0312e4875eb7279c723735d302e663ac"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-directvectortilesofflinetest-0e88ef420c",
+      "start_byte": 359,
+      "end_byte": 665,
+      "sha256": "259048255837611d9836dd07760389351b1172b3b6cafd44dfc3fdf13a06a81d"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-directvectortilestest-43d988d542",
+      "start_byte": 665,
+      "end_byte": 956,
+      "sha256": "f7d8be7c26b199ecff74c6f81e6abb77bc442ea5e7acfd3b378512a71619eb2e"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-legacyunderlayprogresstext-dc9430c6d0",
+      "start_byte": 956,
+      "end_byte": 1181,
+      "sha256": "74ec0946edfb2b6189e66cbd9d1b85c2b5f9d5875efac130edfb4878bace2936"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-legacyunderlaytransfersessiontest-7c475c001b",
+      "start_byte": 1181,
+      "end_byte": 1435,
+      "sha256": "c5f0d09d88840cab8b21c9f8d0ed00ecb30c3741f2c6cc948de201ebbd95f856"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-legacyunderlayprogressnativetest-1cfb4aa019",
+      "start_byte": 1435,
+      "end_byte": 1711,
+      "sha256": "b18f2c0de8e00457d8bd48c2db17244a74989a755c007d0bcdc51049641fc5a4"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-privaterenderresourceprofiler-1eab5dd573",
+      "start_byte": 1711,
+      "end_byte": 2113,
+      "sha256": "d5a3685e402dd64de15ac3e59e0cbb24b20468acff56beed32dce8fd8741716a"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-privaterenderresourceprofilertest-d20fcded77",
+      "start_byte": 2113,
+      "end_byte": 2433,
+      "sha256": "6185a96094547781e57e1561918e91337df59100c8b66908f531d146c1847811"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-sqlitemvtevidence-876edc07a9",
+      "start_byte": 2433,
+      "end_byte": 2802,
+      "sha256": "28b00ce1fe3dd2b5e986aedc7bb0ceded33a9a8c1597f9e27bb26970a1b13429"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-nativesqlitevectorrenderingtest-4866c92207",
+      "start_byte": 2802,
+      "end_byte": 3523,
+      "sha256": "64fc88509a598a17f996e5fac48e3f65d7c274b2c910707e2b199ad9892844a3"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-diagnosticsbackgroundlocationstart-7f3e98e5ca",
+      "start_byte": 3523,
+      "end_byte": 3918,
+      "sha256": "7166c23bf0066371eb13f59401c4e4db5d6b4ebf46701267eaf1f0ea71dc4c74"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-diagnosticsbackgroundlocationstarttest-3d97373866",
+      "start_byte": 3918,
+      "end_byte": 4264,
+      "sha256": "a496b7f6dedfeef67eb14948c8cf9e9e3594e89b7dcee6056d6c966c3f0e4996"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-rendermemorynotice-9e94b8b8d8",
+      "start_byte": 4264,
+      "end_byte": 4567,
+      "sha256": "efb34fa0c45f9015a14fc8a2caa731c1881f6e1c9a851ecee56e7eec6a81d92b"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-scrollablealertdialogs-2fe48a8e20",
+      "start_byte": 4567,
+      "end_byte": 4903,
+      "sha256": "e0416c146d64c84f5ce45c7edf9bbe9315d88c8a466c20e122907f85a562cc9c"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-rendermemorynoticetest-ce0255bc9b",
+      "start_byte": 4903,
+      "end_byte": 5132,
+      "sha256": "ed78ff3f6d4813cc8b0edf864e299213a2770667a957e86dd47c92801a30b3c5"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-rendermemorysafetytest-49496943bd",
+      "start_byte": 5132,
+      "end_byte": 5679,
+      "sha256": "3c2766317d799d01a47ddb910f2b14c83893f85d963d4c19a7a39f8d2b4a2c39"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-diagnosticsgpsplatform-605d9f60c7",
+      "start_byte": 5679,
+      "end_byte": 6096,
+      "sha256": "ec9031c32d9f0ee62f7b38d11a6a752a796dcd598e51e8e010e6fbe6c46a4f89"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-diagnosticsgpsfixwitness-245d03024d",
+      "start_byte": 6096,
+      "end_byte": 6462,
+      "sha256": "053b3da168c83d7141fa31fcdf94a8a847a6b19097fee45fa5a57c6b0906056b"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-diagnosticsgpsfixwitnesstest-2d457e5f8a",
+      "start_byte": 6462,
+      "end_byte": 6767,
+      "sha256": "97d296fd3abd10c08fa96a2a2216dfe48ad176de80a2d5f060206a1d2e67dc0f"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-diagnosticsgpsplatformtest-4e0a0066a7",
+      "start_byte": 6767,
+      "end_byte": 7074,
+      "sha256": "d9acd123d5983d6712188f14e33e3cbff9ffeb5609903a4d52a45b45bc4e6de8"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-diagnosticsprocessexitreporter-3e754bd4b4",
+      "start_byte": 7074,
+      "end_byte": 7445,
+      "sha256": "d89ae3a36e48ec77407af6bc1d709330d007634acf19710796e98e9f4c913f43"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-diagnosticstracepolicy-b6155c421a",
+      "start_byte": 7445,
+      "end_byte": 7760,
+      "sha256": "f10a2c0843ffb29f3dee13d83eb921aee02f90efa368c640aca0de588f94c8ca"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-diagnosticstracepolicytest-4a539350c8",
+      "start_byte": 7760,
+      "end_byte": 8049,
+      "sha256": "d15447f1175c8552938dc2a772f9d7b38c74529dd81591f9e504b4f365ef605d"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-diagnosticsnativetrace-d29cd2fcec",
+      "start_byte": 8049,
+      "end_byte": 8411,
+      "sha256": "aeab9d9588bc4cc9ce786470b7b2cfe94614e7cec05f6007b38a03aa7a3bc699"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-diagnosticsnativetracetest-98933dc344",
+      "start_byte": 8411,
+      "end_byte": 8680,
+      "sha256": "307f2579cb22e2d67ba60a2f7a4aca0abe178289da54fde427a2d06990a216a3"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-diagnosticsprocessexitreportertest-e9c19d4908",
+      "start_byte": 8680,
+      "end_byte": 8970,
+      "sha256": "dce27cf08902e54f7e5f6ff1957d8bb4be091c75c191ec218b0a978c314034a5"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-maprenderstresstest-aecbf7cbc0",
+      "start_byte": 8970,
+      "end_byte": 9460,
+      "sha256": "c8f4684f4202cacb9652ff50acd3e08d0836691e61f8f711f38f534a5ae34fa2"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-mapselectiondialog-33129bb01d",
+      "start_byte": 9460,
+      "end_byte": 9696,
+      "sha256": "45d5bd6cd97914e6c75a6dad780595c860c4053f0480b8ce9e11a25885eaf16b"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-maintenancereminders-a8a206610d",
+      "start_byte": 9696,
+      "end_byte": 10022,
+      "sha256": "a979274d5dd3156b1ba92641246660cbcab9474c00084e4a42bb6028b065cfe9"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-maintenancereminderstest-e2e45230b3",
+      "start_byte": 10022,
+      "end_byte": 10326,
+      "sha256": "07920f696ad3c86b17fd1c99470f1f7ee22cc955b3b058d5784823d398296a79"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-maintenanceremindersnativetest-f6d2a926c3",
+      "start_byte": 10326,
+      "end_byte": 10644,
+      "sha256": "b9147b3e580e999f6b39cca2d613d40c19146021af8193edcde9e9772855fdb5"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-verificationio-bdc9367cfe",
+      "start_byte": 10644,
+      "end_byte": 10842,
+      "sha256": "f7ddfc119caf14710fc163499fcdd3c509db84f4c89bc482b40b9884c7b83f94"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-visiblelinelabelstest-3f010766f0",
+      "start_byte": 10842,
+      "end_byte": 11057,
+      "sha256": "8f741766fafa17c879f33da9fefdf3e8b058d735917ee17e97b3bcdfabaecbdc"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-trackstopconfirmationtest-8964bcbbb7",
+      "start_byte": 11057,
+      "end_byte": 11343,
+      "sha256": "2d7fd2f65eabbd3235f3dfb3cf93113354317c3af2cc795a3b54c22840cf3e57"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-legacytrackcolorsnativetest-cd12154540",
+      "start_byte": 11343,
+      "end_byte": 11544,
+      "sha256": "be65a56b0006ba3a56a8e06199346cf88f47576068b141fb93b1e81196894ad3"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-trackcontrolstest-89471e7599",
+      "start_byte": 11544,
+      "end_byte": 12089,
+      "sha256": "e5cd59b1bed38a67b495637b5a95bcc4b4f56824c4df070933789a91ee07bff0"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-nativestyletouch-417ca11f59",
+      "start_byte": 12089,
+      "end_byte": 12377,
+      "sha256": "0e67a2c27e1d86b134fda0cea272d8c6d6af509ab98906817f1c73031dfcc5fb"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-polygonstylerenderingtest-5dafb4bb0c",
+      "start_byte": 12377,
+      "end_byte": 12591,
+      "sha256": "891d9e3ae6971da101fe6bce1ec6198f2ead97c3f59cb887034a6c7ae75148c5"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-polygonstyleeditortest-72d19b0bbf",
+      "start_byte": 12591,
+      "end_byte": 12802,
+      "sha256": "9b60410f091b16b6951eb0a6167f52e453ca49a386c3b3a46551a73157414099"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-fireflystyleeditortest-d0eb7658b4",
+      "start_byte": 12802,
+      "end_byte": 13107,
+      "sha256": "9843668a07e1dc780fb5f193db6450f6f2993878fbd0a0f4419bcfc274156571"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-appupdatenativetest-183cd20838",
+      "start_byte": 13107,
+      "end_byte": 13491,
+      "sha256": "72a8a3ef81d2b33ee4ae0b796d4765a55160c2406725e3bb2a3a97bbd121e943"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-diagnosticsexitinfo-df770181bb",
+      "start_byte": 13491,
+      "end_byte": 13972,
+      "sha256": "0339a2b7505acc65ea8168c0c7a3e72009e9345710b806adec3ac2bc4b3b363e"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-appupdatenetworkguardtest-3d4059cef4",
+      "start_byte": 13972,
+      "end_byte": 14242,
+      "sha256": "a35478eeb61dfab3591a6daafdf56db29e669cbc3ac11e2b0967e0d329e65a9f"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-appupdateworker-601feaec4b",
+      "start_byte": 14242,
+      "end_byte": 14540,
+      "sha256": "342745e6f3dd5224248cba6d673733467f823c59495798b1c4a861076c6b494a"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-appupdatedownload-921fb0f551",
+      "start_byte": 14540,
+      "end_byte": 14808,
+      "sha256": "89c621ec9bd57f2dc98beb2434c933d02e7825e75d3f3f8e5ce7fd8bf18f88c2"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-appupdatedownloadtest-9f3f9d6394",
+      "start_byte": 14808,
+      "end_byte": 15043,
+      "sha256": "cb898a47231ba622d72bea3b630d53b0d9df40cc08d00500facb59ff2eb2546b"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-appupdatereadystatetest-af6881d7a5",
+      "start_byte": 15043,
+      "end_byte": 15284,
+      "sha256": "8783f6993006d2ce660bca71ece4edd1cee02ac3bb3d826ebc7a9c7bc9ef0574"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-appupdatenativetest-183cd20838-2",
+      "start_byte": 15284,
+      "end_byte": 15683,
+      "sha256": "178fc593227c4bd09dfd49d412237e5a2a1945b57fffd6361e92f25b42feb53f"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-cascadingformstest-5b6e4d4cf5",
+      "start_byte": 15683,
+      "end_byte": 16097,
+      "sha256": "af7c5e695d3c5941e3ad5e5ad65d4358c0f67fa9374672f03a38a2aab206de29"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-preferences-location-b9a239449b",
+      "start_byte": 16097,
+      "end_byte": 16369,
+      "sha256": "5430b866ee79ae87c540ff352dd80924617ae07ca0caf51d627a65d833772bd9"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-gpsrecoverynativetest-f3f14f5e34",
+      "start_byte": 16369,
+      "end_byte": 16798,
+      "sha256": "9184d0d8ce0500fa92b3e4c87650695f14fb39ca3a81fb4379596fd4f423b0e4"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-syncjournalcommit-e1cd0616ca",
+      "start_byte": 16798,
+      "end_byte": 17017,
+      "sha256": "638cf1ee820c4393ede19720315774993e76a326d5a27730a0c6c28f721529c9"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-syncjournalcommittest-1ac14791c3",
+      "start_byte": 17017,
+      "end_byte": 17257,
+      "sha256": "0c018ce5c84d4b27ce8295955d1530e2b2008dc1d1e5943bef4d390ccc3dcd7e"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-syncrecoveryjournalnativetest-a3f74852a6",
+      "start_byte": 17257,
+      "end_byte": 17487,
+      "sha256": "4fd5b5a70da53622a63aad4d0519dcd33df3bd877d9ec84afbc016f1cd9609b3"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-usageanalytics-e47a5a5400",
+      "start_byte": 17487,
+      "end_byte": 17718,
+      "sha256": "8e89ea1b9cbedded484c3f07c7057a8e3904232a8721ffe294b17d75e4500eda"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-usagestore-acca2e5577",
+      "start_byte": 17718,
+      "end_byte": 17935,
+      "sha256": "611f01dcf6c055027504cfed5c16633a234b9ff0f990857a2e57b3dababaf1ab"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-usagedelivery-68a8378b4d",
+      "start_byte": 17935,
+      "end_byte": 18127,
+      "sha256": "9d80583478858d59baa0c1425b4f9526046a910bcf93e946f8347069b72b751f"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-usageuploadworker-ac616f5db6",
+      "start_byte": 18127,
+      "end_byte": 18313,
+      "sha256": "2dd9b9597d56ab5bdfae57f91bb6d8c5d9ec38a5bb39accbe24a5bacd50a0bd4"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-usageopenpolicy-45b22c33db",
+      "start_byte": 18313,
+      "end_byte": 18507,
+      "sha256": "62140a985389282efc0140f8027f5d629c54abcfabc73764153bd2604ae06559"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-usagedeliverytest-774d79d806",
+      "start_byte": 18507,
+      "end_byte": 18740,
+      "sha256": "19ecbe834f3b5cb5c1e83fc5bed7e06bae4acb90576a0067deeca8b8bd2e1713"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-locationdisplayaccuracy-5c9061e2a9",
+      "start_byte": 18740,
+      "end_byte": 18996,
+      "sha256": "8bc9ea7504703d3d494db2ef52c41df6de44ea19a7fd809ebd817723a7ff5719"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-aboutactivity-5616ad3826",
+      "start_byte": 18996,
+      "end_byte": 19202,
+      "sha256": "ce92907bfd877e801c5676e41d468dc248726c40945e5cffb96a3b42ce641ba5"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-sharedtrackstest-beaefab01d",
+      "start_byte": 19202,
+      "end_byte": 19505,
+      "sha256": "8465219cf90e42bb94ad50dd9f270e716b1ad5cad30dac4c4af506c91e581745"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-vectorstylerenderingtest-09febc837c",
+      "start_byte": 19505,
+      "end_byte": 20061,
+      "sha256": "7266726498e02957832299c31a97e6ed2e0d19768d7eb1459ce191d6386ce397"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-run-mobile-tests-55911b4e31",
+      "start_byte": 20061,
+      "end_byte": 20354,
+      "sha256": "6fcbcd02387d4b306e01fd7440d317110586da34d54de7cefff8142c0c04d706"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-mobile-native-log-6ff014d577",
+      "start_byte": 20354,
+      "end_byte": 20675,
+      "sha256": "7dd2a8ae5879828bd5aa6eeff665567e47ab2595832ab5d7457eb72603d72a40"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-test-mobile-native-log-4d65c63e3b",
+      "start_byte": 20675,
+      "end_byte": 20972,
+      "sha256": "50046eefc97ea054c7aa7046fd49e61a80802cf2b5836ea38e918103d798bc4f"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-locationorbittest-5af5bfd7be",
+      "start_byte": 20972,
+      "end_byte": 21355,
+      "sha256": "c1baad58f184794ce5fce94b7b05c5fbfc11621b341920c26d5abe0e0d76929e"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-verificationtestrunner-cd98e31c3f",
+      "start_byte": 21355,
+      "end_byte": 21674,
+      "sha256": "2a3a93cc33ee90fd0744e222a42cc7a3e6bec2b455e0a776d30b015a4496d765"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-layerselectiondialogtest-1fc50cbe69",
+      "start_byte": 21674,
+      "end_byte": 21867,
+      "sha256": "162a73262a20cda2056a296e8a8bb4b4db3e402e5ba0ddae10122b167bac959c"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-projectlayerselectiontest-e86abf1d50",
+      "start_byte": 21867,
+      "end_byte": 22189,
+      "sha256": "5fabeef7f77e89dc6bd1ed5aeaf851faa30cdce11d104a2683cba36dc2b3d4d7"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-projectsyncdisplaynativetest-2c5c03918c",
+      "start_byte": 22189,
+      "end_byte": 22413,
+      "sha256": "76ce4a4ab7382702d8bf158b10f05bfcc7f30764aa7c8a6dd72485431b563259"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-layout-azimuth-panel-d473c120bf",
+      "start_byte": 22413,
+      "end_byte": 22620,
+      "sha256": "72403ca2a0301f47dc7e2a1927c6c3c2efedb6be35be0c4134094e969217d780"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-layout-stakeout-panel-ed481cf704",
+      "start_byte": 22620,
+      "end_byte": 22799,
+      "sha256": "1c0be6daf06c7cd1d5fcdf7985d45df106aaff474debc8f08169ac2f239d6cf5"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-projectsyncrunner-7dbf8d0a0d",
+      "start_byte": 22799,
+      "end_byte": 23008,
+      "sha256": "549a65a69b8a2a7bb161bc020549eec874360ce99a4d1c62c54974b7c323b572"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-localchangesuploadtest-e392c98820",
+      "start_byte": 23008,
+      "end_byte": 23274,
+      "sha256": "a344b50668f7b05701fe71621d0b937d233c944d6929453d5dc8870d32cd3073"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-backgroundlocationcontroller-2a905f2f75",
+      "start_byte": 23274,
+      "end_byte": 23671,
+      "sha256": "a68a7bdda88364fc404661d9c79c7726b46a6aad30541c9b2529d9c440ef2bc0"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-backgroundlocationservice-6c5e1d3188",
+      "start_byte": 23671,
+      "end_byte": 23989,
+      "sha256": "96075d968736fc989b2e0ef3f154d864aad38071ff47429ecd1c6eaf29043334"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-backgroundlocationpolicy-2cc5dc4319",
+      "start_byte": 23989,
+      "end_byte": 24224,
+      "sha256": "94c1f5bed7bc4a6c9329e1d7e3314c2cd76db1945c1b7024a5c1fcce52446cd6"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-backgroundgpsnativetest-56cba5fef5",
+      "start_byte": 24224,
+      "end_byte": 24650,
+      "sha256": "08eadf0582885c36e23e0f9d5e09c9b8c8f561caaee22ab586213e820b04917a"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-mapruntimediagnosticsnativetest-d64eceb292",
+      "start_byte": 24650,
+      "end_byte": 25143,
+      "sha256": "160379ce5ca8134006f8dd2b2924699145ef8f820a4e3a628296e1f2a6d2f442"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-syncrecoveryjournaltest-ae1edc2718",
+      "start_byte": 25143,
+      "end_byte": 25399,
+      "sha256": "a29876a60c161e3adc0afb3595d67715cccf74a41c4123225a48d8d0557a6ce7"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-mapactionsmenu-9401acc4b4",
+      "start_byte": 25399,
+      "end_byte": 25618,
+      "sha256": "5dbfa9d87d0ae8270e3a5a6021df642f9c09914d4ca44f210f523d90bd19ea54"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-responsivemaplayout-e5ba54dcad",
+      "start_byte": 25618,
+      "end_byte": 25870,
+      "sha256": "6d410ecd659dea920b64f7063310deeb4b604e2127fae83656044f7cd487c8ff"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-boundeddrawerlayout-9a13b5abfe",
+      "start_byte": 25870,
+      "end_byte": 26078,
+      "sha256": "951ce59da734d8997bc92cd60ba497e2ea53f119ba27bf6de69d2ee4f591e012"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-mapstatuspanel-0ee2f365c0",
+      "start_byte": 26078,
+      "end_byte": 26287,
+      "sha256": "4bf8e6e280eb4d8044fa0361432f107db434aa0a1c84386e5ddfc95e94a04194"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-largetextlayouttest-c02f57adcb",
+      "start_byte": 26287,
+      "end_byte": 26735,
+      "sha256": "18eccdbbfabebac3cda468000bf63bf674a204075ec94b2dce451463f019e3fb"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-status-panel-content-71d914cc3b",
+      "start_byte": 26735,
+      "end_byte": 26907,
+      "sha256": "64d1fb4912b0878a440f55bcc934e303daa6668eee36b931044f8400ef700121"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-layout-stakeout-panel-ed481cf704-2",
+      "start_byte": 26907,
+      "end_byte": 27112,
+      "sha256": "cece4e9fb67a86c3b2bbe2fc593a1363dac4467ea1b998e4b896155d3a3e6341"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-reorderedlayerviewanimated-da6423b932",
+      "start_byte": 27112,
+      "end_byte": 27381,
+      "sha256": "6895833170a7ab887dea304706df4d9431c7f4c30c80daa0e05a0f14e233b366"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-reorderedlayerviewanimatedtest-37aaaccda4",
+      "start_byte": 27381,
+      "end_byte": 27647,
+      "sha256": "4bbad0c5187e8b2d35e879b824616393d5e9853068a5b9c6e9788282493a82b2"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-syncofflineandwalkgpstest-04342c694d",
+      "start_byte": 27647,
+      "end_byte": 28080,
+      "sha256": "9e8a996c2d18c64c69760c721d4c866b61bd34c24fccbad256dfa62b6de88632"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-emulatornetworkfixture-69254de669",
+      "start_byte": 28080,
+      "end_byte": 28382,
+      "sha256": "e1030c079e25b9a2a7140ed72e2a448ec71bf8e69d06b3e611d35304b969e58c"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-syncnotifications-2603f2a4f6",
+      "start_byte": 28382,
+      "end_byte": 28637,
+      "sha256": "0829a558b7c4dd9ca962735bc88ddcb446d5787e74f178f7193d8d8fc1926532"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-offlinesyncintentservice-4e7b691c08",
+      "start_byte": 28637,
+      "end_byte": 28901,
+      "sha256": "16779e0d431aa3e1486fd81c6c05f384ca29f40255bc67913099ca2a59ce2ef2"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-syncnotificationstest-f6331984a5",
+      "start_byte": 28901,
+      "end_byte": 29166,
+      "sha256": "78c664f15fb2f520071b1293ed0fb2ee3eb2c1fa1a4eb6c24b7ef3a61e121cd5"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-syncnotificationstest-718e9c5183",
+      "start_byte": 29166,
+      "end_byte": 29448,
+      "sha256": "41e61487693fe8ed11d677c28ca76085ac00493c23a0c97713eba1113d02aa09"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-diagnosticshttppolicy-3f9fb0ac1e",
+      "start_byte": 29448,
+      "end_byte": 29731,
+      "sha256": "34255d37a910413b6f57f60cf41882e74b45f4cdd8f6fef871f86d23c100ec13"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-diagnosticspayloadlimiter-b26969d31f",
+      "start_byte": 29731,
+      "end_byte": 29989,
+      "sha256": "cbfa341eb1429e8d1d807cc2e0910e0fdb76549d91a3bd1bf15d0c921b8b1485"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-backgroundlocationwarning-4e4340b339",
+      "start_byte": 29989,
+      "end_byte": 30344,
+      "sha256": "2fbe9c5dd1c64394afb352f6279b026ba310eb1fe0b2fde36cdd1c3e07c1a3ce"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-backgroundlocationwarningtest-5b8b6661ea",
+      "start_byte": 30344,
+      "end_byte": 30721,
+      "sha256": "bf3f765c0ace2e470dc7b96b62670754bff9689c6867bc5497de4b288c34352c"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-diagnosticsnoisetest-8d9b742471",
+      "start_byte": 30721,
+      "end_byte": 30992,
+      "sha256": "f490d705c8f6db72d0c829a2d48a8242fdc564ece8f113d36b8d564164db035d"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-trackuploadtest-b42d02c19c",
+      "start_byte": 30992,
+      "end_byte": 31430,
+      "sha256": "b37fc250655994ba28a628ba480f2f986300205858d7c09b4c7c3f23653669ed"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-mapeditingtoolstest-77c2add31a",
+      "start_byte": 31430,
+      "end_byte": 32106,
+      "sha256": "0be94c60e6c189d9a9b97d2e2d1db144d9920d80227206e514b1ea5971eb4c52"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-standardfeaturetypestest-b697d9c93c",
+      "start_byte": 32106,
+      "end_byte": 32393,
+      "sha256": "85016ecfd22047e1e481aa04615c23c9700a067c09321a3078e61182fecedd6d"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-appdiagnostics-9d8131755b",
+      "start_byte": 32393,
+      "end_byte": 32825,
+      "sha256": "607b90d22e6ef3e026d3545d1c63f1f97f2511eef0b69520ccddea0258b1e937"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-diagnosticstransport-83d379df1c",
+      "start_byte": 32825,
+      "end_byte": 33068,
+      "sha256": "ff56cfa931346379556da175bd9dd6700927bb1041ee19826709364eb4ca55d8"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-diagnosticsretryworker-28f3607dba",
+      "start_byte": 33068,
+      "end_byte": 33304,
+      "sha256": "31f7b9fb999381429c6cd2dda315c9e4b6b1a7cd554069e786821424e9ce945f"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-diagnosticspolicy-4cd970d3ab",
+      "start_byte": 33304,
+      "end_byte": 33510,
+      "sha256": "9704b8f2386ec369e71421beaab7e526f6076599a6f87a5495f83034bc730b3a"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-diagnosticsdeliverytest-302df413ca",
+      "start_byte": 33510,
+      "end_byte": 33770,
+      "sha256": "d6ae27ff1273cc10b4f61bdff5754891a3c18e45f5f3f9f5740070f927ebc39d"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-diagnosticstestrunner-b3b45ed47f",
+      "start_byte": 33770,
+      "end_byte": 33992,
+      "sha256": "604e72878d2bacc3a92c68a4923c5c92f243559b296e776e9e03b7766bbf91a1"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-formappearancetest-bb7c93deae",
+      "start_byte": 33992,
+      "end_byte": 34252,
+      "sha256": "7cd758eaf1a855960a043c3bc71765e931a825c49ef005bfea065fbe0f088359"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-projectsyncrunner-7dbf8d0a0d-2",
+      "start_byte": 34252,
+      "end_byte": 34626,
+      "sha256": "b32118f2a0ca502c22b338ea4349d998752081d39776609a64b1fa5252b85f06"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-projectsyncrunnertest-1b32204772",
+      "start_byte": 34626,
+      "end_byte": 34987,
+      "sha256": "bbb6ed6769e8b172ae527ed39b94288c98a459c4a43afad27167a22ffac1c32c"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-conditionalrequiredfieldstest-4596a7ea40",
+      "start_byte": 34987,
+      "end_byte": 35248,
+      "sha256": "9351b1f21cc630544ec5a3c991b7470489ea9629fb91c68203d8bb413ff3a55f"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-cascadingformstest-5b6e4d4cf5-2",
+      "start_byte": 35248,
+      "end_byte": 35565,
+      "sha256": "82c3634367623c167e74bed262d942a8651d54e8e8d7fbaabc7444b93987a67c"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-layerpendingchangestest-6889a89697",
+      "start_byte": 35565,
+      "end_byte": 35858,
+      "sha256": "415ef5c5f668d2a5a41c9ef9bfdd22d302b0f8e78bbee99270c9d4f03b22ea7d"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-cascadingformstest-5b6e4d4cf5-3",
+      "start_byte": 35858,
+      "end_byte": 36225,
+      "sha256": "b37d4cd7aadeeb974b0c1ad1d3de2f0e0b360c90e71bd2d236b038de842780cf"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-projectscriptstest-e02877c217",
+      "start_byte": 36225,
+      "end_byte": 36425,
+      "sha256": "6b482ac19e33aba9625a491b9381d8ebd5d6f7f4cddcb4257b3c1caacc166e7b"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-manifest-cca36a2291",
+      "start_byte": 36425,
+      "end_byte": 36581,
+      "sha256": "19745b69011acd70fcffdc196b4817c4631adf1e8194b563e3d79f2e1ac45a34"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-mainapplication-99f515b4e8",
+      "start_byte": 36581,
+      "end_byte": 36727,
+      "sha256": "92b2e16791e78ebd4ce2621e0e55ae81dd1148a9a8bdfe241454ff30a69eabae"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-requiredfieldstest-2be8ec8154",
+      "start_byte": 36727,
+      "end_byte": 37083,
+      "sha256": "939099c4e23c3a1654a679a30ebbdf694bcd335e8d4db6bf151a99c4321b25a2"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-trackpowerwarning-e20687b661",
+      "start_byte": 37083,
+      "end_byte": 37379,
+      "sha256": "ba7be3a54597e4d9165f4b40575506529a7b9777e67059293a24ab9a8c3c6a24"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-gnssdeviceadapter-d230f7ee76",
+      "start_byte": 37379,
+      "end_byte": 37603,
+      "sha256": "079d51c8e9bae0bb6787cf5299008c93c9e6c16ddd842eecccb66edf24c36f6c"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-trackrecordingmodestest-daeeeb2ca0",
+      "start_byte": 37603,
+      "end_byte": 37887,
+      "sha256": "e9a86d5178a4d7e0b8cfcc6b618b5fc5699b56f146dd3951c5745836430239e2"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-stakeoutforegroundservicetest-4a2d6fbafe",
+      "start_byte": 37887,
+      "end_byte": 38240,
+      "sha256": "11cfc5c9be143b40d04b051a063d6168652e694078a00b8d21d2c8623fb73f68"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-layout-map-content-32fdea7677",
+      "start_byte": 38240,
+      "end_byte": 38472,
+      "sha256": "bf8f57672e777ea4ad219571929a20815c057f5123e845b026d337dec300fb1d"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-mapcontrolrail-cba390fb7a",
+      "start_byte": 38472,
+      "end_byte": 38775,
+      "sha256": "c3bf9acebaf1c221f421e8d4360e17b6e1b9369fa552eea897e7e056105f9064"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-mapcontrolgrid-3be6588385",
+      "start_byte": 38775,
+      "end_byte": 38938,
+      "sha256": "185977713e703720064aea056f9371f0f2840adaad365dd4e12a5701c4e86695"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-maplayoutcontracttest-9062597c10",
+      "start_byte": 38938,
+      "end_byte": 39165,
+      "sha256": "3c26b16b42527c74210c0678a1c425f70551973603c3814f82c0dbb81b12ee83"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-layersfragment-b39c824ea1",
+      "start_byte": 39165,
+      "end_byte": 39811,
+      "sha256": "ce70e55405f65955d39367011a02e95ec81ce590f95f3d1894763390241ba12b"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-exportfileprovider-a48ef4102b",
+      "start_byte": 39811,
+      "end_byte": 40090,
+      "sha256": "9f1fbbc74cf8eb6ca77526a273c1e5f46fdd6a9d7b96c35d216d95558af6a487"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-underlaycatalogactivity-62922eae25",
+      "start_byte": 40090,
+      "end_byte": 40686,
+      "sha256": "b4c2b036047d37918ef4f8af7f74398ddea81d15427e26792925f76b6ee6000f"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-activity-underlay-catalog-9030291a7d",
+      "start_byte": 40686,
+      "end_byte": 40930,
+      "sha256": "f2a79565c50d1be3deb7d93a36b6bc1f4c220fe415786114700a4e81718c4999"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-debugcompanioninstaller-c43bdf2005",
+      "start_byte": 40930,
+      "end_byte": 41276,
+      "sha256": "7222b4c160f3f3e059aebdefeab02a0ad59f1f3fd59c6ccdd2925b8db0bcd5b8"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-debugcompanionpolicy-cd4263e903",
+      "start_byte": 41276,
+      "end_byte": 41454,
+      "sha256": "76d4e840a4e6a09789f0c2c7ee23286a98c04a5e7be0eb3b30689422167458e2"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-build-51a0b488f9",
+      "start_byte": 41454,
+      "end_byte": 41745,
+      "sha256": "6f274d87331f84cbe4d2ae92a87c899504a26ba0770a9c04e7100e53194c0c54"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-launcher-icon-5d3f736bc0",
+      "start_byte": 41745,
+      "end_byte": 41941,
+      "sha256": "1a053a12767f30d2aec31f191a077f2cf481f9893904307277e9c11e08e8f06f"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-launcher-icon-b92ce8d2a0",
+      "start_byte": 41941,
+      "end_byte": 42144,
+      "sha256": "05394a2a1ec3e8a8e146271dd7f953735ee31b396a0e959e62dc89ee3ecedbb5"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-mainapplication-99f515b4e8-2",
+      "start_byte": 42144,
+      "end_byte": 43012,
+      "sha256": "ce73581c77241cb0897ce86703afb6d4ffd675bd16592db3fae415888c18db6b"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-settingsfragment-31b04c3998",
+      "start_byte": 43012,
+      "end_byte": 43494,
+      "sha256": "7d6344f9b3da63dd2797c1cb37b4c6ca3cde36b7aaeb4f4c721c7432a6d3f1c3"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-selectmappathpreference-504da4b20e",
+      "start_byte": 43494,
+      "end_byte": 43839,
+      "sha256": "74c7fc635655b87b334845470a4c7f28eaa1c4ded7b608637ad2f1ceaa9e211a"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-settingsworkspacemovetest-f9c7d712e5",
+      "start_byte": 43839,
+      "end_byte": 44365,
+      "sha256": "363d6e478131ce016b22336578a6b0fb2499b2ece7df7c2028e0fddde6c00e74"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-mainactivity-a8f77e45c7",
+      "start_byte": 44365,
+      "end_byte": 45104,
+      "sha256": "5077c5315bd2f3ac02a1b888210da029625dc61d13a4e6804092167635933982"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-externalgnssactivity-b8f1f726af",
+      "start_byte": 45104,
+      "end_byte": 45546,
+      "sha256": "7cc47a21ea0dfc9dc24a8ea8baecbf3390c1919236b806552b147006ddd69a33"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-preferences-general-85bb101da0",
+      "start_byte": 45546,
+      "end_byte": 45750,
+      "sha256": "d05519bef0b3d994ea5d2e54f1389535cb9346c7b6fb366947660d6fc0ccdbd5"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-walkemergencyreset-281bb0f777",
+      "start_byte": 45750,
+      "end_byte": 45961,
+      "sha256": "8808fc65170ba2afb4c1234635c3c87f8e9c541170a331b40f33e5d09dae148f"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-settingsactivity-243f62cadc",
+      "start_byte": 45961,
+      "end_byte": 46244,
+      "sha256": "b7c5a9c98124170aafb0ba799855c5a88633f727ba4e1b9eaa3db03071bd46f4"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-preferences-tracks-cfb877832e",
+      "start_byte": 46244,
+      "end_byte": 46638,
+      "sha256": "f7bcfa084f04b1df7a272bb187a7d355fd53caf2856dedb557b502caef5cf457"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-appupdatepackageinfopolicy-059572c4db",
+      "start_byte": 46638,
+      "end_byte": 46950,
+      "sha256": "0e0c29b8e827f0e6b950d64435221fa4efb486a91eb7a2fada28abfae138b9f1"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-appupdatepackageinfopolicytest-2e1547047c",
+      "start_byte": 46950,
+      "end_byte": 47172,
+      "sha256": "52183ea8fb605811e7ff29a0f46c040431fb225d8f95af0f3f765bf6784250b8"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-projectchooserdialog-41ebf81b68",
+      "start_byte": 47172,
+      "end_byte": 47377,
+      "sha256": "f5ddd759ade830989df7fdb70718b69d9f6dbc527820ec9fea028e6a754a8222"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-projectsettingsactivity-684b8dce73",
+      "start_byte": 47377,
+      "end_byte": 47682,
+      "sha256": "5d1e6537442879cd5954513dac280ba6518f1ca68b415300c438950239cd786b"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-legacyunderlayexportactivity-716acb10d4",
+      "start_byte": 47682,
+      "end_byte": 47896,
+      "sha256": "88dc903e269126ba4caddbb25f160e355d757d561287c2a0040fea0e6211b21e"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-legacyunderlayprovider-74c706ab50",
+      "start_byte": 47896,
+      "end_byte": 48126,
+      "sha256": "46066b536803f423b862fd39cb53a40b834c5cac97b5b1396642df5fd826590a"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-legacyunderlayimporter-9430cc166a",
+      "start_byte": 48126,
+      "end_byte": 48494,
+      "sha256": "38c743c212a860a34da5156c9cc2ad6ed2a32608bae5966699dd8ff30222894f"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-legacyunderlaytransferpolicy-ba75441788",
+      "start_byte": 48494,
+      "end_byte": 48745,
+      "sha256": "a5b35f593b2ab6bfb26da17ac1d162072064ad5bdb5f199a27902eab69b07f64"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-legacyunderlaytransferpolicytest-dfee010720",
+      "start_byte": 48745,
+      "end_byte": 48945,
+      "sha256": "4c1f91db82c8a88a9d533bdffd18281efc533ac72dda63850135bc704e9737f1"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-legacyunderlaymigrationcontractpolicytest-c5da47215f",
+      "start_byte": 48945,
+      "end_byte": 49162,
+      "sha256": "8db50f3aecf04d5868fc1da4271779eac5ff00ba49bffc5e7ad3a8849c2556f8"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-legacyunderlaymigrationcontract-8c605aa082",
+      "start_byte": 49162,
+      "end_byte": 49497,
+      "sha256": "7f762855e4fa06e95de9d9498c5bc175b9798e4cecbe1af5defaad8dae1f2026"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-offlinesyncintentservice-4e7b691c08-2",
+      "start_byte": 49497,
+      "end_byte": 49947,
+      "sha256": "ebceedc300ffa33812b0612e2544e3872a2294f644bfaa70bb18b4d38e341851"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-mapfragment-6658bbfb0c",
+      "start_byte": 49947,
+      "end_byte": 53622,
+      "sha256": "ee99b29f182e49e2601df9b4868f548faa70e72380dd1e315001ceaade5d2724"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-deviceheadingprovider-43fe2cde4c",
+      "start_byte": 53622,
+      "end_byte": 54055,
+      "sha256": "35d794c7c0038f708942e5654b0549fac9b9f59ae2cbd149752cc3e5d433b651"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-deviceheadingprovidertest-7a4269ec21",
+      "start_byte": 54055,
+      "end_byte": 54331,
+      "sha256": "cfb6976b8393ef7d082e3cdac5f2aa187d01fa1a183ab2df63e91df4e549db44"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-locationorbittest-5af5bfd7be-2",
+      "start_byte": 54331,
+      "end_byte": 55165,
+      "sha256": "c56993a451528e10de0887e4da37a94d257eb81d7b48d9016f37bc03eaf368c6"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-headingconeaccuracy-1d44dd1595",
+      "start_byte": 55165,
+      "end_byte": 55428,
+      "sha256": "3456c4586e317822de72394a8c4119a63f5a1ec6715faa8dc2569546de4825be"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-stakeoutcontroller-4756aba044",
+      "start_byte": 55428,
+      "end_byte": 56231,
+      "sha256": "94b5776cd95a818f6670f885c45156191da0d7786adb6e48e4ce39cb445d6ce6"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-stakeoutforegroundservice-efe0a8fca6",
+      "start_byte": 56231,
+      "end_byte": 56566,
+      "sha256": "dcd960e8852b28225ce81ef63ab4deab224dedf04430744e523945aad4a0f8af"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-stakeoutheadingprovider-cd3f76ec4c",
+      "start_byte": 56566,
+      "end_byte": 56826,
+      "sha256": "de39f0074399ec9c2f14a3e3fb19acc3199d3428c32e389b10cc57b55526ffd5"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-magneticazimuthcalculator-0af82fb9af",
+      "start_byte": 56826,
+      "end_byte": 57109,
+      "sha256": "ed01d44e477e338a97edef454b667d19b0a522a673ba892b125557eed80062a7"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-worldmagneticmodel2025-05a92ab6ce",
+      "start_byte": 57109,
+      "end_byte": 57325,
+      "sha256": "9cda0f26ebcda1bf024ec82fc6f76688ddf025e431428d9c3a9cb3ab4b957965"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-stakeoutaudiocue-0c63cbda68",
+      "start_byte": 57325,
+      "end_byte": 57564,
+      "sha256": "2be45141324da393c860cd5880f3921f2ed6af50bfbde24c0e20ce0dad436cd3"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-add-layer-0c8ca5112f",
+      "start_byte": 57564,
+      "end_byte": 57729,
+      "sha256": "fa50308c4d8a3e50e4ad90ca3054d7f18c1a7ef34e94ceadef6360b37be18cb6"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-appupdatemanager-0212f5ec15",
+      "start_byte": 57729,
+      "end_byte": 58145,
+      "sha256": "fe998504445a7b25ec6039dd9759832fc65624aaaa108ae60585ad6e4b938665"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-startupupdatecheckscheduler-bfa9759d9d",
+      "start_byte": 58145,
+      "end_byte": 58445,
+      "sha256": "fdb8b4fdf20306119142e8e677701877a833f715f83aa957f5828cbe892319b1"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-startupupdatecheckschedulertest-3b919bcc7d",
+      "start_byte": 58445,
+      "end_byte": 58763,
+      "sha256": "490636951aaf54205f85245f39ae7338f7b55069e84d865feb12d11d331a7a1b"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-appupdatenetworkstatetest-bf3b360fa1",
+      "start_byte": 58763,
+      "end_byte": 59005,
+      "sha256": "e544d0638f50ed01f347a6ff739aa3231aa30925e71c6a13dfdd9f1d30193290"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-appupdatependinginstallationtest-9f892d7b94",
+      "start_byte": 59005,
+      "end_byte": 59292,
+      "sha256": "7c74a4e70f77f89aa71683dd5ba1a1b4f7930f28f7624b6e3dadb37bfd430ab3"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-syncadapter-415f22cf8f",
+      "start_byte": 59292,
+      "end_byte": 59691,
+      "sha256": "ba8eeb7f8200971d29abe101328cc75391b36e3f0a53665c3fa430ea397954d3"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-syncservice-9b0c474b25",
+      "start_byte": 59691,
+      "end_byte": 59924,
+      "sha256": "c8f6fe98db17175a53ecfd8dcf358ce1fe5918b5596d2adc108613432d66914e"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-syncrecoveryjournal-85b2f8952f",
+      "start_byte": 59924,
+      "end_byte": 60367,
+      "sha256": "6ad77eb658f2de5c92ffa8ffadfb9c668fa91c108acf847bdb04384abca10b8b"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-syncrecoveryjournalconfirmationtest-52f02831ca",
+      "start_byte": 60367,
+      "end_byte": 60782,
+      "sha256": "2dd20aa9f3e542eb58164834e7da8276399efb007707f451fa7f695701f292a8"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-mapeditingtoolstest-77c2add31a-2",
+      "start_byte": 60782,
+      "end_byte": 61143,
+      "sha256": "69a9299f6a699260a2741cd40364263d331c6b3dfb88ffc7946ed9d2d0c95c5b"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-featurepersistencetest-b28b7c4644",
+      "start_byte": 61143,
+      "end_byte": 61306,
+      "sha256": "887f1e073e9decebb81d2adf6257b4ceb7a9a1558098c296dbfaa52cdb2a59b8"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-formsaverecoverytest-4814f38194",
+      "start_byte": 61306,
+      "end_byte": 61483,
+      "sha256": "1cd3115f774305f54d13119008f0c575b6a221eecff2c2a09571f00659280eef"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-trackerstoprecoverytest-6e25216204",
+      "start_byte": 61483,
+      "end_byte": 61670,
+      "sha256": "6d5f52e7e9576ac7d24cff380b1442685f935965707eb6d8360f541390c0bfa0"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-ngwlookupcachesynctest-30eb938e96",
+      "start_byte": 61670,
+      "end_byte": 62217,
+      "sha256": "660d683a10443736f3bce402f068b4cd75a0aca5a9ecc3801587e51300de63b4"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-ngfplookupprefetchtest-475dba28a6",
+      "start_byte": 62217,
+      "end_byte": 62571,
+      "sha256": "45f0479f81ec441e71aa60fd5b7933506b3b90a0bd95a6c33b29998ae4c917f1"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-syncfailurepresentationtest-64ed92fdfd",
+      "start_byte": 62571,
+      "end_byte": 62868,
+      "sha256": "61ed08b47af9a0152fc4fa51160b88388bb93597575470b8d90a97475a8bfd56"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-projectsynclatefailuretest-0b7b3ff5ac",
+      "start_byte": 62868,
+      "end_byte": 63164,
+      "sha256": "5e27fccf49c245da64d19648690837196e3e9af494fbe1700a776c3dfe624941"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-resourcechildrenmessagestest-1ae1c546ee",
+      "start_byte": 63164,
+      "end_byte": 63472,
+      "sha256": "af8598c0dad2441350a352b77502428f90d3dd8897929ec3e1355f59ca62dcb9"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-layerfillerrormessagetest-a24b539f13",
+      "start_byte": 63472,
+      "end_byte": 63769,
+      "sha256": "ed1fc0a644865ff2ce5c3705cca3e4eb0773eb04ae608aff7f3b466b37dc839f"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-formlegacylistmessagestest-f0568c6f49",
+      "start_byte": 63769,
+      "end_byte": 64071,
+      "sha256": "7c1624c9cb55a15d3faf223cdd8a632820adbfa31285cfc671b109fcc6134044"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-resourceselectioncheckboxtest-b55b47630d",
+      "start_byte": 64071,
+      "end_byte": 64333,
+      "sha256": "7850bc2201e287068718e5e54112c1b33bf010425ff0363020aec73b7a0c4e2e"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-ngwresourceselectiondeduptest-d97a1b99d0",
+      "start_byte": 64333,
+      "end_byte": 64633,
+      "sha256": "3ba9c01a9dde59350c7082e9c576e8314b96b10a368c88a9006af2f34141c4c3"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-resourceselectionrowlayouttest-13a13c077b",
+      "start_byte": 64633,
+      "end_byte": 64963,
+      "sha256": "30cacdcd3200c2918693863e458c89fdf6ce45b47ac13d140ec962723a2b44d9"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-selectedtracksharebindingtest-c57acd24f8",
+      "start_byte": 64963,
+      "end_byte": 65243,
+      "sha256": "5d226dbe6ddc7f1d07fccfa48a18a755bcae4de56f1c272de465b64813e48bf9"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-trackgpxnameexporttest-1c06a14ee7",
+      "start_byte": 65243,
+      "end_byte": 65488,
+      "sha256": "93e1acbcf7083f14e5e9bf10c3e629d6b5f08b1d66f48ba0bdd7c041c25b0a0e"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-key-components-trackselectionpaneltest-928798b4f1",
+      "start_byte": 65488,
+      "end_byte": 65743,
+      "sha256": "3103d2dee2bfd30e982881735b45de06720e7cd93b3b5967e59e5b8f6e0dca43"
+    },
+    {
+      "id": "lisa:mobile:metadata:app-module-manifest",
+      "start_byte": 65743,
+      "end_byte": 65761,
+      "sha256": "43d6cd2351d709744e85a3fec23350b0c83081bbd075b7b814f567af767c7e14"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-public-contracts-render-resource-economy-host",
+      "start_byte": 65761,
+      "end_byte": 65973,
+      "sha256": "e05bc1f1528af53a87c2671434eee05de4e68d197c3fd9edcb9fe48d4dc5dd56"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-public-contracts-map-host",
+      "start_byte": 65973,
+      "end_byte": 66153,
+      "sha256": "9a66dbe3f45e973b189668372c1625c631ad07ff6f2f542290fb9c774cb6072c"
+    },
+    {
+      "id": "lisa:mobile:resource:app-module-settings-refs",
+      "start_byte": 66153,
+      "end_byte": 67378,
+      "sha256": "1ce5ad25d0f426ea5fe6250324da5188330d04d4a86997d6b5488438653dda3d"
+    },
+    {
+      "id": "lisa:mobile:metadata:app-module-manifest",
+      "start_byte": 67378,
+      "end_byte": 67397,
+      "sha256": "af081cbbcb12345ef97fcf3dbea3a6d7839e0970c8f7ccbd6f002375f07e2ed9"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-storage-contracts-updater-ready",
+      "start_byte": 67397,
+      "end_byte": 67493,
+      "sha256": "0193ce5cebbf8a7f35714322f4df8d100882571b722ede275e7ade7f56280371"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-storage-contracts-updater-background",
+      "start_byte": 67493,
+      "end_byte": 67593,
+      "sha256": "da93dc7cc04217a272cbc30a3d0dc060f996d70a4e640168d7a5b3e95b576d20"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-storage-contracts-diagnostic-reports",
+      "start_byte": 67593,
+      "end_byte": 67692,
+      "sha256": "11ff8326b70921f511f59937d08eb77711aa4c880387c34eb4707349bdc81f14"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-storage-contracts-updater-pending-install",
+      "start_byte": 67692,
+      "end_byte": 67798,
+      "sha256": "5af808db5a2c9aae000aefc7a58e35b283228eb47cf5194b049b38457695e8ad"
+    },
+    {
+      "id": "lisa:mobile:contract:app-module-storage-contracts-sync-recovery-journal",
+      "start_byte": 67798,
+      "end_byte": 67905,
+      "sha256": "cbe1b34dbdeaeafaa0167d7f11ac4eaa76dcbe661171096b9745eabd9315d96f"
+    },
+    {
+      "id": "lisa:mobile:resource:app-module-invariant-refs",
+      "start_byte": 67905,
+      "end_byte": 69482,
+      "sha256": "45365f6a134a86703ef9feb4297341c3c295821768d7dbbf300e9550ae8366e3"
+    },
+    {
+      "id": "lisa:mobile:resource:app-module-global-docs",
+      "start_byte": 69482,
+      "end_byte": 70586,
+      "sha256": "aafd6fbff3b6d5eddab246dfbf6e403711ec852d82493670d0641eb3e7cafeea"
+    },
+    {
+      "id": "lisa:mobile:resource:app-module-smoke-tests",
+      "start_byte": 70586,
+      "end_byte": 72562,
+      "sha256": "e25d8793f14c562bdc1c43ca30cd256eebd6e0024afbd2f653704eefa104c168"
+    },
+    {
+      "id": "lisa:mobile:resource:app-module-upstream-hotspots",
+      "start_byte": 72562,
+      "end_byte": 72663,
+      "sha256": "63ba21ce06b8dc9c97d5ac8fd53bb19e0239fc006c9eaefc6396c7fbc114b8ae"
+    }
+  ]
+}

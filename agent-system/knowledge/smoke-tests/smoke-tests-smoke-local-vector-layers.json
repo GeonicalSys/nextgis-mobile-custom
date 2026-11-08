@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-smoke-local-vector-layers",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "SMOKE-LOCAL-VECTOR-LAYERS"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "device",
+        "scope": [
+          "app",
+          "maplib",
+          "maplibui"
+        ],
+        "steps": [
+          "Create point, line and polygon vector layers from the application",
+          "Add and edit one feature in each layer, restart the application and edit them again",
+          "Hide an editable layer, open object creation, select it and add a feature",
+          "Import a WGS84 GeoJSON without crs and one with urn:ogc:def:crs:EPSG::4326",
+          "On Android 16 import an EPSG:3857 GeoJSON and inspect the application log",
+          "Import a KML containing Point, LineString and Polygon coordinates",
+          "Import a GPX containing wpt, rtept and trkpt coordinates with name, time and elevation",
+          "Compare the resulting point count and order with both source files",
+          "Verify imported feature positions, add or edit a feature, restart and reopen the layers",
+          "Attempt to import malformed and coordinate-empty KML/GPX files",
+          "Attempt to import a file with an unsupported CRS such as EPSG:32637"
+        ],
+        "expected": "Manually created, local GeoJSON and flattened KML/GPX layers are editable before and after restart; a hidden editable layer remains offered for object creation and becomes persistently visible when selected; WGS84 data with no CRS or a common EPSG:4326 name imports at the correct position, each valid KML/GPX coordinate is a point in source order with available metadata, EPSG:3857 import does not attempt to change SQLite safety PRAGMAs inside a transaction, while an actually unsupported CRS and invalid or empty XML are rejected with a plain user-facing message and leave no incomplete layer.\n"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-smoke-local-vector-layers"
+    ]
+  }
+}

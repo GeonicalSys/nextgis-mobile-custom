@@ -1,0 +1,76 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:mobile-roadmap-sync-and-changes-center",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "planned",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "planned",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "UNKNOWN",
+    "release": "unknown",
+    "retention": "Retain simple project selection and the separate detail route."
+  },
+  "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The proposal makes the fate of individual edits and attachments observable.",
+        "implementation": "Use existing queue and recovery states. Keep saved, waiting, needs reconciliation, server confirmed and any future peer stage distinct.",
+        "source_verification": "Check partial completion, targeted retry and operation identity independently of project list counts.",
+        "merge": "The proposed center needs separate UI and queue delivery evidence.",
+        "runtime_verification": "Verify that a field user can locate and retry one pending edit without resaving the form.",
+        "release": "Release scope follows the approved center and its actual queue acceptance."
+      }
+    },
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## UX-02 Центр изменений и синхронизации",
+        "",
+        "Приоритет P1. Состояние: Предложена. Использует существующие очередь и статусы.",
+        "",
+        "Показать не только число слоёв с правками, а сами ожидающие объекты/вложения: «сохранено на устройстве», «ожидает отправки», «нужна сверка», «подтверждено сервером». Для сбоя — причина и одна подходящая команда. В P2P добавить отдельный этап доставки через другое устройство.",
+        "",
+        "Приёмка: пользователь может найти конкретную неотправленную правку, понять её судьбу и безопасно повторить. Частичная синхронизация не выглядит полным успехом; повтор не требует заново открывать и пересохранять форму. Простой список выбора проекта остаётся простым — подробности открываются отдельно.",
+        ""
+      ]
+    },
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "UX-02"
+    },
+    "priority": {
+      "role": "priority_at_pinned_roadmap_basis",
+      "value": "P1"
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "Proposed queue and transfer visibility using existing statuses."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-sync-and-changes-center"
+    ]
+  }
+}

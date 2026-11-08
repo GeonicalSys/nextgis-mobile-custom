@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-auto-vector-spatial-cache-recovery",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "AUTO-VECTOR-SPATIAL-CACHE-RECOVERY"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "automatic",
+        "scope": [
+          "maplib",
+          "app"
+        ],
+        "command": "& '.\\gradlew.bat' '--offline' '--no-daemon' '--continue' '-Pkotlin.incremental=false' '-PciReliabilityChecks=true' '--console=plain' ':maplib:testDebugUnitTest' '--tests' 'com.nextgis.maplib.datasource.GeometryRTreeRecoveryTest' '--tests' 'com.nextgis.maplib.map.LocalVectorBulkCacheReadinessTest' '--tests' 'com.nextgis.maplib.datasource.GeometryRTreePersistenceTest' '--tests' 'com.nextgis.maplib.datasource.GeometryRTreeConcurrencyTest' '--tests' 'com.nextgis.maplib.map.SqliteVectorSpatialQueryTest'",
+        "expected": "New complete batches are native-ready and persist a complete index before count/properties/manual repair; Partial/canceled indexes retain existing rejection guards; empty-create admission refuses a fresh unready empty index over a nonempty table or an unavailable count, while independently complete nonempty snapshots remain accepted. Legacy, malformed, clear/same-path-save, missing-file and fresh-load recovery controls remain independently witnessed.",
+        "source_result": "Фактический Core29: до исправления15 assertion FAIL/14 controls, после29 PASS/0 failures/errors/skips (5 XML/5.653s; Gradle exit0/BUILD40s; observed42.537s). Те же Core tests/oracles;105 inputs unchanged during run/10 owned processes settled absent. В историческом Core29 checkpoint consumer compile ещё ожидалась; затем Root принял отдельную финальную source compile. Финальная consumer source compile Belka: Gradle exit0, BUILD SUCCESSFUL in 1m 23s, 86.8108238s observed, 100 source-only tasks,120 inputs unchanged/all12 owned processes naturally stopped. Java/Kotlin source compilation; no APK/AAB/AAR/dex/NDK/install/publish or native Android/GPU/device acceptance. Receipt Q:\\Codex\\Scratch\\lisa-ecosystem-depth-audit-20261029\\evidence\\resume-20261031-source-checkpoint\\belka-resume-compile\\final-result-source-stop.json SHA256 be7f54baa369662c2cd44a509c745fbc099f357a0df91c9a30a7d69a12008d1c.; не combined55 PASS и не device/native acceptance. App legacy25P1F не является crop RED.",
+        "runtime_scope": "Core29 =16 Robolectric API28 technical SQLite (lifecycle12 +spatial4) and13 plain JUnit (recovery11 +legacy persistence1 +concurrency1). No actual HTTP service/import, native map, installed APK or device/process-restart acceptance.",
+        "environment": "Reuse existing JBR21/Gradle9.3.1/AGP9.1.0/API28 and Q caches/TEMP/TMP/TMPDIR/java.io.tmpdir through documented offline developer setup. Gradle command has no Q helper dependency; scope source only. Unit failure blocks later consumer compile."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-auto-vector-spatial-cache-recovery"
+    ]
+  }
+}

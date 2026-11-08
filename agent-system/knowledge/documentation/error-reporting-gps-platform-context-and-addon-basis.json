@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:error-reporting-gps-platform-context-and-addon-basis",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:error-reporting"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/error-reporting.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "К классифицированным редким GPS отчётам добавлен platform snapshot: fine/coarse/",
+        "background permission, GPS/global location enabled, app standby bucket,",
+        "background restriction, process importance и observer_on_main. Это данные",
+        "недостающие в provider_silent после screen off; они не устанавливают причину.",
+        "Координаты/accounts/storage не читаются; необязательная ошибка сбора не теряет",
+        "исходный отчёт. Пороги, retry и подавление нормального no_fix/acquisition/filter",
+        "wait не изменены. Card android-20261027-gps-provider-evidence; первый ручной",
+        "crash APK030f303 этого GPS addon ещё не содержит.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "The last two lines pin the initial APK and report card. The earlier lines describe the runtime context fields."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:error-reporting-gps-platform-context-and-addon-basis"
+    ]
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:map-rendering-map-indicator-producers",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-rendering"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the rendering subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-rendering.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Значение показателей карты",
+        "",
+        "Назначение элемента определяется его источником и обработчиком, а не местом",
+        "на экране. Нижние `tv_latitude`/`tv_longitude` получают координаты отображаемого",
+        "`Location` из GPS pipeline. Они не показывают центр камеры, середину охвата",
+        "проекта или геометрию выбранного объекта. Даже поле `MapFragment.mCurrentCenter`",
+        "здесь хранит позицию устройства в Web Mercator; имя поля не определяет его смысл.",
+        "Рядом показанный `tv_zoom`, напротив, получает zoom камеры MapLibre. Линейка",
+        "`tv_ruler` вычисляет расстояние по своему экранному отрезку через проекцию карты.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:map-rendering-map-indicator-producers"
+    ]
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-knowledge-data-and-roadmap",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          ".",
+          "docs/README.md",
+          "docs/registry/README.md",
+          "docs/guides/documentation-maintenance.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the established App documentation address and original Git range."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "agent-system/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "For the official comparison, edit the appropriate `official-differences-*.json`",
+        "record. `official-differences.json` carries the frontmatter and orders the",
+        "topics through `contains` relations. Add, move or remove a topic through",
+        "those relations, then regenerate the Markdown. The pinned byte spans in",
+        "provenance describe the original revision. Keep dated comparisons and",
+        "verification in evidence records with their original scope.",
+        "",
+        "For sync and storage, edit the appropriate **ngw-sync-and-storage-*.json**",
+        "record in the same directory. The layout **ngw-sync-and-storage.json** keeps",
+        "the published headings and orders topics through contains relations. The",
+        "account acknowledgment, full-project clock and local outbox have separate",
+        "records. Earlier pins and dated checks are evidence with their original scope.",
+        "",
+        "Edit mobile roadmap tasks in **knowledge/documentation/mobile-roadmap-*.json**.",
+        "Each task has a stable ID, its published alias and separate goal, implementation,",
+        "source verification, merge, runtime verification and release fields. Update",
+        "the affected task's prose for Markdown readers. Add dated outcomes as evidence",
+        "and link them from the task. Use **mobile-roadmap-layout.json** to order topics",
+        "and evidence, then run `python -B docs/scripts/prose_knowledge.py --write`.",
+        "The published `docs/roadmap/mobile.md` address carries the generated view.",
+        "",
+        "The two **MOB-02** headings remain in the view. The process exit incident is",
+        "`lisa:mobile:task:mobile-roadmap-process-exit-224` and dependency discovery is",
+        "`lisa:mobile:task:mobile-roadmap-dependency-discovery`. Use the stable ID for",
+        "knowledge queries. The original ambiguity is documented in",
+        "[the instruction review question](knowledge/policy-questions/roadmap-mob02-distinct-subjects.json).",
+        "For rollback, project the latest task records and check the full Markdown",
+        "before restoring the former authoring route.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-knowledge-data-and-roadmap"
+    ]
+  }
+}

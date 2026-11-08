@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:device-smoke-tests-tracker-registration-and-durable-upload-smoke",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:device-smoke-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/device-smoke-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Отправка и регистрация трека",
+        "",
+        "На изолированном устройстве открыть «Мои треки» до регистрации UID: отправка",
+        "включена, переключатель доступен. Записать и остановить трек; без регистрации",
+        "точки сохраняются, отметка трека скрыта. После подтверждения регистрации",
+        "ошибка пакета/сети оставляет отметку до отправки. Создать трекер с тем же UID в ВебГИС,",
+        "не менять настройки приложения. Проверить автоматическую отправку и снятие",
+        "отметки; фоновый период 15 минут, фактический запуск зависит от Android."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:device-smoke-tests-tracker-registration-and-durable-upload-smoke"
+    ]
+  }
+}

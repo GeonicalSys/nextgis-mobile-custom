@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:collector-projects-lisa-catalog-entry-and-manual-import",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:collector-projects"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the App mobile project topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/collector-projects.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Первый пункт меню добавления слоя «Загрузить проект» ищет в Веб ГИС группу с",
+        "`keyname=lisa` (общий ключ для Lisa и Belka) и показывает `collector_project`",
+        "внутри неё, включая вложенные группы, отдельными строками с radio, разделителями",
+        "и прокруткой, если список длиннее экрана. Загрузка начинается по кнопке",
+        "«Загрузить». Импорт дальше тот же, что у ручного",
+        "выбора Collector в дереве NGW. Пункт «Добавить слой NGW по URL» скрыт, код",
+        "сохранён.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:collector-projects-lisa-catalog-entry-and-manual-import"
+    ]
+  }
+}

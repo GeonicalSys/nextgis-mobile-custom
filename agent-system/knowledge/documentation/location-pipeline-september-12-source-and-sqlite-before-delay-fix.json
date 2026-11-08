@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:location-pipeline-september-12-source-and-sqlite-before-delay-fix",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:location-pipeline"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/location-pipeline.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Предыдущая проверка до исправления задержки, 2026-09-12: 216 unit tests maplib, 57 maplibui, 6 app и 7",
+        "проверок документационных инструментов прошли. На SQLite 3.53.1 проверены точные SQL",
+        "v5→v6, сохранение прежних строк и double-координат, порядок rowid при переводе",
+        "часов и изменение только нужной строки стоянки без изменения времени прибытия."
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Earlier test totals and SQLite v5→v6 replay remain bound to that frame."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:location-pipeline-september-12-source-and-sqlite-before-delay-fix"
+    ]
+  }
+}

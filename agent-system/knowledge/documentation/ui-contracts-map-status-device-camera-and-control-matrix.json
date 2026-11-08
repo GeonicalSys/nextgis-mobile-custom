@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ui-contracts-map-status-device-camera-and-control-matrix",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:ui-contracts"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ui-contracts.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Основные экраны и границы",
+        "",
+        "### Показания и действия карты",
+        "",
+        "| Элемент и ID контракта | Подтверждённый смысл | Различающий пример |",
+        "| --- | --- | --- |",
+        "| `tv_latitude` / `tv_longitude`, `UI-MAP-STATUS-COORDINATES` | WGS84 широта/долгота display Location устройства, с выбранным форматом/точностью текста | Переместить камеру при неподвижной позиции: панель не становится координатой камеры |",
+        "| `tv_zoom`, `UI-MAP-ZOOM` | Дробный уровень zoom камеры с суффиксом `z` | Это не масштаб чертежа 1:N и не точность GPS |",
+        "| `iv_ruler` / `tv_ruler`, `UI-MAP-SCALE-RULER` | Расстояние карты под экранным отрезком линейки, преобразованное через projection и preferred_units | Оно меняется при масштабе/проекции, а не является дальностью до цели или длиной объекта |",
+        "| `menu_locate`, `UI-MAP-LOCATE` | Разовое перемещение камеры к доступной позиции устройства | Разобрать отдельно fallback к первой пригодной extent, отсутствие fix и разрешения |",
+        "| Условный overlay autopan, `UI-MAP-CONDITIONAL-AUTOPAN` | Другая ветвь, со своим flag/порогом движения/in-screen/lock | Само обновление GPS-курсора не доказывает постоянного центрирования камеры |",
+        "| «Слежение», `UI-NAVIGATION-STAKEOUT-TARGET` | Вынос к выбранной геометрии; для линии/полигона — к найденной ближайшей точке | Это не обещание follow-camera и не автоматический центр объекта |",
+        "| `fl_compass` / `azimuth`, `UI-MAP-COMPASS` | Legacy ориентация устройства с настройкой севера и display rotation | Отдельно от camera bearing, нового heading sector и направления на цель |",
+        "| `tv_source` и `gnss_hud`, `UI-LOCATION-SOURCE-GNSS-HUD` | Provider/extras display fix и отдельно состояние внешнего приёмника/качество | Подключённый приёмник и число спутников не доказывают свежую пригодную координату |",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ui-contracts-map-status-device-camera-and-control-matrix"
+    ]
+  }
+}

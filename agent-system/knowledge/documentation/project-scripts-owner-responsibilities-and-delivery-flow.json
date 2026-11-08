@@ -1,0 +1,69 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:project-scripts-owner-responsibilities-and-delivery-flow",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:project-scripts"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the NGFP or project-rule subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/project-scripts.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Владельцы и доставка",
+        "",
+        "| Часть | Владелец | Ответственность |",
+        "|---|---|---|",
+        "| Каталог пакета, проверка и публикация | desktop `stand_project` | Детерминированный ZIP, привязки слоёв, обратное скачивание, Collector config, collect/clone |",
+        "| Формат, кеш, QuickJS, GIS broker | `maplib` | Проверка пакета, отдельный UID, ограничения ресурсов, чтение своей карты |",
+        "| Форма | `maplibui` | События, снимок значений, pin версии, сообщения, Save gate |",
+        "| Application lifecycle и native build | `app` | Обычный запуск приложения и минимальный запуск sandbox в обоих брендах |",
+        "",
+        "```mermaid",
+        "flowchart LR",
+        "    S[Каталог пакета] --> P[stand_project]",
+        "    P --> Z[ZIP-вложение служебного vector_layer]",
+        "    P --> C[Ссылка в Collector]",
+        "    C --> I[Import / composition sync]",
+        "    Z --> I",
+        "    I --> K[Проверенный кеш проекта]",
+        "    K --> F[Форма с закреплённой версией]",
+        "    F --> Q[QuickJS в isolatedProcess]",
+        "    Q --> B[API broker в основном процессе]",
+        "    B --> D[SQLite своей карты: только чтение]",
+        "    Q --> N[Предупредить / запретить Save]",
+        "```",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:project-scripts-owner-responsibilities-and-delivery-flow"
+    ]
+  }
+}

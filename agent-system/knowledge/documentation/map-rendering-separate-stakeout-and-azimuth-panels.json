@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:map-rendering-separate-stakeout-and-azimuth-panels",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-rendering"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the rendering subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-rendering.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Отдельные панели выноса и измерения",
+        "",
+        "MapFragment переключает layout_stakeout_panel и layout_azimuth_panel независимо.",
+        "GPS callback обновляет только панель текущего режима. Вынос сохраняет compass/",
+        "map-bearing стрелку, расстояние, точность и звук. В обоих измерениях отсутствуют",
+        "стрелка, звук и GPS accuracy; временные MapLibre точки/линия и их перетаскивание",
+        "сохраняются. FittedPanelLayout удерживает Close и коррекцию измерения в usable bounds.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:map-rendering-separate-stakeout-and-azimuth-panels"
+    ]
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-08-22-035e2bef524a",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-08-22",
+        "",
+        "- Полный NGW/Collector fill снова принимает стандартный `MULTIPOLYGON` с",
+        "  внутренними кольцами и несколькими polygon members: парсер разделяет части по",
+        "  уровню скобок. Ошибка отдельного объекта останавливает и откатывает слой, а",
+        "  HyperLog сохраняет слой/resource/нулевой индекс/класс/сообщение/ограниченный",
+        "  стек без координат и значений полей.",
+        "- Production Lisa/Belka подготовлен как новый монотонный выпуск `3.1.2.11` /",
+        "  `versionCode 205`; уже опубликованный `3.1.2.10` / 204 не переиспользуется.",
+        "  Lisa Debug намеренно остаётся `3.1.2.9` / 203.",
+        "- Cold Continue LineString/MultiLineString теперь явно снимает общий polygon",
+        "  FillLayer: восстановленная линия больше не выглядит замкнутым полигоном, при",
+        "  этом геометрия, вершины и сохранение остаются без изменений.",
+        "- Cold Continue незавершённого дополнения полигона обходом теперь сохраняет",
+        "  property-bearing MapLibre edit feature, атомарно восстанавливает заливку,",
+        "  красный контур и скрытый vertex cache. Контур не мерцает при новых GPS-точках,",
+        "  а после Stop вершины снова сразу доступны для редактирования.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-08-22",
+        "heading": "2026-08-22",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-08-22-035e2bef524a"
+    ]
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ui-contracts-selected-track-gpx-share-and-stale-owner-guard",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:ui-contracts"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ui-contracts.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### Поделиться выбранным треком",
+        "",
+        "UI-TRACK-SELECTION-PANEL включает Share в обеих марках. Настоящая связь:",
+        "queryTrackIds → TrackInfo.id → refreshSelectedTrack bind → singleton IDs copy →",
+        "ExportGPXTask → shared provider → GPX FileProvider grant. Это не selected feature",
+        "FID, map-layer ID, recorder session, upload ACK или NGW export. Контракт включает",
+        "stale view/Activity/selection/mode guard, decoded XML-valid name и contained",
+        "basename; независимые method tripwires дополняют прежний неизменный bind witness.",
+        "",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ui-contracts-selected-track-gpx-share-and-stale-owner-guard"
+    ]
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:mobile-roadmap-roadmap-review-process",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the published Markdown address and pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "# Внедрение и пересмотр",
+        "",
+        "Ближайший пакет: MOB-00 → уточнение REL-01/REL-02 → PERF-01. После этого выбрать первый PostgreSQL слой для SYNC-01 и тяжёлый read-only слой для MVT-01; UX-01/UX-02 можно проектировать параллельно. Данные, операции и бюджеты фиксируются до оптимизации.",
+        "",
+        "При каждом PR обновляются его карточки. При изменении приоритета записываются причина, решение владельца продукта и сдвинутые задачи. Перед планированием следующего выпуска сверяются все обязательные предшественники и фактическое включение изменений. Периодический обзор можно проводить раз в две недели; автоматический мониторинг этим документом не создаётся.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:mobile-roadmap-roadmap-review-process"
+    ]
+  }
+}

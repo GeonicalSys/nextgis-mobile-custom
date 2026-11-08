@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:map-rendering-startup-and-delayed-anr-journal",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-rendering"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the rendering subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-rendering.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Startup snapshot и delayed ANR — 2026-10-17",
+        "",
+        "MapRuntimeDiagnostics.beginStartup использует тот же независимый observer, что",
+        "query/tile diagnostics. MainApplication отмечает фиксированные bootstrap stages;",
+        "наблюдатель не вызывает GIS, SQLite или renderer. Старый process snapshot читается",
+        "до первой новой записи, а общий journal startup/query/tile ограничен 16 KiB с",
+        "удалением старейшей записи. SDK cached/Backfillable события сопоставляются по их",
+        "времени, без подмены исходной сборки текущим reporter. Задержки загрузки R-tree и",
+        "native SIGABRT требуют новых данных; алгоритмы загрузки карты и лимиты local tiles",
+        "по прежним несимволицированным стекам не меняются.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:map-rendering-startup-and-delayed-anr-journal"
+    ]
+  }
+}

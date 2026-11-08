@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ui-contracts-ngfp-resource-binding-namespace-and-remap-exclusions",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:ui-contracts"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ui-contracts.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Ресурсные bindings NGFP имеют собственную grammar: combobox.attributes.ngw_id",
+        "(regular/AutoTextEdit) и meta.ngw_connection.id. Server URL/account определяют",
+        "namespace, а числа в cap, defaults/options, field names, local rows, srs.id и",
+        "business GeoJSON к remap ресурсов не относятся. Скриптовые deployment bindings",
+        "Collector metadata и динамические photo attachment URLs — отдельные контракты.",
+        "Текущие неизвестные сохраняются в едином LISA dependency-audit-todo.yaml:",
+        "AUDIT-TODO-NGFP-EMBEDDED-CONNECTION, AUDIT-TODO-NGFP-REFERENCE-COERCION,",
+        "AUDIT-TODO-NGFP-LOOKUP-PREFETCH и AUDIT-TODO-NGFP-EXISTING-CLONES.",
+        "Ни source review, ни будущий remap fix не доказывают исправление прежних",
+        "артефактов или работоспособность nested lookup prefetch/native UI.",
+        "",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ui-contracts-ngfp-resource-binding-namespace-and-remap-exclusions"
+    ]
+  }
+}

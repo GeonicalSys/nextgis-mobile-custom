@@ -1,0 +1,66 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-13-364335b4d5b5",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-13 — Компактная телеметрия и доступные жесты карты",
+        "",
+        "- В нижней панели оставлены координаты/масштаб и GPS/точность двумя группами;",
+        "  при переносе координат масштаб переходит к коротким GPS/точности без лишней строки.",
+        "  Высота и скорость удалены, пустой footer 40 dp отменён. Attribution следует",
+        "  за реальными границами нижних видимых элементов.",
+        "- Свёрнутое меню пропускает DOWN/MOVE/UP в прозрачных слотах; native regression",
+        "  контролирует эти жесты, видимый плюс и нормальную высоту панели при разных DPI.",
+        "- Агентские инструкции требуют сохранять компактный обычный масштаб и",
+        "  проверять прозрачные области, а не только видимость кнопок. Уведомления могут",
+        "  перекрывать основной экран; их собственный текст и действия должны помещаться.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-13",
+        "heading": "2026-10-13 — Компактная телеметрия и доступные жесты карты",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-13-364335b4d5b5"
+    ]
+  }
+}

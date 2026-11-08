@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:device-smoke-tests-august-21-walk-state-and-checkpoint",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:device-smoke-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/device-smoke-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "   активен обход: для существующей фигуры выбрать средний узел и убедиться, что",
+        "   GPS-точки идут до его прежнего следующего узла, а хвост полигона не отстаёт от",
+        "   текущей позиции. В панели обхода проверить одну строку 48 dp: название слоя, дискета,",
+        "   пауза/плей и крестик. Отменить каждое подтверждение по одному, убедиться,",
+        "   что запись и владелец сохраняются. Подтвердить паузу: новые GPS-точки не",
+        "   добавляются. Подтвердить продолжение и соединение; дискета после подтверждения",
+        "   финального снимка сразу открывает атрибуты. При нехватке точек появляется"
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Dated package recipe for GPS append, pause and Finish."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:device-smoke-tests-august-21-walk-state-and-checkpoint"
+    ]
+  }
+}

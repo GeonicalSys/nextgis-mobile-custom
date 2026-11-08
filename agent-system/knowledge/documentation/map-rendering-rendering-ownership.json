@@ -1,0 +1,61 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:map-rendering-rendering-ownership",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-rendering"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the rendering subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-rendering.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Ownership",
+        "",
+        "- `MapDrawable` строит и обновляет MapLibre style, sources и layers.",
+        "- `MPLFeaturesUtils` содержит операции style и определение sibling anchors.",
+        "- Для Polygon и MultiPolygon он создаёт отдельный Point source подписи:",
+        "  внутренняя точка берётся с учётом отверстий, у MultiPolygon — на наибольшей",
+        "  пригодной части. Вырожденный контур без внутренней точки не получает подпись.",
+        "  Полный helper сохраняет исходные свойства feature; native точка получает",
+        "  компактную label-проекцию и создаётся только при непустой подписи.",
+        "- `VectorLayerRenderCache` ускоряет подготовку векторных слоёв при cold start.",
+        "- `LayerFillService` загружает и вставляет импортированные слои в `LayerGroup`.",
+        "- `ReorderedLayerView` синхронизирует порядок UI и модели.",
+        "- `MapFragment` — host `MaplibreMapInteraction` и точка reload/lite reload.",
+        "- Gradle-файлы `app`, `maplibui` и `maplib` совместно задают один native",
+        "  MapLibre backend для конечного APK.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:map-rendering-rendering-ownership"
+    ]
+  }
+}

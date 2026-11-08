@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-map-locate-fallback",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "map-locate-fallback"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "map-locate-fallback",
+        "repository": "root",
+        "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+        "marker": "private fun locateFirstLayerExtent(): Boolean",
+        "requires": [
+          "for (candidate in mapView.getAllLayers())",
+          "if (isUsableExtent(extent))",
+          "break",
+          "val center = extent.center",
+          "val fallbackZoom = LOCATE_MIN_ZOOM.coerceIn("
+        ],
+        "forbids": [
+          "fitBounds",
+          "LatLngBounds"
+        ],
+        "sha256": "0e00a779a580938a5927753a584e78c1f57dad45d484c6e3ce3baaf42c702c72"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-map-locate-fallback"
+    ]
+  }
+}

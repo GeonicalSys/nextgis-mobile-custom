@@ -1,0 +1,74 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:collector-roadmap-underlay-server-specification",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "planned",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:collector-roadmap"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "UNKNOWN",
+    "release": "unknown",
+    "retention": "Keep the local immutable contract and the current shared asset identity until a new contract is accepted."
+  },
+  "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "Remote underlay refresh depends on an agreed new server specification.",
+        "implementation": "Local underlays retain the immutable_local contract and shared asset references. The manual Debug import is a separate path.",
+        "source_verification": "A future specification needs manifest, version and hash checks and an atomic replacement plan. Existing local import evidence covers its own archive and cache.",
+        "merge": "The shared asset and local import route is in the adopted source. Server refresh remains pending specification.",
+        "runtime_verification": "Verify incomplete download, rollback and retained active project references after authorization.",
+        "release": "A remote update release follows the specification and separately verified client compatibility.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/architecture/collector-projects.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/architecture/shared-underlays.md"
+          }
+        ]
+      }
+    },
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/collector.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "5. После получения спецификации нового сервера определить manifest/version/hash и атомарную",
+        "   замену `.ngrc`; до этого подложка остаётся `immutable_local`."
+      ]
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "Lifecycle describes the next action in the pinned roadmap. Existing implementation claims are source wording."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:collector-roadmap-underlay-server-specification"
+    ]
+  }
+}

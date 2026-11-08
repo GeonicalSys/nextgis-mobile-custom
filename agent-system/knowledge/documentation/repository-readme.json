@@ -1,0 +1,223 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:repository-readme",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "README.md",
+          "agent-system/knowledge/documentation/repository-readme.json"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the repository landing page at README.md and refresh it with the App prose projector."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "# NextGIS Mobile",
+        "",
+        "GeonicalSystem maintains the LISA and BELKA Android variants of",
+        "[NextGIS Mobile](https://github.com/nextgis/android_gisapp) for field work",
+        "with NextGIS Web. The [LISA ecosystem guide](docs/architecture/lisa-ecosystem.md)",
+        "describes how the app connects to LISA desktop and its QGIS plugins.",
+        "",
+        "## Table of contents",
+        "",
+        "- [Key capabilities](#key-capabilities)",
+        "  - [Field data collection](#field-data-collection)",
+        "  - [Offline-first workflows](#offline-first-workflows)",
+        "  - [Synchronization with NextGIS Web](#synchronization-with-nextgis-web)",
+        "  - [Map visualization and layer control](#map-visualization-and-layer-control)",
+        "  - [GPS tracking](#gps-tracking)",
+        "  - [Data management and editing](#data-management-and-editing)",
+        "- [Typical use cases](#typical-use-cases)",
+        "- [Installation](#installation)",
+        "- [Documentation](#documentation)",
+        "- [Community and ecosystem](#community-and-ecosystem)",
+        "- [Commercial support](#commercial-support)",
+        "- [License](#license)",
+        "",
+        "## Key capabilities",
+        "",
+        "### Field data collection",
+        "",
+        "The [form guide](docs/guides/form-behavior-user-guide.md) explains how to",
+        "fill in fields, use lookup lists and save features.",
+        "",
+        "### Offline-first workflows",
+        "",
+        "See [shared offline basemaps](docs/architecture/shared-underlays.md) for",
+        "local map storage and use across projects.",
+        "",
+        "### Synchronization with NextGIS Web",
+        "",
+        "The [project synchronization guide](docs/guides/project-synchronization-user-guide.md)",
+        "explains when the app sends local edits and how it handles a server interruption.",
+        "",
+        "### Map visualization and layer control",
+        "",
+        "See [map rendering](docs/architecture/map-rendering.md) for rendering modes,",
+        "layer order, styles and labels.",
+        "",
+        "### GPS Tracking",
+        "",
+        "See [shared tracks](docs/architecture/shared-tracks.md) for track recording,",
+        "history and synchronization.",
+        "",
+        "### Data management and editing",
+        "",
+        "See [feature editing](docs/architecture/feature-copy-transform.md) for",
+        "copying, moving and rotating features in the app.",
+        "",
+        "## Typical use cases",
+        "",
+        "Use mobile projects to collect and update geospatial data in the field.",
+        "The [mobile project setup guide](docs/runbooks/collector-project-setup.md)",
+        "covers project configuration in NextGIS Web.",
+        "",
+        "## Installation",
+        "",
+        "Use the signed APK or update channel for your LISA or BELKA deployment.",
+        "See [package and channel identities](docs/reference/flavors-and-versioning.md)",
+        "and the [APK release guide](docs/runbooks/release-apk.md) for details.",
+        "",
+        "The official NextGIS Mobile app is listed on",
+        "[Google Play](https://play.google.com/store/apps/details?id=com.nextgis.mobile).",
+        "",
+        "## Documentation",
+        "",
+        "- [App documentation by role](docs/README.md)",
+        "- [Start here for contributors and agents](docs/START-HERE.md)",
+        "- [GeonicalSystem fork customizations](docs/reference/fork-customizations.md)",
+        "- [Official NextGIS Mobile user guide](https://docs.nextgis.com/docs_ngmobile/source/index.html)",
+        "",
+        "Validate the App documentation locally from this repository root.",
+        "",
+        "```powershell",
+        "powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools/docs-check.ps1 -RunTests",
+        "```",
+        "",
+        "## Community and ecosystem",
+        "",
+        "- [NextGIS community forum](https://community.nextgis.com)",
+        "- [Upstream GitHub issues](https://github.com/nextgis/android_gisapp/issues)",
+        "- [NextGIS Web](https://github.com/nextgis/nextgisweb)",
+        "- [NextGIS Connect for QGIS](https://github.com/nextgis/nextgis_connect)",
+        "",
+        "## Commercial support",
+        "",
+        "See [NextGIS contacts](https://nextgis.com/contact/) for support from the",
+        "upstream NextGIS team.",
+        "",
+        "## License",
+        "",
+        "NextGIS Mobile is released under the GNU General Public License v3.0 or later.",
+        "See the repository's [license text](LICENSE).",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:lisa-ecosystem",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:documentation-form-behavior-user-guide",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:shared-underlays",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:documentation-project-synchronization-user-guide",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:map-rendering",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:shared-tracks",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:feature-copy-transform",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:collector-project-setup",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:documentation-flavors-and-versioning",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:release-apk",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:documentation-docs-index",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:documentation-start-here",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:fork-customizations",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:repository-readme-original",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:repository-readme"
+    ]
+  }
+}

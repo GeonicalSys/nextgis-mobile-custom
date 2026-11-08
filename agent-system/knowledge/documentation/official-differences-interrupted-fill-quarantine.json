@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-interrupted-fill-quarantine",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Каждый новый fill-каталог до обращения к данным получает marker незавершённой",
+        "публикации. После process death удаляются только помеченные каталоги, которых нет",
+        "в сохранённом `LayerGroup`, и их таблицы в `layers.db` этого же workspace.",
+        "Referenced stage считается уже опубликованным, а старые каталоги без marker не",
+        "удаляются автоматически. Новый слой до create/insert привязывается к target",
+        "group; map database разрешается по владельцу слоя и map-файлу, а не по последней",
+        "глобальной project preference. Это исключает каталоги в одном проекте и таблицы",
+        "в другом после ручного restart или switch.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-interrupted-fill-quarantine"
+    ]
+  }
+}

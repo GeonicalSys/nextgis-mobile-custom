@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:map-performance-cache-queue-discovery-invalid-20261028",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-performance",
+      "lisa:mobile:resource:map-performance-cache-queue-acceptance-boundary"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original measurement or checkpoint and its acceptance limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-performance.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Первая whole-contour проверка до правок завершилась exit0. Финальные refresh и",
+        "retry получили INVALID из-за контрактных документов чужого desktop checkout",
+        "(standart_profiles/AGENTS.md, geonical-docs scenario-dependencies/local-ci/",
+        "mobile-client). Это не PASS. Семантические связи сохранены в own app registries,",
+        "source/mobile input hashes стабильны; canonical root index write/check остаётся",
+        "UNKNOWN/follow-up владельцу, без изменения/заморозки чужих файлов. Частный APK",
+        "не объявляется сквозной release acceptance.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:map-performance-cache-queue-discovery-invalid-20261028"
+    ]
+  }
+}

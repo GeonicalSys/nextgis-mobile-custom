@@ -1,0 +1,97 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-form-draft",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-FORM-DRAFT"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-FORM-DRAFT",
+        "group": "forms",
+        "title": "Черновик привязан к проекту и операции",
+        "surface": "Форма объекта",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [
+          "form_save",
+          "controls_list"
+        ],
+        "meaning": "Черновик хранит незавершённую работу и identity операции, а не подтверждает сохранение объекта или отправку.",
+        "value_origin": "captureFormDraft: mapPath/layerId/featureId/operationId, form/meta paths, typed control state, script pin, geometry и photo paths → FeatureFormDraftStore.commit.",
+        "units": "updatedAtMs — Unix milliseconds; остальные значения типизированы полями.",
+        "updates": [
+          "Checkpoint собирает актуальные controls и дополнительные pins.",
+          "Store обновляет время и сообщает результат commit."
+        ],
+        "actions": [
+          "Продолжить заполнение",
+          "Попытаться сохранить"
+        ],
+        "conditions": [
+          "View-only/finalized draft не записывается этим capture path.",
+          "Невалидный snapshot не принимается."
+        ],
+        "saved_state": "Durable snapshot содержит owning map и operation UUID; сохранение controls не является созданием business row.",
+        "source_ids": [
+          "WF-FORM-DRAFT",
+          "WF-FORM-DRAFT-STORE"
+        ],
+        "expectations": [
+          "Oracle: после прерывания восстанавливается именно owning-project черновик с operationId, прежними controls и pins; другой проект не получает его значения.",
+          "Контрпример: восстановление по одному layerId в другой карте либо сообщение об успешном Save только из-за наличия snapshot."
+        ],
+        "unknowns": [
+          "Реальный process kill/restore, вложения и точная pin-проверка не исполнялись; source facts не заменяют native regression."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-draft",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-draft-store",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-form-draft"
+    ]
+  }
+}

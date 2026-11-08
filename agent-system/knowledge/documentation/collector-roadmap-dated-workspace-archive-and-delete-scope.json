@@ -1,0 +1,50 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:collector-roadmap-dated-workspace-archive-and-delete-scope",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:collector-roadmap"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated verification or delivery checkpoint and its limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/collector.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "| Изолированные multi-project workspaces | реализовано | добавить безопасный archive/delete workspace |"
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Pinned roadmap status row. The current architecture separately documents local deletion via backup, tombstone and fallback. Archival and recovery remain separate tasks."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:collector-roadmap-dated-workspace-archive-and-delete-scope"
+    ]
+  }
+}

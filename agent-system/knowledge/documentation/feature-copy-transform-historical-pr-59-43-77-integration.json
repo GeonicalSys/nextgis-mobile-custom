@@ -1,0 +1,50 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:feature-copy-transform-historical-pr-59-43-77-integration",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:feature-copy-transform"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated verification or delivery checkpoint and its limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/feature-copy-transform.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Порядок интеграции: Merge Commit maplib #59 → Merge Commit maplibui #43 →",
+        "обновление app pins на удалённые merge commits → Squash app #77. До закрытия",
+        "этой цепочки APK не объявляется готовым к публикации. Версии не повышаются,",
+        "desktop/NGW/SQLite schema contracts не меняются.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:feature-copy-transform-historical-pr-59-43-77-integration"
+    ]
+  }
+}

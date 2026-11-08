@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-smoke-sync-interrupt-action",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "SMOKE-SYNC-INTERRUPT-ACTION"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "device",
+        "scope": [
+          "app",
+          "maplib",
+          "maplibui"
+        ],
+        "steps": [
+          "Start a slow multi-account synchronization with a stalled GET",
+          "open layer loading",
+          "underlay catalog or project create/rename/delete",
+          "verify the warning offers cancel/continue",
+          "confirm interruption and measure cancel-to-worker-stop",
+          "repeat while one outbound edit is awaiting its response",
+          "then complete the requested action"
+        ],
+        "expected": "A stalled read and tracked apply stop within a few seconds and rollback without partial rows; an already-sent mutation is the only request allowed to finish and its local change record follows the confirmed result; the spinner remains active until every data-sync lease finishes and the next action starts only after release."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-smoke-sync-interrupt-action"
+    ]
+  }
+}

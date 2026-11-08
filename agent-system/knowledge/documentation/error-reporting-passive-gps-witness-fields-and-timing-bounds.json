@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:error-reporting-passive-gps-witness-fields-and-timing-bounds",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:error-reporting"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/error-reporting.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Witness содержит ровно десять numeric/enum полей: `schema_version`, `read_status`,",
+        "`probe_started_elapsed_realtime_ms`, `probe_finished_elapsed_realtime_ms`,",
+        "`probe_duration_ms`, `cached_fix_elapsed_realtime_ms`, `cached_fix_age_ms`,",
+        "`app_raw_timestamp_status`, `cache_vs_app_raw`, `cache_minus_app_raw_ms`.",
+        "Отсутствие, недопустимое или будущее время, отказ permission/read и сбой clock",
+        "явно отличаются от успешного нулевого возраста. Millisecond сравнение сообщает",
+        "older/same/newer либо unknown; отрицательная delta отличима от sentinel по enum.",
+        "Тексты исключений и произвольные значения в witness не входят, ошибка чтения",
+        "не теряет исходный отчёт. Синхронный Binder getter не получает execution-time",
+        "таймаут: размер и число полей ограничены, гарантия времени выполнения не заявлена.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:error-reporting-passive-gps-witness-fields-and-timing-bounds"
+    ]
+  }
+}

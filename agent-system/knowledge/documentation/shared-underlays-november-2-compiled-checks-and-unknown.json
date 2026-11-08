@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:shared-underlays-november-2-compiled-checks-and-unknown",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:shared-underlays"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/shared-underlays.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Подготовлены LegacyUnderlayTransferSessionTest и LegacyUnderlayProgressNativeTest",
+        "с поздним PFD, finalization pulses, queued cancel/stale callback и RU themes/",
+        "font1/1.3/2/280–320dp portrait/landscape. Они только скомпилированы.",
+        "Реальный старый Debug, source→URI preparation, крупная подложка, все стадии и",
+        "жалоба о10мин ожидания требуют завтрашнего live evidence; причина не установлена.",
+        "Exporter/provider/wire/trust и исходные Debug файлы не менялись.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Tests were compiled. The old Debug, large real transfer and ten-minute wait still lacked live proof at this frame."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:shared-underlays-november-2-compiled-checks-and-unknown"
+    ]
+  }
+}

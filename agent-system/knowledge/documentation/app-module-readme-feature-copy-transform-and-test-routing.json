@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-feature-copy-transform-and-test-routing",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Копирование, сдвиг и поворот",
+        "",
+        "MapFragment предлагает копирование выбранного объекта в совместимый редактируемый слой с выбором категории, затем открывает новую форму. В MODE_EDIT доступен сдвиг/поворот жестами с неподвижной камерой и штатным Save/Cancel/Undo. Related feature-editing выполняет сценарии на изолированном эмуляторе; с явным PhoneSerial также на verification APK, PhoneOnly допускает только неподвижную phone-часть. [Контракт](../../docs/architecture/feature-copy-transform.md).",
+        "",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:feature-copy-transform",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-feature-copy-transform-and-test-routing"
+    ]
+  }
+}

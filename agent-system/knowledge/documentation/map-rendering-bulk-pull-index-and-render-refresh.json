@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:map-rendering-bulk-pull-index-and-render-refresh",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-rendering"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the rendering subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-rendering.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "23. Инкрементальный NGW pull не публикует insert/update/delete broadcast для",
+        "    каждой строки: после полного SQLite-apply выполняется одна R-tree rebuild.",
+        "    Публичные операции R-tree сериализованы, а notify callback не меняет индекс",
+        "    во время bulk/rebuild. Hot style refresh берёт отдельные `Feature` из",
+        "    `VectorLayerRenderCache`, последовательно вычисляет props и публикует готовый",
+        "    snapshot на main thread; live `Feature.properties` на worker не изменяется.",
+        "    Полный NGW fill отдельно валидирует Polygon и members MultiPolygon через JTS",
+        "    без legacy квадратичного сравнения пар сегментов. Число features в progress",
+        "    остаётся числом серверных объектов, независимо от количества polygon parts и",
+        "    координат внутри них. Последующий untracked sync пропускает отдельную",
+        "    отсутствующую или невалидную геометрию, сохраняет её remote ID от ошибочного",
+        "    локального удаления и продолжает единый SQLite-apply остальных объектов."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:map-rendering-bulk-pull-index-and-render-refresh"
+    ]
+  }
+}

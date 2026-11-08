@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:location-pipeline-gnss-transport-session-identity-and-quality-expiry",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:location-pipeline"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/location-pipeline.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Поздний open/data/close от предыдущего transport не изменяет новый сеанс.",
+        "При отключении и после восьми секунд тишины качество становится «Нет фикса»;",
+        "старые «Авто»/«Плав»/«Фикс» не остаются в HUD. Повреждённая NMEA-строка",
+        "не продлевает прежнее качество. BESTPOSB quality `1` означает автономное",
+        "решение; наличие поправок не подменяет его на FLOAT/FIX. Профиль, GATT failures",
+        "и session lifecycle проверяются на API 26/36; физический Pigo/PiRat требует smoke.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:location-pipeline-gnss-transport-session-identity-and-quality-expiry"
+    ]
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:point-firefly-sprite-coverage-and-cpu-budget",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:point-firefly"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the style or label subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/point-firefly.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "`FireflyMarkerRegistry` строит RGBA sprite с независимыми покрытиями ядра и",
+        "ореола. Покрытие ореола исключает всю внутреннюю область. Для blur > 0 наружу",
+        "идёт Gaussian falloff; края сглажены в пределах одного sample. Память bitmap",
+        "ограничена 512 × 512 и LRU 4 MiB. Размеры конечны и ограничены только в новом",
+        "рендерере; модель обычных точек не меняется. Прежнее преобразование размеров",
+        "через `getMPLThinkness` сохраняется, но нулевая ширина действительно даёт 0.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:point-firefly-sprite-coverage-and-cpu-budget"
+    ]
+  }
+}

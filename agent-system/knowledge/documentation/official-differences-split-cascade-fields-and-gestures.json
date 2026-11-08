@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-split-cascade-fields-and-gestures",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "В форке управляемый каскадом сдвоенный элемент отображается двумя отдельными",
+        "списками с собственными подписями, полной шириной и отступами. Серверная форма",
+        "сохраняет совместимый JSON. Взмах работает над обычными списками, флажками,",
+        "короткими комментариями и пустой областью страницы; выделение текста, подпись",
+        "и собственная горизонтальная прокрутка сохраняют свои жесты. Официальные три",
+        "HEAD повторно проверены через GitHub API при этой доработке 7 октября 2026 года;",
+        "они совпали с указанными ниже.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-split-cascade-fields-and-gestures"
+    ]
+  }
+}

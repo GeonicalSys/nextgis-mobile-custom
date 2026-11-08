@@ -1,0 +1,76 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:change-impact-maplibre-backend",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "change-impact",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "definition": {
+      "role": "complete_change_impact_definition",
+      "value": {
+        "id": "MAPLIBRE-BACKEND",
+        "paths": [
+          "app/build.gradle",
+          "maplibui/build.gradle",
+          "maplib/build.gradle"
+        ],
+        "owners": [
+          "app",
+          "maplibui",
+          "maplib"
+        ],
+        "read": [
+          "docs/architecture/map-rendering.md",
+          "docs/reference/build-matrix.md",
+          "docs/reference/official-differences.md",
+          "app/docs/README.md",
+          "maplibui/docs/README.md",
+          "maplib/docs/README.md"
+        ],
+        "invariants": [
+          "INV-MAPLIBRE-BACKEND-COMPATIBILITY"
+        ],
+        "must_update_docs": [
+          "docs/architecture/map-rendering.md",
+          "docs/reference/build-matrix.md",
+          "docs/reference/official-differences.md",
+          "app/docs/manifest.yaml",
+          "maplibui/docs/manifest.yaml",
+          "maplib/docs/manifest.yaml"
+        ],
+        "verify": [
+          "AUTO-MAPLIB-UNIT",
+          "AUTO-MAPLIBUI-ASSEMBLE",
+          "AUTO-APP-VERSION-MATRIX",
+          "SMOKE-MAP-OPENGL-COMPATIBILITY"
+        ],
+        "strict_docs": true
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/change-impact.json",
+    "scopes": [
+      "lisa:mobile:contract:change-impact-maplibre-backend"
+    ]
+  }
+}

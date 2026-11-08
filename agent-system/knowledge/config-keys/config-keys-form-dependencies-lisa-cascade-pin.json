@@ -1,0 +1,50 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:config-keys-form-dependencies-lisa-cascade-pin",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "config-keys",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_registry_section",
+      "value": "form_dependencies"
+    },
+    "registry-key": {
+      "role": "incumbent_mapping_or_list_key",
+      "value": "lisa_cascade_pin"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "owner": "maplibui",
+        "source": "maplibui/src/main/java/com/nextgis/maplibui/util/CascadingFormController.java",
+        "purpose": "SHA-256 reference to a verified immutable definition in the owning layer form_dependencies directory; Bundle/draft contains no large table, legacy inline pins remain readable and empty pins the absence of rules."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/sectioned-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:config-keys-form-dependencies-lisa-cascade-pin"
+    ]
+  }
+}

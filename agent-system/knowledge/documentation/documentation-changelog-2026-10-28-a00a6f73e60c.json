@@ -1,0 +1,67 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-28-a00a6f73e60c",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-28 — Приватная сборка и первые обычные замеры787",
+        "",
+        "По возобновлённому MOB-04 собраны обычные Debug/Lisa Release/Belka Release;",
+        "build02 PASS83s и version matrix всех трёх PASS на неизменном runtime source.",
+        "Первый SQLite B diagnostic завершил300s с RSS460.7–614.3MiB до включения",
+        "подписей выделов и не объявлен строгим A/B. Парная A-B-B-A серия дала168 memory",
+        "samples: средний late60 RSS−31.15%, sampled peak−24.05%; A1 collector FAIL и",
+        "original A2 transport partial сохранены, completed A2 retry отдельный. DB bytes",
+        "и16 labels-ON configs неизменны. Phone scene medians перекрываются, f80920px",
+        "CENTER/TOP difference остаётся, tablet1403 delay ещё открыт.",
+        "Обновлены MOB-04, performance и [разбор](reference/mobile-crash-224-2026-10-27.md).",
+        "Это факты приватной проверки, без merge, публикации или завершения Full/2GiB gate.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-28",
+        "heading": "2026-10-28 — Приватная сборка и первые обычные замеры787",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-28-a00a6f73e60c"
+    ]
+  }
+}

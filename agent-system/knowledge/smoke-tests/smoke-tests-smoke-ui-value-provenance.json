@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-smoke-ui-value-provenance",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "SMOKE-UI-VALUE-PROVENANCE"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "device",
+        "scope": [
+          "app",
+          "maplib",
+          "maplibui"
+        ],
+        "command": "After separate runtime authorization follow the independent pilot matrix in docs/architecture/ui-contracts.md on an owned verification project/device.",
+        "steps": [
+          "Keep the technical device/display fix and camera deliberately different; pan the camera without follow and read both independent producers.",
+          "Exercise only the applicable conditional autopan route, missing/stale fix, locate and saved viewport restore separately; Slezhenie must target selected geometry.",
+          "Verify read-only versus editable layer, active project ownership, form validation/draft and stale sync callbacks with independent state/row witnesses.",
+          "Record actual build/device/flavor/permissions and results; these steps are planned NOT_RUN in the current source/docs stage."
+        ],
+        "expected": "Deliberately separate device/display fix, camera and project extent. Pan without follow, test applicable autopan gates, missing/stale fix and viewport restore; compare each UI source independently. Verify selected-object action, layer visibility/edit rights, project owner and pending/sync state separately. Planned NOT_RUN in this source/docs stage; no location/business/project mutation on an ordinary user's data."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-smoke-ui-value-provenance"
+    ]
+  }
+}

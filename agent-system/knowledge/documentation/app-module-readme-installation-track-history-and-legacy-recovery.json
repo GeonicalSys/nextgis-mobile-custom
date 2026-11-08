@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-installation-track-history-and-legacy-recovery",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Общая история треков и проверки обычных стилей",
+        "",
+        "«Мои треки» — общая история установки, одно служебное представление на карте.",
+        "MainApplication импортирует старые источники до открытия map helpers. Switch",
+        "во время записи запрещён. SharedTracksTest проверяет общую историю и native",
+        "отрисовку; VectorStyleRenderingTest использует обычные synthetic SQL/GeoJSON",
+        "слои и исключает configured vector tiles. Related styles добавлен в каталог.",
+        "Исправление переноса читает настоящий `layers.db` и повторяет пропущенную",
+        "историю рядом с новыми общими треками. Native SharedTracksTest проверяет все",
+        "поля исходника, remap незавершённого сеанса и pending Stop после обновления."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-installation-track-history-and-legacy-recovery"
+    ]
+  }
+}

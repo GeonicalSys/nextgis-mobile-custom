@@ -1,0 +1,70 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-30-c316f373915c",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 30 октября2026 — scoped NGW response и save(false)",
+        "",
+        "В Core Draft #63 явный206 больше не используется как полный snapshot: отказ до",
+        "применения именно этого pull, при прежних раннем push/prefix cleanup и других",
+        "response routes. Две lookup ветви отмечают false save в IO текущего результата,",
+        "не обещая rollback/retry/disk. Новые карточки maplib-20261030-full-snapshot-http206,",
+        "maplib-20261030-lookup-save-failure и android-20261030-sync-admission-regression.",
+        "",
+        "Shared19:4 meaningful assertion FAIL/15 controls →19PASS, Core1.905с/App2.298с,",
+        "Gradle35с; standalone15 не запускался отдельно. Belka source compile0/39с,",
+        "100 task set совпал при ином порядке;7 PID завершились. Первый dry capture остаётся",
+        "UNKNOWN/NOT_PASS, recovery dry и actual compile раздельны. Старые9/19/22/21/12 и",
+        "1117/1192 не rerun; native/DB/device/APK/fullCI и новые metadata gates NOT_RUN.",
+        "UI39/142/19/F61 и прежние clock/wiki ограничения сохранены.",
+        "",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-30",
+        "heading": "30 октября2026 — scoped NGW response и save(false)",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-30-c316f373915c"
+    ]
+  }
+}

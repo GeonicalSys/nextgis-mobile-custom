@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-smoke-self-update",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "SMOKE-SELF-UPDATE"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "device",
+        "scope": [
+          "app"
+        ],
+        "steps": [
+          "Start offline and restore Internet without restarting the phone",
+          "Verify foreground retry and correlated skip or HTTP failure logs",
+          "Close and relaunch the app and recreate a restored window in a new process",
+          "Check the branch manifest for Lisa Release",
+          "Belka Release and Lisa Debug",
+          "On Android 9 or 10 download a valid same-certificate update whose archive PackageManager may omit SigningInfo",
+          "Test mismatched branch or channel and an APK URL outside the versioned branch path",
+          "Test mismatched versionName",
+          "size",
+          "checksum and certificate",
+          "Revoke Install unknown apps for the current variant",
+          "Download a valid artifact",
+          "Grant the requested special permission and return to the app"
+        ],
+        "expected": "Valid same-branch same-signature update, including the Android 9-10 legacy archive-signature fallback, reuses the downloaded APK and opens the installer automatically after permission return; invalid schema, identity, version, URL, integrity or certificate is rejected."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-smoke-self-update"
+    ]
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:mobile-roadmap-reliable-server-ack",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "UNKNOWN",
+    "release": "unknown",
+    "retention": "Retain the exact create and queue witnesses and the distinction between orphaned, transient and corrupt records."
+  },
+  "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "Keep REL-01 open for validation of the remote ID, transactional remap and queue confirmation, and reconciliation after a lost response.",
+        "implementation": "The adopted maplib pin keeps separate missing-ID and empty-cursor paths. It still reaches successful NEW cleanup when the creation result has no ID.",
+        "source_verification": "The reviewed NGWVectorLayer path is source evidence of the current condition. The newer downloader and journal changes have separate scopes.",
+        "merge": "The adopted pin identifies the existing code. Delivery of the REL-01 acceptance work remains open.",
+        "runtime_verification": "A server-accepted POST with a lost response, process death, restart and invalid ID cases still need their own oracles.",
+        "release": "This review establishes the source finding and its limits.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp/maplib",
+            "revision": "7152e3cd403f9020cebcf752b8299538a85136c1",
+            "path": "src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+            "path": "docs/reference/mobile-reliability-audit.md"
+          }
+        ]
+      }
+    },
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## REL-01 Достоверное подтверждение отправки",
+        "",
+        "Приоритет P0. Состояние: Исследуется. Основание: подтверждено кодом. Владельцы реализации — maplib, интеграция app/maplibui.",
+        "",
+        "В NGWVectorLayer успешный HTTP ответ создания с JSON без поля id возвращается как успех; вызывающий код после этого удаляет NEW из очереди. При пустом cursor для создания/изменения также действует политика «обработано». Это требует исправления и адресной проверки; потеря данных на конкретном телефоне этим аудитом не установлена.",
+        "",
+        "Приёмка: отсутствующий, неверный и недопустимый server ID не очищает правку; remap локального ID и подтверждение очереди согласованы. Временная ошибка чтения, действительно осиротевшая запись и повреждение БД различаются; неопределённые операции сохраняются для восстановления, обычная очередь продолжает работу.",
+        "",
+        "Отдельно проверить «сервер принял POST, ответ потерялся» и смерть процесса между ответом и локальной фиксацией. Пока backend не даёт подходящей поддержки, нельзя обещать однократное создание при любых повторах. Нужен явный способ сверки неопределённого результата.",
+        "",
+        "Основание: [создание и ACK](https://github.com/GeonicalSys/android_maplib/blob/7e7055e54002b116e7a147fcd2791486913ddd9a/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java#L3883), [очистка очереди](https://github.com/GeonicalSys/android_maplib/blob/7e7055e54002b116e7a147fcd2791486913ddd9a/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java#L1357).",
+        ""
+      ]
+    },
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "REL-01"
+    },
+    "priority": {
+      "role": "priority_at_pinned_roadmap_basis",
+      "value": "P0"
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "Source finding at the roadmap basis. Acceptance requires independent API and process-death checks."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-reliable-server-ack"
+    ]
+  }
+}

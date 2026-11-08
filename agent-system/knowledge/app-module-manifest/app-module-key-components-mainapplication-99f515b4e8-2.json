@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:app-module-key-components-mainapplication-99f515b4e8-2",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "app-module-manifest",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/main/java/com/nextgis/mobile/MainApplication.java"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [
+      "lisa:mobile:metadata:app-module-manifest"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed module definition and its pinned source provenance."
+  },
+  "facets": {
+    "manifest-field": {
+      "role": "module_manifest_section",
+      "value": "key_components"
+    },
+    "definition": {
+      "role": "module_manifest_ordered_value",
+      "value": {
+        "path": "app/src/main/java/com/nextgis/mobile/MainApplication.java",
+        "responsibility": "Main-process initialization and logging; honour save_log or verbose_log for HyperLog export; create or adopt and activate the initial local project before GISApplication opens its first map, schedule exact registered project/account recovery across active-project changes, except that a pre-registry Debug workspace is kept in place for explicit underlay streaming and does not schedule shared-catalog migration; create editable local vector layers and keep default OSM at internal index zero plus tracks at the top of the reversed layer list for every workspace. Storage move retires only the exact captured mMap without factory getMap, and checks cached actual path plus exact owner with rebind under the same application monitor; retirement does not prove renderer read drain."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/app-module-manifest.json",
+    "scopes": [
+      "lisa:mobile:contract:app-module-key-components-mainapplication-99f515b4e8-2"
+    ]
+  }
+}

@@ -1,0 +1,165 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:polygon-style-controls",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/architecture/polygon-style-controls.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the style or label subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/polygon-style-controls.md"
+    },
+    "frontmatter": {
+      "role": "markdown_frontmatter_lines",
+      "value": [
+        "title: Штриховки, контуры полигонов и живой образец",
+        "type: architecture",
+        "last_verified: 2026-11-02",
+        "related_code:",
+        "  - maplib/src/main/java/com/nextgis/maplib/display/PolygonPatternOptions.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/display/PolygonOutlineOptions.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/display/ConfigurablePolygonPatternRegistry.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/display/SimplePolygonStyle.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/display/FieldStyleRule.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/display/MplStyleMapper.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/MplFeatureStyleProps.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/mpl/MplLayerStyleVars.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/mpl/PolygonLayerFactory.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/mpl/PolygonOutlineLayerFactory.java",
+        "  - maplib/src/test/java/com/nextgis/maplib/display/PolygonStyleOptionsTest.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/util/StylePreviewView.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/util/PolygonStyleControls.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/util/FeatureTypePreview.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/fragment/StyleFragment.java",
+        "  - tools/mobile-test-plan.json",
+        "  - app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleRenderingTest.java",
+        "  - app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleEditorTest.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/map/SqliteVectorTileProvider.java"
+      ]
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "",
+        "# Штриховки, контуры полигонов и живой образец",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:polygon-style-controls-small-window-preview-and-actions",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:polygon-style-controls-optional-json-and-inheritance",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:polygon-style-controls-pattern-geometry-and-opacity",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:polygon-style-controls-tile-motif-and-native-image-lifecycle",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:polygon-style-controls-classic-outline-layout-and-picking",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:polygon-style-controls-legacy-mvt-to-classic-fallback",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:polygon-style-controls-offline-live-preview",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:polygon-style-controls-style-option-and-pixel-fixtures",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:polygon-style-controls-legacy-tile-fallback-fixture",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:polygon-style-controls-editor-profile-matrix",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:polygon-style-controls-historical-test-and-pr-delivery-order",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:polygon-style-controls-bounded-native-png-capture",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:polygon-style-controls-style-verification-20261024",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:polygon-style-controls-category-effective-style-save-and-cancel",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:polygon-style-controls-category-editor-real-touch-oracle",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:polygon-style-controls-current-direct-sqlite-generation",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:polygon-style-controls"
+    ]
+  }
+}

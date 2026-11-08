@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:location-pipeline-wake-lock-and-external-gnss-service-ownership",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:location-pipeline"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/location-pipeline.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "На время автоматического background lease, хотя бы одной записи **или** активной внешней NMEA-сессии источник",
+        "удерживает `PARTIAL_WAKE_LOCK` независимо от настройки звука. Последний",
+        "recorder и выключение внешнего GNSS освобождают его; открытая карта системного",
+        "GPS сама по себе такой lock не удерживает. Пока `gnss_input=external` и выбран",
+        "endpoint, `ExternalGnssSession` не зависит от слушателей карты: сворачивание и",
+        "сон не закрывают BT/USB/TCP. `ExternalGnssService` держит процесс как",
+        "foreground `location|connectedDevice` с тихим уведомлением. Сервисы записи",
+        "объявляют и явно запускают только foreground type `location`: иначе Android",
+        "проверяет также предпосылки `connectedDevice` и отвергает запись ещё до",
+        "создания трека или получения точек. Это обеспечивает обработку GPS и",
+        "акселерометра при выключенном экране, но не позволяет обещать хорошее",
+        "спутниковое измерение внутри здания. Старый хороший accuracy не подставляется",
+        "вместо ухудшившегося нового.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:location-pipeline-wake-lock-and-external-gnss-service-ownership"
+    ]
+  }
+}

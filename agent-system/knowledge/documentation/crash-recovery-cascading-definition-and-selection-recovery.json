@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:crash-recovery-cascading-definition-and-selection-recovery",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:crash-recovery"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/crash-recovery.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "NGFP [cascading lists](cascading-form-lists.md) store a SHA-256 reference to the",
+        "complete immutable snapshot under the owning layer, selected stable keys,",
+        "managed field names and original values in typed state via `saveAdditionalFormState`.",
+        "Large tables stay out of the Activity Binder parcel. Rotation and durable recovery",
+        "verify the pinned file even after NGFP changes; missing/corrupt snapshots block Save",
+        "and retain the previous selection in the draft. Cleared descendants are",
+        "explicit null values, so retry cannot restore obsolete children from SQLite.",
+        "Cascade membership validation and the common required gate run before writes;",
+        "an invalid selection leaves the recoverable draft intact.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:crash-recovery-cascading-definition-and-selection-recovery"
+    ]
+  }
+}

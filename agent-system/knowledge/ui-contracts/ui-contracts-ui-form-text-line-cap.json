@@ -1,0 +1,121 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-form-text-line-cap",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-FORM-TEXT-LINE-CAP"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-FORM-TEXT-LINE-CAP",
+        "group": "forms",
+        "title": "Высота текстового поля NGFP и сохранённое значение",
+        "surface": "Динамический type=text_edit в FormBuilderModifyAttributesActivity; class TextEdit из formtemplate_edittext.xml, поле определяется attributes.field, отдельного android:id у каждого поля нет.",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [],
+        "meaning": "max_string_count задаёт ветку single-line либо максимальное число отображаемых строк TextEdit. Это не лимит символов, не значение поля и не NGW resource ID.",
+        "value_origin": "Выбранный NGFP form.json → getControl(type=text_edit)/formtemplate_edittext.xml → addToLayout → TextEdit.init. attributes.field нормализуется в field identity; saved Bundle перед feature cursor, затем attributes.text и last preferences для нового объекта. ngw_login/ngid_login имеют отдельные override branches. attributes.max_string_count читается getInt независимо от значения; mFields хранит control по getFieldName.",
+        "units": "max_string_count — безразмерное число строк отображения; значение текстового поля — строка по схеме слоя. CRS и физические единицы не возникают из этого параметра.",
+        "updates": [
+          "При создании/recreation control заново читает layout и прежнее значение. maxLines<2 вызывает setSingleLine(true), иначе setMaxLines(maxLines).",
+          "getValue возвращает getText().toString(); saveState сохраняет текст по normalized field key. Установка высоты сама не выбирает строку/категорию и не подтверждает Save/sync."
+        ],
+        "actions": [
+          "Ввести или восстановить текст в существующем поле формы.",
+          "Передать значение обычным form/draft/Save путям с их самостоятельными gates."
+        ],
+        "conditions": [
+          "Один общий maplibui control используется Lisa/Belka; schema/flavor-specific deployed archive и merged APK runtime не проверялись.",
+          "Канонические3 v2.2 формы задают descript.max_string_count=4; label имеет1/10/1 для линий/точек/площадей. only_figures/input type и login overrides не объявляются одинаковыми со свободным текстом.",
+          "Динамический control выбирается классом/layout и normalized attributes.field; fake XML widget ID не вводится. Desktop remap resource ID должен сохранять этот presentation scalar и обычные literals."
+        ],
+        "saved_state": "TextEdit.saveState хранит текст, а не cap/ресурсный ID. Layout cap повторно поступает из form.json. Существующие durable draft/pin/Save semantics описаны в UI-FORM-DRAFT/UI-FORM-SAVE; исход clone/update не доказывает миграцию открытого draft.",
+        "source_ids": [
+          "WF-FORM-TEXT-CONTROL-FACTORY",
+          "WF-FORM-TEXT-CONTROL-BINDING",
+          "WF-FORM-TEXT-LINE-INITIALIZATION",
+          "WF-FORM-TEXT-FIELD-IDENTITY",
+          "WF-FORM-TEXT-VALUE",
+          "WF-FORM-TEXT-STATE"
+        ],
+        "expectations": [
+          "Oracle: исходный descript с cap4 после клонирования других NGW ресурсов сохраняет cap4 и полное значение текста; label1/10/1 не становятся resource IDs.",
+          "Oracle: разные draft/cursor/new-template значения различаются; восстановление принимает прежний текст по field key, а изменение cap не подменяет текст/default.",
+          "Контрпример: совпавшее число4 в id_map меняет max_string_count; либо высоту по подписи поля ошибочно принимают за character count, selected option или geometry."
+        ],
+        "unknowns": [
+          "Source review only; фактические строки/scroll/keyboard/input type, font scale, themes, rotation и native Save не выполнялись.",
+          "Точная форма на tenant, private overlay/multiple-form order и уже изменённые clone artifacts требуют root-owned provenance/repair review; этот UI контракт не доказывает их исправление."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-text-control-factory",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-text-control-binding",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-text-line-initialization",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-text-field-identity",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-text-value",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-text-state",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-form-text-line-cap"
+    ]
+  }
+}

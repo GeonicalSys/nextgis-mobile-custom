@@ -1,0 +1,48 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:mobile-roadmap-styles-tracks-release-224-20261027",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout",
+      "lisa:mobile:task:mobile-roadmap-styles-and-tracks"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the pinned checkpoint and keep its results within the stated source and runtime bounds."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Приоритет P1. Состояние: app [#78](https://github.com/GeonicalSys/nextgis-mobile-custom/pull/78), [#79](https://github.com/GeonicalSys/nextgis-mobile-custom/pull/79), [#80](https://github.com/GeonicalSys/nextgis-mobile-custom/pull/80), [maplib #60](https://github.com/GeonicalSys/android_maplib/pull/60) и [maplibui #44](https://github.com/GeonicalSys/android_maplibui/pull/44) слиты; consumer pins подтверждены. ЛИСА3.1.2.30/224 опубликована27 октября по явному пользовательскому исключению без зелёного Full планшета; versioned/latest HTTP-хэши проверены. Адресные проверки и ограничения записаны в [квитанции выпуска](../reference/mobile-release-fixes-2026-10-26.md). Владелец — app с зависимостями maplib/maplibui. Это учёт текущей работы, а не новое поручение на её исполнение.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:mobile-roadmap-styles-tracks-release-224-20261027"
+    ]
+  }
+}

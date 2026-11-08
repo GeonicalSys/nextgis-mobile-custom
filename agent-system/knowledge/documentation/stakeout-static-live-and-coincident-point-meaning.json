@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:stakeout-static-live-and-coincident-point-meaning",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:stakeout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/stakeout.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "- Для произвольной точки A исходной точкой расчёта является A, для live-режимов —",
+        "  свежий Android `Location`; точка B или выбранный Point рассматривается как",
+        "  точечная цель того же `StakeoutGeometryTarget`. При совпадении A и B расстояние",
+        "  равно нулю, а азимут показывается неопределённым (`—`)."
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:resource:stakeout-private-index-projected-nearest-and-wgs84-inverse",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:stakeout-static-live-and-coincident-point-meaning"
+    ]
+  }
+}

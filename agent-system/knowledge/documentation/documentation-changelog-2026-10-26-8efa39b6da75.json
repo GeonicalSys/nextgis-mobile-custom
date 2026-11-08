@@ -1,0 +1,64 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-10-26-8efa39b6da75",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-10-26 — Локальные проверки вместо автоматических Actions",
+        "",
+        "По поручению пользователя Android reliability/docs workflow оставлены только",
+        "для ручного запуска. Full локально сохраняет все254 native метода и получает",
+        "прежние6 cloud-only enlarged-window profiles; docs-check включает report guard,",
+        "его regressions и strict task change-impact. Publication gate требует новую",
+        "матрицу. API30 word fit и reminders3/3, delivery9/9, все8 запусков real-window",
+        "пакета,913 Android units и обе release source sets прошли локальную проверку.",
+        "Runner53 и report/docs26+24 PASS. Полный Full254 обоих устройств ещё впереди.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-10-26",
+        "heading": "2026-10-26 — Локальные проверки вместо автоматических Actions",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-10-26-8efa39b6da75"
+    ]
+  }
+}

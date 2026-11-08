@@ -1,0 +1,87 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-layer-order",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-LAYER-ORDER"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-LAYER-ORDER",
+        "group": "layers",
+        "title": "Порядок строк соответствует стеку карты",
+        "surface": "Панель слоёв",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [
+          "tvLayerName"
+        ],
+        "meaning": "Первой строке списка соответствует верхний индекс модели слоя, а не индекс0.",
+        "value_origin": "LayersListAdapter.getItem: getCount()-1-i → mMap.getLayer(nIndex).",
+        "units": "Целочисленный индекс, не расстояние.",
+        "updates": [
+          "После изменения списка adapter вычисляет строку из текущего стека."
+        ],
+        "actions": [
+          "Просмотреть стек"
+        ],
+        "conditions": [
+          "Модель карты присутствует; для отсутствующей карты возвращается null."
+        ],
+        "saved_state": "Этот контракт описывает чтение порядка; drag/reorder persistence отдельным методом здесь не сертифицирован.",
+        "source_ids": [
+          "WF-LAYER-ORDER"
+        ],
+        "expectations": [
+          "Oracle: для стека A(0), B(1), C(2) порядок списка C,B,A; строка сохраняет identity соответствующего слоя.",
+          "Контрпример: верхняя строка управляет нижним слоем из-за прямого i вместо обратного индекса."
+        ],
+        "unknowns": [
+          "Полная цепочка перетаскивания/сохранения порядка пока вне проверенного набора; не обещать её PASS."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-layer-order",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-layer-order"
+    ]
+  }
+}

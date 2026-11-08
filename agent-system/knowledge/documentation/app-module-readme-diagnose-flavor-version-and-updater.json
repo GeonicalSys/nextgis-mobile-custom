@@ -1,0 +1,70 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-diagnose-flavor-version-and-updater",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "- Неправильный бренд или launcher: проверить `app/build.gradle`,",
+        "  `app/src/<flavor>/res/values/launcher_icon.xml`, соответствующие",
+        "  `drawable-*` flavor resources и manifest metadata.",
+        "- Version change: запускать `tools\\verify-apk-version-matrix.ps1`; не определять",
+        "  версию debug по basename APK.",
+        "- Update отклонён: проверить schema, branch/channel, identity, version,",
+        "  versioned URL, size/hash/certificate и доступность branch manifest; не",
+        "  отключать проверку для обхода ошибки. Запись `Updater APK validation rejected`",
+        "  показывает этап отказа; нулевое число archive certificates на Android 9–10",
+        "  означает сбой обоих PackageManager-представлений подписи.",
+        "- Обновление не предложено: сопоставить `Updater startup` (restore, focus,",
+        "  busy/companion, retry) и `Updater check`/`Updater manifest` по `id`. Журнал",
+        "  содержит branch, текущую/серверную версии, active/internet/validated и transports,",
+        "  HTTP status, elapsedMs и exception со stack trace. Нет системного VALIDATED —",
+        "  запрос всё равно выполняется при active+INTERNET; результат даёт сам сервер.",
+        "  Неудачная/отложенная попытка сохраняется до валидного результата; повторы",
+        "  выполняются только в resumed окне с фокусом через 10/30/120/300 секунд, после",
+        "  изменения сети или Resume — через 2,5 секунды. Bundle completion принимается",
+        "  только в том же процессе; rotation не повторяет уже показанное предложение.",
+        "  Очищенный ошибочный/устаревший pending manifest не подавляет новую проверку.",
+        "  Проверки: `StartupUpdateCheckSchedulerTest`, `AppUpdateNetworkStateTest`,",
+        "  `AppUpdatePendingInstallationTest`.",
+        "- После выдачи разрешения update не продолжился: проверить",
+        "  `AppUpdateManager.resumePendingInstallation()`, `app_update_state` и вызов из",
+        "  `MainActivity.onResume()`/`SettingsActivity.onResume()`."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-diagnose-flavor-version-and-updater"
+    ]
+  }
+}

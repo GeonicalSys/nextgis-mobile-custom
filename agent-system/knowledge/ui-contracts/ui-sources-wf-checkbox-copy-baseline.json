@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-wf-checkbox-copy-baseline",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "WF-CHECKBOX-COPY-BASELINE"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "WF-CHECKBOX-COPY-BASELINE",
+        "repository": "maplibui",
+        "path": "src/main/java/com/nextgis/maplibui/util/FeatureCopyDefaults.java",
+        "marker": "public static String baseline(Map<String,Object> controls)",
+        "requires": [
+          "value == null || value instanceof String || value instanceof Number || value instanceof Boolean",
+          "value.getClass().getName()+\":\"+value"
+        ],
+        "forbids": [],
+        "sha256": "dd7df4b32fc5516f6e60f1cc50d244853245592c1f57a919cc671774ebc1acbc"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-wf-checkbox-copy-baseline"
+    ]
+  }
+}

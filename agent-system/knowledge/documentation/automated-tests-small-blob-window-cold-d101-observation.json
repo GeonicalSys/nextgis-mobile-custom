@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:automated-tests-small-blob-window-cold-d101-observation",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Durable6039 сохранять как предыдущий ordinary PRIVATE baseline. Новый",
+        "API28+1MiB window/<=512KiBsmall payload физически проверен coldD101/API30:",
+        "1350inline+2PFD среди10terminal representatives;0retained read/window failures,",
+        "same9counter121/110-feature cohorts сохранили объёмы и дали меньший BLOBstage.",
+        "Полный кадр/PSS/sharp17→12/fullynewextent — отдельная приёмка, SDKreturn её не",
+        "заменяет. Sorter/Java/decoded/native allocations отдельно,",
+        "общий RAM прирост1MiB не обещать. Без normal build/native evidence focused JVM",
+        "не принимают скорость или reported2–3s target.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Retains physical reads and counters on the D101 frame and its unresolved full-scene gates."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:automated-tests-small-blob-window-cold-d101-observation"
+    ]
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-smoke-ngw-large-pull-cache",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "SMOKE-NGW-LARGE-PULL-CACHE"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "device",
+        "scope": [
+          "app",
+          "maplib"
+        ],
+        "steps": [
+          "Prepare an open NGW vector layer where one pull creates and deletes at least 1000 features while the map is visible; include one server feature with missing or invalid geometry and an existing local copy of that remote ID",
+          "Start manual sync once and interact with the map while that layer is applied",
+          "Reopen the project, run a no-change sync and export HyperLog"
+        ],
+        "expected": "The process remains alive and responsive; incremental pull emits no per-row vector cache notification storm, performs one final spatial cache rebuild and one layer reload; the invalid server geometry is skipped, its previous local row is retained, and the rest of the layer commits; no notify_insert/GeoEnvelope/GeometryRTree crash, LinkedTreeMap style exception or spatial cache count mismatch appears on reopen, and the no-change sync leaves cache and SQLite counts equal.\n"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-smoke-ngw-large-pull-cache"
+    ]
+  }
+}

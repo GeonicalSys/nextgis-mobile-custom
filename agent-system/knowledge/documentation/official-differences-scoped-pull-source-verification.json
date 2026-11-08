@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:official-differences-scoped-pull-source-verification",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the dated comparison or verification at its original source span."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Actual shared19/Core4+App15 GREEN, Belka source0/39с и set100/orderdifferent относятся",
+        "к текущим c0a4/ca59 и7d697/7ae829. Первый dry observer nativeunknown/NOT_PASS и",
+        "recovery сохранены; allgatesPASS нет. Исторические keyset9/37с, clock19/journal22/",
+        "storage21/prefetch12 не повторялись. Core Merge Commit до App pointer, затем обычный",
+        "выпуск; UI39/142/19/F61 и native/device/release границы сохранены.",
+        "",
+        "Карточки: maplib-20261030-full-snapshot-http206,",
+        "maplib-20261030-lookup-save-failure и android-20261030-sync-admission-regression.",
+        "Полная recipe: [Core PR63](https://github.com/GeonicalSys/android_maplib/pull/63),",
+        "файл `update-reports/entries/maplib-20261030-full-snapshot-http206.md`.",
+        "[Точный контракт и открытые риски](../architecture/ngw-sync-and-storage.md).",
+        "",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:official-differences-scoped-pull-source-verification"
+    ]
+  }
+}

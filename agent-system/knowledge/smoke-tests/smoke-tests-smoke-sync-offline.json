@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-smoke-sync-offline",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "SMOKE-SYNC-OFFLINE"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "device",
+        "scope": [
+          "app",
+          "maplibui"
+        ],
+        "command": "On an isolated Debug emulator use DiagnosticsTestRunner with an explicit synthetic DSN for offline/walk, account queue and track delivery suites; select the emulator serial in every adb command.",
+        "steps": [
+          "Build Lisa Debug/test APKs with diagnosticDeliveryChecks=true; grant storage, location and POST_NOTIFICATIONS only to the isolated emulator.",
+          "Run adb -s <isolated-emulator-serial> shell am instrument -w -r -e class com.nextgis.mobile.reliability.SyncOfflineAndWalkGpsTest,com.nextgis.mobile.reliability.SyncNotificationsTest,com.nextgis.mobile.util.ProjectSyncRunnerTest,com.nextgis.mobile.reliability.TrackUploadTest -e diagnosticsDsn http://synthetic@127.0.0.1:9/1 -e diagnosticsRun sync-offline-walk com.nextgis.mobile.debug.test/com.nextgis.mobile.util.DiagnosticsTestRunner."
+        ],
+        "expected": "Disconnected manual tap/retry shows No internet connection without dispatching sync or changing last-sync time. Error notification uses the same readable text. Account work stays ENQUEUED with zero attempts until network returns; disconnected runner and track delivery retain queues/points without HTTP. GPS loss/timestamp gap resumes automatically without dropping the first usable fix or releasing point locks; explicit pause and sticky user pause state remain intact. No physical phone or production NGW accounts."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-smoke-sync-offline"
+    ]
+  }
+}

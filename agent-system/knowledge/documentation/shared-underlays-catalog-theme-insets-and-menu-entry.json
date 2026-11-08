@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:shared-underlays-catalog-theme-insets-and-menu-entry",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:shared-underlays"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/shared-underlays.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Удаление",
+        "",
+        "Экран хранилища и режим выбора используют явную `AppTheme.UnderlayCatalog`",
+        "в manifest, необходимую для `AppCompatActivity`; общей темы у application нет.",
+        "Штатный Toolbar с заголовком и кнопкой возврата размещён в layout над списком.",
+        "Системные insets учитывают status/navigation bars и вырезы; на Android 16",
+        "строки каталога не должны уходить под верхнюю панель или системные значки.",
+        "Вход в управление — «Настройки → Хранилище подложек», на одном уровне",
+        "с пунктом «Проект», непосредственно после него. Режим выбора по-прежнему",
+        "открывается из меню добавления слоя.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:shared-underlays-catalog-theme-insets-and-menu-entry"
+    ]
+  }
+}

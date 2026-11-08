@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-catalog-theme-insets-and-route",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Оба режима `UnderlayCatalogActivity` используют явную `AppTheme.UnderlayCatalog`",
+        "в manifest: у приложения нет общей AppCompat-темы. Отдельный layout размещает",
+        "штатный Toolbar над списком, а системные insets отводят место status/navigation",
+        "bars и вырезам экрана, включая Android 16. «Хранилище подложек» расположено",
+        "на первом экране настроек, сразу",
+        "после «Проект»; `SettingsActivity` открывает каталог так же, как управление",
+        "проектом. В «Общие» дублирующего пункта нет. При smoke проверять переход",
+        "«Настройки → Хранилище подложек», возврат и выбор подложки из меню добавления.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-catalog-theme-insets-and-route"
+    ]
+  }
+}

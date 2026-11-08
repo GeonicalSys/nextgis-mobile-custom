@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-smoke-debug-companion",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "SMOKE-DEBUG-COMPANION"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "device",
+        "scope": "app",
+        "steps": [
+          "Install a trusted old Debug and open Geonical; defer the offer and recreate MainActivity to see it again.",
+          "With Debug missing the export Activity, use Import from the old app in Underlay storage and expect the update offer rather than the unsupported toast; verify disabled/non-exported Activity is not accepted as an available exporter.",
+          "Verify crash recovery and a pending self-update take precedence; the offer suppresses only the automatic self-update check.",
+          "Start from Underlay storage, allow unknown-source installation, recreate the process and return through verified cached installation.",
+          "Verify focus changes while progress is dismissed do not stack permission dialogs or consume the pending installer phase; return from Android Settings directly to one Package Installer prompt.",
+          "Complete installation and verify the original transfer confirmation appears only for the same active project; startup origin only shows a message.",
+          "Cancel permission or installation; verify no transfer, no install loop and unchanged Debug data.",
+          "Reject wrong package, flavor, code, hash, signer, URL and a signed APK without exporter."
+        ],
+        "expected": "Only the intended newer Debug is installed; self-update stays separate and data transfer always retains explicit confirmation."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-smoke-debug-companion"
+    ]
+  }
+}

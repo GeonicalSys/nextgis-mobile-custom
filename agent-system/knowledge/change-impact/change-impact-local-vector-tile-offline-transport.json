@@ -1,0 +1,68 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:change-impact-local-vector-tile-offline-transport",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "change-impact",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "definition": {
+      "role": "complete_change_impact_definition",
+      "value": {
+        "id": "LOCAL-VECTOR-TILE-OFFLINE-TRANSPORT",
+        "paths": [
+          "maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java",
+          "app/src/androidTest/java/com/nextgis/mobile/rendering/DirectVectorTilesTest.java"
+        ],
+        "owners": [
+          "maplibui",
+          "app"
+        ],
+        "read": [
+          "docs/architecture/map-rendering.md",
+          "docs/architecture/ngw-sync-and-storage.md"
+        ],
+        "invariants": [
+          "INV-LOCAL-VECTOR-TILE-OFFLINE-TRANSPORT"
+        ],
+        "must_update_docs": [
+          "docs/architecture/map-rendering.md",
+          "docs/reference/official-differences.md",
+          "maplibui/docs/README.md",
+          "maplibui/docs/manifest.yaml"
+        ],
+        "verify": [
+          "AUTO-LOCAL-VECTOR-TILE-OFFLINE",
+          "AUTO-MAPLIBUI-UNIT",
+          "AUTO-MOBILE-RELATED",
+          "AUTO-APP-RELEASES"
+        ],
+        "strict_docs": true
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/change-impact.json",
+    "scopes": [
+      "lisa:mobile:contract:change-impact-local-vector-tile-offline-transport"
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:track-controls-native-glow-selection-and-core",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:track-controls"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/track-controls.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Каждый сегмент GeoJSON получает track_id, track_name, track_color и производный",
+        "track_core_color. Последний уменьшает каждый sRGB-канал исходного цвета до",
+        "27% с округлением (выбранное пользователем затемнение 73%); сохранённый цвет",
+        "в БД и цвет в диалоге выбора остаются исходными. Начальные и",
+        "конечные флажки остаются отключены. Общие saved/current sources имеют по одному",
+        "проходу свечения исходного оттенка (6.5 px, blur 3, opacity .83), белому выделению",
+        "(4 px, только выбранный ID) и тёмной сердцевине (1.4 px). В обычном состоянии",
+        "видимы два уровня; прежнее выделение не меняется. Число style layers постоянно при росте числа",
+        "треков. Данные берутся из прежней общей SQLite; смена GeoJSON/тайлов и протокола",
+        "отправки не входит в эту задачу. OpenGL и MapLibre 13.7.1 сохраняются.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:track-controls-native-glow-selection-and-core"
+    ]
+  }
+}

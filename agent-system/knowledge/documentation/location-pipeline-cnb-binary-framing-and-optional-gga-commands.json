@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:location-pipeline-cnb-binary-framing-and-optional-gga-commands",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:location-pipeline"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/location-pipeline.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "системного GPS. Приёмники ComNav/PiGoLite по умолчанию шлют двоичный CNB",
+        "(`AA 44 12`), а не `$GGA`: кадрирование собирает BESTPOSB (сообщение 42) в",
+        "координаты, а `$`/`#` внутри бинаря не считаются NMEA. `unlogall` не пишется —",
+        "он остановил бы BESTPOSB. Пока нет ASCII, сессия может по одной GATT-записи",
+        "добавить `log gpgga/gst/gsa/rmc` (каждая ≤20 байт) и ждёт `OK!`. `#BESTPOSA`",
+        "по-прежнему принимается, если ASCII появится. Чистый NMEA-поток этих команд не",
+        "получает. Google Play",
+        "Services не добавляются. Доступность сетевой позиции зависит от системного",
+        "Network Provider, разрешений и условий связи.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:location-pipeline-cnb-binary-framing-and-optional-gga-commands"
+    ]
+  }
+}

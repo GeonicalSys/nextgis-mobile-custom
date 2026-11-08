@@ -1,0 +1,187 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-form-date-ngfp-value",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-FORM-DATE-NGFP-VALUE"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-FORM-DATE-NGFP-VALUE",
+        "group": "forms",
+        "title": "Дата и время NGFP: режим, default и сохранённое значение",
+        "surface": "NGFP type=date_time → formtemplate_datetime, корневой formcontrol.DateTime без отдельного android:id",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [],
+        "meaning": "NGFP date control имеет отдельную реализацию: picker mode, отображаемый текст, mValue seed, shared Calendar и actual schema type нельзя подменять друг другом.",
+        "value_origin": "attributes.field → ControlHelper/core normalization/name-presence check; attributes.date_type0=DATE,1=TIME,2=DATETIME, missing/other→DATETIME. Это независимо от Field.type. Stock selector constants имеют другую нумерацию:0=DATE_TIME,1=DATE,2=TIME.",
+        "units": "getValue/state — explicit null либо Long epoch milliseconds из mCalendar. Display — DateFormat default-style/FORMAT-locale text. Новые default strings разбираются fixed dd/MM/yyyy,HH:mm,dd/MM/yyyy HH:mm с default Locale; hint display pattern не является этим config grammar.",
+        "updates": [
+          "Приоритет init: saved key включая explicit null → existing cursor column getLong → только для new feature непустой attributes.text, затем last preference может заменить timestamp. Missing seed использует текущее время. ParseException default возвращает0L; strict/full-input/UTC setter здесь нет.",
+          "Saved-state/существующая колонка обновляют mValue, но new default/last ветви устанавливают shared mCalendar отдельно. OnClick сбрасывает shared Calendar из mValue до accepted callback. При различающихся seed/default и false mExplicitNull последующие getter/state могут увидеть сброс; это условное source-наблюдение, не текущий bug/Cancel result.",
+          "Accepted DATE/TIME callbacks устанавливают carrier и сбрасывают mExplicitNull; скрытые Calendar components не нормализуются в гарантированный DATE-day/fixed TIME baseline."
+        ],
+        "actions": [
+          "Открыть native picker по выбранному date_type и принять date либо date+time/time callback.",
+          "После успешного base Save last-value API удаляет preference при null либо commit Long; это отдельный optional cache, не запись business row."
+        ],
+        "conditions": [
+          "ControlHelper.isEnabled проверяет наличие имени в schema, не его date type и не NGW/PG право. View-only может отключить control отдельно.",
+          "SQL NULL/nonintegral cursor и malformed state/default/locale outcomes не приравниваются к explicit saved-state null.",
+          "При actual FTDate snapshot применяет UTC-day conversion к числу; mode/date-looking text сами не доказывают FTDate или совпадение business day."
+        ],
+        "saved_state": "saveState сохраняет mCalendar milliseconds либо explicit-null key, затем dismiss held DatePicker. last preference и mValue dialog seed не равны Bundle/state carrier. Null getter сам по себе не означает putNull: ContentValues/copy baseline и существующий snapshot fallback сохраняют свои условия.",
+        "source_ids": [
+          "WF-DATE-NGFP-INIT",
+          "WF-DATE-NGFP-VALUE",
+          "WF-DATE-NGFP-STATE",
+          "WF-DATE-NGFP-OPEN",
+          "WF-DATE-NGFP-DATE-CALLBACK",
+          "WF-DATE-NGFP-TIME-CALLBACK",
+          "WF-DATE-NGFP-PARSE-DEFAULT",
+          "WF-DATE-NGFP-LAST-VALUE",
+          "WF-DATE-NGFP-FACTORY",
+          "WF-DATE-FIELD-NORMALIZATION",
+          "WF-DATE-CAPTURE-VALUES",
+          "WF-DATE-COPY-VALUES",
+          "WF-DATE-COPY-EMPTY",
+          "WF-DATE-SCRIPT-SNAPSHOT",
+          "WF-FORM-SAVE",
+          "WF-FORM-DRAFT",
+          "WF-FORM-ABSENT-FIELD"
+        ],
+        "expectations": [
+          "Oracle: при известном mode/schema/default/last/state отдельно сопоставлять text, mValue seed, shared Calendar/getter, accepted callbacks и output ContentValues; сохранять различие explicit-null/absent/copied value.",
+          "Контрпример: объявить NGFP date_type schema-type ID, принять текст за payload, скрыть conditional seed-reset под blanket Cancel guarantee либо переписать source fingerprint без semantic review."
+        ],
+        "unknowns": [
+          "Actual private NGFP/date bindings/schema/preferences/clock/zone/locale/runtime не читались.",
+          "Политика default/last при первом открытии и при Cancel, нормализация DATE/TIME, поле-clear и все native lifecycle/remote результаты UNKNOWN."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-ngfp-init",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-ngfp-value",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-ngfp-state",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-ngfp-open",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-ngfp-date-callback",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-ngfp-time-callback",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-ngfp-parse-default",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-ngfp-last-value",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-ngfp-factory",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-field-normalization",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-capture-values",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-copy-values",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-copy-empty",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-script-snapshot",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-save",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-draft",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-absent-field",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-form-date-ngfp-value"
+    ]
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-manual-offline-sync-and-walk-recording-state",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Ручной sync без активной сети сообщает «Отсутствует подключение к интернету»",
+        "до запуска очереди. При пропаже соединения диалог/уведомление ошибки использует",
+        "тот же текст. LAN/VPN не требует внешнего validated Internet. Обход продолжает",
+        "ожидать свежий GNSS после потери сигнала без автоматической паузы; пауза остаётся",
+        "явным пользовательским действием. Native `SyncOfflineAndWalkGpsTest` проверяет",
+        "реальный диалог, очередь, геометрию, point lock и сохранение ручной паузы.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-manual-offline-sync-and-walk-recording-state"
+    ]
+  }
+}

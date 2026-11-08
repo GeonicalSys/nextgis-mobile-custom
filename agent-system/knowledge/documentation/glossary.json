@@ -1,0 +1,74 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:documentation-glossary",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/glossary.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the published Markdown address and pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/glossary.md"
+    },
+    "frontmatter": {
+      "role": "markdown_frontmatter_lines",
+      "value": [
+        "title: Глоссарий",
+        "type: reference",
+        "last_verified: 2026-07-19",
+        "related_code:",
+        "  - docs/registry/invariants.yaml"
+      ]
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "",
+        "# Глоссарий",
+        "",
+        "- **Collector project** — NGW-проект с metadata, composition и изолированным локальным workspace.",
+        "- **Composition sync** — сверка серверного состава Collector project с локальными слоями.",
+        "- **LayerGroup order** — порядок модели слоёв, где индекс `0` является нижним.",
+        "- **Hot add** — добавление слоя в уже созданный MapLibre style без полного restart.",
+        "- **Lite reload** — облегчённая синхронизация layers/style без полного пересоздания всего flow.",
+        "- **NGRc** — импортируемый локальный raster/TMS resource с особыми правилами вставки.",
+        "- **Invariant** — продуктовый контракт с постоянным ID в `registry/invariants.yaml`.",
+        "- **Upstream hotspot** — файл/область, где изменения NextGIS часто пересекаются с форком.",
+        "- **Module pack** — `docs/README.md` и `docs/manifest.yaml` компонента. Вход `AGENTS.md` принадлежит физическому репозиторию.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:documentation-glossary"
+    ]
+  }
+}

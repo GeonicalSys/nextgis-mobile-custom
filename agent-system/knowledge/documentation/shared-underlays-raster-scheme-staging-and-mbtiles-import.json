@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:shared-underlays-raster-scheme-staging-and-mbtiles-import",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:shared-underlays"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/shared-underlays.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Схема берётся только из `tms_type`: OSM преобразуется в TMS один раз, TMS",
+        "остаётся без переворота. Поддержаны PNG/JPEG/WebP, один encoding на базу;",
+        "смешанный encoding, неверные координаты и пустой набор отвергаются. Writer",
+        "вычисляет bounds/minzoom/maxzoom, слой сохраняет прежний запас видимости ±2",
+        "уровня и provenance NGRc. Перед публикацией выполняются `MbTilesInfo.inspect`,",
+        "fsync и rename staging. Новый MBTiles проверяется и сохраняется без изменения",
+        "содержимого, его идентичность — SHA-256 базы. Новый пункт импорта поддерживает",
+        "также один MBTiles внутри ZIP, без временного распакованного файла.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:shared-underlays-raster-scheme-staging-and-mbtiles-import"
+    ]
+  }
+}

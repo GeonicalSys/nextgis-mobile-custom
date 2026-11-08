@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:error-reporting-october-29-gps-cache-evidence",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:error-reporting"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/error-reporting.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Более новый system cache при старом raw измерении сужает проверку до границы",
+        "доставки/обработки, но сам не доказывает причину или пригодность позиции.",
+        "Старый/пустой cache также не доказывает ошибку приложения. Used-in-fix status",
+        "и успешное принятие повторного запроса не заменяют timestamp нового `Location`.",
+        "Это улучшение сбора свидетельств для групп90/96, не устранённая GPS-пауза.",
+        "См. [разбор29октября](../reference/glitchtip-triage-2026-10-29.md),",
+        "[контракт cached API](https://developer.android.com/reference/android/location/LocationManager#getLastKnownLocation(java.lang.String))",
+        "и [usedInFix](https://developer.android.com/reference/android/location/GnssStatus#usedInFix(int)).",
+        "Технические pure и Robolectric API30/36 tests проверяют arithmetic, fail-open,",
+        "fixed keys, privacy и replay; они не воспроизводят vendor GNSS delivery gap.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Groups 90/96 and technical tests preserve the cache comparison's evidentiary limit."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:error-reporting-october-29-gps-cache-evidence"
+    ]
+  }
+}

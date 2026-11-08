@@ -1,0 +1,76 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:workspace.project-sync",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "policy-workspace",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          ".",
+          "app"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain editable logical subject and pinned provenance; product implementation/acceptance are separate records."
+  },
+  "facets": {
+    "body": {
+      "role": "standing_contract",
+      "value": "Читать consuming root docs/architecture/ngw-sync-and-storage.md и\ndocs/guides/project-synchronization-user-guide.md. sync_all_projects по умолчанию true;\nручной и scheduled account запуск используют ProjectSyncRunner. Не переключать\nmMap/active prefs ради фонового проекта. Владельца переносить через\nSyncWorkspaceSession во все async callbacks, service tickets и provider URI;\nuntagged UI URI всегда относится к активной карте, expired token не имеет fallback.\nОчередь держит глобальный lease до завершения дочерних работ и mutating HTTP.\nПолный pending project/account план сохраняется до первого прохода; Collector\njournals разделены по canonical map path. Проверять cancellation, equal layer/group\nIDs, сохранность draft и реальный fill на изолированном эмуляторе.\n"
+    },
+    "classification": {
+      "role": "reviewed_knowledge_class",
+      "value": "standing_contract"
+    },
+    "review": {
+      "role": "classification_reason",
+      "value": "Complete default scope, exact workspace ownership, async/provider/service propagation, global lease, pending plan, canonical journal and isolated verification."
+    },
+    "source_section": {
+      "role": "source_document_context",
+      "value": [
+        "# GeonicalSystem NextGIS Mobile fork — инструкции для ИИ-агентов",
+        "## Общая синхронизация проектов"
+      ]
+    },
+    "authority_limit": {
+      "role": "authority_and_acceptance_boundary",
+      "value": "Path applicability is reviewed separately from the rule's textual triggers. Every source condition and heading remains attached; no automatic predicate or lifecycle inference. Stored commands and dates do not grant current execution, freshness or product acceptance. Existing instruction clients/checkers remain effective until measured cutover."
+    },
+    "shared_source_review": {
+      "role": "individual_same_fact_review",
+      "value": {
+        "reason": "Individually reviewed identical complete project-sync rule under the same sync heading in root and module instructions. Same physical owner; the explicit root/app path union and both exact original projections preserve all conditions. No hash-only or cross-owner merge.",
+        "sources": [
+          "AGENTS.md",
+          "app/AGENTS.md"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/policy-migration.json",
+    "scopes": [
+      "lisa:mobile:contract:workspace.project-sync"
+    ]
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:change-impact-render-memory-acceptance",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "change-impact",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "definition": {
+      "role": "complete_change_impact_definition",
+      "value": {
+        "id": "RENDER-MEMORY-ACCEPTANCE",
+        "paths": [
+          "app/src/androidTest/java/com/nextgis/mobile/rendering/RenderMemorySafetyTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/rendering/MapRenderStressTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/util/VerificationTestApplication.java",
+          "app/src/androidTest/java/com/nextgis/mobile/util/VerificationTestRunner.java",
+          "tools/mobile-test-plan.json",
+          "tools/mobile_render_acceptance.py",
+          "tools/run_mobile_tests.py",
+          "tools/tests/test_mobile_native_failures.py",
+          "tools/tests/test_mobile_render_acceptance.py"
+        ],
+        "owners": [
+          "app",
+          "maplib"
+        ],
+        "read": [
+          "docs/runbooks/automated-tests.md",
+          "docs/architecture/map-performance.md",
+          "docs/reference/mobile-crash-224-2026-10-27.md"
+        ],
+        "invariants": [
+          "INV-RENDER-MEMORY-PRESSURE",
+          "INV-NATIVE-GEOJSON-PAYLOAD",
+          "INV-RENDER-MEMORY-NOTICE",
+          "INV-DIAGNOSTIC-DELIVERY"
+        ],
+        "must_update_docs": [
+          "docs/runbooks/automated-tests.md",
+          "app/docs/README.md",
+          "app/docs/manifest.yaml",
+          "docs/architecture/map-performance.md"
+        ],
+        "verify": [
+          "AUTO-RENDER-MEMORY-UNITS",
+          "AUTO-RENDER-MEMORY",
+          "AUTO-MOBILE-FULL",
+          "AUTO-MOBILE-PUBLICATION-GATE"
+        ],
+        "strict_docs": true
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/change-impact.json",
+    "scopes": [
+      "lisa:mobile:contract:change-impact-render-memory-acceptance"
+    ]
+  }
+}

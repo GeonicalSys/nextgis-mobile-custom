@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-contracts-resource-checkbox-api28-checkpoint",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:ui-contracts"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ui-contracts.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Текущий checkbox срез: actual37 API28 models PASS (22+6 new и9 protected browser);",
+        "Belka source compile0/BUILD47s; native acceptance отдельно NOT_RUN. Native Service/import writes, accounts/network, rotation и merged-flavor resource",
+        "acceptance NOT_RUN. Исторические message89/Belka59 не перезапущены и не принимают",
+        "новый Adapter source. Whole F61 clock row и остальные43 contracts/163 methods/",
+        "39 non-method rows сохраняются; новые semantic pins ниже только после source review.",
+        "",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Exact API28/Belka source result preserves native, service and variant limits."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-contracts-resource-checkbox-api28-checkpoint"
+    ]
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:shared-tracks-selected-id-and-gpx-snapshot-boundary",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:shared-tracks"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/shared-tracks.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### Экспорт выбранного трека",
+        "",
+        "TrackView получает shared FIELD_ID из cursor, а map panel — отдельный TrackInfo.id.",
+        "Оба маршрута передают IDs в LayerUtil: task получает собственную копию списка,",
+        "читает persisted shared tracks/trackpoints в POINT_ORDER и сохраняет segments.",
+        "Untagged URI всё ещё разрешает TrackLayer через active map presentation; сам",
+        "TrackLayer обращается к installation-wide SharedTrackStore. Успех запуска не",
+        "доказывает availability active map на всём worker, единый metadata/points snapshot,",
+        "recorder-tail drain, packet ACK или полноту истории NGW. Canonical risk:",
+        "`AUDIT-TODO-MOBILE-TRACK-GPX-EXPORT-OWNERSHIP`. Общая БД, sent/session IDs, Recorder Stop и project switch guard не меняются.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Shared cursor and panel IDs feed the same exporter. Active presentation availability, metadata/points coherence, tail drain and NGW completeness remain UNKNOWN."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:shared-tracks-selected-id-and-gpx-snapshot-boundary"
+    ]
+  }
+}

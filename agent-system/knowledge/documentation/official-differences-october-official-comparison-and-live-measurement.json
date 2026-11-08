@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-october-official-comparison-and-live-measurement",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Ранее 8 октября 2026 проверены указанные ниже pinned SHA app/maplib/maplibui через",
+        "GitHub API. Для диагностики позднее дополнительно проверен новый official app master",
+        "`f11d38f77e4caf1b569526c5f620b2ec513c5f9d` (commit 8 октября 07:14 UTC).",
+        "Его tree/MainApplication/manifest не содержат описанного ниже механизма доставки.",
+        "Recursive tree проверенного official app не содержит",
+        "stakeout/azimuth. В собственном инструменте форка обычное live-измерение использует",
+        "только location service, без Bluetooth-разрешения; отказ Android корректно",
+        "завершает owning session и освобождает GPS/audio, а старый Intent не возобновляет",
+        "измерение после process death.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-october-official-comparison-and-live-measurement"
+    ]
+  }
+}

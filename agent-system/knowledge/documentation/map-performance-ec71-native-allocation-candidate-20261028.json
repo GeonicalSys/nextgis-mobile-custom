@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:map-performance-ec71-native-allocation-candidate-20261028",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-performance",
+      "lisa:mobile:resource:map-performance-geojsonvt-plateau-and-crash-trigger"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original measurement or checkpoint and its acceptance limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-performance.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Для экспериментального кандидатаec71 уже получен qualified180s capture:",
+        "sampled retained net951044804→391105220bytes, sampled malloc peak",
+        "997182148→455068356bytes. Это измерение всего candidate bundle, не изолированная",
+        "доля одной правки. Последовательность входных жестов одинакова, но старт",
+        "маршрута после receipt различался:13,4s против74,3s; равенство камеры/времени",
+        "этим не установлено. Candidate ещё содержал прежний ошибочный RSS-trigger,",
+        "который мог отключить SDK cache при большом свободном остатке. Поэтому эти",
+        "числа не принимают финальную free-only policy, последующий editor follow-up,",
+        "FGS witness или устройство2GiB. Первый candidate capture с data loss остаётся",
+        "FAIL и не используется вместо qualified повторного. Счётчики malloc/RSS/graphics",
+        "имеют разные accounting и не складываются в общий расход.",
+        "[Разбор инцидента](../reference/mobile-crash-224-2026-10-27.md),",
+        "[карточка payload](../../maplib/update-reports/entries/maplib-20261028-native-geojson-payload.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:map-performance-ec71-native-allocation-candidate-20261028"
+    ]
+  }
+}

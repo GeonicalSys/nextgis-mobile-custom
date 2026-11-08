@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-resource-selector-recovery",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Восстановление выбора ресурсов",
+        "",
+        "`SelectNGWResourceActivity` и `SelectNGWResourceDialog` не сериализуют `Connections`",
+        "в saved state; новые launch intents тоже не содержат дерева. Сохраняются имена",
+        "account/server, пути remote ID и только выбранные флаги raster/vector. Credentials",
+        "повторно запрашиваются из AccountManager. `NgwResourceSelectionState` загружает",
+        "необходимые ветви в фоне и сопоставляет новые process-local IDs; отсутствующий",
+        "account/ресурс или ошибка сети не считаются успешным восстановлением. Исходное",
+        "компактное состояние сохраняется во время restore и после ошибки для повтора,",
+        "импорт до успеха заблокирован. Закрытие экрана отменяет restore и закрывает его",
+        "диалог ошибки. Размер состояния не зависит от числа загруженных, но не выбранных",
+        "ресурсов (не является жёстким лимитом для произвольно большого числа выбранных).",
+        "",
+        "Сценарии проверки: `SMOKE-NGW-SELECTOR-RESTORE`.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-resource-selector-recovery"
+    ]
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:error-reporting-gps-recovery-reasons-and-report-policy",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:error-reporting"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/error-reporting.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "`GpsRecoveryPolicy` различает отсутствие спутникового решения (`no_fix`),",
+        "недоставленные callbacks при свежем used-in-fix status (`callback_stalled`),",
+        "тишину всего provider, stale/invalid fixes, ожидание фильтра и display processing.",
+        "Локальный эпизод фиксируется через 30 s первичного / 15 s повторного ожидания",
+        "после истечения прежней 8 s свежести. No-fix/acquisition/filter wait остаются",
+        "локальными независимо от длительности и повторов. В GlitchTip уходят непрерывные",
+        "callback_stalled от 30 s, provider_silent от 60 s и stale/invalid/display_processing",
+        "от 15 s именно этой причины. Предыдущее ожидание спутников не считается временем",
+        "сбоя callbacks. Не более одной",
+        "начальной отправки за 10 min. Recovery/cancel пары отправляются только для уже",
+        "отправленного эпизода, с тем же UUID и причиной группировки, даже если причина",
+        "позже изменилась; recovery имеет INFO, задержка WARNING.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:error-reporting-gps-recovery-reasons-and-report-policy"
+    ]
+  }
+}

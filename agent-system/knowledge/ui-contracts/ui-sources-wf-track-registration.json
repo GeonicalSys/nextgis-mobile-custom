@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-wf-track-registration",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "WF-TRACK-REGISTRATION"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "WF-TRACK-REGISTRATION",
+        "repository": "maplibui",
+        "path": "src/main/java/com/nextgis/maplibui/mapui/TrackRegistrationState.java",
+        "marker": "public static boolean canShowPending(Context context)",
+        "requires": [
+          "TrackSendSettings.isEnabled(preferences)",
+          "fingerprint(deviceUrl(context)).equals(preferences.getString(PREF_REGISTERED_DEVICE, null))"
+        ],
+        "forbids": [],
+        "sha256": "d9871bfa786b10ed6ec9ca7bc3e115a1a780bbcd64a162cc0cdf496a61486d24"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-wf-track-registration"
+    ]
+  }
+}

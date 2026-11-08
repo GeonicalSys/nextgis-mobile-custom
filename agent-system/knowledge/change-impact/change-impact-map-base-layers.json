@@ -1,0 +1,70 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:change-impact-map-base-layers",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "change-impact",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "definition": {
+      "role": "complete_change_impact_definition",
+      "value": {
+        "id": "MAP-BASE-LAYERS",
+        "paths": [
+          "app/src/main/java/com/nextgis/mobile/MainApplication.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java"
+        ],
+        "owners": [
+          "app",
+          "maplib",
+          "maplibui"
+        ],
+        "read": [
+          "docs/architecture/map-rendering.md",
+          "docs/architecture/collector-projects.md"
+        ],
+        "invariants": [
+          "INV-LAYER-ORDER",
+          "INV-DEFAULT-OSM-BOTTOM",
+          "INV-TRACK-LAYER-TOP"
+        ],
+        "must_update_docs": [
+          "docs/architecture/map-rendering.md",
+          "docs/architecture/collector-projects.md",
+          "app/docs/README.md",
+          "app/docs/manifest.yaml"
+        ],
+        "verify": [
+          "AUTO-APP-RELEASES",
+          "SMOKE-MAP-COLD-START",
+          "SMOKE-COLLECTOR-IMPORT"
+        ],
+        "strict_docs": true
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/change-impact.json",
+    "scopes": [
+      "lisa:mobile:contract:change-impact-map-base-layers"
+    ]
+  }
+}

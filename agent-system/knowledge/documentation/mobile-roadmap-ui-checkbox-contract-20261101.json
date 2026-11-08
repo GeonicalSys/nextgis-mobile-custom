@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:mobile-roadmap-ui-checkbox-contract-20261101",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout",
+      "lisa:mobile:task:mobile-roadmap-ui-knowledge"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the pinned checkpoint and keep its results within the stated source and runtime bounds."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Продолжение source/docs01.11 в прежнем MOB-UI-01: UI-FORM-CHECKBOX-NGFP-VALUE",
+        "разделяет NGFP Checkbox, Boolean state/cache, Integer0/1 getter и обычный",
+        "FTInteger TextEdit/String. Значения NULL/empty, absent control и выбранный",
+        "present-checkbox copy-retention gate различаются. Добавлены1контракт,11новых",
+        "method guards и4file witnesses;11старых guards переиспользуются. Старые",
+        "Date46/213/64/54 записи сохранены; projected47/224/64/58 подтверждаются",
+        "actual catalog/validator receipts после применения. Source7records/4routes",
+        "и98passive metadata checks не являются native tests или currenttenant proof.",
+        "Это та же own app Draft87 и LISA Draft278, без изменения очереди/приоритетов.",
+        "Product fixes/ranking/native NOT_RUN; merge/APK отдельно от source доставки.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:mobile-roadmap-ui-checkbox-contract-20261101"
+    ]
+  }
+}

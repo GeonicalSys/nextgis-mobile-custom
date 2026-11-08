@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:device-smoke-tests-project-script-forms-and-package-rollback",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:device-smoke-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/device-smoke-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Project scripts",
+        "",
+        "На тестовом проекте выбрать подрядчика с замечанием в другом типе аудита за",
+        "последний месяц; проверить выбор, Save/Return, отсутствие повторов после OK,",
+        "новую историю перед Save, rotate/draft pin и быстрые смены выбора. Прервать",
+        "скачивание нового ZIP: старый пакет остаётся, сбой видим. Проверить open/closed",
+        "при недоступном слое, смену аккаунта/карты, UTF-8, loop/OOM и новый hook после",
+        "восстановления sandbox. Не сохранять тестовые объекты в подключённый PostGIS.",
+        "[Результаты](../reference/project-scripts-verification.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:device-smoke-tests-project-script-forms-and-package-rollback"
+    ]
+  }
+}

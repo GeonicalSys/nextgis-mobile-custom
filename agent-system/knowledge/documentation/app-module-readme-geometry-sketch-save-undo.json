@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-geometry-sketch-save-undo",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "- новый скетч начинается сразу после выбора слоя: точка или первый узел линии/",
+        "  полигона ставится в экранную проекцию центра камеры, следующие узлы добавляются",
+        "  тапами; midpoint-вставка работает для линий, полигонов и линейки, дополнения",
+        "  касанием/overflow и дублирующей нижней кнопки `+` нет;",
+        "  кнопка формы активна после появления геометрии и проходит тот же путь",
+        "  проверки/сохранения, что верхняя кнопка «Сохранить»; повторное нажатие не",
+        "  открывает вторую форму; успешное сохранение нового или существующего объекта,",
+        "  включая подтверждение формы атрибутов, полностью завершает редактирование,",
+        "  снимает выделение и возвращает стандартный экран карты; Undo/Redo отменяет",
+        "  или возвращает одну реальную правку за одно нажатие и хранит до 100 изменений",
+        "  без служебных снимков выбора узла",
+        "  и callback-снимков, отличающихся только CRS; в инструменте измерения те же",
+        "  кнопки по одной отменяют и возвращают добавление или перенос точки активной",
+        "  MapLibre-линейки и сохраняют её состояние при пересоздании экрана;"
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-geometry-sketch-save-undo"
+    ]
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-resource-url-import",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### Расширенный импорт NGW-ресурса по ссылке",
+        "",
+        "**Что это.** Базовый импорт по ссылке уже есть в официальном приложении. Форк",
+        "расширяет его до универсального входа для конкретного NGW vector, PostGIS или",
+        "raster resource.",
+        "",
+        "**Для чего.** Пользователю можно отправить одну ссылку на нужный слой, не",
+        "заставляя его вручную создавать аккаунт и искать ресурс в дереве Web GIS. При",
+        "этом приложение не должно создавать лишние аккаунты или давать права",
+        "редактирования, которых нет на сервере.",
+        "",
+        "**Как используется.** В меню добавления слоя пользователь выбирает «Добавить",
+        "слой NGW по URL» и вставляет адрес вида `<server>/resource/<id>`. Поддерживаются",
+        "NextGIS Cloud и произвольные HTTP(S) self-hosted серверы, в том числе с портом",
+        "или префиксом пути. Если аккаунт этого сервера уже настроен, используются его",
+        "учётные данные. Иначе гостевой аккаунт создаётся только после успешной проверки",
+        "адреса, существования ресурса, его типа и права чтения.",
+        "",
+        "Ссылка непосредственно на QGIS-стиль автоматически разрешается до родительского",
+        "слоя. Vector/PostGIS layer загружается через обычную очередь импорта, raster",
+        "добавляется на карту сразу. Если сервер не даёт `data.write`, слой создаётся",
+        "read-only и получает только направление синхронизации server-to-device.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-resource-url-import"
+    ]
+  }
+}

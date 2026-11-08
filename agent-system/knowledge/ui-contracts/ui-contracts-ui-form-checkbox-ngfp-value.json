@@ -1,0 +1,219 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-form-checkbox-ngfp-value",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-FORM-CHECKBOX-NGFP-VALUE"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-FORM-CHECKBOX-NGFP-VALUE",
+        "group": "forms",
+        "title": "Флажок NGFP: состояние Boolean и значение integer 0/1",
+        "surface": "Выбранный NGFP type=checkbox → formtemplate_checkbox → formcontrol.Checkbox; XML root без отдельного android:id. Обычный FTInteger использует другой control.TextEdit.",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [],
+        "meaning": "Состояние флажка — Boolean; getValue возвращает Integer1/0. Это не nullable checkbox output, не schema BOOLEAN, не NGW resource-selection checkbox и не finish_beep.",
+        "value_origin": "attributes.field нормализуется через ControlHelper/core; mFields регистрирует control под этим именем. attributes.text — переводимая подпись, init_value — отдельный Boolean default. Наличие поля включает control; captured view-only отключает его отдельно. Фактический Field.type и server authorization этим не доказываются.",
+        "units": "Безразмерный флаг: isChecked true→Integer1, false→Integer0. Bundle nextgis_control_<field> и optional last preference <field> хранят Boolean. Cursor branch читает int и сравнивает с0, поэтому любой успешно прочитанный ненулевой int отображается как checked. Generic FTInteger TextEdit на этом UI boundary возвращает String, несмотря на numeric input flags.",
+        "updates": [
+          "Приоритет init: saved key/Bundle.getBoolean → существующий cursor/getInt()!=0 → только при отсутствии key и cursor новый attributes.getBoolean(init_value), затем optional last preference. Missing column при существующем cursor оставляет локальный false и не переходит к default/last.",
+          "Cursor NULL/nonintegral/out-of-int result/exception implementation-defined по официальному Cursor API: собственного isNull здесь нет. Невалидный/отсутствующий init_value может вызвать JSONException; финальный value==null→false не ловит эту ошибку.",
+          "Копирование отдельно адаптирует raw NULL/empty к unchecked Boolean, сохраняя raw copy. В выбранном пути с присутствующим checkbox сохранить raw NULL/empty после его getter позволяет copy-retention gate: нужны copied data+baseline и точное совпадение текущего typed value с baseline; это сравнение значений, не история edits."
+        ],
+        "actions": [
+          "Изменить checked-state; getter участвует в обычном capture и Save, но само изменение не подтверждает запись или upload.",
+          "При успешном base Save optional isShowLast пишет Boolean preference через apply; RuntimeException optional cache логируется отдельно и не отменяет уже возвращённый base success."
+        ],
+        "conditions": [
+          "Applicable только при реальном выборе данного NGFP элемента/Activity; оба бренда используют shared library contract, не доказанный current fleet UI.",
+          "Actual Field roster определяет наличие control/value в capture. После copy-retention gate runtime Integer кладётся в ContentValues как Integer; present FTInteger snapshot остаётся числом. Отсутствующий control, SQL NULL, raw copied NULL/empty и unchecked0 различаются.",
+          "UI-FORM-SAVE/REQUIRED/DRAFT/UNBOUND-PRESERVATION остаются прежними: required/visible/cascade/script/owner/provider gates не обходятся. Getter0 не означает отдельное правило «обязан быть включён» и не является Save ACK.",
+          "BOOLEAN schema support не добавляется. Общие mobile flags сохраняют прежний integer0/1 contract; browser Boolean support к Android не переносится."
+        ],
+        "saved_state": "saveState записывает Boolean под nextgis_control_<normalized-field>; base saveControlState включает control в Bundle/draft capture. isShowLast/cache и copied raw values/baseline имеют отдельное назначение. getValue не возвращает explicit null; видимое unchecked не доказывает ни стирание SQL NULL, ни его сохранение вне доказанного copy-retention gate.",
+        "source_ids": [
+          "WF-CHECKBOX-NGFP-INIT",
+          "WF-CHECKBOX-NGFP-VALUE",
+          "WF-CHECKBOX-NGFP-STATE",
+          "WF-CHECKBOX-NGFP-LAST",
+          "WF-CHECKBOX-NGFP-SHOW-LAST",
+          "WF-CHECKBOX-GENERIC-TEXT-INIT",
+          "WF-CHECKBOX-GENERIC-TEXT-VALUE",
+          "WF-CHECKBOX-COPY-ADAPT",
+          "WF-CHECKBOX-COPY-BASELINE",
+          "WF-CHECKBOX-LAST-DISPATCH",
+          "WF-CHECKBOX-LAST-WRAPPER",
+          "WF-FORM-TEXT-CONTROL-FACTORY",
+          "WF-FORM-TEXT-CONTROL-BINDING",
+          "WF-DATE-STD-BINDING",
+          "WF-DATE-FIELD-NORMALIZATION",
+          "WF-DATE-CAPTURE-VALUES",
+          "WF-DATE-COPY-VALUES",
+          "WF-DATE-COPY-EMPTY",
+          "WF-DATE-SCRIPT-SNAPSHOT",
+          "WF-FORM-ABSENT-FIELD",
+          "WF-FORM-DRAFT",
+          "WF-FORM-SAVE"
+        ],
+        "expectations": [
+          "Oracle: различать actual Field.type и NGFP type=checkbox; отдельно сопоставлять checked Boolean, Bundle/prefs Boolean, Integer getter, copied raw/baseline и ContentValues. Generic FTInteger должен оставаться фактическим TextEdit/String route.",
+          "Oracle для absence: missing cursor column, SQL NULL, missing/invalid new init_value, absent control и copied NULL/empty проверяются как разные producer branches; не подставлять один blanket false/null outcome.",
+          "Сохранять каждый прежний contract/source fingerprint и copy/Save/required/draft invariants. Source drift требует semantic review и reverse consumers, не автоматического обновления sha."
+        ],
+        "unknowns": [
+          "Actual private NGFP/schema/defaults/rules, stored rows/preferences/Bundle data, installed Cursor/AppCompat/OS и fleet adoption не наблюдались.",
+          "Native touch/Cancel/rotation/durable draft, malformed-input outcomes, provider coercion, local write/NGW upload и current tenant permissions UNKNOWN."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-checkbox-ngfp-init",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-checkbox-ngfp-value",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-checkbox-ngfp-state",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-checkbox-ngfp-last",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-checkbox-ngfp-show-last",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-checkbox-generic-text-init",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-checkbox-generic-text-value",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-checkbox-copy-adapt",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-checkbox-copy-baseline",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-checkbox-last-dispatch",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-checkbox-last-wrapper",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-text-control-factory",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-text-control-binding",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-std-binding",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-field-normalization",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-capture-values",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-copy-values",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-copy-empty",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-date-script-snapshot",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-absent-field",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-draft",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-save",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-form-checkbox-ngfp-value"
+    ]
+  }
+}

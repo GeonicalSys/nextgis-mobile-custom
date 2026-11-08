@@ -1,0 +1,72 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ecosystem-contracts-eco-project-scripts",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ecosystem",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_registry_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_mapping_or_list_key",
+      "value": "ECO-PROJECT-SCRIPTS"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "id": "ECO-PROJECT-SCRIPTS",
+        "from": "qgis-plugins",
+        "to": "mobile-app",
+        "type": "server_resource_contract",
+        "transport": "Source-only ZIP attachment on a native vector_layer plus collector_project.mobile_json_config.lisa_project_scripts",
+        "statement": "stand_project verifies deterministic ZIP and aliases before publication/readback; maplib validates hash/API and caches per project, isolated QuickJS uses APK-hosted bounded capabilities, maplibui pins complete references to forms and drafts. Spatial, table and write APIs are future capabilities, not arbitrary external JS implementations.",
+        "owners": [
+          "maplib",
+          "maplibui",
+          "app"
+        ],
+        "local_docs": [
+          "docs/architecture/project-scripts.md",
+          "docs/guides/project-scripts-user-guide.md"
+        ],
+        "external_docs": [
+          {
+            "system": "qgis-plugins",
+            "path": "geonical-docs/guides/mobile-project-scripts.md"
+          }
+        ],
+        "verify": [
+          "SMOKE-PROJECT-SCRIPTS",
+          "SMOKE-COLLECTOR-IMPORT"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/sectioned-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:ecosystem-contracts-eco-project-scripts"
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:classic-style-verification-firefly-classic-fixture",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:classic-style-verification",
+      "lisa:mobile:resource:point-firefly"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the style or label subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/classic-style-verification.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## «Светлячок»",
+        "",
+        "[Отдельный тип точки](point-firefly.md) проверяется через тот же SQL/JSON/native",
+        "путь: чёткое ядро при blur 0–3, отсутствие ореола внутри прозрачного ядра,",
+        "независимые alpha и layer opacity, Point/MultiPoint и общая zoom curve.",
+        "Смешанная категория сохраняет пиксели прежнего размытого круга. Picking,",
+        "видимость, custom icon overlay, смена типа и удаление не оставляют лишних",
+        "изображений. Редактор имеет отдельную матрицу 72 локальных профилей с реальными",
+        "touches, Save и Cancel. Оба класса включены в Related styles; явный PhoneOnly",
+        "разрешён только в отдельном verification APK. Эмулятор остаётся частью Full."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:classic-style-verification-firefly-classic-fixture"
+    ]
+  }
+}

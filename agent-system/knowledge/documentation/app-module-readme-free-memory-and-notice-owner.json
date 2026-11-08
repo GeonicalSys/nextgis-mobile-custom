@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-free-memory-and-notice-owner",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Память карты — MOB-04, 2026-10-28",
+        "",
+        "App использует библиотечную экономию кэшей по фактической свободной RAM,",
+        "системному порогу/OS low-memory state и Java headroom. Занятая память процесса,",
+        "RSS и native heap — только диагностика. Номинальные2GiB сами по себе не",
+        "вызывают предупреждение/замедление, а занятое другими приложениями устройство8GiB",
+        "может перейти к экономии по текущему остатку. `MapFragment` передаёт lifecycle текущего",
+        "MapView, включает/отключает SDK tile cache и принимает owner-fenced callback.",
+        "`RenderMemoryNotice` даёт одно автоматическое предупреждение за процесс,",
+        "включая другую карту/слой и Activity recreation; ручной статус доступен повторно.",
+        "«Повторить» пересматривает cache policy, без полной повторной загрузки всех",
+        "GeoJSON. Нет сохранённой настройки ограничений или записи visibility/data.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-free-memory-and-notice-owner"
+    ]
+  }
+}

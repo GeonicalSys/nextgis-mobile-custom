@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:metadata:ui-coverage-workspace-move-review",
+  "kind": "metadata",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "coverage"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "workspace_move_review"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "reviewed_at": "2026-10-29",
+        "basis": "Owned frozen app V4 source and21 actual-body JVM cases; native runtime NOT_RUN. Initial source_context above remains historical.",
+        "clock_delivery": "WF-SYNC-CLOCK-STORE remains original F61 hash/requirements; own working maplib clock drift is pending library Merge Commit then app pointer and semantic pin review. No alternate fingerprints.",
+        "source_sha256": {
+          "app/src/main/java/com/nextgis/mobile/MainApplication.java": "80608577888f59e9719716f0e5f2d3579ff0836c708af4541e4fe112918d4340",
+          "app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java": "4be0682b74b7166462ded5e01ad155ec584536ad326cf21f787ed9eb792fe4ec",
+          "app/src/main/java/com/nextgis/mobile/util/SelectMapPathPreference.java": "cbc12abd7be89cbfbd29d54701d641c78ee29ab98891825934d76f556cd00820",
+          "app/src/main/res/values/strings.xml": "13d137f8f6654501991df5598521c7709dbe764458cbaf620d1e34a481eb3690",
+          "app/src/main/res/values-ru/strings.xml": "f2c1cf08be0aff18257ee6d1e343121ff275dcade9b3f232558853c1e753dd7d",
+          "app/src/test/java/com/nextgis/mobile/fragment/SettingsWorkspaceMoveTest.java": "0320e557b2fa0a5bb485cb8affb7d33467200406b1a0dc7f6f653390f6bb9fb1"
+        }
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:metadata:ui-coverage-workspace-move-review"
+    ]
+  }
+}

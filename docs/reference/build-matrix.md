@@ -1,7 +1,7 @@
 ---
 title: Матрица сборки и версий
 type: reference
-last_verified: 2026-11-01
+last_verified: 2026-11-06
 related_code:
   - build.gradle
   - gradle/wrapper/gradle-wrapper.properties
@@ -13,12 +13,47 @@ related_code:
   - .github/workflows/android-reliability.yml
   - .github/workflows/docs-validate.yml
   - docs/scripts/check_change_impact.py
+  - docs/scripts/change_impact_knowledge.py
+  - docs/scripts/module_manifest_knowledge.py
+  - docs/scripts/prose_knowledge.py
   - docs/tests/test_change_impact_ci.py
+  - docs/scripts/structured_view_proof.py
+  - tools/docs-check.ps1
 ---
 
 # Матрица сборки и версий
 
 ## Проверка документации
+
+Записи точки входа, чеклиста, оглавлений, руководства по сопровождению и
+пяти пользовательских руководств находятся в `agent-system/knowledge/documentation/`.
+После правки записи обновить Markdown командой
+`python -B docs/scripts/prose_knowledge.py --write` и включить обновлённое
+представление в тот же коммит. Валидатор сверяет представление с записью.
+
+Отдельные темы в сравнении с official редактируются в записях
+`official-differences-*.json`. Запись `official-differences.json` хранит
+frontmatter и порядок тем в связях `contains`. После правки темы обновить
+`docs/reference/official-differences.md` той же командой генерации.
+Исторические результаты сохраняют дату, исходную версию и объём проверки.
+
+Правка генератора, валидатора или их тестов проходит строгую проверку
+`DOCUMENTATION-CI`. Автономная документация использует прежний Markdown-адрес.
+Та же проверка сверяет дорожную карту, порядок её задач и свидетельств.
+Регрессия проверяет независимое редактирование двух задач с прежним ID MOB-02.
+
+README модуля App собирается из его тематических записей той же командой.
+Проверка пакета сверяет представление, frontmatter и ссылки.
+
+Манифест модуля App собирается из записей в
+`agent-system/knowledge/app-module-manifest/`. После правки выполнить
+`python -B docs/scripts/prose_knowledge.py --write`.
+Оба представления входят в штатную проверку пакета App.
+
+В репозитории App валидатор читает записи change-impact из
+`agent-system/knowledge/change-impact/` и проверяет актуальность производного
+`docs/registry/change-impact.yaml`. Поставка документации без `agent-system/`
+использует YAML. Порядок триггеров и условия strict review общие для обоих входов.
 
 `Validate documentation` передаёт в strict change-impact проверку итоговые
 изменения всего PR, а не только последнего push. Поэтому документация,
@@ -47,6 +82,35 @@ branch, включая первый push новой ветки. Push в default 
 новая ветка, default/tag/manual события и имена с пробелами/кириллицей.
 Отдельно проверяются pagination API, точный head repository и отказ API.
 Эти проверки не требуют сборки APK, телефона или эмулятора.
+
+Полная проверка App сверяет одиннадцать YAML и JSON представлений с
+обычными генераторами и упорядоченными записями. После регенерации
+обнови квитанцию командой `python -B docs/scripts/structured_view_proof.py --write`.
+
+Для пакетов библиотек с производным манифестом валидатор сверяет обязательные
+README, YAML и квитанцию с записями владельца. У maplib к обязательным адресам
+относятся и оба руководства SQLite. При объявленном адресе
+`agent-system/README.md` валидатор проверяет содержимое и ссылки этой страницы.
+Из корня App обнови представления командой
+`python -B docs/scripts/prose_knowledge.py --write --module easypicker-module`
+и квитанцию командой
+`python -B docs/scripts/structured_view_proof.py --write --module easypicker-module`.
+Для maplib и maplibui передай соответствующий ID модуля. Старые закреплённые
+ревизии App используют обычные README и YAML из своих библиотек.
+
+Локальный `tools/docs-check.ps1 -RunTests` получает JSON путей из того же
+`check_change_impact.py --local-paths --base origin/my-maplibre`, без GitHub API
+и токена. От общего предка учитываются подготовленные, закоммиченные,
+неподготовленные, новые и удалённые файлы с сохранением Unicode/пробелов.
+PowerShell и проверка диапазона PR передают валидатору полный JSON-массив
+через стандартный ввод. Такой вызов укладывается в ограничение Windows
+на командную строку даже для сотен путей. Отдельный `--changed-file`
+остаётся доступен для ручной проверки.
+Внутренняя работа в сабмодуле и его незакреплённый child HEAD не являются
+изменением parent pin. Подготовленный или закоммиченный gitlink по-прежнему
+запускает обязательный review official differences; отсутствующая база остаётся
+ошибкой. Это источник scope для проверки документации, не признание pin
+доставленным, не приёмка библиотеки и не разрешение merge или публикации.
 
 ## Android reliability
 

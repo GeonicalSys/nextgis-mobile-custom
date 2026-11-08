@@ -1,0 +1,791 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:metadata:config-keys-registry",
+  "kind": "metadata",
+  "owner": "android_projects/android_gisapp",
+  "topic": "config-keys",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-schema": {
+      "role": "incumbent_registry_schema",
+      "value": 1
+    },
+    "registry-layout": {
+      "role": "complete_reviewed_section_and_row_order",
+      "value": [
+        {
+          "section": "preferences",
+          "shape": "mapping",
+          "keys": [
+            "show_compass_accuracy_sector",
+            "background_gps_enabled",
+            "show_sync",
+            "track_send",
+            "track_registered_device",
+            "track_send_default_enabled_v1",
+            "battery_dont_show_pref",
+            "shared-track-layer",
+            "tracks_temp",
+            "location_source",
+            "gnss_input",
+            "gnss_device",
+            "gnss_transport",
+            "gnss_device_id",
+            "gnss_device_name",
+            "gnss_tcp_host",
+            "gnss_tcp_port",
+            "verbose_log",
+            "tracks_location_source",
+            "debug_companion_install",
+            "shared_underlay_migration",
+            "com.nextgis.mobile.PREFS_UNDERLAYS",
+            "sync_all_projects",
+            "sync_recovery_journal",
+            "map_show_loc",
+            "map_show_compass",
+            "map_rotation_enabled",
+            "map_bearing",
+            "photo_overlay_enabled",
+            "photo_overlay_use_object_coords",
+            "photo_overlay_defaults_enabled_v1",
+            "keep_screen_on",
+            "keep_screen_on_default_enabled_v1",
+            "stakeout_sound_enabled",
+            "stakeout_far_distance",
+            "stakeout_medium_distance",
+            "stakeout_near_distance",
+            "stakeout_reached_distance",
+            "stakeout_declination_correction",
+            "check_updates",
+            "layer_backup_max_gb",
+            "sw_track_service",
+            "track_recording_session",
+            "track_recording_enabled",
+            "track_recording_mode",
+            "permission_requested_marker",
+            "background_recording_sound",
+            "ngw_identity_backup",
+            "feature_form_draft",
+            "geometry_edit_draft",
+            "walkedit_temp"
+          ]
+        },
+        {
+          "section": "manifest_metadata",
+          "shape": "mapping",
+          "keys": [
+            "io.sentry.auto-init",
+            "com.nextgis.mobile.UPDATE_FLAVOR",
+            "io.sentry.traces.user-interaction.enable",
+            "io.sentry.attach-screenshot",
+            "io.sentry.attach-view-hierarchy",
+            "io.sentry.traces.sample-rate",
+            "io.sentry.traces.profiling.sample-rate"
+          ]
+        },
+        {
+          "section": "runtime_constants",
+          "shape": "mapping",
+          "keys": [
+            "feature_type_initial_values",
+            "SOURCE_REVISION",
+            "apk_version_update"
+          ]
+        },
+        {
+          "section": "variant_resources",
+          "shape": "mapping",
+          "keys": [
+            "provider_auth",
+            "nextgis_accounts_auth",
+            "nextgis_accounts_auth_type"
+          ]
+        },
+        {
+          "section": "build_inputs",
+          "shape": "mapping",
+          "keys": [
+            "privateResourceProfiling",
+            "usage.properties",
+            "fieldVerificationChecks",
+            "diagnosticDeliveryChecks",
+            "ciReliabilityChecks",
+            "sentry.properties",
+            "local.properties",
+            "maplibui-client-id"
+          ]
+        },
+        {
+          "section": "storage",
+          "shape": "mapping",
+          "keys": [
+            "diagnostic-process-owner",
+            "process-exits-export",
+            "map-runtime-diagnostics",
+            "hyperlog-local-only",
+            "diagnostic-reports",
+            "ngw-field-required",
+            "feature-save-journal",
+            "pending-track-points",
+            "updater-ready",
+            "maintenance-reminders",
+            "updater-background",
+            "updater-pending-install",
+            "updater-startup-session",
+            "collector-registry",
+            "collector-workspaces",
+            "collector-initial-local-project",
+            "collector-import-journal",
+            "collector-form-transaction",
+            "ngw-schema-rebuild-guard",
+            "layer-backups"
+          ]
+        },
+        {
+          "section": "layer_json",
+          "shape": "mapping",
+          "keys": [
+            "feature_label_field",
+            "mobile_render_mode",
+            "render_mode",
+            "layer_origin",
+            "mobile",
+            "ngrc_provenance",
+            "legacy_underlay_migration"
+          ]
+        },
+        {
+          "section": "form_rules",
+          "shape": "mapping",
+          "keys": [
+            "lisa_form_rules",
+            "lisa_id",
+            "lisa_required_pin"
+          ]
+        },
+        {
+          "section": "form_dependencies",
+          "shape": "mapping",
+          "keys": [
+            "lisa_form_dependencies",
+            "lisa_cascade_pin",
+            "lisa_cascade_fields",
+            "lisa_cascade_keys",
+            "lisa_cascade_original"
+          ]
+        },
+        {
+          "section": "project_scripts",
+          "shape": "mapping",
+          "keys": [
+            "lisa_project_scripts",
+            "scripts_expected",
+            "scripts_active",
+            "scripts_status",
+            "scriptReference",
+            "project_scripts_cache"
+          ]
+        }
+      ]
+    },
+    "registry-notes": {
+      "role": "incumbent_trailing_yaml_comments",
+      "value": [
+        "# 2026-10-17: diagnostics contract 3 reserves context/breadcrumb budgets and scope",
+        "# identity. Existing diagnostic-reports/map-runtime-diagnostics/sync_recovery_journal",
+        "# keys and storage formats are unchanged; startup joins the same 16 KiB journal.",
+        "# Journal commit uses an owned writer and restores caller interruption."
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-show-compass-accuracy-sector",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-background-gps-enabled",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-show-sync",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-track-send",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-track-registered-device",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-track-send-default-enabled-v1",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-battery-dont-show-pref",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-shared-track-layer",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-tracks-temp",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-location-source",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-gnss-input",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-gnss-device",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-gnss-transport",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-gnss-device-id",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-gnss-device-name",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-gnss-tcp-host",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-gnss-tcp-port",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-verbose-log",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-tracks-location-source",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-debug-companion-install",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-shared-underlay-migration",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-com-nextgis-mobile-prefs-underlays",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-sync-all-projects",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-sync-recovery-journal",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-map-show-loc",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-map-show-compass",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-map-rotation-enabled",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-map-bearing",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-photo-overlay-enabled",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-photo-overlay-use-object-coords",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-photo-overlay-defaults-enabled-v1",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-keep-screen-on",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-keep-screen-on-default-enabled-v1",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-stakeout-sound-enabled",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-stakeout-far-distance",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-stakeout-medium-distance",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-stakeout-near-distance",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-stakeout-reached-distance",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-stakeout-declination-correction",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-check-updates",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-layer-backup-max-gb",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-sw-track-service",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-track-recording-session",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-track-recording-enabled",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-track-recording-mode",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-permission-requested-marker",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-background-recording-sound",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-ngw-identity-backup",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-feature-form-draft",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-geometry-edit-draft",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-preferences-walkedit-temp",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-manifest-metadata-io-sentry-auto-init",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-manifest-metadata-com-nextgis-mobile-update-flavor",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-manifest-metadata-io-sentry-traces-user-interaction-enable",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-manifest-metadata-io-sentry-attach-screenshot",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-manifest-metadata-io-sentry-attach-view-hierarchy",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-manifest-metadata-io-sentry-traces-sample-rate",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-manifest-metadata-io-sentry-traces-profiling-sample-rate",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-runtime-constants-feature-type-initial-values",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-runtime-constants-source-revision",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-runtime-constants-apk-version-update",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-variant-resources-provider-auth",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-variant-resources-nextgis-accounts-auth",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-variant-resources-nextgis-accounts-auth-type",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-build-inputs-privateresourceprofiling",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-build-inputs-usage-properties",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-build-inputs-fieldverificationchecks",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-build-inputs-diagnosticdeliverychecks",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-build-inputs-cireliabilitychecks",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-build-inputs-sentry-properties",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-build-inputs-local-properties",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-build-inputs-maplibui-client-id",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-storage-diagnostic-process-owner",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-storage-process-exits-export",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-storage-map-runtime-diagnostics",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-storage-hyperlog-local-only",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-storage-diagnostic-reports",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-storage-ngw-field-required",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-storage-feature-save-journal",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-storage-pending-track-points",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-storage-updater-ready",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-storage-maintenance-reminders",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-storage-updater-background",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-storage-updater-pending-install",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-storage-updater-startup-session",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-storage-collector-registry",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-storage-collector-workspaces",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-storage-collector-initial-local-project",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-storage-collector-import-journal",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-storage-collector-form-transaction",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-storage-ngw-schema-rebuild-guard",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-storage-layer-backups",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-layer-json-feature-label-field",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-layer-json-mobile-render-mode",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-layer-json-render-mode",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-layer-json-layer-origin",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-layer-json-mobile",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-layer-json-ngrc-provenance",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-layer-json-legacy-underlay-migration",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-form-rules-lisa-form-rules",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-form-rules-lisa-id",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-form-rules-lisa-required-pin",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-form-dependencies-lisa-form-dependencies",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-form-dependencies-lisa-cascade-pin",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-form-dependencies-lisa-cascade-fields",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-form-dependencies-lisa-cascade-keys",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-form-dependencies-lisa-cascade-original",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-project-scripts-lisa-project-scripts",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-project-scripts-scripts-expected",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-project-scripts-scripts-active",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-project-scripts-scripts-status",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-project-scripts-scriptreference",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-project-scripts-project-scripts-cache",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/sectioned-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:metadata:config-keys-registry"
+    ]
+  }
+}

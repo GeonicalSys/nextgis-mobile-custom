@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:map-performance-787-geojsonvt-allocation-profile-20261028",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-performance",
+      "lisa:mobile:resource:map-performance-classic-editor-and-native-payload"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the original measurement or checkpoint and its acceptance limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-performance.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Что установлено профилем787",
+        "",
+        "В квалифицированной выборке native retained allocations около673MiB из907MiB",
+        "(74,2%) принадлежат GeoJSONVT index, в том числе не менее564MiB — property maps;",
+        "около128MiB относятся к растровым данным. Это доли выборки allocator, а не",
+        "разложение всего RSS процесса и не размер исходных файлов. Подтверждён лишний",
+        "повторяемый payload атрибутов обычного GeoJSON пути. Тяжёлая геометрия, растры",
+        "или local MVT не объявляются единственной причиной по общему числу памяти.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:map-performance-787-geojsonvt-allocation-profile-20261028"
+    ]
+  }
+}

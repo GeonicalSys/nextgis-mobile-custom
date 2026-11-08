@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:location-pipeline-a54-old-stop-and-corrected-cold-starts",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:location-pipeline"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/location-pipeline.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "На A54 установлена тестовая Lisa Release 3.1.2.18/212 из feature-ветки с",
+        "сохранением данных; SHA-256 установленного APK совпадает с проверенной сборкой.",
+        "Подтверждён актуальный полевой дефект: старый UI Stop оставлял durable intent,",
+        "поэтому после перезапуска включалась запись. В исправленной версии штатный пункт",
+        "«Завершить запись трека» дал closedTracks=1; сервис уничтожился с running=false.",
+        "Два последующих холодных запуска не создали TrackerService, меню показывало",
+        "«Начать запись трека». Перед завершением эта запись приняла 48 GNSS fixes и",
+        "сохранила одну точку. Звуковой контроль при проверке оставался выключенным.",
+        "",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Historical Stop incident, exact installed artifact and two successful cold starts."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:location-pipeline-a54-old-stop-and-corrected-cold-starts"
+    ]
+  }
+}

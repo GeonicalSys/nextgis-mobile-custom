@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:shared-tracks-legacy-recovery-native-oracles",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:shared-tracks"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/shared-tracks.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Три дополнительных native случая проходят production SharedTrackProjects.prepare:",
+        "полный перенос всех полей из finished history рядом с новым треком и восстановление",
+        "старого owner/URI/pending Stop с lost ACK без повторных точек; отдельный случай",
+        "собирает истории сразу двух неактивных проектов с одинаковыми legacy IDs рядом",
+        "с новой общей записью, не активируя их карты, и проверяет обе истории после switch.",
+        "Для локального",
+        "диагностического прогона completed case допускает явно переданный track-only",
+        "fixture в verification external files; реальные accounts/прочие таблицы не копируются.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:shared-tracks-legacy-recovery-native-oracles"
+    ]
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-09-08-f82a5829a918",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-09-08",
+        "",
+        "- Инструмент азимута получил два свободных сценария: от текущего положения до",
+        "  точки карты и между двумя произвольными точками. Вынос выбранного объекта и",
+        "  оба новых режима показывают числовой магнитный азимут по встроенной WMM2025 и",
+        "  геодезическое расстояние WGS84; временные точки/линия не входят в проект.",
+        "- Контракт MapLibre дополнен непостоянными `azimuth-measurement-*` слоями под",
+        "  всегда верхним курсором местоположения, а device smoke — проверками WMM,",
+        "  повёрнутой карты, отсутствующего компаса и совпадающих точек.",
+        "- Точки A/B и live-цель можно корректировать перетаскиванием; GPS-начало остаётся",
+        "  фиксированным. Подпись магнитного азимута допускает вторую строку, поэтому",
+        "  числовое значение не обрезается на узком экране.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-09-08",
+        "heading": "2026-09-08",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-09-08-f82a5829a918"
+    ]
+  }
+}

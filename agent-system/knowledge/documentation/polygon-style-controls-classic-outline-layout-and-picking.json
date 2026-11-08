@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:polygon-style-controls-classic-outline-layout-and-picking",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:polygon-style-controls"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the style or label subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/polygon-style-controls.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Контур: сплошной, пунктир, точки, штрихпунктир или 2–16 положительных длин штрихов",
+        "и пропусков. Основной цвет, толщина и alpha остаются прежними полями полигона.",
+        "Новые настройки: cap/join/miter, смещение −64…64 px, просвет 0…64 px между",
+        "параллельными линиями. Дополнительная сплошная обводка рисуется под основным",
+        "контуром: собственные цвет/alpha и добавочная ширина 0…32 px с каждой стороны.",
+        "Геометрические границы и picking не меняются. Native dash/cap/join задаются",
+        "константами в фильтрованных `-layout-contour-*` children общего GeoJSON source;",
+        "видимость, порядок, zoom limits, restyle и удаление идут через логический слой."
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:polygon-style-controls-classic-outline-layout-and-picking"
+    ]
+  }
+}

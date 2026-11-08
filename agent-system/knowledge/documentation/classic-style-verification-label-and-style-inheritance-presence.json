@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:classic-style-verification-label-and-style-inheritance-presence",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:classic-style-verification",
+      "lisa:mobile:resource:map-rendering-rule-style-defaults-and-zoom"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the style or label subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/classic-style-verification.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Модульные регрессии воспроизводили отсутствие halo/font/collision inheritance,",
+        "замену explicit false scale и 255 opacity значением Other. LabelAttributes хранит",
+        "наличие настройки из setter/JSON; clone копирует presence set. Type-default и",
+        "false имеют самостоятельный смысл при явном задании и сериализуются. Старый JSON",
+        "без ключа продолжает наследовать Other. Style отдельно сохраняет explicit size",
+        "scale=false. Изменение не добавляет возможностей vector-tile renderer.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:classic-style-verification-label-and-style-inheritance-presence"
+    ]
+  }
+}

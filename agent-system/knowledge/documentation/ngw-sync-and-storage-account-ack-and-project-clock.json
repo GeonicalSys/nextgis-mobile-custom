@@ -1,0 +1,68 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-account-ack-and-project-clock",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### Account ACK раньше полного clock",
+        "",
+        "Порядок в `ProjectSyncRunner.run`:",
+        "",
+        "1. Выполнить account pass и дождаться его детей.",
+        "2. Проверить account error, session failure/cancel, готовый account outbox и",
+        "   незавершённый Collector import. Лишь затем удалить точную пару через",
+        "   `SyncRecoveryJournal.complete`.",
+        "3. После accounts проверить весь обязательный набор account names, отсутствие",
+        "   layer-only ограничения и готовых правок всего проекта.",
+        "4. Ещё раз дождаться детей, закрыть session и background map, восстановить",
+        "   runtime bookkeeping открытой карты.",
+        "5. Только после успешного cleanup и при неизменной cancellation generation",
+        "   вызвать `ProjectSyncState.markComplete` и потребовать успешный результат",
+        "   записи; legacy account clocks обновляются лишь после этого результата.",
+        "",
+        "Следовательно, пустой recovery journal **не доказывает полный project ACK**:",
+        "pair ACK записывается раньше финального cleanup/clock. Это разные commit",
+        "boundaries. Process death или cleanup failure между ними не разрешают агенту",
+        "переносить часы вперёд по отсутствию очереди. Быстрый `LocalChangesWorker`",
+        "использует owner/drain/lease, но не пишет full clock. `LayersFragment` читает",
+        "clock только active UI map; особенности неуспешной записи описаны ниже.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-account-ack-and-project-clock"
+    ]
+  }
+}

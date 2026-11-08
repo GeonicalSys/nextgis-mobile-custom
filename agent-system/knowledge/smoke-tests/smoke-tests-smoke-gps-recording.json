@@ -1,0 +1,100 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-smoke-gps-recording",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "SMOKE-GPS-RECORDING"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "device",
+        "scope": [
+          "app",
+          "maplib",
+          "maplibui"
+        ],
+        "steps": [
+          "Enable Battery Saver with screen-off GPS policy 1, 2 or 4; manual Start must warn with Battery settings and Record anyway, even with Doze exemption or its old prompt suppressed; settings alone must not create a track",
+          "During a track enable Battery Saver while the screen is off, verify the ongoing notification warning, then disable it and verify GPS resumes in the same recording; Stop remains available; native external GNSS and foreground-only policy 3 must not show the system GPS warning",
+          "Discover two BLE receivers named PiGo Lite at different signal levels; verify separate rows, numerical dBm and stronger signal closer to zero, then walk closer and repeat discovery",
+          "Repeat with paired Classic receivers; unknown or non-discoverable devices show Signal not measured, never zero or a prior scan value; selecting one stores only its original id/name",
+          "During scan switch transport, leave the screen and start another scan; late callbacks must not restore obsolete rows; USB/TCP must not show Bluetooth signal",
+          "Tap the track button while stopped; verify Pedestrian and Pedestrian + car entries with icons, dismissal by Back/outside tap and correct placement on phone, landscape, tablet and rail overflow",
+          "Turn Android system location off and choose a track mode; verify the Location settings prompt and no tracker service or new track row",
+          "Turn system location on, choose each mode and stop with one tap; verify the orange person, larger red dot and confirmed recording label",
+          "In pedestrian mode feed walking, exactly 30 km/h, faster than 30 km/h and walking again; verify skipped fast points, automatic resume and separate persisted segments on map and GPX",
+          "Repeat with missing receiver speed, GNSS loss, process restart and Stop while driving; verify selected mode recovery and no rejected sampler tail; mixed mode retains car points",
+          "Turn system location off or revoke permission while recording and press the track button; verify Stop rather than the mode menu or a new permission prompt",
+          "On Android 14+ deny Bluetooth permissions, grant fine location and start a track; confirm a new track row and notification before the menu says recording",
+          "Simulate a foreground permission or SQLite insert failure; verify an immediate warning, a non-recording menu label and no fabricated GPS points",
+          "Fail one trackpoint insert after recording started, then restore storage; verify warning and non-recording menu until the next successful point, without deleting earlier points",
+          "Deny device-account access while location is granted, restart, then deny twice and return from app settings; verify the account request is not skipped and granted permission is rechecked",
+          "Deny POST_NOTIFICATIONS and reopen the map; verify startup and settings-return permission checks do not ask for notifications, while opting into sync notifications in Settings can request them",
+          "Start a track on the visible map, turn the screen off, move, then reopen where GNSS is unavailable",
+          "Verify current Network position and its metric accuracy circle; block all sources and wait over eight seconds",
+          "Grant approximate location only; verify map fallback and that track/walk cannot record Network",
+          "With sound disabled on Galaxy A54, record 10 minutes screen on and 10 minutes screen off; reopen repeatedly and compare GPS health raw cadence, accuracy, age, requests/stops and wake lock",
+          "Stand for 20 minutes indoors with 20-30 metre accuracy, then outdoors with about 5 metre accuracy; inspect saved distance and gradual correlated drift",
+          "Keep recording on a table, then hold and move the phone while remaining in place; verify handset handling does not start a false path",
+          "Repeat walking starts at 3-5 and 8-12 metre accuracy; verify the current cursor follows before the line confirms and the circle does not inflate with distance from the initial anchor",
+          "Start walking with an early turn inside the uncertainty radius; wait for confirmation and verify the first metres and corner appear with original timestamps",
+          "Cancel a tentative departure or lose GPS before confirmation; verify the buffer is not appended and another recording session cannot inherit it",
+          "Export one track and multiple tracks to a local file receiver; check .gpx filename, share Intent application/gpx+xml, URI MIME text/xml including anonymous FileProvider lookup; MAX may show .gpx.xml and must not show .gpx.null or .gpx.bin",
+          "Explicitly stop a track and verify end time is saved, closedTracks is one, and that track does not auto-resume",
+          "Start at an uncertain fix, improve reception without moving and verify the stop vertex is corrected without an extra segment",
+          "Start slow walking from that stop, then repeat starting and stopping a car with the phone fixed in its mount",
+          "Walk slowly, stop, start again, turn and reverse; repeat on a road at legal vehicle speeds",
+          "Lose GNSS and regain it; reload the track and export GPX",
+          "Repeat with walk digitizing; verify pause, save, and explicit Continue and connect with fresh GPS",
+          "Select sparse point intervals and verify corner retention and validated final points",
+          "Record with screen off and both track and walk active; stop one and verify the other still receives GNSS",
+          "Revoke and restore fine permission, restart the process, and verify durable track intent and walk draft",
+          "Check the circle at several latitudes, zooms and camera tilts, after cold style load and hot layer add",
+          "Enable background sound, stand still, mute notification volume and then alarm volume, and lose GNSS",
+          {
+            "With GPS Connector / external mock GNSS": "accuracy follows HDOP extras, does not pulse 47 m, does not jump to Network; track/walk vertices use receiver coordinates no coarser than 2 s / 1 m"
+          },
+          {
+            "With native External GNSS (Bluetooth Classic NMEA, no mock)": "HUD shows RTK quality/sats/HDOP, map accuracy follows GST, chip and network are not mixed, successive GGA are not dropped as chip, track/walk use receiver coordinates no coarser than 2 s / 1 m"
+          },
+          {
+            "With native External GNSS selected, Home/screen-off for 30 s then reopen": "HUD must not flash connecting; verbose log must not record External GNSS closed on onPause"
+          },
+          "With Pigo Lite/Lite Plus and PiRat UHF, fully stop PiMock and power-cycle the receiver; connect from Lisa over BLE and verify fresh coordinates, actual FIX/FLOAT/Auto quality, eight-second quality expiry on data loss and reconnection without PiMock; diagnostic UART must pair 3A20/3A21/3A22 and initialization must not alter correction or radio settings",
+          "During stakeout on a live receiver fix, the widget must not flash Waiting for GPS solely because the GNSS timestamp is slightly in the future or because GGA repeats every 5 s"
+        ],
+        "expected": "System location off blocks an interactive start before durable recording intent changes; the stopped button offers two modes and the active button stops immediately. Pedestrian mode excludes speed above 30 km/h and resumes in a separate segment; mixed mode retains validated vehicle movement. The map shows only a current source with an honest accuracy radius and clears both marker and circle on expiry. No network fix, camera anchor, cached final snap or unrecorded preview enters geometry. Walking and legal vehicle movement retain turns without stationary drift or isolated large jumps. GPS gaps remain separate map/Canvas/GPX segments; walk pause and insertion position survive restart and require explicit reconnection. Sound uses fresh measurement timestamps before decimation and keeps existing alarm/vibration behavior. Screen lifecycle and ending one recording consumer do not stop another consumer. Sound-disabled background recording retains its acquisition and wake lock. UI resume displays the actual current accuracy without a subscription-induced restart; real reception deterioration remains visible. Check battery drain during the screen-off run.\n"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-smoke-gps-recording"
+    ]
+  }
+}

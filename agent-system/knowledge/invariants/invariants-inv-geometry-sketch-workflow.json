@@ -1,0 +1,94 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:invariants-inv-geometry-sketch-workflow",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "invariants",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "INV-GEOMETRY-SKETCH-WORKFLOW"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "title": "Geometry sketches use tap-created nodes, one polygon part and a shared form handoff",
+        "owners": [
+          "app",
+          "maplib",
+          "maplibui"
+        ],
+        "statement": "Point creation starts immediately at the projected screen centre; LineString, MultiLineString, Polygon and MultiPolygon creation starts with one projected centre node and subsequent map taps insert nodes after the selected node. Line, polygon and ruler editors expose midpoint insertion. Before insertion, the selected node is red, its ordered successor inside the same open line part or closed polygon ring is a larger orange node, and their segment is a thicker orange line. An open line endpoint has no successor indicator; a closed ring wraps only to its own first node. Line/polygon edit menus expose no touch-append action or overflow trigger; polygon menus also expose no add/delete polygon or add/delete hole action. A new MultiPolygon sketch accepts at most one polygon part, while loading and editing existing multipart or holed geometry does not discard its structure. Walk append starts after the selected node and remains contiguous before its former successor using service-confirmed GNSS vertices; a GPS gap pauses the walk until an explicit reconnection. While walk recording is active, a separate panel owns controls and normal menus remain available. Point creation locks all walk controls from chooser through Save/Cancel; Finish awaits the service acknowledgement. For new walk geometry, every line needs two distinct vertices and every polygon ring three; insufficient geometry exits with a readable message and no feature/form write. The finished owner's Save stays enabled in its editor and opens attributes for new and existing features; Cancel is direct and confirmed. For new Point, MultiPoint, LineString, MultiLineString, Polygon and MultiPolygon features, the attribute action becomes available as soon as geometry exists and delegates to the same validation, GTMultiPolygon repair and single-form handoff as Save. Repeated taps must not launch duplicate forms. A successful direct geometry Save or attribute-form Save is terminal for both new and existing features: the host clears edit/view selection and returns to MODE_NORMAL with the standard map controls. Failed writes retain their current edit context; explicit form cancellation follows its normal cancellation path. The selection toolbar has no duplicate add action; cancelling a new sketch asks for confirmation and then returns directly to normal map mode. Ruler area is always formatted in hectares, and the ruler exposes the same Undo/Redo controls as a sketch so each added or moved measurement point is one reversible history step. Line and polygon screen vertices are converted with the current MapLibre projection so their first node follows the current camera centre. Polygon and MultiPolygon WKT recovery preserves every member, exactly one outer ring per member and only real holes, so it cannot cancel the fill, truncate a member at its first hole or lose later members. An invalid simple Polygon remains in editing and reports self-intersection separately from an insufficient point count. Undo/Redo retains 100 real coordinate-WKT changes; consecutive snapshots from selection or callbacks that differ only in CRS metadata do not allocate another step, one action moves exactly one edit, and a boundary attempt leaves the history cursor unchanged.\n",
+        "related_code": [
+          "maplib/src/main/java/com/nextgis/maplib/datasource/GeoGeometryFactory.java",
+          "maplib/src/main/java/com/nextgis/maplib/datasource/GeoPolygon.java",
+          "maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java",
+          "maplib/src/test/java/com/nextgis/maplib/datasource/GeoMultiPolygonWktTest.java",
+          "maplib/src/main/java/com/nextgis/maplib/map/MLP/PolygonEditClass.java",
+          "maplib/src/main/java/com/nextgis/maplib/map/MLP/MultiPolygonEditClass.java",
+          "maplib/src/main/java/com/nextgis/maplib/map/MLP/EditDirectionPolicy.java",
+          "maplib/src/test/java/com/nextgis/maplib/map/MLP/EditDirectionPolicyTest.java",
+          "maplib/src/main/java/com/nextgis/maplib/map/MLP/MeasurmentLine.java",
+          "maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java",
+          "maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java",
+          "maplib/src/main/java/com/nextgis/maplib/util/LocationUtil.java",
+          "maplib/src/test/java/com/nextgis/maplib/util/LocationUtilAreaTest.java",
+          "maplib/src/test/java/com/nextgis/maplib/map/MLP/PolygonSketchPolicyTest.java",
+          "maplib/src/test/java/com/nextgis/maplib/map/MPLFeaturesUtilsPolygonTest.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/service/WalkEditService.java",
+          "maplibui/src/test/java/com/nextgis/maplibui/service/WalkGeometryInsertionTest.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/overlay/EditLayerOverlay.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/overlay/RulerOverlay.java",
+          "maplibui/src/main/java/com/nextgis/maplibui/overlay/UndoRedoOverlay.java",
+          "maplibui/src/test/java/com/nextgis/maplibui/overlay/UndoRedoOverlayTest.java",
+          "maplibui/src/main/res/menu/ruler_measurement.xml",
+          "maplibui/src/main/res/menu/edit_polygon.xml",
+          "maplibui/src/main/res/menu/edit_multipolygon.xml",
+          "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+          "app/src/main/res/menu/select_action.xml",
+          "app/src/main/res/values/strings.xml",
+          "app/src/main/res/values-ru/strings.xml"
+        ],
+        "verify_smoke": [
+          "AUTO-MAPLIB-UNIT",
+          "AUTO-MAPLIBUI-UNIT",
+          "AUTO-MAPLIBUI-ASSEMBLE",
+          "SMOKE-GEOMETRY-SKETCH-WORKFLOW"
+        ],
+        "must_update_docs": [
+          "docs/architecture/map-rendering.md",
+          "docs/reference/official-differences.md",
+          "docs/runbooks/device-smoke-tests.md",
+          "maplib/docs/README.md",
+          "maplibui/docs/README.md",
+          "app/docs/README.md"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:invariants-inv-geometry-sketch-workflow"
+    ]
+  }
+}

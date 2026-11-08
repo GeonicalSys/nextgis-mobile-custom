@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-sync-timeouts-and-cancellation",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "### Тайм-ауты, отмена и объяснённые пропуски",
+        "",
+        "`NGWVectorLayer.getConnection` задаёт 45 с на соединение и 180 с без новых байтов",
+        "до первого `getResponseCode`, в том числе на повторном HTTPS-соединении. При",
+        "ошибке открытия соединение закрывается. Это не общий deadline большого snapshot:",
+        "пока байты поступают, загрузка может продолжаться. Существующее число retry",
+        "ограничено; interrupt не запускает сетевой retry, сохраняется для account adapter",
+        "и проверяется при download, parse, scan, apply, delete, reconcile и перед commit.",
+        "Явное прерывание меняет generation активных sync-session и закрывает их",
+        "зарегистрированные read-only GET, поэтому зависшее чтение не ждёт 180 секунд.",
+        "POST/PUT/DELETE намеренно не разрывается после отправки: завершается только один",
+        "текущий mutation request, локальная change queue обновляется по подтверждённому",
+        "ответу, а следующий record уже не начинается. UI отдельно сообщает об этом",
+        "безопасном ожидании. SQLite освобождается только после commit/rollback.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-sync-timeouts-and-cancellation"
+    ]
+  }
+}

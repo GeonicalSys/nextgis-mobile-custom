@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-remote-retry-and-push-before-pull",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the sync and storage subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Получение изменений векторного слоя сначала делает до трёх коротких HTTP-попыток.",
+        "Если последняя попытка завершилась временной сетевой ошибкой, HTTP `408`/`429`/`5xx`",
+        "или NGW `ExternalDatabaseError`, адаптер не останавливает проход и не повторяет уже",
+        "успешные слои: проблемный слой ставится в отдельную очередь. После завершения",
+        "основного прохода и не ранее чем через 15 секунд после последнего такого сбоя",
+        "адаптер повторяет только отложенные слои, ещё максимум по три HTTP-попытки.",
+        "Ошибка первого прохода не попадает в итоговый `SyncResult`, если повторный проход",
+        "успешен. Если он тоже исчерпан, результат содержит обычную IO-ошибку и отдельное",
+        "пользовательское сообщение о временной недоступности сервера или внешней базы.",
+        "Локальные изменения одного слоя отправляются до большого remote pull. Если push",
+        "не завершён, pull этого слоя не начинается. Время успешной синхронизации",
+        "обновляется только после чистого завершения всего account-pass.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-remote-retry-and-push-before-pull"
+    ]
+  }
+}

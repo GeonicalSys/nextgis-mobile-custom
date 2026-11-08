@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import configparser
+import json
 import re
 import runpy
 import sys
@@ -24,17 +25,6 @@ except ImportError:  # pragma: no cover - exercised by a user without dependenci
     raise SystemExit(2)
 
 
-REGISTRY_FILES = (
-    "repositories.yaml",
-    "modules.yaml",
-    "dependencies.yaml",
-    "ecosystem.yaml",
-    "invariants.yaml",
-    "change-impact.yaml",
-    "config-keys.yaml",
-    "upstream-overlaps.yaml",
-    "smoke-tests.yaml",
-)
 CENTRAL_FRONTMATTER = {"title", "type", "last_verified", "related_code"}
 MODULE_FRONTMATTER = {"title", "module_id", "last_verified"}
 MODULE_MANIFEST_FIELDS = {
@@ -95,6 +85,23 @@ def load_yaml(path: Path, validation: Validation) -> Any:
         return yaml.safe_load(path.read_text(encoding="utf-8"))
     except (OSError, UnicodeError, yaml.YAMLError) as exc:
         validation.error(path.as_posix(), f"invalid YAML: {exc}")
+        return {}
+
+
+def load_change_impact(docs_root: Path, validation: Validation) -> Any:
+    view = docs_root / "registry/change-impact.yaml"
+    owner = docs_root.parent
+    sources = owner / "agent-system"
+    if not sources.exists() and not sources.is_symlink():
+        return load_yaml(view, validation)
+
+    projector = runpy.run_path(str(Path(__file__).with_name("change_impact_knowledge.py")))
+    try:
+        registry = projector["project_change_impact"](owner)
+        projector["check_generated"](view, registry)
+        return registry
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        validation.error(view.as_posix(), f"change-impact projection failed: {exc}")
         return {}
 
 
@@ -162,11 +169,12 @@ def workspace_target(
 
 
 def read_frontmatter(
-    path: Path, required: set[str], validation: Validation
+    path: Path, required: set[str], validation: Validation, *, text: str | None = None
 ) -> Mapping[str, Any]:
     location = path.as_posix()
     try:
-        text = path.read_text(encoding="utf-8")
+        if text is None:
+            text = path.read_text(encoding="utf-8")
     except (OSError, UnicodeError) as exc:
         validation.error(location, f"cannot read UTF-8: {exc}")
         return {}
@@ -191,9 +199,12 @@ def read_frontmatter(
     return mapping
 
 
-def validate_markdown_links(path: Path, workspace: Path, validation: Validation) -> None:
+def validate_markdown_links(
+    path: Path, workspace: Path, validation: Validation, *, text: str | None = None
+) -> None:
     try:
-        text = path.read_text(encoding="utf-8")
+        if text is None:
+            text = path.read_text(encoding="utf-8")
     except (OSError, UnicodeError):
         return
     for raw_target in LINK_RE.findall(text):
@@ -217,11 +228,43 @@ def validate_markdown_links(path: Path, workspace: Path, validation: Validation)
 
 def validate_central_markdown(
     docs_root: Path, workspace: Path, validation: Validation
-) -> None:
-    for path in sorted(docs_root.rglob("*.md")):
+) -> dict[Path, str]:
+    sources = docs_root.parent / "agent-system"
+    projected = {}
+    module_readmes = {}
+    if sources.exists() or sources.is_symlink():
+        projector = runpy.run_path(str(Path(__file__).with_name("prose_knowledge.py")))
+        try:
+            for path, text in projector["project_documents"](docs_root.parent).items():
+                if path.parts[0] == "docs":
+                    projected[docs_root / path.relative_to("docs")] = text
+                elif docs_root == workspace / "docs":
+                    view = workspace / path
+                    module_readmes[view] = text
+                    try:
+                        projector["check_generated"](view, text)
+                    except (OSError, ValueError) as exc:
+                        validation.error(view.as_posix(), str(exc))
+                    if path.parts in {
+                        ("README.md",),
+                        ("WHATS_NEW.md",),
+                        ("CONTEXT_INSTRUCTION.md",),
+                        ("CUSTOMIZATIONS.md",),
+                        ("agent-system", "README.md"),
+                    }:
+                        validate_markdown_links(view, workspace, validation, text=text)
+        except (OSError, ValueError, KeyError, TypeError) as exc:
+            validation.error(docs_root.as_posix(), f"prose projection failed: {exc}")
+    for path in sorted(set(docs_root.rglob("*.md")) | projected.keys()):
+        text = projected.get(path)
+        if text is not None:
+            try:
+                projector["check_generated"](path, text)
+            except (OSError, ValueError) as exc:
+                validation.error(path.as_posix(), str(exc))
         if "templates" in path.relative_to(docs_root).parts:
             continue
-        frontmatter = read_frontmatter(path, CENTRAL_FRONTMATTER, validation)
+        frontmatter = read_frontmatter(path, CENTRAL_FRONTMATTER, validation, text=text)
         for index, related in enumerate(as_list(frontmatter.get("related_code"))):
             workspace_target(
                 workspace,
@@ -230,7 +273,8 @@ def validate_central_markdown(
                 validation,
                 allow_dot=True,
             )
-        validate_markdown_links(path, workspace, validation)
+        validate_markdown_links(path, workspace, validation, text=text)
+    return module_readmes
 
 
 def validate_repositories(
@@ -736,9 +780,14 @@ def validate_manifest(
     hotspot_ids: set[str],
     workspace: Path,
     validation: Validation,
+    *,
+    readme_text: str | None = None,
+    manifest_data: Mapping[str, Any] | None = None,
 ) -> None:
     location = manifest_path.as_posix()
-    manifest = require_mapping(load_yaml(manifest_path, validation), location, validation)
+    if manifest_data is None:
+        manifest_data = load_yaml(manifest_path, validation)
+    manifest = require_mapping(manifest_data, location, validation)
     require_fields(manifest, MODULE_MANIFEST_FIELDS, location, validation)
     if manifest.get("schema_version") != 1:
         validation.error(location, "schema_version must be 1")
@@ -794,20 +843,22 @@ def validate_manifest(
         if hotspot not in hotspot_ids:
             validation.error(location, f"unknown upstream hotspot {hotspot!r}")
 
-    readme_frontmatter = read_frontmatter(readme_path, MODULE_FRONTMATTER, validation)
+    readme_frontmatter = read_frontmatter(readme_path, MODULE_FRONTMATTER, validation, text=readme_text)
     if readme_frontmatter.get("module_id") != expected_module:
         validation.error(readme_path.as_posix(), f"module_id must be {expected_module!r}")
     if manifest.get("maturity") == "maintained":
         try:
-            if "TODO" in readme_path.read_text(encoding="utf-8").upper():
+            text = readme_text if readme_text is not None else readme_path.read_text(encoding="utf-8")
+            if "TODO" in text.upper():
                 validation.error(readme_path.as_posix(), "maintained README must not contain TODO")
         except OSError:
             pass
-    validate_markdown_links(readme_path, workspace, validation)
+    validate_markdown_links(readme_path, workspace, validation, text=readme_text)
 
 
 def validate_module_packs(
     modules: Mapping[str, Any],
+    repos: Mapping[str, Any],
     config_ids: set[str],
     invariant_ids: set[str],
     smoke_ids: set[str],
@@ -816,6 +867,9 @@ def validate_module_packs(
     validation: Validation,
     target_module: str | None,
     require_pack: bool,
+    *,
+    module_readmes: Mapping[Path, str] | None = None,
+    owned_app_pack: bool = False,
 ) -> None:
     if target_module and target_module not in modules:
         validation.error("arguments", f"unknown module {target_module!r}")
@@ -832,10 +886,12 @@ def validate_module_packs(
         if pack_root_value is None:
             continue
         pack_root = workspace / pack_root_value
-        agents = pack_root / "AGENTS.md"
         readme = pack_root / "docs" / "README.md"
         manifest = pack_root / "docs" / "manifest.yaml"
-        paths = (agents, readme, manifest)
+        expected_repo = str(module.get("repository"))
+        paths = (readme, manifest)
+        if pack_root_value == as_mapping(repos.get(expected_repo)).get("path"):
+            paths = (pack_root / "AGENTS.md", *paths)
         existing = [path.is_file() for path in paths]
         policy = module.get("docs_policy")
         if not any(existing):
@@ -848,7 +904,38 @@ def validate_module_packs(
             missing = [path.relative_to(workspace).as_posix() for path, present in zip(paths, existing) if not present]
             validation.error(f"module:{module_id}", f"partial documentation pack; missing {missing}")
             continue
-        expected_repo = str(module.get("repository"))
+        readme_text = module_readmes.get(readme) if module_readmes is not None else None
+        manifest_data = None
+        if owned_app_pack and module_id == "app":
+            try:
+                projector = runpy.run_path(str(Path(__file__).with_name("module_manifest_knowledge.py")))
+                if readme_text is None or manifest != workspace / projector["VIEW"]:
+                    raise ValueError("Missing projected README or unexpected App pack path")
+                manifest_data = projector["project_manifest"](workspace)
+                projector["check_view"](workspace, manifest_data)
+            except (OSError, ValueError, KeyError, TypeError) as exc:
+                validation.error(manifest.as_posix(), f"App module manifest projection failed: {exc}")
+                continue
+        elif owned_app_pack and module_id in {"easypicker-module", "maplib", "maplibui"}:
+            try:
+                projector = runpy.run_path(str(Path(__file__).with_name("module_manifest_knowledge.py")))
+                profile = projector["PROFILES"][module_id]
+                if pack_root != workspace / Path(profile.owner).name:
+                    raise ValueError(f"Unexpected pack path for {module_id}")
+                proof = runpy.run_path(str(Path(__file__).with_name("structured_view_proof.py")))
+                if proof["library_view_declared"](pack_root, module_id=module_id):
+                    proof["check_proof"](pack_root, module_id=module_id)
+                    manifest_data = projector["project_manifest"](pack_root, module_id=module_id)
+                    prose = runpy.run_path(str(Path(__file__).with_name("prose_knowledge.py")))
+                    documents = prose["project_documents"](pack_root, module_id=module_id)
+                    for path, text in documents.items():
+                        prose["check_generated"](pack_root / path, text)
+                        if pack_root / path != readme:
+                            validate_markdown_links(pack_root / path, workspace, validation, text=text)
+                    readme_text = documents[PurePosixPath("docs/README.md")]
+            except (OSError, ValueError, KeyError, TypeError) as exc:
+                validation.error(manifest.as_posix(), f"{module_id} module pack projection failed: {exc}")
+                continue
         validate_manifest(
             manifest,
             readme,
@@ -861,6 +948,8 @@ def validate_module_packs(
             hotspot_ids,
             workspace,
             validation,
+            readme_text=readme_text,
+            manifest_data=manifest_data,
         )
 
 
@@ -925,15 +1014,28 @@ def main(argv: Iterable[str] | None = None) -> int:
         help="Report change-impact requirements for a changed workspace path",
     )
     parser.add_argument(
+        "--changed-files-stdin",
+        action="store_true",
+        help="Read an additional JSON array of changed paths from standard input",
+    )
+    parser.add_argument(
         "--enforce-diff",
         action="store_true",
         help="Fail strict triggers if required docs are absent from --changed-file",
     )
     args = parser.parse_args(list(argv) if argv is not None else None)
+    if args.changed_files_stdin:
+        try:
+            paths = json.load(sys.stdin)
+        except (OSError, ValueError) as exc:
+            parser.error(f"cannot read changed paths from standard input: {exc}")
+        if not isinstance(paths, list) or any(not isinstance(path, str) or not path for path in paths):
+            parser.error("--changed-files-stdin requires a JSON array of non-empty strings")
+        args.changed_file.extend(paths)
     if args.require_pack and not args.module:
         parser.error("--require-pack requires --module")
     if args.enforce_diff and not args.changed_file:
-        parser.error("--enforce-diff requires at least one --changed-file")
+        parser.error("--enforce-diff requires at least one changed path")
 
     docs_root = args.docs_root.resolve()
     workspace = args.workspace_root.resolve()
@@ -946,9 +1048,17 @@ def main(argv: Iterable[str] | None = None) -> int:
         return validation.finish()
 
     registry_root = docs_root / "registry"
-    loaded = {
-        name: load_yaml(registry_root / name, validation) for name in REGISTRY_FILES
-    }
+    loaded = {}
+    projector = runpy.run_path(str(Path(__file__).with_name("keyed_registry_knowledge.py")))
+    for name in projector["REGISTRIES"]:
+        filename = f"{name}.yaml"
+        view = registry_root / filename
+        try:
+            registry = projector["project_for_docs"](docs_root, name)
+            loaded[filename] = load_yaml(view, validation) if registry is None else registry
+        except (OSError, ValueError, KeyError, TypeError) as exc:
+            validation.error(view.as_posix(), f"{name} projection failed: {exc}")
+            loaded[filename] = {}
     repos, declared_repo_modules = validate_repositories(
         loaded["repositories.yaml"], workspace, validation
     )
@@ -983,16 +1093,26 @@ def main(argv: Iterable[str] | None = None) -> int:
         validation,
     )
     triggers = validate_change_impact(
-        loaded["change-impact.yaml"],
+        load_change_impact(docs_root, validation),
         modules,
         invariant_ids,
         smoke_ids,
         workspace,
         validation,
     )
-    validate_central_markdown(docs_root, workspace, validation)
+    module_readmes = validate_central_markdown(docs_root, workspace, validation)
+    owned_app_pack = docs_root == workspace / "docs" and (
+        (workspace / "agent-system").exists() or (workspace / "agent-system").is_symlink()
+    )
+    if owned_app_pack:
+        proof = runpy.run_path(str(Path(__file__).with_name("structured_view_proof.py")))
+        try:
+            proof["check_proof"](workspace)
+        except (OSError, ValueError, KeyError) as error:
+            validation.error("agent-system/provenance/structured-views.json", str(error))
     validate_module_packs(
         modules,
+        repos,
         config_ids,
         invariant_ids,
         smoke_ids,
@@ -1001,6 +1121,8 @@ def main(argv: Iterable[str] | None = None) -> int:
         validation,
         args.module,
         args.require_pack,
+        module_readmes=module_readmes,
+        owned_app_pack=owned_app_pack,
     )
     if args.changed_file:
         report_changed_files(triggers, args.changed_file, args.enforce_diff, validation)

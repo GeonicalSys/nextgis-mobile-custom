@@ -1,0 +1,89 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-08-20-414302dbf5ea",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-08-20",
+        "",
+        "- Добавлены `INV-GEOMETRY-SKETCH-WORKFLOW` и",
+        "  `SMOKE-GEOMETRY-SKETCH-WORKFLOW`: новый Polygon/MultiPolygon начинается с",
+        "  одного квадрата, полигональные меню повторяют LineString без команд частей и",
+        "  отверстий, а кнопка формы нового объекта использует общий Save/repair handoff.",
+        "- Закреплён no-op контракт свойств NGW-слоя: просмотр вкладок не меняет",
+        "  двустороннюю синхронизацию на «только с сервера», а editable Collector-слой",
+        "  можно вернуть из server-only режима без удаления и повторного импорта;",
+        "  добавлен `SMOKE-LAYER-SYNC-SETTINGS`.",
+        "- Добавлен `INV-SPATIAL-CACHE-CONSISTENCY` и",
+        "  `SMOKE-NGW-LARGE-PULL-CACHE`: массовый incremental NGW pull не создаёт",
+        "  построчный broadcast storm, R-tree сериализует операции и пересобирается один",
+        "  раз, а MapLibre style refresh работает с независимым snapshot свойств.",
+        "- Повторно проверен официальный `nextgis/android_maplib`: по состоянию на",
+        "  20 августа incremental bulk, полная синхронизация R-tree и безопасный",
+        "  `tighten()` в official отсутствуют.",
+        "- Добавлен `INV-PROJECT-OPERATION-EXCLUSION`: ручная sync работает только с",
+        "  активной картой, резервирует workspace до конца всех последовательных account,",
+        "  блокирует switch/mutation и повторный полный запуск; fill/rebuild могут",
+        "  присоединиться только к тому же проекту.",
+        "- Registry проектов переведён на schema `2` с `WEBGIS`/`LOCAL` и атомарными",
+        "  `project.json`: зафиксированы создание пустого local workspace, локальное",
+        "  переименование, backup-gated device-only delete и fallback после удаления",
+        "  последнего проекта. Быстрый picker содержит только имена, реквизиты находятся",
+        "  в «Настройки → Проект».",
+        "- Schema rebuild описан как staged replacement с сохранением старого слоя до",
+        "  успешной записи нового и circuit breaker: две попытки неизменного fingerprint",
+        "  за 24 часа, cooldown 10 минут, статус и reset в настройках проекта.",
+        "- Добавлены `SMOKE-PROJECT-MANAGEMENT`, `SMOKE-SCHEMA-REBUILD-GUARD` и",
+        "  `SMOKE-NGW-IMPORT-BACK`; уточнены current-project sync, FGS timeout/resume и",
+        "  переход toolbar Back по дереву NGW.",
+        "- Official NextGIS Mobile/MapLib/MapLibUI/EasyPicker HEAD повторно проверены;",
+        "  hashes от 30 июля не изменились.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-08-20",
+        "heading": "2026-08-20",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-08-20-414302dbf5ea"
+    ]
+  }
+}

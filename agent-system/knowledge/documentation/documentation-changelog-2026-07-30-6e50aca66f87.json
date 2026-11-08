@@ -1,0 +1,92 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-07-30-6e50aca66f87",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the complete dated changelog section and its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-07-30",
+        "",
+        "- Версия форка поднята до `3.1.2.7`: Lisa/Belka Release `versionCode` 198,",
+        "  Lisa Debug `versionCode` 199; maplib `VERSION_NAME` `3.1.2.7` для debug и",
+        "  release.",
+        "- Общий GPS-фильтр трека и обхода больше не ограничен пешеходными 25 км/ч:",
+        "  валидные последовательности сохраняются до 160 км/ч без профилей движения.",
+        "  Проверка идёт от последнего принятого фикса, длинный интервал не удаляет",
+        "  буфер, а одиночные выбросы отбрасываются с учётом accuracy. Источники трека и",
+        "  обычного местоположения теперь строго следуют своим настройкам. При совместно",
+        "  включённых GPS и Network свежий пригодный GPS имеет приоритет, а Network",
+        "  автоматически возвращается как резерв через 12 секунд без GPS.",
+        "- Невалидная геометрия слоя `GTMultiPolygon` перед формой атрибутов исправляется",
+        "  через JTS в один валидный мультиполигон: самопересечение может стать несколькими",
+        "  частями, но feature и форма остаются одними. Неисправимый результат остаётся в",
+        "  редакторе; простые Polygon и линейные слои намеренно не затронуты. Исправлена",
+        "  потеря CRS контейнера при ручном MapLibre-редактировании, из-за которой ранее",
+        "  отбрасывался результат исправления любого самопересечения.",
+        "- Локальное включение vector layer, который был `visible=false` при import,",
+        "  сверяется с текущим MapLibre style: при отсутствии live source/render layer",
+        "  выполняется data reload даже при наличии старой process-cache записи. Для",
+        "  появления точек больше не требуется менять server `visible` и запускать sync.",
+        "- Collector batch fill атомарно резервирует уникальные UUID-каталоги слоёв и",
+        "  прекращает задачу на первой SQL-ошибке вместо продолжения по общей/неверной",
+        "  таблице. Post-fill reload подтверждается только после фактического появления",
+        "  видимых vector sources/layers в MapLibre и имеет один ограниченный полный retry.",
+        "- Sync adapter напрямую публикует process-wide started/finished state во всех",
+        "  путях завершения; layer drawer сверяет с ним анимацию, поэтому пропущенный",
+        "  lifecycle broadcast больше не оставляет бесконечный spinner.",
+        "- Временный сбой NGW/external PostGIS при pull векторного слоя больше не обрывает",
+        "  весь проход: после остальных слоёв выполняется отложенный повтор только",
+        "  проблемных слоёв с минимальной паузой 15 секунд; исчерпанный серверный retry",
+        "  получает отдельное пользовательское сообщение.",
+        "- Выбранное в «Настройки слоя → Поля» поле имени объекта сохраняется в",
+        "  `config.json` как `feature_label_field`; identify-список нескольких объектов,",
+        "  верхняя панель и таблица атрибутов используют один резолвер с fallback на",
+        "  `_id`. Старый per-layer `layer_label` остаётся совместимым.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-07-30",
+        "heading": "2026-07-30",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-07-30-6e50aca66f87"
+    ]
+  }
+}

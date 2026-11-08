@@ -1,0 +1,61 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-typed-ngw-error-delivery",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Safe user-facing NGW error delivery — source Draft30 октября2026",
+        "",
+        "Fork сохраняет типизированную server cause через owned account/queue и выдаёт",
+        "resource-only explanation вместо потерянной причины/generic fallback там, где",
+        "cause положительно известна. Numeric IO/Parse policy сохранена у producers;",
+        "отдельно закрыт отсутствовавший final late-child project outcome. Это не новый",
+        "remote transaction/retry/idempotency protocol и не гарантия доставки notification.",
+        "",
+        "Additive Core APIs: typed local result output, structured child-load result и",
+        "typed HTTP exception сохраняют старые checked/void/raw String callers. App владеет",
+        "safe notification/manual Intent; UI — browser/fill/form messages. Main Lisa/Belka",
+        "исходники общие, merged APK/device/locale/large-window результат NOT_RUN.",
+        "Library Merge Commit63/46 до App pointer/clock semantic review, затем обычный App86",
+        "Squash по отдельной команде. Новые local source tests не принимают committed F61/E66",
+        "как готовый APK и не закрывают неясные200/TUS/remote-commit/disk/restart риски.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-typed-ngw-error-delivery"
+    ]
+  }
+}

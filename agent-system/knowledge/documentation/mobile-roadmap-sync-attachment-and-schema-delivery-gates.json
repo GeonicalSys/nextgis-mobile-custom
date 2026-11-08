@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:mobile-roadmap-sync-attachment-and-schema-delivery-gates",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the published Markdown address and pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Доставка: library Merge Commit → fetch удалённых merge commits → App gitlink",
+        "update → compile/адресные проверки по фактическим pointers → отдельно разрешённая",
+        "device/native acceptance. Незамерженный локальный pin не заменяет этот порядок.",
+        "Library PR/commit references и App adoption обновляются по завершённым шагам;",
+        "наличие Draft/компиляции live checkout не означает APK, merge или выпуск.",
+        "",
+        "Границы: без NGW/customer API, реальных фото/данных, Office, DB, GUI/AVD/device",
+        "проверок. Legacy positive-size partial может по-прежнему пройти heuristic",
+        "PhotoPicker; автоматическая миграция/удаление cache не добавлена. Silent-truncated",
+        "200 integrity, checksum/Content-Length и concurrent preview/same-final ownership",
+        "остаются отдельными неизвестностями. Влияние на фон/батарею не измерялось; новых",
+        "scheduler/lease/cancel policy или task counters не вводится. Следующие source",
+        "frontiers не начинаются до закрытия этого started fixes checkpoint.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:mobile-roadmap-sync-attachment-and-schema-delivery-gates"
+    ]
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-mobile-project-rule-checks",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the comparison subject at the published address with its pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Проверки мобильного проекта",
+        "",
+        "В подготовленных исходниках форка Collector доставляет versioned пакет правил,",
+        "а форма выполняет его в изолированном обработчике. Встроенный ограниченный API",
+        "читает локальные данные своего проекта; JS выдаёт предупреждение или запрет Save.",
+        "GIS-выборка и календарное месячное окно реализованы в APK и переиспользуются",
+        "пакетами; пространственные операции и нормативные таблицы пока не реализованы.",
+        "Первая проверка сообщает о прежних аудитах подрядчика с замечаниями за месяц.",
+        "Открытая форма/черновик закрепляют версию. Подготовка debug использует уже",
+        "слитые библиотеки и сохраняет номер версии приложения. Production APK с этой",
+        "возможностью ещё не опубликован.",
+        "[Контракт](../architecture/project-scripts.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-mobile-project-rule-checks"
+    ]
+  }
+}

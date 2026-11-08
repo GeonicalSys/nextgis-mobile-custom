@@ -1,0 +1,596 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:metadata:invariants-registry",
+  "kind": "metadata",
+  "owner": "android_projects/android_gisapp",
+  "topic": "invariants",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-schema": {
+      "role": "incumbent_registry_schema",
+      "value": 1
+    },
+    "registry-order": {
+      "role": "complete_reviewed_mapping_order",
+      "value": [
+        "INV-UI-VALUE-PROVENANCE",
+        "INV-GPS-CACHE-WITNESS",
+        "INV-LOCAL-TILE-CACHE-ADMISSION",
+        "INV-SQLITE-NATIVE-VECTORS",
+        "INV-RENDER-MEMORY-PRESSURE",
+        "INV-NATIVE-GEOJSON-PAYLOAD",
+        "INV-RENDER-MEMORY-NOTICE",
+        "INV-LOCAL-VECTOR-TILE-OFFLINE-TRANSPORT",
+        "INV-MIXED-MAP-CANDIDATES",
+        "INV-FIELD-LINE-DISPLAY-PRIORITY",
+        "INV-MAINTENANCE-REMINDERS",
+        "INV-POLYGON-STYLE-CONTROLS",
+        "INV-POINT-FIREFLY",
+        "INV-FEATURE-COPY",
+        "INV-WHOLE-OBJECT-TRANSFORM",
+        "INV-MOBILE-USAGE",
+        "INV-VISIBLE-LINE-LABELS",
+        "INV-SHARED-TRACKS",
+        "INV-CLASSIC-RULE-LABELS",
+        "INV-SCROLLING-DIALOG-VIEWPORT",
+        "INV-MOBILE-PUBLICATION-ACCEPTANCE",
+        "INV-PROJECT-SYNC-COMPLETION",
+        "INV-UI-VISIBLE-BOUNDS",
+        "INV-TRACK-DELIVERY",
+        "INV-FEATURE-TYPE-CREATION",
+        "INV-CONDITIONAL-REQUIRED",
+        "INV-CASCADING-FORM-LISTS",
+        "INV-PROJECT-SCRIPTS",
+        "INV-REQUIRED-FIELDS",
+        "INV-LOCAL-WRITE-COMMIT",
+        "INV-TRACK-RETRY",
+        "INV-TOOL-TAP-TOLERANCE",
+        "INV-NGID-LOGIN",
+        "INV-SHARED-UNDERLAYS",
+        "INV-DEBUG-COMPANION",
+        "INV-FLAVORS",
+        "INV-VERSION-COUPLING",
+        "INV-MAPLIBRE-BACKEND-COMPATIBILITY",
+        "INV-MAPLIBRE-VIEW-LIFECYCLE",
+        "INV-NGW-ACCOUNT-IDENTITY",
+        "INV-NGW-RESOURCE-DIALOG-LIFECYCLE",
+        "INV-LAYER-ORDER",
+        "INV-DEFAULT-OSM-BOTTOM",
+        "INV-TRACK-LAYER-TOP",
+        "INV-HOT-ADD-CONSISTENCY",
+        "INV-NO-TRACK-FLAGS",
+        "INV-LOCATION-CURSOR-TOP",
+        "INV-MAP-CAMERA-CONTROLS",
+        "INV-UNDERLAY-DISPLAY",
+        "INV-COLLECTOR-RESOURCE",
+        "INV-COLLECTOR-LAYER-IDENTITY",
+        "INV-COLLECTOR-RASTER-STYLES",
+        "INV-COLLECTOR-ISOLATION",
+        "INV-COLLECTOR-EDITABILITY",
+        "INV-COLLECTOR-RESUMABLE",
+        "INV-COLLECTOR-FORM-ATOMIC",
+        "INV-NGRC-PRESERVE",
+        "INV-LEGACY-UNDERLAY-MIGRATION",
+        "INV-BACKUP-BEFORE-DESTRUCTION",
+        "INV-MULTIPOLYGON-REPAIR",
+        "INV-GEOMETRY-SKETCH-WORKFLOW",
+        "INV-GPS-TRACK-FILTER",
+        "INV-STAKEOUT-GUIDANCE",
+        "INV-LOCAL-LOG-STARTUP",
+        "INV-BACKGROUND-LOCATION-WARNING",
+        "INV-SQLITE-BOUNDED-ORIGINAL-READS",
+        "INV-SQLITE-PHASE-DIAGNOSTICS",
+        "INV-DIAGNOSTIC-DELIVERY",
+        "INV-CRASH-DRAFT-RECOVERY",
+        "INV-UPDATER-IDENTITY",
+        "INV-UPDATER-PERMISSION-RESUME",
+        "INV-UPDATER-BACKGROUND",
+        "INV-UPDATER-AUTO-RETRY",
+        "INV-NGW-URL-IMPORT",
+        "INV-SYNC-NOTIFICATIONS",
+        "INV-SYNC-ACCOUNT-ISOLATION",
+        "INV-PROJECT-OPERATION-EXCLUSION",
+        "INV-SPATIAL-CACHE-CONSISTENCY",
+        "INV-ECOSYSTEM-SERVER-BOUNDARY",
+        "INV-LOCAL-VECTOR-LAYERS",
+        "INV-HIDDEN-VECTOR-TILE-IDENTIFY",
+        "INV-LOCAL-VECTOR-TILE-RESOURCE-BOUNDS",
+        "INV-LOCAL-VECTOR-TILE-LABELS",
+        "INV-PRIVATE-RESOURCE-PROFILING",
+        "INV-NGW-LOOKUP-CACHE-CONTENT",
+        "INV-NGFP-LOOKUP-PREFETCH-SCOPE",
+        "INV-NGW-FULL-SNAPSHOT-ADMISSION",
+        "INV-NGW-USER-MESSAGES",
+        "INV-NGW-RESOURCE-CHECKBOX-SELECTION",
+        "INV-VECTOR-SPATIAL-CACHE-RECOVERY",
+        "INV-NGW-RESOURCE-ROW-TEXT-FIT",
+        "INV-TRACK-SELECTED-GPX-SHARE"
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-ui-value-provenance",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-gps-cache-witness",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-local-tile-cache-admission",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-sqlite-native-vectors",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-render-memory-pressure",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-native-geojson-payload",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-render-memory-notice",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-local-vector-tile-offline-transport",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-mixed-map-candidates",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-field-line-display-priority",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-maintenance-reminders",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-polygon-style-controls",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-point-firefly",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-feature-copy",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-whole-object-transform",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-mobile-usage",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-visible-line-labels",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-shared-tracks",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-classic-rule-labels",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-scrolling-dialog-viewport",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-mobile-publication-acceptance",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-project-sync-completion",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-ui-visible-bounds",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-track-delivery",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-feature-type-creation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-conditional-required",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-cascading-form-lists",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-project-scripts",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-required-fields",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-local-write-commit",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-track-retry",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-tool-tap-tolerance",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-ngid-login",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-shared-underlays",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-debug-companion",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-flavors",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-version-coupling",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-maplibre-backend-compatibility",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-maplibre-view-lifecycle",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-ngw-account-identity",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-ngw-resource-dialog-lifecycle",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-layer-order",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-default-osm-bottom",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-track-layer-top",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-hot-add-consistency",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-no-track-flags",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-location-cursor-top",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-map-camera-controls",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-underlay-display",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-collector-resource",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-collector-layer-identity",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-collector-raster-styles",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-collector-isolation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-collector-editability",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-collector-resumable",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-collector-form-atomic",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-ngrc-preserve",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-legacy-underlay-migration",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-backup-before-destruction",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-multipolygon-repair",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-geometry-sketch-workflow",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-gps-track-filter",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-stakeout-guidance",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-local-log-startup",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-background-location-warning",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-sqlite-bounded-original-reads",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-sqlite-phase-diagnostics",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-diagnostic-delivery",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-crash-draft-recovery",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-updater-identity",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-updater-permission-resume",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-updater-background",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-updater-auto-retry",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-ngw-url-import",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-sync-notifications",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-sync-account-isolation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-project-operation-exclusion",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-spatial-cache-consistency",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-ecosystem-server-boundary",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-local-vector-layers",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-hidden-vector-tile-identify",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-local-vector-tile-resource-bounds",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-local-vector-tile-labels",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-private-resource-profiling",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-ngw-lookup-cache-content",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-ngfp-lookup-prefetch-scope",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-ngw-full-snapshot-admission",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-ngw-user-messages",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-ngw-resource-checkbox-selection",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-vector-spatial-cache-recovery",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-ngw-resource-row-text-fit",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:invariants-inv-track-selected-gpx-share",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:metadata:invariants-registry"
+    ]
+  }
+}

@@ -1,0 +1,257 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:shared-underlays",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/architecture/shared-underlays.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/shared-underlays.md"
+    },
+    "frontmatter": {
+      "role": "markdown_frontmatter_lines",
+      "value": [
+        "title: Общее хранилище подложек и обновление Debug перед переносом",
+        "type: architecture",
+        "last_verified: 2026-11-02",
+        "related_code:",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlayCatalog.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlayKind.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/SharedUnderlayStore.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/NgrcArchive.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/FileUtil.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/RasterMbtilesWriter.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/util/SharedUnderlayProjects.java",
+        "  - maplibui/src/main/java/com/nextgis/maplibui/service/LayerFillService.java",
+        "  - app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt",
+        "  - app/src/main/java/com/nextgis/mobile/MainApplication.java",
+        "  - app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayMigrationContract.java",
+        "  - app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayTransferPolicy.java",
+        "  - app/src/main/java/com/nextgis/mobile/util/DebugCompanionInstaller.java"
+      ]
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "",
+        "# Хранилище подложек",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:shared-underlays-catalog-fitted-dialogs-and-callbacks",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:shared-underlays-application-id-storage-ownership",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:shared-underlays-asset-identity-and-project-owned-layer",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:shared-underlays-streaming-ngrc-import-and-full-archive-hash",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:shared-underlays-ngrc-entry-normalization-and-collision",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:shared-underlays-raster-scheme-staging-and-mbtiles-import",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:shared-underlays-import-classifier-and-picker-boundary",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:shared-underlays-legacy-migration-eligibility-and-rename",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:shared-underlays-moving-journal-and-restart-recovery",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:shared-underlays-closed-project-lease-and-idempotent-marker",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:shared-underlays-pre-registry-debug-source-preservation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:shared-underlays-dedup-redirect-and-durable-links",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:shared-underlays-redirect-reference-config-and-project-settings",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:shared-underlays-renderer-exporter-and-importer-payload-paths",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:shared-underlays-pipe-inactivity-retry-and-lease",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:shared-underlays-confirmed-user-cancel-and-process-teardown",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:shared-underlays-catalog-theme-insets-and-menu-entry",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:shared-underlays-project-unlink-and-catalog-retention",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:shared-underlays-confirmed-payload-deletion-and-reference-sweep",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:shared-underlays-companion-offer-and-export-activity-probe",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:shared-underlays-catalog-companion-and-active-project-identity",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:shared-underlays-companion-permission-recovery-and-project-pin",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:shared-underlays-focus-race-and-external-window-owner",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:shared-underlays-trusted-debug-manifest-and-apk-identity",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:shared-underlays-september-14-debug-manifest-frame",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:shared-underlays-jvm-regression-oracles",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:shared-underlays-september-14-source-and-package-checks",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:shared-underlays-september-14-a54-acceptance-and-limits",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:shared-underlays-september-14-a56-user-archive",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:shared-underlays-september-14-debug-offer-and-install",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:shared-underlays-focus-race-local-install-receipt",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:shared-underlays-original-underlay-integration",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:shared-underlays-underlay-follow-up-draft-delivery",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:shared-underlays-transfer-progress-phase-and-stall-boundaries",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:shared-underlays-transfer-opening-ui-and-cancel-control",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:shared-underlays-november-2-compiled-checks-and-unknown",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:shared-underlays"
+    ]
+  }
+}

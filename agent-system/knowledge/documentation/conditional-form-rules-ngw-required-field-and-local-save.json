@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:conditional-form-rules-ngw-required-field-and-local-save",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:conditional-form-rules"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the NGFP or project-rule subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/conditional-form-rules.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "SQL `dynamic.field_polygons.classobj/typeobj` допускает NULL и не имеет DB default.",
+        "Connected Collector импорт получает `Field.required` и тип из серверного",
+        "`feature_layer.fields`; отсутствующий required читается как false. SQL nullable и",
+        "отсутствие required в template сами не доказывают actual server flag. Collector",
+        "visible — флаг слоя, не полевая conditional visibility. Save собирает обе строки",
+        "из DoubleComboboxValue и проходит существующие required/scripts/owner gates до",
+        "provider insert/update. Непустые default names являются значениями.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:conditional-form-rules-ngw-required-field-and-local-save"
+    ]
+  }
+}

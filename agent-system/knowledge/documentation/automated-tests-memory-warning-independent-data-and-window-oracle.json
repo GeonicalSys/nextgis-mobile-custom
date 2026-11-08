@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:automated-tests-memory-warning-independent-data-and-window-oracle",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:automated-tests"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/automated-tests.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "RenderMemorySafetyTest использует129изолированных технических полигонов по65",
+        "координат. Независимые ожидания проверяют все ID и координаты SQLite, полного",
+        "rich Java input и фактической compact projection перед SDK tiling, полный набор",
+        "native source ID и неизменность whole-row hashes. Это проверка сохранения",
+        "исходного содержания, а не сравнение с результатом той же compaction-функции.",
+        "Первое автоматическое окно должно прийти через production callback после",
+        "запроса cache economy, без ручного вызова host callback. После закрытия повторные",
+        "callbacks, Activity recreation и другой слой не показывают его снова в том же",
+        "процессе. Ручной статус проверяется отдельно в8локальных русских component",
+        "профилях; они не заменяют Full real-window matrix. Остальные gesture/layout",
+        "классы подтверждают только это известное окно в verification Application;",
+        "dedicated memory suite сохраняет production delivery.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:automated-tests-memory-warning-independent-data-and-window-oracle"
+    ]
+  }
+}

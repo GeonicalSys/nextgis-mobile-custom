@@ -1,0 +1,214 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:manual-resource-profiling",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/runbooks/manual-resource-profiling.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/runbooks/manual-resource-profiling.md"
+    },
+    "frontmatter": {
+      "role": "markdown_frontmatter_lines",
+      "value": [
+        "title: Ручной сеанс измерения ресурсов карты",
+        "type: runbook",
+        "last_verified: 2026-10-28",
+        "related_code:",
+        "  - tools/profile_render_resources.py",
+        "  - tools/tests/test_profile_render_resources.py",
+        "  - tools/profile_native_heap.py",
+        "  - tools/prepare_native_heap_apk.py",
+        "  - app/src/main/java/com/nextgis/mobile/util/PrivateRenderResourceProfiler.java"
+      ]
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "",
+        "# Ручной сеанс измерения ресурсов карты",
+        ""
+      ]
+    }
+  },
+  "relations": [
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:manual-resource-profiling-t40-run-and-interpretation-limits",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:manual-resource-profiling-private-manual-profiling-scope",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:manual-resource-profiling-profileable-apk-and-device-identity",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:manual-resource-profiling-owned-host-storage-and-oem-capability",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:manual-resource-profiling-start-new-owned-session",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:manual-resource-profiling-start-command-shape",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:manual-resource-profiling-bounded-light-sampler",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:manual-resource-profiling-host-supervisor-command-shape",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:manual-resource-profiling-window-schedule-resume-and-gap-readback",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:manual-resource-profiling-heavy-window-mode-and-byte-bounds",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:manual-resource-profiling-callgraph-comparison-and-manual-window",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:manual-resource-profiling-session-time-and-per-process-export-budget",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:manual-resource-profiling-cold-stop-consent-and-idle-gate",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:manual-resource-profiling-perfetto-stdin-and-daemon-ack",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:manual-resource-profiling-t40-config-file-refusal",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:manual-resource-profiling-owned-legacy-recovery-and-prestop-recheck",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:manual-resource-profiling-short-native-probe-observations",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:manual-resource-profiling-startup-coverage-and-attach-interpretation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:manual-resource-profiling-session-status-stop-and-pull-commands",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:manual-resource-profiling-collector-process-ownership-and-failed-start",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:manual-resource-profiling-export-session-matching-and-stop-ack",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:manual-resource-profiling-immutable-pull-and-profile-quality",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:manual-resource-profiling-stable-copy-retry-and-host-budget",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:manual-resource-profiling-owned-remote-retention-and-cleanup",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:manual-resource-profiling-simpleperf-parent-identity-and-child-stop",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:manual-resource-profiling-process-heap-cpu-and-gpu-interpretation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:manual-resource-profiling-profile-scope-and-publication-gates",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:manual-resource-profiling-ordinary-source-only-regression",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:manual-resource-profiling-platform-and-capture-references",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:manual-resource-profiling"
+    ]
+  }
+}

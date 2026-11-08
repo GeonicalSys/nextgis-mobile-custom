@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "registries": {
+    "repositories": {
+      "source": {
+        "repository": "android_projects/android_gisapp",
+        "path": "docs/registry/repositories.yaml",
+        "revision": "da445d69e9f502751fe5d1a8325183c37c032a94",
+        "blob": "47a61e1e7fa5a30e1477eb9d0ef18c4682e25090",
+        "sha256_utf8_lf": "2532cb5e5456f8fddef7f9a00c99eae58c08b7322df77157b7ba2b5207c7c565"
+      },
+      "header": {
+        "lines": [
+          1,
+          2
+        ],
+        "sha256_utf8_lf": "9df60c970f63326113903fbcb9d6a70edfb7a37e9b209f6b698dc4780832fc7b",
+        "target": "lisa:mobile:metadata:repositories-registry"
+      },
+      "entries": [
+        {
+          "key": "root",
+          "lines": [
+            3,
+            11
+          ],
+          "sha256_utf8_lf": "eead85106d5e505c7b0fab4aa41ad7cdc68814dcd863bd91916fae710f212e0c",
+          "target": "lisa:mobile:contract:repositories-root"
+        },
+        {
+          "key": "maplib",
+          "lines": [
+            12,
+            20
+          ],
+          "sha256_utf8_lf": "098aff3c005c7106bca231fe07d30a374ee4eec1f878bad7a6af95966e090567",
+          "target": "lisa:mobile:contract:repositories-maplib"
+        },
+        {
+          "key": "maplibui",
+          "lines": [
+            21,
+            29
+          ],
+          "sha256_utf8_lf": "2aee9ee4d315a8e94dfe0b4575594dc3cbe4e29f8a374d227fdbdc347b738656",
+          "target": "lisa:mobile:contract:repositories-maplibui"
+        },
+        {
+          "key": "easypicker",
+          "lines": [
+            30,
+            38
+          ],
+          "sha256_utf8_lf": "4472b21bff3f5375fa7ada71a8e4202255a17360d35d28b3e80a27528d147350",
+          "target": "lisa:mobile:contract:repositories-easypicker"
+        }
+      ],
+      "complete_ordered_value_sha256": "a4717e5c3011e6fb004d7e887fc3a52ccd7cfff11d08fc104e56c4667cac39ec",
+      "source_line_count": 38
+    },
+    "modules": {
+      "source": {
+        "repository": "android_projects/android_gisapp",
+        "path": "docs/registry/modules.yaml",
+        "revision": "da445d69e9f502751fe5d1a8325183c37c032a94",
+        "blob": "cc7eadc64289f2c83a761ac6a922961750b46010",
+        "sha256_utf8_lf": "7c8cfa5a1a1ad834910f90598cb8333667a3383612f9bbf5d49f6469657ad573"
+      },
+      "header": {
+        "lines": [
+          1,
+          2
+        ],
+        "sha256_utf8_lf": "b57b684a720f330af3c29761bb01c8cea192c9811d2043d27547d776e816031f",
+        "target": "lisa:mobile:metadata:modules-registry"
+      },
+      "entries": [
+        {
+          "key": "app",
+          "lines": [
+            3,
+            15
+          ],
+          "sha256_utf8_lf": "a6b04b656185fed309c19c5673c738e61d96eb225d754bbfa7512ed880f85625",
+          "target": "lisa:mobile:contract:modules-app"
+        },
+        {
+          "key": "maplib",
+          "lines": [
+            16,
+            27
+          ],
+          "sha256_utf8_lf": "9c198b7c77aaae29fe025d51a475764475c07ee4478da2e6c408605318c3fe42",
+          "target": "lisa:mobile:contract:modules-maplib"
+        },
+        {
+          "key": "maplibui",
+          "lines": [
+            28,
+            39
+          ],
+          "sha256_utf8_lf": "771d5e800ee7bfe17cbebc0cdd486f4efcb0c51a165900529f1072e7e8bafe7d",
+          "target": "lisa:mobile:contract:modules-maplibui"
+        },
+        {
+          "key": "easypicker-module",
+          "lines": [
+            40,
+            50
+          ],
+          "sha256_utf8_lf": "ae9c4142079a313623a35bbdd42646af829149707a32712e7da2ceda97fbcdd0",
+          "target": "lisa:mobile:contract:modules-easypicker-module"
+        },
+        {
+          "key": "wizardpager",
+          "lines": [
+            51,
+            61
+          ],
+          "sha256_utf8_lf": "6bb30af9f2287fb47a03e33be8d4ad7e10965889ff99d101b4cf55d29622a51d",
+          "target": "lisa:mobile:contract:modules-wizardpager"
+        }
+      ],
+      "complete_ordered_value_sha256": "c0261cd0507fe96513f1aa54c1a261297b1964686be63d52452fb797b4d5da15",
+      "source_line_count": 61
+    }
+  }
+}

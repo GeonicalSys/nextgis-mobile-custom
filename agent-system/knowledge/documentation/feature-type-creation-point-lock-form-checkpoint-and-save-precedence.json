@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:feature-type-creation-point-lock-form-checkpoint-and-save-precedence",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:feature-type-creation"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the App feature editing subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/feature-type-creation.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "По местоположению LayerUtil получает выбранные значения и явную GPS-геометрию;",
+        "во время фонового обхода point UUID остаётся в стадии choose до принятия категории,",
+        "а отмена диалога освобождает его, сохраняя обход. При переходе к форме",
+        "LayerUtil сначала сохраняет durable checkpoint с состоянием и owning map path,",
+        "затем запускает Activity. Состояние Activity и восстановленный durable draft",
+        "имеют приоритет над начальными значениями. Смена родителя использует штатную",
+        "очистку потомков; required, scripts и before-save gate остаются общими.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:feature-type-creation-point-lock-form-checkpoint-and-save-precedence"
+    ]
+  }
+}

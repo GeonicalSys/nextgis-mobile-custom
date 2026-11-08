@@ -1,0 +1,70 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:smoke-tests-smoke-walk",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "smoke-tests",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-key": {
+      "role": "incumbent_mapping_key",
+      "value": "SMOKE-WALK"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "type": "device",
+        "scope": [
+          "app",
+          "maplib",
+          "maplibui"
+        ],
+        "steps": [
+          "Lose GPS during a walk, including while a point owns manual controls, then restore it; recording stays active, the first usable fix appends automatically and the point lock remains; a manually paused walk must remain paused across the same loss/recovery and sticky restart",
+          "Start a new line or polygon walk and immediately Finish with insufficient distinct vertices; verify the readable no-save message, no new feature/form and released walk owner",
+          "Press the disk on a valid new or existing walk, cancel once and confirm; verify the acknowledged final geometry immediately opens attributes with no premature row write",
+          "Inspect the single 48dp themed row with only layer name, disk, pause/play and cross, three 48dp targets, long-press and accessibility names; cancel each confirmation and verify the owner is retained",
+          "Confirm Pause, supply fresh fixes and verify geometry does not grow; cancel Resume once, then confirm reconnection and verify the same owner records again; acquire a point lock while a confirmation is open and verify the queued command is rejected",
+          "Start current-location or new walk creation from a distant map extent; verify map target matches the actual GPS geometry anchor, zoom is unchanged and cancelled category selection does not pan",
+          "Expand creation actions, rotate and use large fonts; verify the panel moves clear of the actions and returns to the bottom after collapse",
+          "Recreate edit menus and toggle different actions; active Save and other enabled icons remain fully opaque",
+          "On Android 14+ deny Bluetooth permissions but grant fine location; start a walk using the system GNSS and verify its location-only foreground service and visible panel",
+          "Upgrade an installation with a retained failed walk session; inspect the panel, saved vertices and explicit Resume/Finish/Discard without erasing the draft",
+          "Enable background recording sound and start geometry-by-walk editing",
+          "Minimize notification volume while alarm volume remains audible, then mute alarm volume",
+          "Minimize the app, stand still for at least 35 seconds, then walk until several geometry points are saved",
+          "Disable every location provider or block background location delivery and wait at least 20 seconds",
+          "Revoke location permission in Android settings while walk recording is active, then return to the app",
+          "Restore location permission and continue the retained walk draft",
+          "Pause and resume the app, then finish geometry",
+          "Disable background recording sound and repeat the minimized recording segment"
+        ],
+        "expected": "Geometry and editing state survive lifecycle transitions without duplicate reload. While minimized, fresh usable callbacks produce a short confirmation every 10 seconds even while stationary and independently of saved vertices. Notification volume does not suppress the alarm-stream tone; muted alarm volume produces short vibration instead. The heartbeat stops after callbacks become stale; foreground and disabled-setting recording stay silent. Permission revocation causes no crash or forbidden location-FGS restart and the walk draft remains available after permission is restored.\n"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/keyed-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:smoke-tests-smoke-walk"
+    ]
+  }
+}

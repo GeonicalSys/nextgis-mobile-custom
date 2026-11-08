@@ -1,0 +1,79 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:collector-roadmap-local-vector-tile-production-acceptance",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "planned",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:collector-roadmap"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "UNKNOWN",
+    "release": "unknown",
+    "retention": "Preserve the earlier foundation and MVT evidence with the old transport. Keep the editable-layer boundary."
+  },
+  "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The heavy read-only project acceptance remains open. It now applies to the adopted direct SQLite route.",
+        "implementation": "Maplib 66 retired the HTTP provider and App 89 adopted that change. Source lifecycle, invalidation, cache and identify are now reviewed on the direct route.",
+        "source_verification": "The previous local-vector foundation and server lifecycle describe their historical frame. The retirement has compile evidence, with parity and invalidation acceptance still open.",
+        "merge": "App 89 adopted maplib 66 and maplibui 48. That Git delivery covers the renderer route.",
+        "runtime_verification": "Verify heavy read-only layers, cache limits, geometry and style parity, identify and project switching on the authorized frame.",
+        "release": "Production acceptance and publication of a new APK each have their own gate.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp/maplib",
+            "revision": "7152e3cd403f9020cebcf752b8299538a85136c1",
+            "path": "update-reports/entries/maplib-20261102-remove-loopback-tiles.md"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "f05ded46154ee3a0028b664c2f16baf62b7df776",
+            "path": "docs/roadmap/collector.md"
+          }
+        ]
+      }
+    },
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/collector.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "6. Довести local vector tiles до production-уровня на тяжёлом read-only слое: корректный MVT,",
+        "   cache invalidation, identify, style parity, memory/disk limits и server lifecycle.",
+        ""
+      ]
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "Lifecycle describes the next action in the pinned roadmap. Existing implementation claims are source wording."
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Original acceptance scope. Current direct SQLite rendering is documented separately. Production parity, bounds and runtime verification follow the applicable current source and runtime evidence."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:collector-roadmap-local-vector-tile-production-acceptance"
+    ]
+  }
+}

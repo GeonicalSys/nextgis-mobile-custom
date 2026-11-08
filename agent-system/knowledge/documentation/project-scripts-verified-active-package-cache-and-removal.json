@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:project-scripts-verified-active-package-cache-and-removal",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:project-scripts"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the NGFP or project-rule subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/project-scripts.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Lifecycle, черновики и отказ",
+        "",
+        "Import и безопасный composition sync скачивают пакет на worker и проверяют",
+        "формат, hash, версию и присутствие привязанных ID в составе Collector. ZIP",
+        "сохраняется через AtomicFile в `<project>/project_scripts/<sha256>.zip`.",
+        "`scripts_expected`, `scripts_active`, `scripts_status` принадлежат metadata",
+        "этого проекта. При плохом обновлении остаётся последняя проверенная версия и",
+        "явный статус `update_failed`. Удаление ссылки отключает правила для новых форм;",
+        "кеш для существующих черновиков сохраняется.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:project-scripts-verified-active-package-cache-and-removal"
+    ]
+  }
+}

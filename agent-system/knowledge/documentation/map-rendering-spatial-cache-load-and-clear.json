@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:map-rendering-spatial-cache-load-and-clear",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:map-rendering"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the rendering subject at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-rendering.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "GeometryRTree.clear удаляет nodes и size и помечает публичное изменение dirty:",
+        "notifyDeleteAll → clear → save должен записать пустой cache в тот же путь. Load",
+        "использует отдельный clean reset. Missing file даёт настоящий empty index; IOException,",
+        "header/actual Entry cardinality mismatch или неверный child kind полностью сбрасывают",
+        "прочитанный prefix. Счётчик проверяется обходом уже загруженных nodes без второго",
+        "getAll/ID list. Валидный прежний binary layout, IDs/envelopes/search и clean same-path",
+        "save сохраняются. Владелец VectorLayer при расхождении с SQL восстанавливает derived",
+        "index из originals; частично загруженный subclass config при этом не сохраняется.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:map-rendering-spatial-cache-load-and-clear"
+    ]
+  }
+}

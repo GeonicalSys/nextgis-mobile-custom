@@ -1,0 +1,76 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:mobile-roadmap-offline-readiness",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "planned",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "planned",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "UNKNOWN",
+    "release": "unknown",
+    "retention": "Keep the selected project and coverage conditions with the original proposal."
+  },
+  "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "The proposed project-readiness screen still needs the agreed field workflow.",
+        "implementation": "Inspect local forms, data, coverage, free space, permissions, GPS and pending work. Offer a concrete action for each blocking condition.",
+        "source_verification": "The readiness oracle must demonstrate that a missing component blocks a ready result.",
+        "merge": "The consolidated readiness screen needs its own delivery evidence.",
+        "runtime_verification": "Validate the complete agreed airplane-mode scenario including search, form and photo.",
+        "release": "The readiness feature requires its own release acceptance."
+      }
+    },
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## UX-01 Проверка готовности к выезду",
+        "",
+        "Приоритет P1. Состояние: Предложена.",
+        "",
+        "Один экран отвечает, готов ли выбранный проект к работе без сети: данные и формы на месте, подложка покрывает нужную территорию, есть место на диске, права и GPS доступны, незавершённые операции видны. Показывать конкретную причину и действие «скачать / повторить / открыть настройки».",
+        "",
+        "Приёмка: после подготовки и включения авиарежима выполняется согласованный сценарий просмотра, поиска, формы и фото. Отсутствующая часть не помечается «готово». Проверка не требует от полевого сотрудника знания серверных терминов.",
+        ""
+      ]
+    },
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "UX-01"
+    },
+    "priority": {
+      "role": "priority_at_pinned_roadmap_basis",
+      "value": "P1"
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
+      "value": "Proposed readiness check with an airplane-mode workflow."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-offline-readiness"
+    ]
+  }
+}

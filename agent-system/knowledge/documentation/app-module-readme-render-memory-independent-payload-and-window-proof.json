@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-render-memory-independent-payload-and-window-proof",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "`RenderMemorySafetyTest` проверяет129 технических SQLite полигонов по65coords,",
+        "точные ID/Java координаты, native ID set и полный hash строк, warning across",
+        "recreation/second layer/manual status. Его8 component dialog profiles не",
+        "заменяют Full real-window matrix и не имитируют настоящий OOM. Related/Full",
+        "на устройстве/эмуляторе и финальный free-only A/B787 остаются незавершённой",
+        "приёмкой. Измерение experimentalec71 относится к прежней RSS-policy;",
+        "его результаты и ограничения приведены в контракте производительности. Эти правки",
+        "не выпущены; текущая документация не является разрешением публикации.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-render-memory-independent-payload-and-window-proof"
+    ]
+  }
+}

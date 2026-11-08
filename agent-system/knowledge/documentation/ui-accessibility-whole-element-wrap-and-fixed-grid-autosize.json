@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ui-accessibility-whole-element-wrap-and-fixed-grid-autosize",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:ui-accessibility"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ui-accessibility.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "`WrappingRow` переносит целые элементы на следующую строку, сохраняя их",
+        "естественные размеры. Общие строки слоёв/ресурсов и подписи настроек растут",
+        "по содержимому. Кнопки входа, усреднения и диалогов приложения используют",
+        "высоту по тексту вместо фиксированных 32–48 dp. Редактируемые однострочные",
+        "числа/адреса сохраняют собственное поведение ввода. В фиксированной сетке",
+        "таблицы заголовок допускает две строки, а ячейки выбирают наибольший размер",
+        "текста, который помещается в ширину/высоту, с верхней границей из исходного",
+        "`sp` размера. Для этого используется штатный",
+        "[TextView autosize](https://developer.android.com/develop/ui/views/text-and-emoji/autosizing-textview).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ui-accessibility-whole-element-wrap-and-fixed-grid-autosize"
+    ]
+  }
+}

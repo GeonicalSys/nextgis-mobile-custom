@@ -1,0 +1,96 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-offline-sync-retry",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-OFFLINE-SYNC-RETRY"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "UI-OFFLINE-SYNC-RETRY",
+        "group": "offline",
+        "title": "Нет сети: обмен не начинается, доступен повтор",
+        "surface": "Панель слоёв → синхронизация",
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "widgets": [
+          "sync"
+        ],
+        "meaning": "Отсутствие connected network даёт отдельное сообщение; это не успешная синхронизация и не удаление очереди.",
+        "value_origin": "NetworkUtil.isNetworkAvailable → showSyncFailureDialog; текст различает no internet и server error.",
+        "units": "Нет физических единиц.",
+        "updates": [
+          "Сеть проверяется до запуска службы.",
+          "Retry повторно идёт через тот же network gate."
+        ],
+        "actions": [
+          "Повторить",
+          "Отмена"
+        ],
+        "conditions": [
+          "Недоступная Activity сохраняет pending error вместо попытки открыть окно.",
+          "Диалог уже открыт — новое сообщение откладывается."
+        ],
+        "saved_state": "Пользовательский Cancel закрывает сообщение; нет source-основания очищать offline edits.",
+        "source_ids": [
+          "WF-SYNC-MANUAL",
+          "WF-SYNC-RETRY"
+        ],
+        "expectations": [
+          "Oracle: при отсутствии сети не стартует NGW sync, остаются локальные правки; после восстановления Retry использует штатную очередь.",
+          "Контрпример: до проверки сети изменён режим/поставлена служба, потеряны edits или no-network объявлен успешным обменом."
+        ],
+        "unknowns": [
+          "Доступность offline карт/подложек и их полнота не выводятся из этого network gate; map/render cache — отдельная область."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-manual",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-sync-retry",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-offline-sync-retry"
+    ]
+  }
+}

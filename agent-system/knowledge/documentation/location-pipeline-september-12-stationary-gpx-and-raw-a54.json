@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:location-pipeline-september-12-stationary-gpx-and-raw-a54",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:location-pipeline"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated decision or verification checkpoint with its original scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/location-pipeline.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Из присланного GPX: 13 точек и около 70 м ложного пути за 9 минут стоянки.",
+        "Журнал этой записи подтверждает около 1 Hz GPS без перерегистрации, но экран",
+        "был включён. Дополнительный ADB-замер при подтверждённой пользователем стоянке",
+        "с телефоном в руках содержит 118 исходных GPS наблюдений за 117 секунд, разбег",
+        "свыше 100 м, accuracy 14–31 м и ложную speed до 6.4 м/с. Обезличенная метрическая",
+        "последовательность включена в regression fixture; GPX отдельно используется",
+        "только как реконструкция симптома, поскольку уже отфильтрован старой версией.",
+        "Полный screen-off smoke, пешеходный/автомобильный маршрут и расход батареи",
+        "после новых исправлений пока не проверены.",
+        ""
+      ]
+    },
+    "source-scope": {
+      "role": "reviewed_source_scope",
+      "value": "Separates filtered GPX symptoms from the actual raw A54 regression input and screen-off gaps."
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:location-pipeline-september-12-stationary-gpx-and-raw-a54"
+    ]
+  }
+}

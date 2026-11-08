@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:error-reporting-background-gps-stage-enum-and-budget",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:error-reporting"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed App topic at its published address with pinned source provenance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/error-reporting.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "Допустимы только пять этапов: launch, notification, start_foreground,",
+        "acquire_background_updates, schedule_permission_check. Неизвестные stage,",
+        "утраченный owner/request, отрицательный clock delta и недоступные отдельные",
+        "платформенные сведения отмечаются `unknown`; до API29 background permission",
+        "имеет `not_required`. Нет координат, SQL, accounts, Intent payload или файлов",
+        "проекта. Context прикладывается в отдельном временном SDK scope и не остаётся",
+        "у соседних событий; sanitize/replay сохраняет его с диагностическим приоритетом",
+        "в прежнем общем16KiB бюджете. Отдельной категории/отправки событий нет.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:error-reporting-background-gps-stage-enum-and-budget"
+    ]
+  }
+}

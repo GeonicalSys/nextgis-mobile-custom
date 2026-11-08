@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:mobile-roadmap-roadmap-source-basis-20261025",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the pinned checkpoint and keep its results within the stated source and runtime bounds."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "# Источники и границы оценки",
+        "",
+        "Исходные направления: [обсуждение офлайн обмена](https://chatgpt.com/share/6ade3bcc-7f68-83eb-81ff-872ae76c43a0), обсуждение «Оптимизация синхронизации приложения» (Codex chat ID `01a13e76-cfab-7a82-a71d-a74c05b3fc0f`, ссылка доступна в обзорной странице), запрос оптимизации векторных тайлов и дополнение об удобстве.",
+        "",
+        "Проверены документация и исходники app 8cc630ad, maplib 7e7055e5, maplibui ff4a1cce с учётом незавершённых изменений checkout на 25 октября 2026 года. Точные ссылки на неизменённые участки приведены возле выводов. Это анализ для планирования; новые device, серверные и нагрузочные прогоны в данной работе не выполнялись.",
+        "",
+        "Дополнительная навигация: [архитектура синхронизации](https://github.com/GeonicalSys/nextgis-mobile-custom/blob/8cc630ad2abd04d49470ea54715f7f69f9d32618/docs/architecture/ngw-sync-and-storage.md), [аудит надёжности](https://github.com/GeonicalSys/nextgis-mobile-custom/blob/8cc630ad2abd04d49470ea54715f7f69f9d32618/docs/reference/mobile-reliability-audit.md), [карта Collector](https://github.com/GeonicalSys/nextgis-mobile-custom/blob/8cc630ad2abd04d49470ea54715f7f69f9d32618/docs/roadmap/collector.md). Старые отчёты подтверждают только своё время и объём проверки.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:mobile-roadmap-roadmap-source-basis-20261025"
+    ]
+  }
+}
