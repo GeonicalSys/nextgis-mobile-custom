@@ -74,6 +74,19 @@ class FullReceiptTest(unittest.TestCase):
                 'devices':{'phone':{'sdk':36},'emulator':{'sdk':36}}}
     def test_a_complete_current_full_run_is_accepted(self):
         check_publication_receipt(self.receipt(),'abc',{CASE})
+    def test_full_checks_the_physical_route_even_if_the_emulator_passed_the_case(self):
+        receipt = self.receipt()
+        receipt['devices']['phone'].update(serial='phone-usb', hardware='phone-hardware')
+        receipt['runs'] = [{'device': 'emulator-5554', 'passed': [CASE]}]
+        required_phone = frozenset({CASE})
+        with self.assertRaisesRegex(ValueError, 'physical phone did not complete'):
+            check_publication_receipt(receipt, 'abc', {CASE}, required_phone=required_phone)
+        receipt['runs'].append({'device': 'phone-usb', 'passed': [CASE]})
+        check_publication_receipt(receipt, 'abc', {CASE}, required_phone=required_phone)
+        receipt['devices']['phone']['hardware'] = 'ranchu'
+        with self.assertRaisesRegex(ValueError, 'real verification phone identity'):
+            check_publication_receipt(receipt, 'abc', {CASE}, required_phone=required_phone)
+
     def test_legacy_full_without_build_basis_or_with_another_build_cannot_publish(self):
         for value in (None,valid_build_basis('another-source')):
             receipt=self.receipt(); receipt['build_basis']=value
@@ -104,6 +117,12 @@ class FullReceiptTest(unittest.TestCase):
         plan = json.loads((root / 'tools/mobile-test-plan.json').read_text(encoding='utf-8'))
         expected = {case for cases in catalog.values() for case in cases}
         self.assertEqual(expected, validate_plan(plan, catalog))
+        prefix = 'com.nextgis.mobile.rendering.'
+        graphics = {prefix + name for name in ('VectorStyleRenderingTest', 'LocationOrbitTest',
+                                               'DirectVectorTilesOfflineTest', 'MapRenderStressTest')}
+        self.assertLessEqual(graphics, set(plan['phone']))
+        self.assertFalse(graphics & set(plan['emulator']))
+        self.assertEqual(prefix + 'DirectVectorTilesOfflineTest', plan['phone'][-1])
 
     def test_current_sqlite_priority_case_is_routed_to_both_consumers_and_keeps_isolation(self):
         root = Path(__file__).resolve().parents[2]

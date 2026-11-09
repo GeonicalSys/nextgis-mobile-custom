@@ -1,7 +1,7 @@
 ---
 title: Автоматические проверки на смартфоне и эмуляторе
 type: runbook
-last_verified: 2026-11-02
+last_verified: 2026-11-10
 related_code:
   - tools/verify-mobile-tests.ps1
   - tools/run_mobile_tests.py
@@ -263,16 +263,16 @@ query fallback сохраняют нужные поля, rule layout keys, curve
 данные остаются rich. Смена source content требует новых source fingerprints
 и native checks; прежние style/pixel/picking/Save/Cancel assertions не ослабляются.
 
-Stress отдельно подтверждает6480technical polygons,2настоящих MVT sources,
-90s workload, минимум50реальных pan/15pinch изменений native camera,2recreate,
-не менее300heading updates и peak PSS/RSS/Java/native observations. Publication
-checker требует свежие phone/tablet/emulator stress rows и физическийSM-X115.
-Эта model matrix сама не доказывает фактические2GiB: RAM и приёмку такого
-физического устройства фиксируют отдельно. Unit/build, visible_feature>0,
-позднее восстановление или сниженныйRSS не превращают неполный/failed native
-run в PASS. Full продолжает независимые cases после содержательного FAIL,
-сохраняет ошибки в receipt и в конце остаётся FAIL; setup/transport ошибки
-прерывают запуск. Прежние software/fullFAIL и незавершённые прогоны сохраняются.
+Stress подтверждает 6480 технических полигонов, 2 настоящих MVT sources,
+90 секунд нагрузки, минимум 50 изменений pan и 15 pinch реальной камеры,
+2 recreate, минимум 300 обновлений heading, peak PSS/RSS/Java/native.
+Check-Publication требует результаты с текущих исходников на физическом
+смартфоне и другом физическом устройстве в роли планшета.
+Фактическую RAM и приёмку физического 2 GiB устройства фиксируют отдельно.
+Unit/build, visible_feature>0, позднее восстановление или сниженный RSS
+сохраняются как наблюдения. Full продолжает независимые проверки после
+содержательного FAIL и сохраняет этот FAIL в результате. Сбои подготовки
+и подключения прерывают запуск. Прошлые FAIL и неполные прогоны сохраняются.
 
 На checkpoint до последних MLP/free-headroom правок были выполнены963JVMunits,
 93Python harness checks и AndroidTest build29s; отдельно после MLP handoff
@@ -372,9 +372,9 @@ queries. Пограничные пересечения допустимы, не�
 замер. При assertion owned AVD
 сохраняет снимок до закрытия Activity, native camera/lifecycle/style state,
 ограниченный logcat и ещё два отсчёта через5/10s. Поздний recovery не отменяет FAIL.
-Обычный Check-Publication требует текущую матрицу phone/tablet/emulator,
-включая физический SM-X115. Related и техническая карта не заменяют Full
-и приёмку пользовательского проекта.
+Check-Publication требует свежую нагрузочную матрицу физического смартфона
+и отдельного физического планшета. Отдельно обязательны полный выпускной
+прогон и приёмка разрешённого пользовательского проекта.
 
 Related `-Area sqlite-marker` выбирает только существующий MultiPoint/custom-icon
 метод SQL класса, включая PhoneOnly; Full по-прежнему содержит этот класс один
@@ -701,11 +701,19 @@ UI-тестов. Нужны Python 3, Android SDK/API 36 AVD и JDK сборки
 Если устройств несколько, передать `-PhoneSerial SERIAL -EmulatorSerial SERIAL`.
 Полный прогон включает все unit tests app/maplib/maplibui, tests самого runner,
 APK version matrix Lisa Debug/Lisa Release/Belka Release и документационный
-validator. Затем все обнаруженные native `@Test` маршрутизируются по
-`mobile-test-plan.json`: формы/SQLite/подписи/выбор/обычные UI и диагностика
-на смартфон; mock GNSS/трек/обход/permissions/radio и graphics — на эмулятор.
-Phone и emulator suites используют одинаковую verification identity и разные
-устройства; стираются только disposable fixtures.
+validator. Native `@Test` маршрутизируются по `mobile-test-plan.json`.
+Смартфон проверяет формы, выбор, SQLite, стили карты, курсор и офлайн-тайлы.
+Планшет по Wi-Fi выполняет применимые проверки и отдельную нагрузку на карту.
+Эмулятор проверяет mock GNSS, трек, обход, permissions, radio, диагностику
+и оконные профили. Нагрузка и перенесённые графические сценарии входят
+в Full на физических устройствах. В Related их можно запускать на эмуляторе.
+Все устройства используют одинаковую verification identity. Удаляются только
+данные отдельного тестового приложения.
+
+Для офлайн-тайлов подключить смартфон по USB. В конце его части Full
+вручную включить авиарежим и выключить Wi-Fi по запросу runner, оставить
+кабель и разблокированный экран. После проверки вернуть прежние настройки.
+Для планшета с подключением только по Wi-Fi офлайн выполняет USB-смартфон.
 
 Diagnostic delivery полностью локальный: offline handled/fatal/restart/reconnect
 и HTTP 503 retry, synthetic DSN и loopback receiver через временный adb reverse.
@@ -850,6 +858,11 @@ LegacyTrackColorsNativeTest (реальный v1→v2), TrackControlsTest (nativ
 проверки на разрешённом устройстве указать `-PhoneSerial`; используется только
 отдельная verification-установка, системные настройки телефона не меняются.
 
+Матрица Stop дожидается стабилизации окна после поворота экрана.
+Целевое касание вычисляется по видимой кнопке Cancel с учётом
+преобразований её контейнеров и границ окна. Тест проверяет один DOWN и UP на
+кнопке, фактическое закрытие диалога и продолжение записи текущего трека.
+
 Related `-Area line-labels` включает VisibleLineLabelsTest и cross-geometry regression VectorStyleRenderingTest. `-Area firefly-editor-ui` проверяет текущий редактор без кнопки пресета в 72 профилях Save/Cancel. Обе области имеют stationary verification phone routing. PNG `line-label-qa` сохраняются bounded collector перед reset. Фактические результаты фиксируются в квитанции задачи.
 
 Related `-Area cursor-rendering` запускает оба LocationOrbitTest метода
@@ -875,12 +888,12 @@ durable transport и локальный receiver. Нормальные User/upda
 контроль. Неполный run либо сбой последнего case не становится PASS из-за успеха
 предыдущих фаз.
 
-Full включает stress на AVD и выбранном physical device. Check-Publication
-дополнительно требует hardware evidence с текущим source fingerprint: physical
-phone, physical tablet, emulator и incident model SM-X115. Матрица накапливается
-только после успешной фактической нагрузки. Отсутствующий Samsung — блокер
-обычного выпуска, не повод подставлять другое устройство или общий UI profile.
-Приватная диагностическая сборка по явному поручению отдельно, без публикации.
+Full выполняет нагрузку на выбранном USB-смартфоне. До завершения Full
+выполнить `Related -Area render-stress -PhoneOnly -PhoneSerial SERIAL` на
+отдельном планшете с той же версией исходников. `-SkipBuild` допустим
+только при совпадении исходников и точных APK с сохранённой сборкой.
+Check-Publication сверяет успешную фактическую нагрузку, идентичность ОС
+и разные устройства. Эмулятор сохраняет собственную часть Full.
 
 ## Приватное исследование холодной отрисовки, 28 октября 2026
 
@@ -897,8 +910,8 @@ CPU/counts, SDK frame/texture/buffer stats и процессная память 
 
 `Related -Area direct-vector-tiles` выбирает direct old-config/schema/rights,
 живые Firefly/polygon edits, classic matrix, polygon pixels и mixed chooser.
-Offline seam/label/pixel case выполняется только на эмуляторе; phone selectors
-используют отдельный verification package без радио/settings изменений.
+На том этапе офлайн-проверка выполнялась на эмуляторе. Текущий адресный
+офлайн на USB-смартфоне запускается через `Related -Area offline-tiles -PhoneOnly`.
 `Related -Area underlay-migration` выбирает exact-control/queued-cancel и RU
 progress/Cancel layout. Это UI/session coverage, не реальный перенос Debug.
 

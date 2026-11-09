@@ -1,7 +1,7 @@
 ---
 title: MapLibre rendering и порядок слоёв
 type: architecture
-last_verified: 2026-11-02
+last_verified: 2026-11-09
 related_code:
   - app/build.gradle
   - maplib/build.gradle
@@ -438,6 +438,10 @@ ContentProvider и mutable cache `TrackLayer` ([контракт](shared-tracks.
     с исходным FID, owner tile, полной исходной геометрией и учётом отверстий.
     Fill/Line фильтруют Polygon, Symbol — anchor; отдельного объектного source нет.
     Незнакомые custom renderer extensions имеют только явный classic converter.
+    Тест прямого SQLite использует штатный режим пакетного импорта и проверяет,
+    что в пространственном индексе одна запись для исходного объекта. Затем он
+    проверяет видимость объекта до и после смены стиля, смену поколения источника
+    и побайтную сохранность исходной строки.
     DirectVectorTilesTest сохраняет old-config/schema/rights/full-row, live edit,
     offline single-label и glyph/fill/outline assertions; пока compile-only.
 
@@ -806,6 +810,8 @@ callback проверяет живой Fragment, normal mode и отсутств
 Линейка/азимут скрывают общий вход до завершения; восстановленная линейка
 также не показывает вторую кнопку. Старое show_ruler_measuring управляет
 видимостью пункта линейки, оба режима азимута остаются доступны при false.
+Линейка применяет сохранённые точки и историю после загрузки стиля и источников
+карты. Отмена редактирования освобождает модель и в период смены стиля.
 
 `MapControlRail` рассчитывает вместимость по обеим сторонам доступного прямоугольника,
 сохраняет 48dp touch targets и переносит непоместившиеся действия в overflow;

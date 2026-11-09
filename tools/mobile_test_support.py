@@ -117,7 +117,8 @@ def source_fingerprint(root: Path) -> str:
     return digest.hexdigest()
 
 
-def check_publication_receipt(receipt: dict, fingerprint: str, required: set[str]) -> None:
+def check_publication_receipt(receipt: dict, fingerprint: str, required: set[str], *,
+                              required_phone: frozenset[str] = frozenset()) -> None:
     if receipt.get('scope') != 'full' or receipt.get('status') != 'passed':
         raise ValueError('Publication requires a successful full run, not a related/CI run')
     if receipt.get('source_fingerprint') != fingerprint:
@@ -133,6 +134,15 @@ def check_publication_receipt(receipt: dict, fingerprint: str, required: set[str
     devices = receipt.get('devices', {})
     if not devices.get('phone') or not devices.get('emulator'):
         raise ValueError('Both the physical phone and emulator results are required')
+    if required_phone:
+        phone = devices['phone']
+        serial, hardware = phone.get('serial'), phone.get('hardware')
+        if not serial or not hardware or hardware in ('ranchu', 'goldfish'):
+            raise ValueError('Publication requires a real verification phone identity')
+        physical_cases = {case for row in receipt.get('runs', []) if row.get('device') == serial
+                          for case in row.get('passed', [])}
+        if not required_phone <= physical_cases:
+            raise ValueError('The selected physical phone did not complete every assigned case')
     from mobile_render_acceptance import STRESS_CASE, check_stress_matrix
     if STRESS_CASE in required:
         check_stress_matrix(receipt.get('checks', {}).get('render_stress'), fingerprint)

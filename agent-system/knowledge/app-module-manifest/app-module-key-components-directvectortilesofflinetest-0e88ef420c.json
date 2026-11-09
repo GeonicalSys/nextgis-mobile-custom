@@ -41,7 +41,7 @@
       "role": "module_manifest_ordered_value",
       "value": {
         "path": "app/src/androidTest/java/com/nextgis/mobile/rendering/DirectVectorTilesOfflineTest.java",
-        "responsibility": "Prepared emulator-only radio restoration, direct same-source polygon/anchor glyph/fill/outline pixels and offline live Firefly/polygon style edits; compilation is separate from execution."
+        "responsibility": "Owned emulator radio restoration or explicit manual offline verification on a USB phone, direct same-source polygon/anchor glyph/fill/outline pixels and offline live Firefly/polygon style edits; compilation is separate from execution."
       }
     }
   },

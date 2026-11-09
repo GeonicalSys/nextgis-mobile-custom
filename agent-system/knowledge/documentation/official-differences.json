@@ -40,7 +40,7 @@
       "value": [
         "title: Отличия GeonicalSystem от официального NextGIS Mobile",
         "type: reference",
-        "last_verified: 2026-11-02",
+        "last_verified: 2026-11-09",
         "related_code:",
         "  - app/build.gradle",
         "  - app/src/main",

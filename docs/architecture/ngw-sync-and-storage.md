@@ -1,7 +1,7 @@
 ---
 title: NGW sync, локальное хранение и восстановление
 type: architecture
-last_verified: 2026-10-30
+last_verified: 2026-11-09
 related_code:
   - app/src/test/java/com/nextgis/mobile/fragment/SettingsWorkspaceMoveTest.java
   - app/src/main/java/com/nextgis/mobile/util/SelectMapPathPreference.java
@@ -908,6 +908,8 @@ MultiPolygon, но не зависит квадратично от числа в
 создаёт бесконечный foreground service. На Android 15+ `onTimeout()` очищает
 текущую очередь и останавливает FGS, но сохраняет durable Collector journal,
 чтобы следующий запуск мог проверить и докачать партию.
+При запуске наблюдатель отдельно измеряет чтение и разбор конфигурации слоя
+и запрос количества строк SQLite. Отчёт содержит фиксированное имя этапа и время.
 
 Проверить отдельно:
 

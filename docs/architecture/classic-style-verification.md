@@ -148,6 +148,8 @@ Native fixtures compare current source style properties (with numeric float
 tolerance), await native idle for camera/placement and then a fresh fully rendered
 frame, keeping pipeline completion distinct
 from the SDK paint transition duration.
+The classic fixture subscribes to idle before publishing source and layer changes.
+The source readback and a fresh fully rendered frame are both required.
 
 The marker pixel matrix also found disappearing cross strokes: generated SDF
 images placed the boundary at 0.5 instead of the native shader's 0.75. The

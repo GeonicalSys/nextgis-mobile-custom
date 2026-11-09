@@ -134,6 +134,10 @@ final class DiagnosticsProcessExitReporter {
         message.setFormatted("Android process terminated: reason=" + info.getReason() + " status=" + info.getStatus());
         event.setMessage(message);
         Map<String, Object> exit = DiagnosticsExitInfo.exportRecords(java.util.Collections.singletonList(info), process).get(0);
+        long startedAt = owner.optLong("started_at_ms", -1);
+        if (owner.optInt("build", -1) > 0 && startedAt > 0 && info.getTimestamp() >= startedAt) {
+            exit.put("observed_process_age_ms", info.getTimestamp() - startedAt);
+        }
         exit.put("trace", trace); event.getContexts().put("process_exit", exit);
         return event;
     }

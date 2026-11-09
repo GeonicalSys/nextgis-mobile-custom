@@ -3,6 +3,12 @@ package com.nextgis.mobile.rendering;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.accessibilityservice.AccessibilityService;
+import android.view.View;
+import android.view.accessibility.AccessibilityNodeInfo;
+import androidx.test.runner.lifecycle.ActivityLifecycleCallback;
+import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
+import androidx.test.runner.lifecycle.Stage;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +22,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import com.nextgis.maplib.map.TrackLayer;
 import com.nextgis.maplib.gnss.GnssInputPrefs;
 import com.nextgis.maplib.util.SettingsConstants;
+import com.nextgis.maplibui.activity.TrackStopConfirmationActivity;
 import com.nextgis.maplibui.service.TrackerService;
 import com.nextgis.maplibui.util.TrackActions;
 import com.nextgis.mobile.R;
@@ -98,7 +105,123 @@ public class TrackStopConfirmationTest {
             });
             return result.get();
         }
-        void mapStop() { NativeStyleTouch.tap(tracks.f,R.id.action_track_status); }
+        void tapMapTrackControl() throws Exception {
+            AtomicReference<View> button = new AtomicReference<>();
+            AtomicReference<String> overflowTitle = new AtomicReference<>();
+            await(() -> {
+                button.set(null);
+                overflowTitle.set(null);
+                tracks.f.screen.onActivity(activity -> {
+                    View rail = activity.findViewById(R.id.map_control_rail);
+                    View track = rail.findViewById(R.id.action_track_status);
+                    if (!rail.hasWindowFocus() || rail.isLayoutRequested() || !track.isShown()) return;
+                    if (track.getWidth() > 0 && track.getHeight() > 0) {
+                        button.set(track);
+                        return;
+                    }
+                    View overflow = rail.findViewWithTag("map_control_overflow");
+                    if (overflow != null && overflow.isShown() && overflow.getWidth() > 0
+                            && overflow.getHeight() > 0 && track.getContentDescription() != null) {
+                        button.set(overflow);
+                        overflowTitle.set(track.getContentDescription().toString());
+                    }
+                });
+                return button.get() != null;
+            });
+            NativeStyleTouch.tap(tracks.f, button::get);
+            if (overflowTitle.get() != null) TrackControlsTest.Ui.text(overflowTitle.get());
+            android.util.Log.i("TrackTouchQA", "Map rail route=" + (overflowTitle.get() == null ? "direct" : "overflow"));
+        }
+
+        void assertTrackModeChooserIsReachable() throws Exception {
+            tapMapTrackControl();
+            for (int mode : new int[]{com.nextgis.maplibui.R.string.track_mode_pedestrian,
+                    com.nextgis.maplibui.R.string.track_mode_walk_drive}) {
+                await(() -> {
+                    AccessibilityNodeInfo choice = TrackControlsTest.Ui.find(TrackControlsTest.Ui.textMatch(app.getString(mode)));
+                    if (choice == null) return false;
+                    try {
+                        android.graphics.Rect bounds = TrackControlsTest.Ui.touchBounds(choice);
+                        return bounds != null && !bounds.isEmpty() && choice.isEnabled();
+                    } finally {
+                        choice.recycle();
+                    }
+                });
+            }
+            assertTrue(TrackControlsTest.Ui.automation().performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK));
+            assertFalse(TrackerService.hasRecordingSession(app));
+        }
+
+        private int stopPromptWindow() throws Exception {
+            String message = app.getString(com.nextgis.maplibui.R.string.track_stop_confirm);
+            AtomicInteger id = new AtomicInteger(-1);
+            await(() -> {
+                AccessibilityNodeInfo node = TrackControlsTest.Ui.find(TrackControlsTest.Ui.textMatch(message));
+                if (node == null) return false;
+                id.set(node.getWindowId());
+                node.recycle();
+                return true;
+            });
+            return id.get();
+        }
+
+        void answerStop(int button) throws Exception {
+            int window = stopPromptWindow();
+            TrackControlsTest.Ui.tap(TrackControlsTest.Ui.id(button).and(node -> node.getWindowId() == window));
+            awaitClosedPrompt(window);
+        }
+
+        void backFromStop() throws Exception {
+            int window = stopPromptWindow();
+            assertTrue(TrackControlsTest.Ui.automation().performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK));
+            awaitClosedPrompt(window);
+        }
+
+        private void awaitClosedPrompt(int window) throws Exception {
+            await(() -> TrackControlsTest.Ui.automation().getWindows().stream()
+                    .noneMatch(candidate -> candidate.getId() == window));
+        }
+
+        TrackStopConfirmationActivity awaitNotificationActivity() throws Exception {
+            AtomicReference<TrackStopConfirmationActivity> open = new AtomicReference<>();
+            await(() -> {
+                InstrumentationRegistry.getInstrumentation().runOnMainSync(() ->
+                        ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED).stream()
+                                .filter(TrackStopConfirmationActivity.class::isInstance)
+                                .map(TrackStopConfirmationActivity.class::cast).findFirst().ifPresent(open::set));
+                return open.get() != null;
+            });
+            return open.get();
+        }
+
+        void awaitNotificationDestroyed(TrackStopConfirmationActivity previous) throws Exception {
+            AtomicBoolean destroyed = new AtomicBoolean();
+            await(() -> {
+                InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> destroyed.set(
+                        ActivityLifecycleMonitorRegistry.getInstance().getLifecycleStageOf(previous) == Stage.DESTROYED));
+                return destroyed.get();
+            });
+        }
+
+        void openStaleNotification(PendingIntent stop) throws Exception {
+            AtomicBoolean destroyed = new AtomicBoolean();
+            ActivityLifecycleCallback callback = (activity, stage) -> {
+                if (activity instanceof TrackStopConfirmationActivity && stage == Stage.DESTROYED) {
+                    destroyed.set(true);
+                }
+            };
+            android.app.Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+            instrumentation.runOnMainSync(() -> ActivityLifecycleMonitorRegistry.getInstance().addLifecycleCallback(callback));
+            try {
+                stop.send();
+                await(destroyed::get);
+                assertNull("The old notification must not show a Stop prompt for the current session",
+                        TrackControlsTest.Ui.find(TrackControlsTest.Ui.textMatch(
+                                app.getString(com.nextgis.maplibui.R.string.track_stop_confirm))));
+            } finally {
+                instrumentation.runOnMainSync(() -> ActivityLifecycleMonitorRegistry.getInstance().removeLifecycleCallback(callback));
+            }
+        }
         @Override public void close() throws Exception {
             if (TrackerService.hasRecordingSession(app)) stop();
             SharedPreferences.Editor restore = prefs.edit();
@@ -122,16 +245,15 @@ public class TrackStopConfirmationTest {
                 s.app.getContentResolver().insert(Uri.parse("content://" + s.tracks.f.app.getAuthority()
                         + "/" + TABLE_TRACKPOINTS),point);
             }
-            s.mapStop(); TrackControlsTest.Ui.tap(android.R.id.button2); s.unchanged();
-            s.mapStop(); TrackControlsTest.Ui.automation().performGlobalAction(
-                    android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_BACK);
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync(); s.unchanged();
-            s.mapStop(); TrackControlsTest.Ui.tap(android.R.id.button1);
+            s.tapMapTrackControl(); s.answerStop(android.R.id.button2); s.unchanged();
+            s.tapMapTrackControl(); s.backFromStop(); s.unchanged();
+            s.tapMapTrackControl(); s.answerStop(android.R.id.button1);
             await(() -> !TrackerService.hasRecordingSession(s.app));
             assertEquals(1,DatabaseUtils.longForQuery(s.tracks.layer.getDatabase(true),
                     "SELECT count(*) FROM tracks WHERE _id=? AND end>0",new String[]{Long.toString(s.id)}));
             assertEquals(2,DatabaseUtils.longForQuery(s.tracks.layer.getDatabase(true),
                     "SELECT count(*) FROM trackpoints WHERE session=? AND sent=0 AND segment=1",new String[]{Long.toString(s.id)}));
+            s.assertTrackModeChooserIsReachable();
         }
     }
 
@@ -139,10 +261,16 @@ public class TrackStopConfirmationTest {
         try (Session s = new Session()) {
             TrackControlsTest.Ui.menuItem(s.tracks.f.screen,R.id.menu_track,
                     s.app.getString(com.nextgis.maplibui.R.string.track_stop),false);
-            TrackControlsTest.Ui.tap(android.R.id.button2); s.unchanged();
+            s.answerStop(android.R.id.button2); s.unchanged();
             PendingIntent stop = s.notificationStop();
-            stop.send(); TrackControlsTest.Ui.tap(android.R.id.button2); s.unchanged();
-            stop.send(); TrackControlsTest.Ui.tap(android.R.id.button1);
+            stop.send();
+            TrackStopConfirmationActivity first = s.awaitNotificationActivity();
+            s.answerStop(android.R.id.button2);
+            s.awaitNotificationDestroyed(first);
+            s.unchanged();
+            stop.send();
+            assertNotSame(first, s.awaitNotificationActivity());
+            s.answerStop(android.R.id.button1);
             await(() -> !TrackerService.hasRecordingSession(s.app));
         }
     }
@@ -150,13 +278,9 @@ public class TrackStopConfirmationTest {
     @Test public void staleDialogAndNotificationCannotStopNewSessionAndSplitKeepsSession() throws Exception {
         try (Session s = new Session()) {
             String old = s.token(); PendingIntent oldNotification = s.notificationStop();
-            s.mapStop(); s.stop(); s.start(); assertNotEquals(old,s.token());
-            TrackControlsTest.Ui.tap(android.R.id.button1); s.unchanged();
-            oldNotification.send();
-            await(() -> {
-                android.view.accessibility.AccessibilityNodeInfo node = TrackControlsTest.Ui.find(TrackControlsTest.Ui.id(R.id.action_track_status));
-                if (node == null) return false; node.recycle(); return true;
-            });
+            s.tapMapTrackControl(); s.stopPromptWindow(); s.stop(); s.start(); assertNotEquals(old,s.token());
+            s.answerStop(android.R.id.button1); s.unchanged();
+            s.openStaleNotification(oldNotification);
             s.unchanged();
             String current = s.token(), uri = s.temp.getString("track_uri", "");
             InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> s.app.startService(
@@ -164,7 +288,7 @@ public class TrackStopConfirmationTest {
             await(() -> TrackerService.isTrackRecordingActive() && !uri.equals(s.temp.getString("track_uri", "")));
             s.rememberCurrent(); assertEquals(current,s.token());
             assertFalse(TrackerService.stopRecording(s.app,old,"stale-native-test")); s.unchanged();
-            s.mapStop(); TrackControlsTest.Ui.tap(android.R.id.button1);
+            s.tapMapTrackControl(); s.answerStop(android.R.id.button1);
             await(() -> !TrackerService.hasRecordingSession(s.app));
         }
     }
@@ -182,6 +306,8 @@ public class TrackStopConfirmationTest {
                     AtomicBoolean oriented = new AtomicBoolean();
                     await(() -> { s.tracks.f.screen.onActivity(a -> oriented.set(
                             (a.getResources().getConfiguration().orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE) == landscape)); return oriented.get(); });
+                    // The resource configuration can arrive before the rotated window can route input.
+                    TrackControlsTest.Ui.automation().waitForIdle(750, 5000);
                     for (boolean dark : new boolean[]{false,true}) for (float font : new float[]{1f,1.3f,2f}) {
                         AtomicReference<androidx.appcompat.app.AlertDialog> dialog = new AtomicReference<>();
                         AtomicBoolean dismissed = new AtomicBoolean();
@@ -226,9 +352,8 @@ public class TrackStopConfirmationTest {
                         }); return fitted.get(); });
                         s.tracks.f.screen.onActivity(a -> com.nextgis.mobile.reliability.LargeTextLayoutTest.assertTrackDialogFits(dialog.get()));
                         try {
-                            // Resolve physical bounds from the active, focused accessibility window.
-                            // A context-only density/rotation override can precede its input surface.
-                            TrackControlsTest.Ui.tap(android.R.id.button2);
+                            NativeStyleTouch.tap(s.tracks.f, () -> dialog.get()
+                                    .getButton(androidx.appcompat.app.AlertDialog.BUTTON_NEGATIVE));
                             // Input injection can return before AlertController posts dismissal.
                             // Observe its actual OnDismiss callback; send the Cancel tap only once.
                             await(dismissed::get);
@@ -237,13 +362,13 @@ public class TrackStopConfirmationTest {
                             s.tracks.f.screen.onActivity(a -> assertFalse(dialog.get().isShowing()));
                             android.util.Log.i("TrackStopLayoutQA", screen[0] + "x" + screen[1]
                                     + " density=" + screen[2] + " dark=" + dark + " font=" + font
-                                    + " DOWN=1 UP=1 dismissed=true " + TrackControlsTest.Ui.lastTouch);
+                                    + " DOWN=1 UP=1 dismissed=true windowInput=" + windowInput.get());
                             s.unchanged();
                         } catch (AssertionError failure) {
                             throw new AssertionError("Stop confirmation Cancel: " + screen[0] + "x" + screen[1]
                                     + " density=" + screen[2] + " dark=" + dark + " font=" + font
                                     + " down=" + cancelDownEvents.get() + " up=" + cancelUpEvents.get()
-                                    + " dismissed=" + dismissed.get() + " " + TrackControlsTest.Ui.lastTouch
+                                    + " dismissed=" + dismissed.get()
                                     + " windowInput=" + windowInput.get(), failure);
                         } finally {
                             s.tracks.f.screen.onActivity(a -> { if (dialog.get().isShowing()) dialog.get().dismiss(); });

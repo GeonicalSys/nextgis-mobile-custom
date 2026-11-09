@@ -1,7 +1,7 @@
 ---
 title: Штриховки, контуры полигонов и живой образец
 type: architecture
-last_verified: 2026-11-02
+last_verified: 2026-11-09
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/display/PolygonPatternOptions.java
   - maplib/src/main/java/com/nextgis/maplib/display/PolygonOutlineOptions.java
@@ -68,6 +68,10 @@ RGBA texture не содержит общей alpha: pattern opacity и layer op
 Геометрические границы и picking не меняются. Native dash/cap/join задаются
 константами в фильтрованных `-layout-contour-*` children общего GeoJSON source;
 видимость, порядок, zoom limits, restyle и удаление идут через логический слой.
+
+Скрытие логического слоя применяется к заливке, основному контуру и его
+фильтрованным вариантам в текущем стиле. Нативный тест проверяет visibility
+этих слоёв и исчезновение контура с изображения карты.
 Новые параметры требуют classic renderer: настроенный MVT-слой при смене стиля
 переходит через существующий полный reload к GeoJSON. Возможности MVT не расширены.
 

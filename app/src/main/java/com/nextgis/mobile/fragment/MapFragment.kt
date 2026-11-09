@@ -462,6 +462,8 @@ public class MapFragment
     var undoRedoOverlay: UndoRedoOverlay? = null
         protected set
     protected var mRulerOverlay: RulerOverlay? = null
+    private data class RulerStartRequest(val resetHistory: Boolean, val geometry: GeoLineString?)
+    private var pendingRulerStart: RulerStartRequest? = null
     private var preserveRulerHistoryDuringModeRestore = false
     protected var mCurrentCenter: GeoPoint? = null
     protected var mSelectedLayer: VectorLayer? = null
@@ -644,7 +646,9 @@ public class MapFragment
         mMeasurements?.setOnClickListener(this)
         mMeasurements?.let { androidx.core.view.ViewCompat.setTooltipText(it, getString(R.string.measurement_tools)) }
         trackStatusButton = requireNotNull(view.findViewById(R.id.action_track_status))
-        trackStatusButton?.setOnClickListener { mActivity?.toggleTrackRecordingFromMap(it) }
+        trackStatusButton?.setOnClickListener {
+            mActivity?.toggleTrackRecordingFromMap(mapControlPopupAnchor(it))
+        }
         refreshTrackStatusButton()
 
         val addGeometryByWalk = view.findViewById<View>(R.id.add_geometry_by_walk)
@@ -756,6 +760,7 @@ public class MapFragment
             if (mapDrawableOrNull?.maplibreMap?.style != null) {
                 mapLibreLayersAppliedForCurrentView = true
                 startMapLibreRenderRecovery("styling-complete")
+                applyPendingRulerStart()
             }
         }
     }
@@ -898,6 +903,7 @@ public class MapFragment
             HyperLog.v(Constants.TAG, "GeometryDraft retry after MapLibre layers loaded")
             tryResumeManualGeometryFromDraft()
         }
+        applyPendingRulerStart()
     }
 
     override fun loadLayersLite(){
@@ -1954,6 +1960,7 @@ public class MapFragment
         value == MODE_AZIMUTH_CURRENT || value == MODE_AZIMUTH_POINTS
 
     fun setNewMode(requestedMode: Int, vararg readOnly: Boolean) {
+        pendingRulerStart = null
         if (requestedMode != MODE_NORMAL) clearSelectedTrack()
         val mode = if ((requestedMode == MODE_SELECT_FOR_VIEW || requestedMode == MODE_SELECT_ACTION)
             && mSelectedLayer != null
@@ -2502,6 +2509,7 @@ public class MapFragment
         mapLibreHostResumed = false
         stopMapLibreRenderRecovery()
         mapLibreLayersAppliedForCurrentView = false
+        pendingRulerStart = null
         mMapRef.get()?.removeCallbacks(manualGeometryResumeRunnable)
         mapReloadAfterFillRetryRunnable?.let { r ->
             view?.removeCallbacks(r)
@@ -2810,8 +2818,10 @@ public class MapFragment
         outState.putString("finished_walk_edit_id", finishedWalkEditId)
         outState.putLong("selected_track_id", selectedTrackId)
         mapLibreMapView?.onSaveInstanceState(outState)
-        outState.putBoolean(BUNDLE_KEY_IS_MEASURING, mRulerOverlay!!.isMeasuring)
-        val rulerGeometry = mMapRef.get()?.map?.measurementGeometry
+        val requestedRuler = pendingRulerStart
+        outState.putBoolean(BUNDLE_KEY_IS_MEASURING, requestedRuler != null || mRulerOverlay!!.isMeasuring)
+        val rulerGeometry = if (requestedRuler != null) requestedRuler.geometry
+            else mMapRef.get()?.map?.measurementGeometry
         if (rulerGeometry != null) {
             try {
                 outState.putByteArray(BUNDLE_KEY_RULER_GEOMETRY, rulerGeometry.toBlob())
@@ -5677,7 +5687,7 @@ public class MapFragment
 
             } else addPointByTap()
 
-            R.id.action_measurements -> showMeasurementToolsMenu(v)
+            R.id.action_measurements -> showMeasurementToolsMenu(mapControlPopupAnchor(v))
         }
     }
 
@@ -5685,11 +5695,22 @@ public class MapFragment
         resetHistory: Boolean = true,
         restoredGeometry: GeoLineString? = null
     ) {
-        mRulerOverlay!!.startMeasuring(this, mCurrentCenter)
-        mMapRef.get()!!.map.startMeasuring()
-        if (restoredGeometry != null)
-            mMapRef.get()!!.map.restoreMeasurementGeometry(restoredGeometry)
-        if (resetHistory || !undoRedoOverlay!!.hasHistory()) {
+        pendingRulerStart = RulerStartRequest(resetHistory, restoredGeometry)
+        applyPendingRulerStart()
+    }
+
+    private fun applyPendingRulerStart() {
+        val request = pendingRulerStart ?: return
+        val ruler = mRulerOverlay ?: return
+        val map = mMapRef.get()?.map ?: return
+        if (!mapLibreLayersAppliedForCurrentView || !map.areEditSourcesReadyForCurrentStyle() ||
+            map.maplibreMap?.cameraPosition?.target == null) return
+
+        pendingRulerStart = null
+        ruler.startMeasuring(this, mCurrentCenter)
+        map.startMeasuring()
+        request.geometry?.let { map.restoreMeasurementGeometry(it) }
+        if (request.resetHistory || !undoRedoOverlay!!.hasHistory()) {
             undoRedoOverlay!!.clearHistory()
             saveRulerToHistory()
         }
@@ -5759,6 +5780,9 @@ public class MapFragment
         private const val ROTATION_ANGLE_THRESHOLD_DEGREES = 0.5f
         private const val LEGACY_MODE_EDIT_BY_TOUCH = 5
     }
+
+    private fun mapControlPopupAnchor(control: View): View =
+        (control.parent as? com.nextgis.mobile.view.MapControlRail)?.popupAnchorFor(control) ?: control
 
     private fun showMeasurementToolsMenu(anchor: View) {
         if (mode != MODE_NORMAL || isRulerMeasuring) return

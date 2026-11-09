@@ -41,7 +41,7 @@
       "role": "module_manifest_ordered_value",
       "value": {
         "path": "app/src/androidTest/java/com/nextgis/mobile/rendering/LocationOrbitTest.java",
-        "responsibility": "Explicit graphics smoke outside the SwiftShader reliability CI package; check actual MapLibre vector images and central fix anchor, topmost accuracy-sector-white-halo-blue-outline-symbol order after a hot style addition and lite reload, rendered compass/course/plain-dot transitions, default-hidden sector plus persisted opt-in/out after map resume and hot/lite reload while preserving its 56-pixel geometry through native projection at zoom 16/18/19, actual 5 dp blue-centre and white-border and outward thicker blue-rim pixels, transparent bitmap opening and an untinted 14 dp point symbol beneath all service overlays in screenshots and removal when the fix expires on an isolated Debug emulator with a working EGL backend."
+        "responsibility": "Explicit graphics smoke outside the SwiftShader reliability CI package; check actual MapLibre vector images and central fix anchor, topmost accuracy-sector-white-halo-blue-outline-symbol order after a hot style addition and lite reload, rendered compass/course/plain-dot transitions, default-hidden sector plus persisted opt-in/out after map resume and hot/lite reload while preserving its 56-pixel geometry through native projection at zoom 16/18/19, actual 5 dp blue-centre and white-border and outward thicker blue-rim pixels, transparent bitmap opening and an untinted 14 dp point symbol beneath all service overlays in screenshots and removal when the fix expires on an isolated verification phone or Debug emulator with a working EGL backend."
       }
     }
   },

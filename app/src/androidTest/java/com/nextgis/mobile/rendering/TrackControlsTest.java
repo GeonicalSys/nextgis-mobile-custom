@@ -647,6 +647,8 @@ public class TrackControlsTest {
                     AtomicBoolean oriented = new AtomicBoolean();
                     await(() -> { t.f.screen.onActivity(activity -> oriented.set(
                             (activity.getResources().getConfiguration().orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE) == landscape)); return oriented.get(); });
+                    // Let window input settle after the resource configuration reports the rotation.
+                    Ui.automation().waitForIdle(750, 5000);
                     for (boolean dark : new boolean[]{false, true}) for (float font : new float[]{1f,1.3f,2f}) {
                         for (int action = 0; action < 3; action++) {
                             int kind = action;
@@ -679,7 +681,11 @@ public class TrackControlsTest {
                                 }); return fitted.get(); });
                                 t.f.screen.onActivity(activity -> com.nextgis.mobile.reliability.LargeTextLayoutTest.assertTrackDialogFits(dialog.get()));
                                 NativeStyleTouch.tap(t.f, () -> dialog.get().findViewById(android.R.id.button2));
-                                assertFalse(dialog.get().isShowing());
+                                AtomicBoolean dismissed = new AtomicBoolean();
+                                await(() -> {
+                                    t.f.screen.onActivity(activity -> dismissed.set(!dialog.get().isShowing()));
+                                    return dismissed.get();
+                                });
                                 assertNotNull(TrackActions.find(t.f.app, id));
                             } finally { t.f.screen.onActivity(activity -> { if (dialog.get().isShowing()) dialog.get().dismiss(); }); }
                         }

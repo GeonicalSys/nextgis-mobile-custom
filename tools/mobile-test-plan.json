@@ -51,7 +51,10 @@
     "com.nextgis.mobile.util.DiagnosticsNoiseTest",
     "com.nextgis.mobile.util.MapRuntimeDiagnosticsNativeTest",
     "com.nextgis.mobile.util.LegacyUnderlayProgressNativeTest",
-    "com.nextgis.mobile.rendering.DirectVectorTilesTest"
+    "com.nextgis.mobile.rendering.DirectVectorTilesTest",
+    "com.nextgis.mobile.rendering.VectorStyleRenderingTest",
+    "com.nextgis.mobile.rendering.LocationOrbitTest",
+    "com.nextgis.mobile.rendering.DirectVectorTilesOfflineTest"
   ],
   "emulator": [
     "com.nextgis.mobile.util.AppUpdateNativeTest",
@@ -70,16 +73,15 @@
     "com.nextgis.mobile.reliability.TrackRecordingModesTest",
     "com.nextgis.mobile.reliability.TrackUploadTest",
     "com.nextgis.mobile.reliability.WalkCheckpointTest",
-    "com.nextgis.mobile.rendering.LocationOrbitTest",
     "com.nextgis.mobile.util.ProjectSyncRunnerTest",
-    "com.nextgis.mobile.reliability.SharedTracksTest",
-    "com.nextgis.mobile.rendering.VectorStyleRenderingTest",
-    "com.nextgis.mobile.rendering.DirectVectorTilesOfflineTest"
+    "com.nextgis.mobile.reliability.SharedTracksTest"
   ],
   "diagnostics": [
     "com.nextgis.mobile.util.DiagnosticsDeliveryTest"
   ],
   "related_phone_areas": {
+    "offline-tiles": ["com.nextgis.mobile.rendering.DirectVectorTilesOfflineTest"],
+    "orbit-structure": ["com.nextgis.mobile.rendering.LocationOrbitTest#orbitUsesCompassThenCourseWithACenteredAnchorAndConfigurableSector"],
     "sqlite-marker": ["com.nextgis.mobile.rendering.NativeSqliteVectorRenderingTest#sqliteMultiPointRulesRetainBothPartsAndTheCustomMarker"],
     "sqlite-render": ["com.nextgis.mobile.rendering.NativeSqliteVectorRenderingTest"],
     "sqlite-priority": ["com.nextgis.mobile.rendering.NativeSqliteVectorRenderingTest#sqliteFieldLinesAndWholePointGroupsStayAboveSavedAndCurrentTracks"],

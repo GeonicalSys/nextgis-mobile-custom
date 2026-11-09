@@ -52,6 +52,11 @@ public final class MapControlRail extends ViewGroup {
         addView(overflow);
     }
 
+    /** Popup actions dispatched through overflow must use its visible window anchor. */
+    public View popupAnchorFor(View control) {
+        return hidden.contains(control) ? overflow : control;
+    }
+
     @Override protected void onMeasure(int widthSpec, int heightSpec) {
         List<View> controls = new ArrayList<>();
         displayed.clear();

@@ -122,42 +122,55 @@ public class VectorStyleRenderingTest {
             layer.setRenderer(restored==null?new SimpleFeatureRenderer(layer,parsed.get()):new RuleFeatureRenderer(layer,restored,parsed.get()));
             assertTrue(layer.save());
             List<org.maplibre.geojson.Feature> features=MPLFeaturesUtils.createFeatureListFromLayer(layer);
-            screen.onActivity(activity->{
-                org.maplibre.android.maps.Style nativeStyle=((MapDrawable)app.getMap()).getMaplibreMap().getStyle();
-                String source=layer.getPath().toString();
-                MPLFeaturesUtils.createSourceForLayer(layer.getId(),layer.getGeometryType(),features,nativeStyle,
-                        new HashMap<>(),new HashMap<>(),new HashMap<>(),source,false,null,layer);
-                assertTrue("Classic source required",nativeStyle.getSource(source) instanceof GeoJsonSource);
-                MPLFeaturesUtils.createFillLayerForLayer(layer.getId(),layer.getGeometryType(),nativeStyle,
-                        new HashMap<>(),new HashMap<>(),new HashMap<>(),new HashMap<>(),layer.getDefaultStyleNoExcept(),
-                        true,layer,source,null,null);
-            });
-            if(layer.isVisible()){
-                Map<String,com.google.gson.JsonObject> expected=new HashMap<>();
-                for(org.maplibre.geojson.Feature feature:MPLFeaturesUtils.nativeFeaturesForLayer(layer,layer.getGeometryType(),features)){com.google.gson.JsonObject properties=feature.properties().deepCopy();
-                    // Legacy selection color is omitted by the geometry cache; it is not style paint.
-                    properties.remove(MPLFeaturesUtils.prop_color);properties.remove(MPLFeaturesUtils.prop_order);
-                    expected.put(feature.getStringProperty(MPLFeaturesUtils.prop_featureid),properties);}
-                screen.onActivity(activity->((MapDrawable)app.getMap()).getMaplibreMap().triggerRepaint());
-                AtomicBoolean sourceReady=new AtomicBoolean();
-                AtomicReference<String> sourceState=new AtomicReference<>("No source features");
-                try{await(()->{
-                    screen.onActivity(activity->{GeoJsonSource source=((MapDrawable)app.getMap()).getMaplibreMap().getStyle().getSourceAs(layer.getPath().toString());
-                        Set<String> loaded=new HashSet<>();
-                        for(org.maplibre.geojson.Feature feature:source.querySourceFeatures(null)){
-                            String id=feature.getStringProperty(MPLFeaturesUtils.prop_featureid);
-                            com.google.gson.JsonObject wanted=expected.get(id);if(wanted==null)continue;
-                            boolean same=true;for(Map.Entry<String,com.google.gson.JsonElement> property:wanted.entrySet())
-                                if(!sameValue(property.getValue(),feature.properties().get(property.getKey()))){sourceState.set(id+" / "+property.getKey()+" expected="+property.getValue()+" native="+feature.properties().get(property.getKey()));same=false;break;}
-                            if(same)loaded.add(id);
-                        }
-                        sourceReady.set(loaded.containsAll(expected.keySet()));});
-                    return sourceReady.get();
-                });}catch(AssertionError error){throw new AssertionError("Current style did not reach its source: "+sourceState.get(),error);}
+            CountDownLatch idle = new CountDownLatch(1);
+            org.maplibre.android.maps.MapView.OnDidBecomeIdleListener idleListener = idle::countDown;
+            AtomicReference<org.maplibre.android.maps.MapView> observedView = new AtomicReference<>();
+            // A source upload can reach idle while the test is still verifying its contents.
+            try {
+                screen.onActivity(activity->{
+                    MapDrawable map = (MapDrawable) app.getMap();
+                    observedView.set(map.getMaplibreMapView());
+                    observedView.get().addOnDidBecomeIdleListener(idleListener);
+                    org.maplibre.android.maps.Style nativeStyle = map.getMaplibreMap().getStyle();
+                    String source=layer.getPath().toString();
+                    MPLFeaturesUtils.createSourceForLayer(layer.getId(),layer.getGeometryType(),features,nativeStyle,
+                            new HashMap<>(),new HashMap<>(),new HashMap<>(),source,false,null,layer);
+                    assertTrue("Classic source required",nativeStyle.getSource(source) instanceof GeoJsonSource);
+                    MPLFeaturesUtils.createFillLayerForLayer(layer.getId(),layer.getGeometryType(),nativeStyle,
+                            new HashMap<>(),new HashMap<>(),new HashMap<>(),new HashMap<>(),layer.getDefaultStyleNoExcept(),
+                            true,layer,source,null,null);
+                });
+                if(layer.isVisible()){
+                    Map<String,com.google.gson.JsonObject> expected=new HashMap<>();
+                    for(org.maplibre.geojson.Feature feature:MPLFeaturesUtils.nativeFeaturesForLayer(layer,layer.getGeometryType(),features)){com.google.gson.JsonObject properties=feature.properties().deepCopy();
+                        // Legacy selection color is omitted by the geometry cache; it is not style paint.
+                        properties.remove(MPLFeaturesUtils.prop_color);properties.remove(MPLFeaturesUtils.prop_order);
+                        expected.put(feature.getStringProperty(MPLFeaturesUtils.prop_featureid),properties);}
+                    screen.onActivity(activity->((MapDrawable)app.getMap()).getMaplibreMap().triggerRepaint());
+                    AtomicBoolean sourceReady=new AtomicBoolean();
+                    AtomicReference<String> sourceState=new AtomicReference<>("No source features");
+                    try{await(()->{
+                        screen.onActivity(activity->{GeoJsonSource source=((MapDrawable)app.getMap()).getMaplibreMap().getStyle().getSourceAs(layer.getPath().toString());
+                            Set<String> loaded=new HashSet<>();
+                            for(org.maplibre.geojson.Feature feature:source.querySourceFeatures(null)){
+                                String id=feature.getStringProperty(MPLFeaturesUtils.prop_featureid);
+                                com.google.gson.JsonObject wanted=expected.get(id);if(wanted==null)continue;
+                                boolean same=true;for(Map.Entry<String,com.google.gson.JsonElement> property:wanted.entrySet())
+                                    if(!sameValue(property.getValue(),feature.properties().get(property.getKey()))){sourceState.set(id+" / "+property.getKey()+" expected="+property.getValue()+" native="+feature.properties().get(property.getKey()));same=false;break;}
+                                if(same)loaded.add(id);
+                            }
+                            sourceReady.set(loaded.containsAll(expected.keySet()));});
+                        return sourceReady.get();
+                    });}catch(AssertionError error){throw new AssertionError("Current style did not reach its source: "+sourceState.get(),error);}
+                }
+                // Source uploads and glyph layouts are asynchronous; a wall-clock delay cannot fence them.
+                try { awaitNativeIdle(idle); awaitFullyRenderedFrame(); }
+                catch(AssertionError failure) { throw new AssertionError("Classic bind did not settle: "+bindingState(),failure); }
+            } finally {
+                screen.onActivity(activity -> {
+                    if (observedView.get() != null) observedView.get().removeOnDidBecomeIdleListener(idleListener);
+                });
             }
-            // Source uploads and glyph layouts are asynchronous; a wall-clock delay cannot fence them.
-            try { renderedFrame(); }
-            catch(AssertionError failure) { throw new AssertionError("Classic bind did not settle: "+bindingState(),failure); }
             screen.onActivity(activity->{MapDrawable map=(MapDrawable)app.getMap();
                 assertFalse("Explicit classic binding must remain current",map.isSqliteVectorLayer(layer.getId()));
                 assertTrue(map.getMaplibreMap().getStyle().getSource(layer.getPath().toString()) instanceof GeoJsonSource);});
@@ -208,8 +221,14 @@ public class VectorStyleRenderingTest {
             org.maplibre.android.maps.MapView.OnDidBecomeIdleListener idleListener=idle::countDown;
             screen.onActivity(activity->{MapDrawable map=(MapDrawable)app.getMap();
                 map.getMaplibreMapView().addOnDidBecomeIdleListener(idleListener);map.getMaplibreMap().triggerRepaint();});
-            try{assertTrue("The current camera, source and placement must become idle",idle.await(30,TimeUnit.SECONDS));}
+            try { awaitNativeIdle(idle); }
             finally{screen.onActivity(activity->((MapDrawable)app.getMap()).getMaplibreMapView().removeOnDidBecomeIdleListener(idleListener));}
+            awaitFullyRenderedFrame();
+        }
+        private static void awaitNativeIdle(CountDownLatch idle) throws InterruptedException {
+            assertTrue("The current camera, source and placement must become idle", idle.await(30, TimeUnit.SECONDS));
+        }
+        private void awaitFullyRenderedFrame() throws InterruptedException {
             CountDownLatch frame=new CountDownLatch(1);
             org.maplibre.android.maps.MapView.OnDidFinishRenderingFrameListener listener=(fully,encoding,rendering)->{if(fully)frame.countDown();};
             screen.onActivity(activity->{MapDrawable map=(MapDrawable)app.getMap();map.getMaplibreMapView().addOnDidFinishRenderingFrameListener(listener);

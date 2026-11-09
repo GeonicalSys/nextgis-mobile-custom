@@ -194,6 +194,8 @@ public class MapRenderStressTest {
             long workloadElapsed = SystemClock.elapsedRealtime() - workloadBegan;
             evidence.put("elapsed_ms", workloadElapsed).put("workload_elapsed_ms", workloadElapsed);
             screen.onActivity(activity -> {
+                // End synthetic inputs before measuring the renderer's recovery at a fixed camera.
+                headingLoop.removeCallbacks(headingPulse);
                 MapDrawable map = (MapDrawable) app.getMap(); map.setZoomAndCenter(11, new GeoPoint(0, 0), false, 0);
                 assertEquals("Persisted objects survive all reloads", FEATURES,
                         ((VectorLayer) map.getLayerById(state.optJSONArray("ids").optInt(0)))
@@ -243,6 +245,14 @@ public class MapRenderStressTest {
             evidence.put("status", "failed").put("failure", error.getMessage())
                     .put("frames", frames.get()).put("last_frame_age_ms", SystemClock.elapsedRealtime() - lastFrame.get());
             evidence.put("failure_state", renderState(screen, app));
+            JSONArray providers = new JSONArray();
+            screen.onActivity(activity -> {
+                MapDrawable map = (MapDrawable) app.getMap();
+                for (int i = 0; i < state.optJSONArray("ids").length(); i++) {
+                    providers.put(new JSONObject(map.getSqliteVectorDiagnostics(state.optJSONArray("ids").optInt(i))));
+                }
+            });
+            evidence.put("failure_tile_providers", providers);
             if (VerificationEnvironment.isEmulator()) {
                 android.view.accessibility.AccessibilityNodeInfo root = InstrumentationRegistry.getInstrumentation().getUiAutomation().getRootInActiveWindow();
                 evidence.put("active_window_package", root == null ? "unknown" : String.valueOf(root.getPackageName()));

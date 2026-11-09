@@ -16,6 +16,7 @@ import com.nextgis.maplibui.GISApplication;
 import com.nextgis.maplibui.util.SettingsConstantsUI;
 import com.nextgis.mobile.activity.MainActivity;
 import com.nextgis.mobile.util.AppSettingsConstants;
+import com.nextgis.mobile.util.VerificationEnvironment;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.maplibre.android.geometry.LatLng;
@@ -42,7 +43,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import static org.junit.Assert.*;
 
 /**
- * Explicit graphics smoke on an isolated emulator with a working EGL backend.
+ * Graphics smoke in the isolated verification APK with a working EGL backend.
  * Kept outside reliability's headless CI package because its SwiftShader backend
  * cannot render the bitmap symbols needed by the screenshot assertions.
  */
@@ -53,7 +54,7 @@ public class LocationOrbitTest {
     @Test public void phoneAccuracyFloorMatchesThePanelAndNativeCircleWithoutChangingFixes() throws Exception {
         GISApplication app = (GISApplication) InstrumentationRegistry.getInstrumentation()
                 .getTargetContext().getApplicationContext();
-        com.nextgis.mobile.util.VerificationEnvironment.requireIsolated(app);
+        VerificationEnvironment.requireIsolated(app);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(app);
         boolean hadIntro = preferences.contains(AppSettingsConstants.KEY_PREF_INTRO);
         boolean oldIntro = preferences.getBoolean(AppSettingsConstants.KEY_PREF_INTRO, false);
@@ -142,11 +143,13 @@ public class LocationOrbitTest {
     }
 
     @Test public void orbitUsesCompassThenCourseWithACenteredAnchorAndConfigurableSector() throws Exception {
-        assertTrue("Use only an isolated emulator", android.os.Build.MODEL.contains("sdk")
-                || android.os.Build.FINGERPRINT.startsWith("generic"));
         GISApplication app = (GISApplication) InstrumentationRegistry.getInstrumentation()
                 .getTargetContext().getApplicationContext();
-        assertTrue(app.getPackageName().endsWith(".debug"));
+        VerificationEnvironment.requireIsolated(app);
+        if (!VerificationEnvironment.isEmulator()) {
+            assertEquals("Explicit stationary verification phone is required", "true",
+                    InstrumentationRegistry.getArguments().getString("verificationPhone"));
+        }
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(app);
         String sectorKey = AppSettingsConstants.KEY_PREF_SHOW_COMPASS_ACCURACY_SECTOR;
         boolean hadSector = preferences.contains(sectorKey);
@@ -215,7 +218,7 @@ public class LocationOrbitTest {
                 style.addLayer(new BackgroundLayer("orbit-test-hot-layer"));
                 map.updateLocation(FIX, true, 140f, 12f, 35f, 30f);
             });
-            assertStructuralHotAddRestoresStack(screen, app);
+            assertStructuralHotAddRestoresStack(screen, app, "orbit-test-hot-layer");
             screen.onActivity(activity -> {
                 Style style = ((MapDrawable) app.getMap()).getMaplibreMap().getStyle();
                 assertNotNull("Structural refresh retains the SDK hot-added layer", style.getLayer("orbit-test-hot-layer"));
@@ -278,7 +281,10 @@ public class LocationOrbitTest {
                 MapDrawable map = (MapDrawable) app.getMap();
                 map.getMaplibreMap().getStyle().addLayer(new BackgroundLayer("sector-test-hot-layer"));
                 map.updateLocationHeading(35f, 30f);
-                assertStack(map.getMaplibreMap().getStyle());
+            });
+            assertStructuralHotAddRestoresStack(screen, app, "sector-test-hot-layer");
+            screen.onActivity(activity -> {
+                MapDrawable map = (MapDrawable) app.getMap();
                 map.getMaplibreMap().getStyle().removeLayer("sector-test-hot-layer");
                 map.loadLayersToMaplibreMapLite(Collections.emptyList(), true);
             });
@@ -316,7 +322,7 @@ public class LocationOrbitTest {
     }
 
     private static void assertStructuralHotAddRestoresStack(ActivityScenario<MainActivity> screen,
-            GISApplication app) throws Exception {
+            GISApplication app, String hotLayerId) throws Exception {
         AtomicReference<com.nextgis.maplibui.mapui.VectorLayerUI> added = new AtomicReference<>();
         try {
             screen.onActivity(activity -> {
@@ -343,7 +349,8 @@ public class LocationOrbitTest {
             });
             screen.onActivity(activity -> {
                 Style style = ((MapDrawable) app.getMap()).getMaplibreMap().getStyle();
-                assertNotNull(style.getLayer("orbit-test-hot-layer")); assertStack(style);
+                assertNotNull(style.getLayer(hotLayerId));
+                assertStack(style);
             });
         } finally {
             if (added.get() != null) screen.onActivity(activity -> {

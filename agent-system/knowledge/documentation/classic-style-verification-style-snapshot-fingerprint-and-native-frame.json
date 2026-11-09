@@ -40,6 +40,8 @@
         "tolerance), await native idle for camera/placement and then a fresh fully rendered",
         "frame, keeping pipeline completion distinct",
         "from the SDK paint transition duration.",
+        "The classic fixture subscribes to idle before publishing source and layer changes.",
+        "The source readback and a fresh fully rendered frame are both required.",
         ""
       ]
     }

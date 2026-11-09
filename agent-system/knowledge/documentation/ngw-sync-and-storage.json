@@ -40,7 +40,7 @@
       "value": [
         "title: NGW sync, локальное хранение и восстановление",
         "type: architecture",
-        "last_verified: 2026-10-30",
+        "last_verified: 2026-11-09",
         "related_code:",
         "  - app/src/test/java/com/nextgis/mobile/fragment/SettingsWorkspaceMoveTest.java",
         "  - app/src/main/java/com/nextgis/mobile/util/SelectMapPathPreference.java",
