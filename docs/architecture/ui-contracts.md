@@ -1,7 +1,7 @@
 ---
 title: Контракты значений и действий мобильного интерфейса
 type: architecture
-last_verified: 2026-11-04
+last_verified: 2026-11-09
 related_code:
   - app/src/test/java/com/nextgis/mobile/fragment/SettingsWorkspaceMoveTest.java
   - app/src/main/java/com/nextgis/mobile/util/SelectMapPathPreference.java
@@ -78,6 +78,8 @@ UI ID, module ID, repository ID, project/layer/FID и resource ID не взаи�
 viewport и охват проекта устанавливаются по соответствующему camera/project
 producer. Их нельзя получить из координат GPS-панели. Действия, настройки и
 непроверенные ветви каждого элемента перечислены в JSON по указанному ID.
+После пересоздания экрана линейка получает восстановленную геометрию, когда
+готовы камера и источники текущего стиля. До этого запрос хранится в состоянии экрана.
 
 | Экран | Смысл и источник | Что проверять отдельно |
 | --- | --- | --- |

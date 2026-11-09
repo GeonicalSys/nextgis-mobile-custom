@@ -40,7 +40,7 @@
       "value": [
         "title: MapLibre rendering и порядок слоёв",
         "type: architecture",
-        "last_verified: 2026-11-02",
+        "last_verified: 2026-11-09",
         "related_code:",
         "  - app/build.gradle",
         "  - maplib/build.gradle",

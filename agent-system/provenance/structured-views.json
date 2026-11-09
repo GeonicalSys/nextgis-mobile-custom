@@ -114,13 +114,13 @@
     },
     "docs/registry/ui-contracts.json": {
       "layout_id": "lisa:mobile:metadata:ui-contracts-registry",
-      "sha256_utf8_lf": "b70df43752cec608c99cc9884ea6f12a6485633788a20a09d10876fcf3d73e94",
+      "sha256_utf8_lf": "3207469b0e5994d3d123aadac3db251f4748b2412f65c56552ac42e22564ecd3",
       "source_fingerprints": {
         "agent-system/provenance/ui-contracts.json": "466c091fc7477ee2e0949e1cb84defa7eaf2f4473aae773aab024d21e512dc7c",
         "docs/scripts/ui_catalogue_knowledge.py": "123673e3984832ec94154f4ad354b47b396782de67fdd544be9edab098ba33f9",
         "docs/scripts/structured_view_proof.py": "bae9d5c0273dbe26bfa4c4467c2c7210cbc75c1677cc25a9a6a4cf347b6bb54c"
       },
-      "ordered_records_sha256": "cc3fa9db4d4db5517daa30b4926059bdf4efd5332365dae38ecc3f643a84654f",
+      "ordered_records_sha256": "2e5573ab7cc299130520b4f06ada8c192dd30933bb56e151f876ae05420ab326",
       "ordered_count": 488
     }
   }

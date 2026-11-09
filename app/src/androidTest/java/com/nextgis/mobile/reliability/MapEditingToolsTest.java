@@ -11,6 +11,7 @@ import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import com.nextgis.maplib.datasource.GeoLineString;
 import com.nextgis.maplib.datasource.GeoPoint;
 import com.nextgis.maplib.map.MapDrawable;
 import com.nextgis.maplib.map.MaplibreMapInteraction;
@@ -1358,6 +1359,85 @@ public class MapEditingToolsTest {
                 }
             } catch (ReflectiveOperationException error) { throw new AssertionError(error); }
         });
+    }
+
+    @Test public void cancellingEditWithoutRendererClearsModelEditState() throws Exception {
+        awaitRecreatedMap();
+        addLayer(10, true);
+        scenario.onActivity(activity -> {
+            MapDrawable map = (MapDrawable) app.getMap();
+            select(activity, 0);
+            assertTrue(activity.getBottomToolbar().getMenu().performIdentifierAction(R.id.menu_feature_edit, 0));
+            assertNotNull(map.editingObject);
+            String savedGeometry = layers.get(0).getGeometryForId(ids.get(0)).toWKT(true);
+
+            withoutMapLibre(map, () -> activity.getMapFragment().setNewMode(MapFragment.MODE_NORMAL));
+
+            assertNull(map.editingObject);
+            assertFalse(map.isGeometryTransformEnabled());
+            assertFalse(layers.get(0).isFeatureHidden(ids.get(0)));
+            assertEquals(savedGeometry, layers.get(0).getGeometryForId(ids.get(0)).toWKT(true));
+        });
+    }
+
+    @Test public void savedRulerStartsAfterSourcesAreReadyAndSurvivesRecreation() throws Exception {
+        awaitRecreatedMap();
+        GeoLineString saved = new GeoLineString();
+        saved.setCRS(GeoConstants.CRS_WEB_MERCATOR);
+        for (int x : new int[]{100, 200}) {
+            GeoPoint point = new GeoPoint(x, 100);
+            point.setCRS(GeoConstants.CRS_WEB_MERCATOR);
+            saved.add(point);
+        }
+        scenario.onActivity(activity -> {
+            MapDrawable map = (MapDrawable) app.getMap();
+            MapFragment fragment = activity.getMapFragment();
+            withoutMapLibre(map, () -> {
+                requestRulerRestore(fragment, saved);
+                assertNull(map.getMeasurementGeometry());
+            });
+            fragment.changeProgress(false);
+            assertRulerGeometry(saved, map.getMeasurementGeometry());
+        });
+
+        scenario.recreate();
+        awaitRecreatedMap();
+        scenario.onActivity(activity -> assertRulerGeometry(saved, ((MapDrawable) app.getMap()).getMeasurementGeometry()));
+    }
+
+    private static void assertRulerGeometry(GeoLineString expected, GeoLineString actual) {
+        assertNotNull(actual);
+        assertEquals(expected.getPointCount(), actual.getPointCount());
+        for (int index = 0; index < expected.getPointCount(); index++) {
+            assertEquals(expected.getPoint(index).getX(), actual.getPoint(index).getX(), 0.001);
+            assertEquals(expected.getPoint(index).getY(), actual.getPoint(index).getY(), 0.001);
+        }
+    }
+
+    private static void requestRulerRestore(MapFragment fragment, GeoLineString geometry) {
+        try {
+            java.lang.reflect.Method start = MapFragment.class.getDeclaredMethod("startMeasuring", boolean.class, GeoLineString.class);
+            start.setAccessible(true);
+            start.invoke(fragment, false, geometry);
+        } catch (ReflectiveOperationException error) {
+            throw new AssertionError("Ruler restore request failed", error);
+        }
+    }
+
+    private static void withoutMapLibre(MapDrawable map, Runnable action) {
+        try {
+            java.lang.reflect.Field mapRef = MapDrawable.class.getDeclaredField("maplibreMap");
+            mapRef.setAccessible(true);
+            Object current = mapRef.get(map);
+            mapRef.set(map, new java.lang.ref.WeakReference<>(null));
+            try {
+                action.run();
+            } finally {
+                mapRef.set(map, current);
+            }
+        } catch (ReflectiveOperationException error) {
+            throw new AssertionError("Could not simulate a detached renderer", error);
+        }
     }
 
     @Test public void pendingNativeTapIsCancelledBeforeViewDestruction() throws Exception {

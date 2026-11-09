@@ -37,13 +37,16 @@
         "id": "WF-LAYER-ORDER",
         "repository": "maplibui",
         "path": "src/main/java/com/nextgis/maplibui/fragment/LayersListAdapter.java",
-        "marker": "public Object getItem(int i)",
+        "marker": "public ILayer getItem(int position)",
         "requires": [
-          "int nIndex = getCount() - 1 - i",
-          "return mMap.getLayer(nIndex)"
+          "int index = mRows.size() - 1 - position",
+          "return index >= 0 && index < mRows.size() ? mRows.get(index) : null"
         ],
-        "forbids": [],
-        "sha256": "9f7b128e63bc5395479cd1b578769179bcbbc11cc8f795a2f598293b1ae9cd91"
+        "forbids": [
+          "mMap.getLayer(",
+          "mMap.getLayerCount("
+        ],
+        "sha256": "d75a7e932a79e341d8036e47ec16923c457b72d39555a01f487844a6228e8125"
       }
     }
   },

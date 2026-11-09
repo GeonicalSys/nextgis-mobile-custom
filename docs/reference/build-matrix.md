@@ -1,7 +1,7 @@
 ---
 title: Матрица сборки и версий
 type: reference
-last_verified: 2026-11-06
+last_verified: 2026-11-09
 related_code:
   - build.gradle
   - gradle/wrapper/gradle-wrapper.properties
@@ -30,6 +30,11 @@ related_code:
 После правки записи обновить Markdown командой
 `python -B docs/scripts/prose_knowledge.py --write` и включить обновлённое
 представление в тот же коммит. Валидатор сверяет представление с записью.
+
+При изменении реестра UI сначала сверить затронутые контракты с кодом и выполнить
+`python -B docs/scripts/ui_catalogue_knowledge.py --write`. Затем обновить
+квитанцию `python -B docs/scripts/structured_view_proof.py --write` и проверить
+сгенерированный реестр и исходные записи через `tools/docs-check.ps1 -RunTests`.
 
 Отдельные темы в сравнении с official редактируются в записях
 `official-differences-*.json`. Запись `official-differences.json` хранит

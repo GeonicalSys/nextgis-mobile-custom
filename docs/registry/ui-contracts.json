@@ -808,13 +808,16 @@
       "id": "WF-LAYER-ORDER",
       "repository": "maplibui",
       "path": "src/main/java/com/nextgis/maplibui/fragment/LayersListAdapter.java",
-      "marker": "public Object getItem(int i)",
+      "marker": "public ILayer getItem(int position)",
       "requires": [
-        "int nIndex = getCount() - 1 - i",
-        "return mMap.getLayer(nIndex)"
+        "int index = mRows.size() - 1 - position",
+        "return index >= 0 && index < mRows.size() ? mRows.get(index) : null"
       ],
-      "forbids": [],
-      "sha256": "9f7b128e63bc5395479cd1b578769179bcbbc11cc8f795a2f598293b1ae9cd91"
+      "forbids": [
+        "mMap.getLayer(",
+        "mMap.getLayerCount("
+      ],
+      "sha256": "d75a7e932a79e341d8036e47ec16923c457b72d39555a01f487844a6228e8125"
     },
     {
       "id": "WF-EDIT-POLICY",
@@ -1950,7 +1953,7 @@
         "feature.geometry.toBlob()"
       ],
       "forbids": [],
-      "sha256": "0d0986b328c66cbf6b015556e2843db7ad234f568ee10da7d37e987e0357dee1"
+      "sha256": "cb55eb4e0aad030bea34f86ad3ea59a8953146165f56daf15268859b71e4d5c8"
     },
     {
       "id": "WF-STAKEOUT-SELECTION-RESTORE",
@@ -4645,16 +4648,16 @@
         "tvLayerName"
       ],
       "meaning": "Первой строке списка соответствует верхний индекс модели слоя, а не индекс0.",
-      "value_origin": "LayersListAdapter.getItem: getCount()-1-i → mMap.getLayer(nIndex).",
+      "value_origin": "LayersListAdapter.getItem: обратный индекс в упорядоченном снимке прямых слоёв карты.",
       "units": "Целочисленный индекс, не расстояние.",
       "updates": [
-        "После изменения списка adapter вычисляет строку из текущего стека."
+        "Адаптер обновляет снимок вместе с уведомлением списка."
       ],
       "actions": [
         "Просмотреть стек"
       ],
       "conditions": [
-        "Модель карты присутствует; для отсутствующей карты возвращается null."
+        "Если карты нет или позиция за границами снимка, строка отсутствует."
       ],
       "saved_state": "Этот контракт описывает чтение порядка; drag/reorder persistence отдельным методом здесь не сертифицирован.",
       "source_ids": [
@@ -7547,14 +7550,14 @@
     {
       "repository": "root",
       "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
-      "purpose": "Non-method rulerText getter and zoomText delegation: screenToMap/WebMercator/GeoLineString/formatLength, separate camera zoom and saved viewport. Reviewed2026-11-02: only memory-dialog builder gains bounded scrolling; prior guarded methods/ruler/zoom remain exact.",
+      "purpose": "Non-method rulerText getter and zoomText delegation: screenToMap/WebMercator/GeoLineString/formatLength, separate camera zoom and saved viewport. Reviewed2026-11-02: only memory-dialog builder gains bounded scrolling; prior guarded methods/ruler/zoom remain exact. Review dated 2026-11-09 covers a saved measurement waiting for the current style and camera. The scale ruler, zoom, rotation and memory notice have independent source checks.",
       "contract_ids": [
         "UI-MAP-SCALE-RULER",
         "UI-MAP-ZOOM",
         "UI-MAP-CAMERA-ROTATION-STATE",
         "UI-RENDER-MEMORY-WARNING"
       ],
-      "sha256": "0b75167d3525050ecb363cdd46db32efbb058ff8e5ed543a8e13fe4217824a6e"
+      "sha256": "40fc8c1dd7bb92293968b1ef9161d5bd4b19fd3ac65db3049241a07e469c4e6c"
     },
     {
       "repository": "maplib",

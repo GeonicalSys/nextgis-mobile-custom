@@ -39,9 +39,19 @@ public class DiagnosticsProcessExitReporterTest {
         event = AppDiagnostics.prepareCachedForSend(event);
         assertEquals("app@old+223", event.getRelease()); assertEquals("old-revision", event.getTag("source_revision"));
         assertNull(event.getTag("operation"));
-        assertTrue(event.getContexts().get("process_exit").toString().contains("Renderer"));
+        Map<?, ?> exit = (Map<?, ?>) event.getContexts().get("process_exit");
+        assertTrue(exit.toString().contains("Renderer"));
+        assertEquals(1000L, exit.get("observed_process_age_ms"));
         assertNotNull(event.getContexts().get("report_origin"));
     }
+    @Test public void historicalExitWithoutRecordedStartupHasNoEstimatedAge() throws Exception {
+        JSONObject unknown = owner().put("build", -1).put("started_at_ms", 2000);
+        io.sentry.SentryEvent event = DiagnosticsProcessExitReporter.event("app", unknown,
+                exit("app", 42, 2000), Map.of());
+        Map<?, ?> processExit = (Map<?, ?>) event.getContexts().get("process_exit");
+        assertFalse(processExit.containsKey("observed_process_age_ms"));
+    }
+
     @Test public void systemUserAndUpdateStopsAreNotReportedAsCrashes() {
         for (int reason : new int[]{ApplicationExitInfo.REASON_EXIT_SELF, ApplicationExitInfo.REASON_USER_REQUESTED,
                 ApplicationExitInfo.REASON_USER_STOPPED, ApplicationExitInfo.REASON_PACKAGE_UPDATED,

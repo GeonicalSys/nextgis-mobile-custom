@@ -21,6 +21,8 @@ import com.nextgis.maplib.util.GeoConstants;
 import com.nextgis.maplibui.GISApplication;
 import com.nextgis.maplibui.fragment.LayersListAdapter;
 import com.nextgis.maplibui.mapui.NGWVectorLayerUI;
+import com.nextgis.maplibui.util.ProjectOperationCoordinator;
+import com.nextgis.maplibui.util.SharedUnderlayProjects;
 import com.nextgis.mobile.R;
 import com.nextgis.mobile.activity.MainActivity;
 import com.nextgis.mobile.fragment.LayersFragment;
@@ -28,9 +30,16 @@ import com.nextgis.mobile.util.AppSettingsConstants;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import static org.junit.Assert.*;
 
 /** Real drawer, worker and synthetic SQLite outbox; no account or network writes. */
@@ -63,7 +72,7 @@ public class LayerPendingChangesTest {
             scenario.onActivity(a -> ready.set(predicate.test(a)));
             if(!ready.get())Thread.sleep(80);
         }
-        assertTrue("Pending layer badges did not reach expected state",ready.get());
+        assertTrue("Layer list did not reach expected state",ready.get());
     }
     private static NGWVectorLayerUI layer(GISApplication app,MapDrawable map) throws Exception {
         NGWVectorLayerUI layer=new NGWVectorLayerUI(app,new File(map.getPath(),"pending_"+UUID.randomUUID().toString().replace("-","")));
@@ -111,6 +120,85 @@ public class LayerPendingChangesTest {
             assertTrue(changed.delete(false));assertTrue(clean.delete(false));map.save();
             SharedPreferences.Editor edit=prefs.edit();
             if(hadIntro)edit.putBoolean(AppSettingsConstants.KEY_PREF_INTRO,oldIntro);else edit.remove(AppSettingsConstants.KEY_PREF_INTRO);
+            assertTrue(edit.commit());
+        }
+    }
+
+    private static List<Long> layerOrder(LayersListAdapter adapter) {
+        List<Long> ids = new ArrayList<>();
+        for (int position = 0; position < adapter.getCount(); position++) {
+            ids.add(adapter.getItemId(position));
+        }
+        return ids;
+    }
+
+    private static void changeMapInWorker(Runnable mutation) {
+        FutureTask<Void> work = new FutureTask<>(mutation, null);
+        new Thread(work, "layer-list-test-worker").start();
+        try {
+            work.get(10, TimeUnit.SECONDS);
+        } catch (InterruptedException error) {
+            Thread.currentThread().interrupt();
+            throw new AssertionError(error);
+        } catch (ExecutionException | TimeoutException error) {
+            throw new AssertionError("Background layer mutation did not complete", error);
+        } finally {
+            work.cancel(true);
+        }
+    }
+
+    @Test public void backgroundChangesPublishOneOrderAndDraggingTargetsTheDisplayedLayer() throws Exception {
+        GISApplication app = (GISApplication) InstrumentationRegistry.getInstrumentation()
+                .getTargetContext().getApplicationContext();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(app);
+        boolean hadIntro = prefs.contains(AppSettingsConstants.KEY_PREF_INTRO);
+        boolean oldIntro = prefs.getBoolean(AppSettingsConstants.KEY_PREF_INTRO, false);
+        assertTrue(prefs.edit().putBoolean(AppSettingsConstants.KEY_PREF_INTRO, true).commit());
+
+        MapDrawable map = (MapDrawable) app.getMap();
+        NGWVectorLayerUI first = layer(app, map);
+        NGWVectorLayerUI second = layer(app, map);
+        NGWVectorLayerUI incoming = layer(app, map);
+        map.removeLayer(incoming);
+        map.save();
+        AtomicReference<List<Long>> expectedFinal = new AtomicReference<>();
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            await(scenario, activity -> adapter(activity) != null
+                    && !SharedUnderlayProjects.isMigrationPending()
+                    && !ProjectOperationCoordinator.isBusy());
+            scenario.onActivity(activity -> {
+                LayersListAdapter rows = adapter(activity);
+                List<Long> original = layerOrder(rows);
+                int source = position(rows, second.getId());
+                int target = position(rows, first.getId());
+
+                changeMapInWorker(() -> map.insertLayer(0, incoming));
+                assertEquals(original.size() + 1, map.getLayerCount());
+                assertEquals("The adapter must keep the last notified rows", original, layerOrder(rows));
+
+                List<Long> reordered = new ArrayList<>(original);
+                reordered.add(target, reordered.remove(source));
+                expectedFinal.set(reordered);
+                List<Long> withIncoming = new ArrayList<>(reordered);
+                withIncoming.add((long) incoming.getId());
+                rows.swapElements(source, target);
+                assertEquals("Drag targets the same displayed layer after a model insert",
+                        withIncoming, layerOrder(rows));
+
+                changeMapInWorker(() -> map.removeLayer(incoming));
+                assertEquals("The adapter keeps rows until the removal notification",
+                        withIncoming, layerOrder(rows));
+            });
+            await(scenario, activity -> expectedFinal.get().equals(layerOrder(adapter(activity))));
+        } finally {
+            if (map.getLayerById(incoming.getId()) != null) map.removeLayer(incoming);
+            assertTrue(incoming.delete(false));
+            assertTrue(second.delete(false));
+            assertTrue(first.delete(false));
+            map.save();
+            SharedPreferences.Editor edit = prefs.edit();
+            if (hadIntro) edit.putBoolean(AppSettingsConstants.KEY_PREF_INTRO, oldIntro);
+            else edit.remove(AppSettingsConstants.KEY_PREF_INTRO);
             assertTrue(edit.commit());
         }
     }
