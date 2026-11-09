@@ -17,6 +17,8 @@ class LocalDocsScopeTest(unittest.TestCase):
             root=Path(folder)
             for name in ('tools','docs/scripts','docs/tests'):(root/name).mkdir(parents=True,exist_ok=True)
             shutil.copyfile(ROOT/'tools/docs-check.ps1',root/'tools/docs-check.ps1')
+            helper = 'docs/scripts/check_change_impact.py'
+            shutil.copyfile(ROOT/helper, root/helper)
             (root/'tools/update-report-policy.json').write_text(json.dumps({'base_branch':'main'}),encoding='utf-8')
             (root/'tools/check_update_reports.py').write_text('pass\n',encoding='utf-8')
             for name in ('tools/test_check_update_reports.py','docs/tests/test_interface.py'):
@@ -25,10 +27,11 @@ class LocalDocsScopeTest(unittest.TestCase):
                     ' def test_workspace_is_the_owned_fixture(self):\n'
                     '  self.assertTrue(Path("tools/update-report-policy.json").is_file())\n',encoding='utf-8')
             (root/'docs/scripts/validate_docs.py').write_text(
-                'import argparse,json\nfrom pathlib import Path\n'
+                'import argparse,json,sys\nfrom pathlib import Path\n'
                 'p=argparse.ArgumentParser();p.add_argument("--workspace-root");'
                 'p.add_argument("--enforce-diff",action="store_true");'
-                'p.add_argument("--changed-file",action="append",default=[]);a=p.parse_args()\n'
+                'p.add_argument("--changed-files-stdin",action="store_true");a=p.parse_args()\n'
+                'a.changed_file=json.load(sys.stdin) if a.changed_files_stdin else []\n'
                 'if a.enforce_diff and not a.changed_file:p.error("empty enforced diff")\n'
                 'Path("validated.json").write_text(json.dumps(vars(a)),encoding="utf-8")\n',encoding='utf-8')
             (root/'.gitignore').write_text('validated.json\n',encoding='utf-8')

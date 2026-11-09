@@ -83,7 +83,8 @@ public class LegacyUnderlayTransferSessionTest {
         List<LegacyUnderlayImporter.Progress> progress = new ArrayList<>();
         Object session = session(progress);
         try {
-            ((AtomicLong) field(session, "lastProgressAt")).set(0L);
+            long lastProgress = System.currentTimeMillis() - LegacyUnderlayTransferPolicy.DEFAULT_INACTIVITY_TIMEOUT_MS;
+            ((AtomicLong) field(session, "lastProgressAt")).set(lastProgress);
             call(session, "checkForStall");
             assertTrue(((AtomicBoolean) field(session, "timedOut")).get());
             assertEquals(LegacyUnderlayImporter.Phase.STALLED, progress.get(progress.size()-1).phase);
