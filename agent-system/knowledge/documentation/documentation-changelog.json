@@ -99,6 +99,11 @@
     },
     {
       "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-09-tablet-track-stop",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
       "target": "lisa:mobile:evidence:documentation-changelog-2026-11-09-mobile-glitchtip",
       "status": "source_backed"
     },

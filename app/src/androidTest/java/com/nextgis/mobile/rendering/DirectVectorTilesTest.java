@@ -79,8 +79,9 @@ public class DirectVectorTilesTest {
                 byte[] before = contents(layer, 1);
                 String child = "nglayer-layer-" + layer.getId() + (point
                         ? "-layout-firefly-1" : "_outline-layout-contour-1-primary");
-                f.renderedFrame();
-                await("Original tiled geometry must be rendered", () -> !hits(f, layer, "nglayer-layer-" + layer.getId()).isEmpty());
+                // Observe the rendered layer itself; an already idle map need not send a new idle event.
+                await("Original tiled geometry must be rendered: " + (point ? "point" : "polygon"),
+                        () -> !hits(f, layer, "nglayer-layer-" + layer.getId()).isEmpty());
                 f.screen.onActivity(activity -> {
                     com.nextgis.maplib.display.Style style;
                     if (point) {
@@ -103,8 +104,9 @@ public class DirectVectorTilesTest {
                     return next != null && next != previous && next.isCurrent();
                 });
                 assertFalse("An old style generation cannot serve late tiles", previous.isCurrent());
-                assertStreaming(f, layer); f.renderedFrame();
-                await("Advanced style must actually render through its direct source", () -> !hits(f, layer, child).isEmpty());
+                assertStreaming(f, layer);
+                await("Advanced style must actually render through its direct source: " + child,
+                        () -> !hits(f, layer, child).isEmpty());
                 Bitmap image = f.snapshot();
                 try { VectorStyleRenderingTest.saveFireflySnapshot(f, image, point ? "direct-firefly" : "direct-polygon"); }
                 finally { image.recycle(); }
@@ -147,7 +149,16 @@ public class DirectVectorTilesTest {
             }
             Feature feature = new Feature(42, layer.getFields()); feature.setGeometry(geometry);
             for (Field field : layer.getFields()) feature.setFieldValue(field.getName(), "51");
-            layer.createFeatureBatch(feature, DatabaseContext.getDatabaseForLayer(layer, false), false);
+            // Use the same notification lifecycle as production bulk imports.
+            layer.beginBulkImport();
+            try {
+                layer.createFeatureBatch(feature, DatabaseContext.getDatabaseForLayer(layer, false), false);
+            } finally {
+                layer.endBulkImport();
+            }
+            layer.rebuildCache(null);
+            assertEquals("The native spatial index contains the original fixture feature exactly once",
+                    Collections.singletonList(42L), layer.queryForNativeRender(new GeoEnvelope(-size, size, -size, size)));
             layer.setRenderer(new SimpleFeatureRenderer(layer, point
                     ? new SimpleMarkerStyle(Color.GREEN, Color.GREEN, 20, SimpleMarkerStyle.MarkerStyleCircle)
                     : new SimplePolygonStyle(Color.GREEN, Color.BLUE)));

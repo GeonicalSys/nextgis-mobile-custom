@@ -182,6 +182,8 @@ public class TrackStopConfirmationTest {
                     AtomicBoolean oriented = new AtomicBoolean();
                     await(() -> { s.tracks.f.screen.onActivity(a -> oriented.set(
                             (a.getResources().getConfiguration().orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE) == landscape)); return oriented.get(); });
+                    // The resource configuration can arrive before the rotated window can route input.
+                    TrackControlsTest.Ui.automation().waitForIdle(750, 5000);
                     for (boolean dark : new boolean[]{false,true}) for (float font : new float[]{1f,1.3f,2f}) {
                         AtomicReference<androidx.appcompat.app.AlertDialog> dialog = new AtomicReference<>();
                         AtomicBoolean dismissed = new AtomicBoolean();
@@ -226,9 +228,8 @@ public class TrackStopConfirmationTest {
                         }); return fitted.get(); });
                         s.tracks.f.screen.onActivity(a -> com.nextgis.mobile.reliability.LargeTextLayoutTest.assertTrackDialogFits(dialog.get()));
                         try {
-                            // Resolve physical bounds from the active, focused accessibility window.
-                            // A context-only density/rotation override can precede its input surface.
-                            TrackControlsTest.Ui.tap(android.R.id.button2);
+                            NativeStyleTouch.tap(s.tracks.f, () -> dialog.get()
+                                    .getButton(androidx.appcompat.app.AlertDialog.BUTTON_NEGATIVE));
                             // Input injection can return before AlertController posts dismissal.
                             // Observe its actual OnDismiss callback; send the Cancel tap only once.
                             await(dismissed::get);
@@ -237,13 +238,13 @@ public class TrackStopConfirmationTest {
                             s.tracks.f.screen.onActivity(a -> assertFalse(dialog.get().isShowing()));
                             android.util.Log.i("TrackStopLayoutQA", screen[0] + "x" + screen[1]
                                     + " density=" + screen[2] + " dark=" + dark + " font=" + font
-                                    + " DOWN=1 UP=1 dismissed=true " + TrackControlsTest.Ui.lastTouch);
+                                    + " DOWN=1 UP=1 dismissed=true windowInput=" + windowInput.get());
                             s.unchanged();
                         } catch (AssertionError failure) {
                             throw new AssertionError("Stop confirmation Cancel: " + screen[0] + "x" + screen[1]
                                     + " density=" + screen[2] + " dark=" + dark + " font=" + font
                                     + " down=" + cancelDownEvents.get() + " up=" + cancelUpEvents.get()
-                                    + " dismissed=" + dismissed.get() + " " + TrackControlsTest.Ui.lastTouch
+                                    + " dismissed=" + dismissed.get()
                                     + " windowInput=" + windowInput.get(), failure);
                         } finally {
                             s.tracks.f.screen.onActivity(a -> { if (dialog.get().isShowing()) dialog.get().dismiss(); });

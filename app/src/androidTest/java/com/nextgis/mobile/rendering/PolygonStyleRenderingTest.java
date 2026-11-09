@@ -60,7 +60,19 @@ public class PolygonStyleRenderingTest {
             advanced.getPatternOptions().setAlpha(0);rules.setStyle("A",advanced);f.bind(layer,legacy,rules);
             assertEquals("Pattern alpha is independent of both contours",0,pixels(f.snapshot(),0));
             assertTrue(pixels(f.snapshot(),2)>20);
-            f.screen.onActivity(activity->{layer.setVisible(false);((MapDrawable)f.app.getMap()).checkLayerVisibility(layer.getId());});
+            f.screen.onActivity(activity -> {
+                MapDrawable map = (MapDrawable) f.app.getMap();
+                layer.setVisible(false);
+                map.checkLayerVisibility(layer.getId());
+                org.maplibre.android.maps.Style nativeStyle = map.getMaplibreMap().getStyle();
+                String base = "nglayer-layer-" + layer.getId();
+                for (String suffix : new String[]{"", "_outline", "_outline-layout-contour-1-primary",
+                        "_outline-layout-contour-1-casing"}) {
+                    org.maplibre.android.style.layers.Layer part = nativeStyle.getLayer(base + suffix);
+                    assertNotNull("Native polygon part " + suffix, part);
+                    assertEquals("Hidden native polygon part " + suffix, Property.NONE, part.getVisibility().getValue());
+                }
+            });
             f.renderedFrame();assertEquals(0,pixels(f.snapshot(),2));
             f.screen.onActivity(activity->{layer.setVisible(true);((MapDrawable)f.app.getMap()).checkLayerVisibility(layer.getId());});
             f.bind(layer,legacy,null);

@@ -1,7 +1,7 @@
 ---
 title: Автоматические проверки на смартфоне и эмуляторе
 type: runbook
-last_verified: 2026-11-02
+last_verified: 2026-11-09
 related_code:
   - tools/verify-mobile-tests.ps1
   - tools/run_mobile_tests.py
@@ -849,6 +849,11 @@ LegacyTrackColorsNativeTest (реальный v1→v2), TrackControlsTest (nativ
 а на эмуляторе также прежние Stop/retry и shared-track сценарии. Для stationary
 проверки на разрешённом устройстве указать `-PhoneSerial`; используется только
 отдельная verification-установка, системные настройки телефона не меняются.
+
+Матрица Stop дожидается стабилизации окна после поворота экрана.
+Целевое касание вычисляется по видимой кнопке Cancel с учётом
+преобразований её контейнеров и границ окна. Тест проверяет один DOWN и UP на
+кнопке, фактическое закрытие диалога и продолжение записи текущего трека.
 
 Related `-Area line-labels` включает VisibleLineLabelsTest и cross-geometry regression VectorStyleRenderingTest. `-Area firefly-editor-ui` проверяет текущий редактор без кнопки пресета в 72 профилях Save/Cancel. Обе области имеют stationary verification phone routing. PNG `line-label-qa` сохраняются bounded collector перед reset. Фактические результаты фиксируются в квитанции задачи.
 
