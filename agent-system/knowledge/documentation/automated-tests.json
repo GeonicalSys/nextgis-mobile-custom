@@ -40,7 +40,7 @@
       "value": [
         "title: Автоматические проверки на смартфоне и эмуляторе",
         "type: runbook",
-        "last_verified: 2026-11-09",
+        "last_verified: 2026-11-10",
         "related_code:",
         "  - tools/verify-mobile-tests.ps1",
         "  - tools/run_mobile_tests.py",

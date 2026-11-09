@@ -30,13 +30,13 @@
     "definition": {
       "role": "complete_registry_definition",
       "value": {
-        "title": "Publication requires current complete phone and emulator acceptance",
+        "title": "Publication requires complete current physical-device and emulator acceptance",
         "owners": [
           "app",
           "maplibui",
           "maplib"
         ],
-        "statement": "Run local Related after ordinary work and local Full plus Check-Publication after dependency closure and final code/version before publication. Every native case, unit/docs/version gate, 36 chooser profiles and 6 real-window profiles at density620/font200% must pass for the current content, including real_window_matrix. Cloud workflows are manual-only by separate user request. Full preserves every failed attempt; a successful repeat cannot hide it. Setup/transport/locked-device failures abort. Only the separate verification APK is reset on a phone. Missing permitted project requires asking the user.",
+        "statement": "Run local Related after ordinary work and local Full plus Check-Publication after dependency closure and final code/version before publication. Every native case, unit/docs/version gate, 36 chooser profiles and 6 real-window profiles at density620/font200% must pass for the current content, including real_window_matrix. Cloud workflows are manual-only by separate user request. Full preserves every failed attempt; a successful repeat cannot hide it. Setup/transport/locked-device failures abort. Only the separate verification APK is reset on a phone. Missing permitted project requires asking the user. The chosen physical phone must pass all cases assigned to it, including native graphics. Current render stress evidence requires a physical phone and a different physical tablet. The offline tile case uses the isolated app on the USB phone with operator-set airplane mode and Wi-Fi disabled. The tablet keeps its Wi-Fi connection for its assigned tests.",
         "build_identity": "A successful known verification assemble must bind the unchanged source fingerprint to the exact app/test APK hashes and fixed recipe. Related SkipBuild only reuses that basis and fails before device access for missing, stale or mixed binaries. Recheck the pair around installs and completion; Full/publication receipts require the basis. This does not attest installed bytes or production release-candidate provenance.",
         "related_code": [
           "tools/run_mobile_tests.py",
@@ -45,7 +45,10 @@
           "tools/mobile_test_project.py",
           "tools/mobile-test-plan.json",
           "tools/tests/test_mobile_build_identity.py",
-          "app/src/androidTest/java/com/nextgis/mobile/util/VerificationEnvironment.java"
+          "app/src/androidTest/java/com/nextgis/mobile/util/VerificationEnvironment.java",
+          "tools/mobile_render_acceptance.py",
+          "tools/tests/test_mobile_render_acceptance.py",
+          "app/src/androidTest/java/com/nextgis/mobile/rendering/DirectVectorTilesOfflineTest.java"
         ],
         "verify_smoke": [
           "AUTO-MOBILE-FULL",

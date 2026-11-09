@@ -29,6 +29,7 @@ from mobile_build_identity import (GRADLE_ARGUMENTS, build_and_record, load_basi
 
 ROOT = Path(__file__).resolve().parents[1]
 EMULATOR_HARDWARE = {'ranchu', 'goldfish'}
+OFFLINE_TILE_CLASS = 'com.nextgis.mobile.rendering.DirectVectorTilesOfflineTest'
 
 
 class NativeCheckFailure(RuntimeError):
@@ -50,6 +51,7 @@ class Verification:
         self.plan=json.loads((ROOT/'tools/mobile-test-plan.json').read_text(encoding='utf-8'))
         self.catalog=native_catalog(ROOT)
         self.required=validate_plan(self.plan,self.catalog)
+        self.required_phone=frozenset(expand_selectors(self.plan['phone'],self.catalog))
         self.fingerprint=source_fingerprint(ROOT)
         stamp=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
         self.output=Path(args.output or ROOT/'build/verification'/stamp)
@@ -142,6 +144,8 @@ class Verification:
             if not self.args.phone_serial and len(phones)!=1:
                 raise ValueError('Full acceptance needs one connected phone or an explicit --phone-serial')
             self.phone=self.identity(self.args.phone_serial or phones[0],'phone')
+            if OFFLINE_TILE_CLASS in self.plan['phone']:
+                self.require_offline_usb_phone()
             self.select_project()
         elif self.args.phone_serial:
             self.phone=self.identity(self.args.phone_serial,'phone')
@@ -149,6 +153,8 @@ class Verification:
                 for case in self.plan.get('related_phone_areas',{}).get(area,[])})
             if not self.related_phone_cases:
                 raise ValueError('No stationary phone checks are defined for the selected Related areas')
+            if any(case.partition('#')[0] == OFFLINE_TILE_CLASS for case in self.related_phone_cases):
+                self.require_offline_usb_phone()
             if any('ProjectLayerSelectionTest' in case for case in self.related_phone_cases): self.select_project()
             if phone_only: return
         if self.args.scope!='full' and getattr(self.args,'test_project_fixture',None) and not self.project_fixture:
@@ -310,6 +316,39 @@ class Verification:
         for permission in ('BLUETOOTH_CONNECT','BLUETOOTH_SCAN'):
             self.command([self.adb,'-s',serial,'shell','pm','revoke',PACKAGE,'android.permission.'+permission],allow_failure=True)
         self.command([self.adb,'-s',serial,'shell','cmd','locale','set-app-locales',PACKAGE,'--locales','ru'],allow_failure=True)
+
+    def require_offline_usb_phone(self):
+        usb_serial = self.command([self.adb, '-d', 'get-serialno'], timeout=10, allow_failure=True).strip()
+        if usb_serial != self.phone:
+            raise RuntimeError('Connect the selected offline verification phone as the only USB Android device. '
+                               'The tablet can stay connected by Wi-Fi.')
+
+    def phone_offline_settings(self):
+        return tuple(self.command([self.adb, '-s', self.phone, 'shell', 'settings', 'get', 'global', setting],
+                                  timeout=10).strip() for setting in ('airplane_mode_on', 'wifi_on'))
+
+    def phone_native(self, selector, name):
+        if selector.partition('#')[0] != OFFLINE_TILE_CLASS:
+            return self.native(self.phone, [selector], name)
+        self.require_offline_usb_phone()
+        expected = ('1', '0')
+        state = self.phone_offline_settings()
+        operator_change = state != expected
+        if operator_change:
+            print('WAIT: enable airplane mode on the USB phone, turn off Wi-Fi and leave it unlocked.', flush=True)
+        try:
+            deadline = time.monotonic() + 600
+            while state != expected:
+                if time.monotonic() >= deadline:
+                    raise RuntimeError('The offline verification phone did not reach airplane mode with Wi-Fi off')
+                time.sleep(2)
+                state = self.phone_offline_settings()
+            self.checks['manual_offline'] = {'serial': self.phone, 'transport': 'usb',
+                                             'airplane_mode': True, 'wifi': False}
+            return self.native(self.phone, [selector], name, extra={'manualOffline': 'true'})
+        finally:
+            if operator_change:
+                print('DONE: restore your previous airplane mode and Wi-Fi settings on the phone.', flush=True)
 
     def stage_project_fixture(self,serial):
         if not self.project_fixture:
@@ -592,10 +631,10 @@ class Verification:
     def run(self):
         if self.args.scope=='check-publication':
             receipt=json.loads((ROOT/'build/verification/full-passed.json').read_text(encoding='utf-8'))
-            check_publication_receipt(receipt,self.fingerprint,self.required)
+            check_publication_receipt(receipt,self.fingerprint,self.required,required_phone=self.required_phone)
             self.discover_verification_apks()
             verify_pair(receipt['build_basis'],self.fingerprint,build_recipe(ROOT),self.apk_pair())
-            print('PASS: full phone/emulator acceptance matches the current source',flush=True)
+            print('PASS: full phone/tablet/emulator acceptance matches the current source',flush=True)
             return
         if self.args.scope=='list':
             print(json.dumps(self.plan,ensure_ascii=False,indent=2)); return
@@ -610,16 +649,16 @@ class Verification:
                 self.install(self.phone)
             if self.args.scope=='full':
                 self.install(self.phone)
-                self.native(self.emulator, [STRESS_CLASS], 'emulator-render-stress')
                 for test in self.plan['emulator']:
                     self.native(self.emulator,[test],'emulator-'+test.rsplit('.',1)[1])
                 self.grant_and_deny(self.emulator)
                 self.diagnostics(); self.ui_matrix(); self.real_window_matrix()
                 # Finish independent work before requiring a manually unlocked phone.
                 for test in self.plan['phone']:
-                    self.native(self.phone,[test],'phone-'+test.rsplit('.',1)[1])
+                    self.phone_native(test,'phone-'+test.rsplit('.',1)[1])
                 self.require_native_success()
-                check_publication_receipt(self.receipt('passed'),self.fingerprint,self.required)
+                check_publication_receipt(self.receipt('passed'),self.fingerprint,self.required,
+                                          required_phone=self.required_phone)
             else:
                 related_failures=[]
                 selected=set()
@@ -633,8 +672,10 @@ class Verification:
                     if any('StakeoutForegroundServiceTest' in test for test in selected): self.grant_and_deny(self.emulator)
                     if 'layers' in (self.args.area or ['layers']): self.ui_matrix()
                     if 'real-windows' in (self.args.area or []): self.real_window_matrix()
-                for index,test in enumerate(getattr(self,'related_phone_cases',[])):
-                    try: self.native(self.phone,[test],f'phone-related-{index}-'+test.split('#')[-1])
+                phone_cases = sorted(getattr(self,'related_phone_cases',[]),
+                                     key=lambda selector: selector.partition('#')[0] == OFFLINE_TILE_CLASS)
+                for index,test in enumerate(phone_cases):
+                    try: self.phone_native(test,f'phone-related-{index}-'+test.split('#')[-1])
                     except NativeCheckFailure as error: related_failures.append(test+': '+str(error))
                 if related_failures: raise NativeCheckFailure('\n'.join(related_failures))
             self.assert_build_pair()

@@ -43,10 +43,11 @@
           "var newZoom = currentZoom + 1.0",
           "R.id.action_zoom_out ->",
           "var newZoom = currentZoom - 1.0",
-          "R.id.fl_compass -> showFullCompass()"
+          "R.id.fl_compass -> showFullCompass()",
+          "R.id.action_measurements -> showMeasurementToolsMenu(mapControlPopupAnchor(v))"
         ],
         "forbids": [],
-        "sha256": "3dff19b2c9fb2c0663a406e6a72a0f4f19adb344227e4242190431c1c09c119a"
+        "sha256": "591ad2be00706e433927bfe35aeca3c35c57127d1a0e57714b3411279608e839"
       }
     }
   },

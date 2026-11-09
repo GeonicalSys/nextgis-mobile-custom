@@ -360,6 +360,8 @@ Related `-Area accuracy` проверяет панель и реальный к�
 проверка точности не наследует renderer и камеру после Orbit smoke.
 После переключения сектора smoke ждёт не только видимость layers, но и
 сохранённую native geometry радиусом 56 dp, включая скрытый сектор.
+На явно выбранном телефоне Orbit smoke вводит координаты и направление
+только внутри изолированного verification APK. Проверки пикселей сохраняются.
 ProjectSyncRunnerTest перед созданием синтетических проектов ждёт завершения
 pending стартовой миграции подложек и активных workspace operations, до 30 секунд.
 Общий VerificationTestRunner также ждёт marker за отложенными startup callbacks,
@@ -380,8 +382,10 @@ https://geonical-system.ru/contact/ во всех локализациях.
 через прямой CustomVectorSource и native MapLibre. На границах тайлов и после
 смены зума должна оставаться одна Point-подпись с исходным ID, glyph/fill/outline
 pixels и общий source без дополнительного объектного слоя. Отдельно проверяются
-live style edits без HTTP/classic перехода. Радио меняется только на owned
-emulator с восстановлением; current-source acceptance пока NOT_RUN.
+live style edits без HTTP/classic перехода. На выделенном эмуляторе
+сетевой fixture восстанавливает настройки. Для физического прогона по USB
+оператор включает авиарежим и выключает Wi-Fi, тест проверяет отсутствие
+подключения до и после сценария. Режим `manualOffline` требует отдельный verification APK.
 
 ## Общая история треков и проверки обычных стилей
 

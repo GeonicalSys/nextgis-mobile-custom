@@ -6,7 +6,7 @@ import unittest
 from unittest.mock import Mock, patch
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from run_mobile_tests import Verification, NativeCheckFailure
+from run_mobile_tests import OFFLINE_TILE_CLASS, Verification, NativeCheckFailure
 from mobile_sqlite_evidence import SQLITE_CLASS
 
 CASE='example.Test#works'
@@ -27,6 +27,33 @@ class NativeFailureCollectionTest(unittest.TestCase):
         runner.results=[];runner.checks={};runner.devices={};runner.fingerprint='abc'
         runner.prepare=Mock();runner.command=Mock(side_effect=[output(-2),output(0)])
         return runner
+
+    def test_offline_runs_on_the_selected_usb_phone_after_the_operator_sets_airplane_and_wifi(self):
+        with TemporaryDirectory() as folder:
+            runner = self.runner(folder)
+            runner.command = Mock(side_effect=['phone', '0', '1', '1', '0'])
+            runner.native = Mock(return_value={'passed': [OFFLINE_TILE_CLASS]})
+            with patch('run_mobile_tests.time.sleep'), patch('builtins.print') as notice:
+                runner.phone_native(OFFLINE_TILE_CLASS, 'offline')
+            self.assertEqual(['adb', '-d', 'get-serialno'], runner.command.call_args_list[0].args[0])
+            self.assertEqual(
+                [['settings', 'get', 'global', name] for name in ('airplane_mode_on', 'wifi_on') * 2],
+                [item.args[0][4:] for item in runner.command.call_args_list[1:]])
+            runner.native.assert_called_once_with('phone', [OFFLINE_TILE_CLASS], 'offline',
+                                                  extra={'manualOffline': 'true'})
+            self.assertEqual({'serial': 'phone', 'transport': 'usb', 'airplane_mode': True, 'wifi': False},
+                             runner.checks['manual_offline'])
+            self.assertIn('restore', notice.call_args.args[0])
+
+    def test_offline_rejects_another_usb_device_without_changing_settings(self):
+        with TemporaryDirectory() as folder:
+            runner = self.runner(folder)
+            runner.command = Mock(return_value='other-usb')
+            runner.native = Mock()
+            with self.assertRaisesRegex(RuntimeError, 'selected offline verification phone'):
+                runner.phone_native(OFFLINE_TILE_CLASS, 'offline')
+            runner.command.assert_called_once()
+            runner.native.assert_not_called()
 
     def test_full_preserves_failure_and_runs_the_next_independent_check(self):
         with TemporaryDirectory() as folder:

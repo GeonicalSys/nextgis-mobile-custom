@@ -1053,6 +1053,7 @@ public class NativeSqliteVectorRenderingTest {
         boolean line = type == GeoConstants.GTLineString || type == GeoConstants.GTMultiLineString;
         boolean multi = type == GeoConstants.GTMultiPoint || type == GeoConstants.GTMultiLineString || type == GeoConstants.GTMultiPolygon;
         List<PointF> patches = new ArrayList<>(); List<List<PointF>> holes = new ArrayList<>();
+        List<RectF> hatchAreas = new ArrayList<>();
         List<Integer> objectIds = new ArrayList<>();
         f.screen.onActivity(activity -> {
             MapDrawable map = (MapDrawable) f.app.getMap();
@@ -1060,6 +1061,13 @@ public class NativeSqliteVectorRenderingTest {
                 double y = (id - 2) * 160 + (line && part == 1 ? 35 : 0);
                 double x = point ? multi ? part == 0 ? -45 : 45 : 0 : line ? -200 : multi ? part == 0 ? -135 : 135 : 70;
                 patches.add(map.getMaplibreMap().getProjection().toScreenLocation(latLng(x, y))); objectIds.add(id);
+                if (pattern) {
+                    // This part of the authored polygon stays clear of its hole and outline.
+                    // Cover several hatch periods at any device density or phase.
+                    PointF topLeft = map.getMaplibreMap().getProjection().toScreenLocation(latLng(40, y + 26));
+                    PointF bottomRight = map.getMaplibreMap().getProjection().toScreenLocation(latLng(85, y - 26));
+                    hatchAreas.add(new RectF(topLeft.x, topLeft.y, bottomRight.x, bottomRight.y));
+                }
                 if (!point && !line) {
                     List<PointF> samples = new ArrayList<>(); double holeX = multi ? part == 0 ? -90 : 90 : 0;
                     for (int dy : new int[]{-6, 0, 6}) for (int dx : new int[]{-8, 0, 8})
@@ -1071,7 +1079,7 @@ public class NativeSqliteVectorRenderingTest {
         Bitmap image = f.snapshot();
         try {
             for (int i = 0; i < patches.size(); i++) {
-                PointF patch = patches.get(i); int id = objectIds.get(i), matches = 0, blue = 0;
+                PointF patch = patches.get(i); int id = objectIds.get(i), matches = 0;
                 for (int dy = -8; dy <= 8; dy++) for (int dx = -8; dx <= 8; dx++) {
                     int x = Math.round(patch.x) + dx, y = Math.round(patch.y) + dy;
                     assertTrue("Independent smoke sample must be in the snapshot", x >= 0 && y >= 0 && x < image.getWidth() && y < image.getHeight());
@@ -1079,12 +1087,25 @@ public class NativeSqliteVectorRenderingTest {
                     if (custom && id == 1 ? Color.red(color) < 40 && Color.green(color) > 200 && Color.blue(color) > 200
                             : rules && id > 1 ? Color.green(color) > 200 && Color.red(color) < 40 && Color.blue(color) < 40
                             : Color.red(color) > 200 && Color.green(color) < 40 && Color.blue(color) < 40) matches++;
-                    if (Color.blue(color) > 200 && Color.red(color) < 40 && Color.green(color) < 40) blue++;
                 }
                 assertTrue("Actual native geometry pixels SQL id=" + id + " component=" + (multi ? i % 2 : 0)
-                        + " matches=" + matches + " blue=" + blue + " sample=" + patch.x + "," + patch.y
+                        + " matches=" + matches + " sample=" + patch.x + "," + patch.y
                         + " snapshot=" + image.getWidth() + "x" + image.getHeight(), matches >= 5);
-                if (pattern) assertTrue("Procedural blue hatch must reach actual native pixels SQL id=" + id, blue >= 5);
+                if (pattern) {
+                    RectF area = hatchAreas.get(i);
+                    assertTrue("Hatch sample must lie inside the snapshot: " + area, !area.isEmpty()
+                            && area.left >= 0 && area.top >= 0
+                            && area.right <= image.getWidth() && area.bottom <= image.getHeight());
+                    int blue = 0;
+                    for (int y = (int) Math.ceil(area.top); y < area.bottom; y++) {
+                        for (int x = (int) Math.ceil(area.left); x < area.right; x++) {
+                            int color = image.getPixel(x, y);
+                            if (Color.blue(color) > 200 && Color.red(color) < 40 && Color.green(color) < 40) blue++;
+                        }
+                    }
+                    assertTrue("Procedural blue hatch must reach actual native pixels SQL id=" + id
+                            + " blue=" + blue, blue >= 5);
+                }
             }
             for (List<PointF> hole : holes) {
                 int white = 0;

@@ -38,7 +38,7 @@
         "steps": [
           "Run the current render-memory and style/editing native cases in the separate verification APK, preserving required text/geometry/IDs/rules/layout/gates/picking across reload, edit, Save and Cancel.",
           "Exercise the authorized heavy real project with actual available-memory/process observations, pan/zoom/heading/recreate and retained native images; record source fingerprints and device/renderer identity.",
-          "Record actualRAM on a physical2GiB-class target separately from the required incidentSM-X115tablet, physicalphone and admitted software-emulator matrix; model identity alone does not prove2GiB coverage. Retain any failed or incomplete result.",
+          "Record actual RAM on a physical 2 GiB-class target separately from the required render stress matrix of a physical phone and a different physical tablet. Retain failed or incomplete results.",
           "Check automatic notice once per process and independent manual status while cache/work economy is applied, without hiding layers or changing authoritative geometry/data."
         ],
         "expected": "Required contents and interactions remain intact; warnings/economy follow actual free headroom, never nominalRAM or absolute used/native/RSS. Measured memory changes need actual evidence and an explicit device scope. Technical fixtures, successful route input and prior source/unit receipts cannot prove allOOM impossible or satisfy missing native/2GiB/Full checks."

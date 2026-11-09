@@ -38,8 +38,10 @@
         "через прямой CustomVectorSource и native MapLibre. На границах тайлов и после",
         "смены зума должна оставаться одна Point-подпись с исходным ID, glyph/fill/outline",
         "pixels и общий source без дополнительного объектного слоя. Отдельно проверяются",
-        "live style edits без HTTP/classic перехода. Радио меняется только на owned",
-        "emulator с восстановлением; current-source acceptance пока NOT_RUN.",
+        "live style edits без HTTP/classic перехода. На выделенном эмуляторе",
+        "сетевой fixture восстанавливает настройки. Для физического прогона по USB",
+        "оператор включает авиарежим и выключает Wi-Fi, тест проверяет отсутствие",
+        "подключения до и после сценария. Режим `manualOffline` требует отдельный verification APK.",
         ""
       ]
     }

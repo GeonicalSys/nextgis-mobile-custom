@@ -39,14 +39,14 @@
       "value": {
         "repository": "root",
         "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
-        "purpose": "Non-method rulerText getter and zoomText delegation: screenToMap/WebMercator/GeoLineString/formatLength, separate camera zoom and saved viewport. Reviewed2026-11-02: only memory-dialog builder gains bounded scrolling; prior guarded methods/ruler/zoom remain exact. Review dated 2026-11-09 covers a saved measurement waiting for the current style and camera. The scale ruler, zoom, rotation and memory notice have independent source checks.",
+        "purpose": "Non-method rulerText getter and zoomText delegation: screenToMap/WebMercator/GeoLineString/formatLength, separate camera zoom and saved viewport. Reviewed2026-11-02: only memory-dialog builder gains bounded scrolling; prior guarded methods/ruler/zoom remain exact. Review dated 2026-11-09 covers a saved measurement waiting for the current style and camera. The scale ruler, zoom, rotation and memory notice have independent source checks. Review dated 2026-11-09 covers track-mode and measurement popups anchored to the visible rail overflow when their direct button is hidden.",
         "contract_ids": [
           "UI-MAP-SCALE-RULER",
           "UI-MAP-ZOOM",
           "UI-MAP-CAMERA-ROTATION-STATE",
           "UI-RENDER-MEMORY-WARNING"
         ],
-        "sha256": "40fc8c1dd7bb92293968b1ef9161d5bd4b19fd3ac65db3049241a07e469c4e6c"
+        "sha256": "949f1e7a95a7b466ed2ad388996e231e2e8b45fe50b3576f039ac6d89c026e79"
       }
     }
   },

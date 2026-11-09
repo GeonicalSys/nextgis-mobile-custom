@@ -646,7 +646,9 @@ public class MapFragment
         mMeasurements?.setOnClickListener(this)
         mMeasurements?.let { androidx.core.view.ViewCompat.setTooltipText(it, getString(R.string.measurement_tools)) }
         trackStatusButton = requireNotNull(view.findViewById(R.id.action_track_status))
-        trackStatusButton?.setOnClickListener { mActivity?.toggleTrackRecordingFromMap(it) }
+        trackStatusButton?.setOnClickListener {
+            mActivity?.toggleTrackRecordingFromMap(mapControlPopupAnchor(it))
+        }
         refreshTrackStatusButton()
 
         val addGeometryByWalk = view.findViewById<View>(R.id.add_geometry_by_walk)
@@ -5685,7 +5687,7 @@ public class MapFragment
 
             } else addPointByTap()
 
-            R.id.action_measurements -> showMeasurementToolsMenu(v)
+            R.id.action_measurements -> showMeasurementToolsMenu(mapControlPopupAnchor(v))
         }
     }
 
@@ -5778,6 +5780,9 @@ public class MapFragment
         private const val ROTATION_ANGLE_THRESHOLD_DEGREES = 0.5f
         private const val LEGACY_MODE_EDIT_BY_TOUCH = 5
     }
+
+    private fun mapControlPopupAnchor(control: View): View =
+        (control.parent as? com.nextgis.mobile.view.MapControlRail)?.popupAnchorFor(control) ?: control
 
     private fun showMeasurementToolsMenu(anchor: View) {
         if (mode != MODE_NORMAL || isRulerMeasuring) return

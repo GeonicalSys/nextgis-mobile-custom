@@ -11,7 +11,7 @@ from test_mobile_test_support import valid_build_basis
 
 
 class RenderAcceptanceTest(unittest.TestCase):
-    def evidence(self, model='SM-X115'):
+    def evidence(self, model='Test device'):
         return dict(schema_version=2,status='passed',elapsed_ms=90000,workload_elapsed_ms=90000,
                     startup_elapsed_ms=3000,total_elapsed_ms=94000,seed_pid=101,pid=202,
                     render_backend='sqlite_native',sqlite_layers=2,source_checks=60,global_feature_count=0,
@@ -26,17 +26,35 @@ class RenderAcceptanceTest(unittest.TestCase):
                     peak_java_bytes=100000000,peak_native_bytes=100000000,pan_changes=60,pinch_changes=20,
                     heading_updates=600,peak_process_rss_bytes=250000000)
     def matrix(self):
-        return {'schema_version':1,'entries':[
-            {'kind':kind,'source_fingerprint':'abc','device':{'fingerprint':'Android/current'},
-             'evidence':self.evidence(model)} for kind,model in
-            [('phone','Phone'),('tablet','SM-X115'),('emulator','AVD')]]}
-    def test_complete_current_hardware_matrix_is_accepted(self): check_stress_matrix(self.matrix(),'abc')
-    def test_one_device_or_a_different_tablet_cannot_certify_the_incident(self):
-        for remove in range(3):
-            matrix=self.matrix();matrix['entries'].pop(remove)
-            with self.assertRaises(ValueError):check_stress_matrix(matrix,'abc')
-        matrix=self.matrix();matrix['entries'][1]['evidence']['model']='Different tablet'
-        with self.assertRaisesRegex(ValueError,'SM-X115'):check_stress_matrix(matrix,'abc')
+        phone = dict(self.evidence('Phone'), smallest_width_dp=400)
+        tablet = self.evidence('Available tablet')
+        return {'schema_version': 1, 'entries': [
+            {'kind': kind, 'source_fingerprint': 'abc',
+             'device': {'fingerprint': 'Android/current', 'hardware': 'physical',
+                        'serial': serial, 'characteristics': kind},
+             'evidence': evidence}
+            for kind, serial, evidence in [('phone', 'phone-usb', phone), ('tablet', 'tablet-wifi', tablet)]
+        ]}
+
+    def test_distinct_current_physical_devices_are_accepted(self):
+        check_stress_matrix(self.matrix(), 'abc')
+
+    def test_absent_physical_device_cannot_be_replaced_by_an_emulator(self):
+        for remove in range(2):
+            matrix = self.matrix()
+            row = matrix['entries'].pop(remove)
+            row['device'].update(hardware='ranchu', serial='emulator-5554')
+            with self.subTest(role=row['kind']), self.assertRaisesRegex(ValueError, 'hardware'):
+                check_stress_matrix(dict(matrix, entries=matrix['entries'] + [row]), 'abc')
+            row['kind'] = 'emulator'
+            with self.assertRaisesRegex(ValueError, 'physical phone and a different physical tablet'):
+                check_stress_matrix(dict(matrix, entries=matrix['entries'] + [row]), 'abc')
+
+    def test_same_serial_cannot_fill_both_physical_roles(self):
+        matrix = self.matrix()
+        matrix['entries'][1]['device']['serial'] = matrix['entries'][0]['device']['serial']
+        with self.assertRaisesRegex(ValueError, 'different physical tablet'):
+            check_stress_matrix(matrix, 'abc')
     def test_short_empty_or_unknown_gpu_workloads_are_rejected(self):
         for field,value in [('elapsed_ms',89999),('gestures',0),('frames',0),('visible_features',0),
                             ('mvt_layers',1),('gpu','null / null'),('model',''),('recreations',1),('features',8),

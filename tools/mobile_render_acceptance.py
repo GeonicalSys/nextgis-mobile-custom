@@ -65,11 +65,20 @@ def validate_stress(evidence: dict) -> None:
             raise ValueError('Missing actual hardware identity: ' + field)
 
 
+def stress_device_kind(device: dict, evidence: dict) -> str:
+    hardware = device.get('hardware')
+    if not isinstance(hardware, str) or not hardware.strip():
+        raise ValueError('Render stress is missing the Android hardware identity')
+    if hardware in ('ranchu', 'goldfish'):
+        return 'emulator'
+    tablet = ('tablet' in device.get('characteristics', '').split(',')
+              or evidence.get('smallest_width_dp', 0) >= 600)
+    return 'tablet' if tablet else 'phone'
+
+
 def record_stress(path: Path, evidence: dict, device: dict, fingerprint: str) -> dict:
     validate_stress(evidence)
-    kind = 'emulator' if device['hardware'] in ('ranchu', 'goldfish') else (
-        'tablet' if 'tablet' in device.get('characteristics', '').split(',')
-        or evidence.get('smallest_width_dp', 0) >= 600 else 'phone')
+    kind = stress_device_kind(device, evidence)
     row = {'source_fingerprint': fingerprint, 'kind': kind, 'device': device, 'evidence': evidence}
     previous = json.loads(path.read_text(encoding='utf-8')) if path.is_file() else {'entries': []}
     entries = [item for item in previous.get('entries', [])
@@ -88,16 +97,21 @@ def check_stress_matrix(matrix: dict, fingerprint: str) -> None:
     if not isinstance(matrix, dict) or matrix.get('schema_version') != 1:
         raise ValueError('Publication requires current hardware render stress evidence')
     rows = matrix.get('entries', [])
-    kinds = set(); models = set()
+    physical = {'phone': set(), 'tablet': set()}
     for row in rows:
         if row.get('source_fingerprint') != fingerprint:
             raise ValueError('Render stress evidence belongs to changed application/test sources')
-        validate_stress(row.get('evidence', {}))
-        if not row.get('device', {}).get('fingerprint'):
+        evidence, device = row.get('evidence', {}), row.get('device', {})
+        validate_stress(evidence)
+        if not device.get('fingerprint'):
             raise ValueError('Render stress is missing the Android build fingerprint')
-        kinds.add(row.get('kind'))
-        if row.get('kind') != 'emulator': models.add(row['evidence']['model'])
-    if not {'phone', 'tablet', 'emulator'} <= kinds:
-        raise ValueError('Render stress requires a physical phone, a physical tablet and an emulator')
-    if 'SM-X115' not in models:
-        raise ValueError('The incident Samsung SM-X115 still needs physical render stress verification')
+        kind = stress_device_kind(device, evidence)
+        if row.get('kind') != kind:
+            raise ValueError('Render stress device role disagrees with the recorded hardware')
+        if kind in physical:
+            serial = device.get('serial')
+            if not serial:
+                raise ValueError('Render stress is missing the physical device serial')
+            physical[kind].add(serial)
+    if not any(phone != tablet for phone in physical['phone'] for tablet in physical['tablet']):
+        raise ValueError('Render stress requires a physical phone and a different physical tablet')
