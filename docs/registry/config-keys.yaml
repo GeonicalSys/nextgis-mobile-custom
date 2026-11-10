@@ -492,7 +492,8 @@ build_inputs:
     key: client.id
     secret_values_forbidden: true
     optional: true
-    purpose: NGID client identifier injected into BuildConfig
+    purpose: NextGIS ID client identifier injected into MaplibUI BuildConfig; required for each Lisa/Belka release build,
+      optional for Debug. The publisher independently verifies the identifier in the signed APK.
 storage:
   diagnostic-process-owner:
     owner: app

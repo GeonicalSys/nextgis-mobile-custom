@@ -40,7 +40,7 @@
       "value": [
         "title: Дорожная карта мобильного приложения ЛИСА и БЕЛКА",
         "type: roadmap",
-        "last_verified: 2026-11-07",
+        "last_verified: 2026-11-10",
         "related_code:",
         "  - AGENTS.md",
         "  - .github/PULL_REQUEST_TEMPLATE.md",
@@ -98,6 +98,11 @@
     {
       "type": "contains",
       "target": "lisa:mobile:evidence:mobile-roadmap-release-225-library-git-delivery-20261029",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-release-ngid-226",
       "status": "source_backed"
     },
     {
@@ -378,6 +383,11 @@
     {
       "type": "contains",
       "target": "lisa:mobile:task:mobile-roadmap-gps-accuracy-and-full-day",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-login-diagnostics",
       "status": "source_backed"
     },
     {

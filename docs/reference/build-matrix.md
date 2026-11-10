@@ -1,7 +1,7 @@
 ---
 title: Матрица сборки и версий
 type: reference
-last_verified: 2026-11-09
+last_verified: 2026-11-10
 related_code:
   - build.gradle
   - gradle/wrapper/gradle-wrapper.properties
@@ -194,8 +194,8 @@ Mesa llvmpipe: прежний `swiftshader_indirect` не рисует glyph/bit
 [общие треки](../architecture/shared-tracks.md),
 [обычные стили](../architecture/classic-style-verification.md).
 
-Подготавливаемый production выпуск — `3.1.2.31` / `225`, Debug — `3.1.2.23` / `218`.
-Текущие разрешения и результаты:
+Корректирующий production выпуск — `3.1.2.32` / `226`, Debug — `3.1.2.23` / `218`.
+История предыдущего выпуска:
 [подготовка 3.1.2.31](mobile-release-3.1.2.31-2026-11-01.md).
 
 Предыдущий цикл 3.1.2.30/224:
@@ -225,11 +225,11 @@ Debug не публикуется. [Матрица](../history/orbit-ring-delive
 | compileSdk | `36` |
 | targetSdk | `36` |
 | minSdk | `26` |
-| App versionCode (release) | `225` |
-| App versionName (release) | `3.1.2.31` |
+| App versionCode (release) | `226` |
+| App versionName (release) | `3.1.2.32` |
 | App versionCode (debug) | `218` |
 | App versionName (debug) | `3.1.2.23` |
-| maplib VERSION_NAME (release) | `3.1.2.31` |
+| maplib VERSION_NAME (release) | `3.1.2.32` |
 | maplib VERSION_NAME (debug) | `3.1.2.23` |
 | MapLibre Android SDK | `13.7.1`, `android-sdk-opengl` (OpenGL ES) |
 | JTS Core | `1.20.0` |

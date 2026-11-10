@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-11-09
+last_verified: 2026-11-10
 related_code:
   - app/build.gradle
   - app/src/main
@@ -2182,6 +2182,10 @@ master `04d57c9fd843db6745c170147d6a2863da807352` не содержит self-hos
 версию и versioned URL, а после скачивания — размер, SHA-256, реальные
 versionCode/versionName и сертификат подписи APK. APK другого бренда или
 неподтверждённый файл не передаётся системному установщику.
+
+При сборке ЛИСЫ и БЕЛКИ проверяется идентификатор клиента NextGIS ID.
+Издатель дополнительно проверяет этот идентификатор в запросе входа внутри
+подписанного stable APK до отправки. Формат публичного манифеста прежний.
 
 На Android 9–10 PackageManager может не заполнить современный `SigningInfo` для
 скачанного archive APK. Форк одновременно запрашивает legacy `signatures` и
