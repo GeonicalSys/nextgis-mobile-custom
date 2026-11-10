@@ -1,0 +1,113 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:mobile-roadmap-login-diagnostics",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "planned",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "planned",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "UNKNOWN",
+    "release": "unknown",
+    "retention": "Хранить подтверждённый пробел диагностики отдельно от будущей приёмки реализации."
+  },
+  "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "По обычному экспорту журнала различать причины отказа входа в NextGIS ID.",
+        "implementation": "Предложена запись в существующий локальный журнал. Работы не начаты.",
+        "source_verification": "В текущих исходниках нет записи о начале и результате входа в экспортируемом журнале. В опубликованных APK 225 для ЛИСЫ и БЕЛКИ запрос передаёт client_id=null; NextGIS ID отвечает 401 invalid_client. Этот ответ сводится к общей ошибке и не попадает в экспорт. Будущая реализация диагностики не проверялась.",
+        "merge": "Принятие пункта карты не означает слияние реализации.",
+        "runtime_verification": "Проверить выгрузку журнала после воспроизводимых успешных и ошибочных попыток в изолированной тестовой сборке.",
+        "release": "Версия и сроки реализации не назначены.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp/maplibui",
+            "revision": "5213d7af3faa8051355b37742f151741dff57794",
+            "path": "src/main/java/com/nextgis/maplibui/fragment/NGIDLoginFragment.java"
+          },
+          {
+            "repository": "android_projects/android_gisapp/maplibui",
+            "revision": "5213d7af3faa8051355b37742f151741dff57794",
+            "path": "src/main/java/com/nextgis/maplibui/util/NGIDUtils.java"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "cd3b868dad3bcb4269517e2f7c3c128a39ccda72",
+            "path": "app/src/main/java/com/nextgis/mobile/MainApplication.java"
+          },
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "cd3b868dad3bcb4269517e2f7c3c128a39ccda72",
+            "path": "app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt"
+          }
+        ]
+      }
+    },
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## AUTH-01 Диагностика входа в NextGIS ID",
+        "",
+        "Приоритет P1. Состояние: Предложена. Очередность текущих работ не меняется.",
+        "",
+        "Причина: в опубликованном выпуске 3.1.2.31 (225) ЛИСА и БЕЛКА отправляли `client_id=null`, потому что при релизной пересборке отсутствовала настройка `client.id`. NextGIS ID вернул `401 invalid_client` при контрольном запросе. Приложение показывает «Соединение не установлено», а обычный экспорт журнала не содержит попытку входа и её результат. Причину удалось установить сравнением APK.",
+        "",
+        "Объём: писать в существующий локальный журнал начало и результат каждой отправленной попытки, связав их идентификатором. Указывать этап (получение токена или проверка профиля), хост сервера, длительность, исходный HTTP-статус при наличии ответа и категорию ошибки. Исключить логины, пароли, токены, параметры URL, заголовки и тела запросов и ответов.",
+        "",
+        "Владельцы: MaplibUI — этапы и результат входа; App — штатный экспорт журнала. Сохранить контракт входа `INV-NGID-LOGIN` и локальное журналирование `INV-LOCAL-LOG-STARTUP`. Новая автоматическая отправка событий не входит в задачу.",
+        "",
+        "Приёмка: в изолированной тестовой сборке проверить успешный вход, отказ в авторизации, ошибку сервера 5xx, сбой DNS или TLS, таймаут и некорректный ответ. В обычном экспорте видны связанные начало и результат каждой попытки, причины различимы, тестовые секреты отсутствуют.",
+        ""
+      ]
+    },
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "AUTH-01"
+    },
+    "priority": {
+      "role": "priority_at_roadmap_authoring",
+      "value": "P1"
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_roadmap_authoring",
+      "value": "Добавление в карту; реализация, проверки на устройстве и выпуск не начаты."
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:invariants-inv-ngid-login",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:invariants-inv-local-log-startup",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-login-diagnostics"
+    ]
+  }
+}
