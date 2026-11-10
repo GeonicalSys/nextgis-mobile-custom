@@ -99,6 +99,11 @@
     },
     {
       "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-10-ngid-release-guard",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
       "target": "lisa:mobile:evidence:documentation-changelog-2026-11-10-login-diagnostics-roadmap",
       "status": "source_backed"
     },

@@ -1,0 +1,101 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:mobile-roadmap-release-ngid-226",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "planned",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "open",
+    "implementation": "planned",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "UNKNOWN",
+    "release": "unknown",
+    "retention": "Сохранить историю выпуска 225 и отдельную проверку подписанных APK исправления 226."
+  },
+  "facets": {
+    "lifecycle-review": {
+      "role": "reviewed_lifecycle_scope_and_evidence",
+      "value": {
+        "goal": "Восстановить вход в NextGIS ID в стабильных каналах ЛИСЫ и БЕЛКИ и не допускать APK с неверным client_id.",
+        "implementation": "Проверка входного параметра при сборке, затем сверка доверенного идентификатора и фактического запроса подписанного APK.",
+        "source_verification": "Сбой 225 подтверждён в обоих опубликованных APK и контрольным ответом 401 invalid_client. Приёмка 226 требует точного SHA, версии и результата проверки каждого кандидата.",
+        "merge": "Maplib version-only Merge Commit, точный fetched pin в App, App и Publisher Squash.",
+        "runtime_verification": "По поручению владельца тестовые прогоны 226 не выполняются; приёмка проверяет конкретные подписанные APK и публичные артефакты.",
+        "release": "Только Lisa и Belka 3.1.2.32 / 226; Debug вне выпуска. Общее правило Full для других выпусков сохранено.",
+        "references": [
+          {
+            "repository": "android_projects/android_gisapp",
+            "revision": "cd3b868dad3bcb4269517e2f7c3c128a39ccda72",
+            "path": "app/build.gradle"
+          },
+          {
+            "repository": "android_projects/android_gisapp/maplibui",
+            "revision": "5213d7af3faa8051355b37742f151741dff57794",
+            "path": "src/main/java/com/nextgis/maplibui/util/NGIDUtils.java"
+          }
+        ]
+      }
+    },
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## MOB-REL-02 Восстановление входа в ЛИСЕ и БЕЛКЕ",
+        "",
+        "Приоритет P1. Состояние: В работе по прямому поручению владельца. Корректирующий выпуск `3.1.2.32` / `226`.",
+        "",
+        "Публичные APK 225 передавали `client_id=null` из-за отсутствующего `client.id` в отдельной рабочей копии. В этом выпуске проверяется входной параметр сборки и фактический запрос внутри каждого подписанного APK, который будет опубликован.",
+        "",
+        "Владельцы: App — допуск сборки и версия; Maplib — связанная диагностическая версия; Publisher — проверка подписанного APK и выдачи сервера. AUTH-01 остаётся отдельной задачей диагностики.",
+        "",
+        "Приёмка: обе стабильные сборки имеют ожидаемые версию, подпись и NextGIS ID; прежний APK 225 не проходит новый контроль; публичные manifest и APK совпадают с проверенными файлами. Тестовые прогоны 226 пропущены по прямому поручению владельца; общее правило Full для будущих выпусков не меняется.",
+        ""
+      ]
+    },
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "MOB-REL-02"
+    },
+    "priority": {
+      "role": "priority_at_roadmap_authoring",
+      "value": "P1"
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_roadmap_authoring",
+      "value": "Текущая задача исправления выпуска 225, независимая от разработки локальной диагностики AUTH-01."
+    }
+  },
+  "relations": [
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:invariants-inv-mobile-publication-acceptance",
+      "status": "source_backed"
+    },
+    {
+      "type": "depends_on",
+      "target": "lisa:mobile:contract:config-keys-build-inputs-maplibui-client-id",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-release-ngid-226"
+    ]
+  }
+}

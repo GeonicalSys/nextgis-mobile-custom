@@ -50,6 +50,11 @@
   "relations": [
     {
       "type": "contains",
+      "target": "lisa:mobile:evidence:release-note-3.1.2.32",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
       "target": "lisa:mobile:evidence:release-note-3.1.2.31",
       "status": "source_backed"
     },

@@ -4,6 +4,10 @@
 в [`docs/reference/fork-customizations.md`](docs/reference/fork-customizations.md), история merge —
 в [`docs/history/upstream/`](docs/history/upstream/README.md).
 
+## 3.1.2.32 — 2026-11-10
+
+- Исправлен вход в NextGIS ID в ЛИСЕ и БЕЛКЕ.
+
 ## 3.1.2.31 — 2026-11-01
 
 - Ускорена отрисовка больших локальных карт и уменьшено потребление памяти.

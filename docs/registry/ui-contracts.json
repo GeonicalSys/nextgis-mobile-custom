@@ -7642,11 +7642,11 @@
     {
       "repository": "root",
       "path": "app/build.gradle",
-      "purpose": "Effective Lisa/Belka brand declarations and absence of custom sourceSets rerouting for the reviewed shared main UI. Reviewed 2026-11-01: only production version constants change to 3.1.2.31/225; sourceSets, IDs and UI bindings are unchanged.",
+      "purpose": "Effective Lisa/Belka brand declarations and absence of custom sourceSets rerouting for the reviewed shared main UI. Reviewed 2026-11-01: only production version constants change to 3.1.2.31/225; sourceSets, IDs and UI bindings are unchanged. Reviewed 2026-11-10: Release 3.1.2.32/226 and a Release-only client.id check; sourceSets, brand/package/provider identities and UI bindings are unchanged.",
       "contract_ids": [
         "UI-SETTINGS-MAP-STORAGE-MOVE"
       ],
-      "sha256": "e8fc159c55b02741b0a78bd92426a9da71b5e1b9d8ef50e639f0192991900ccf"
+      "sha256": "c15f7732f57ada543bb782a6fdbee51050f83af945e142b09ad3f45b9d97715c"
     },
     {
       "repository": "root",
@@ -7734,13 +7734,13 @@
     {
       "repository": "maplib",
       "path": "build.gradle",
-      "purpose": "Reviewed declared org.locationtech.jts:jts-core:1.20.0 dependency, whose IndexedFacetDistance contract defines planar target-facet and polygon-boundary selection. Reviewed 2026-11-01: only release diagnostic version changes to 3.1.2.31; JTS dependency and target geometry semantics are unchanged. Declaration is not proof of installed JAR/APK/native acceptance.",
+      "purpose": "Reviewed declared org.locationtech.jts:jts-core:1.20.0 dependency, whose IndexedFacetDistance contract defines planar target-facet and polygon-boundary selection. Reviewed 2026-11-01: only release diagnostic version changes to 3.1.2.31; JTS dependency and target geometry semantics are unchanged. Declaration is not proof of installed JAR/APK/native acceptance. Reviewed 2026-11-10: only the Release diagnostic version changes to 3.1.2.32; JTS 1.20.0, OpenGL and target geometry are unchanged.",
       "contract_ids": [
         "UI-NAVIGATION-STAKEOUT-TARGET",
         "UI-NAVIGATION-AZIMUTH-CURRENT",
         "UI-NAVIGATION-AZIMUTH-TWO-POINTS"
       ],
-      "sha256": "2bfa96ae382e4a0c78eaef903a0887acead5f0a502460333baa1968273a7653e"
+      "sha256": "3ee27f8be5e41747d4ffbd58f541d1c30881a65b4ff84b9f839dead77a6d29d6"
     },
     {
       "repository": "maplib",

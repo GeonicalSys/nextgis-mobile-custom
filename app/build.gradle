@@ -38,8 +38,8 @@ sentry {
 //apply plugin: 'kotlin-android-extensions'
 //apply plugin: 'kotlin-kapt'
 
-def productionVersionCode = 225
-def productionVersionName = '3.1.2.31'
+def productionVersionCode = 226
+def productionVersionName = '3.1.2.32'
 def debugVersionCode = 218
 def debugVersionName = '3.1.2.23'
 def fieldVerificationChecks = providers.gradleProperty('fieldVerificationChecks')
@@ -98,6 +98,22 @@ if (usageEndpoint && !(usageEndpoint.startsWith('https://') && usageUploadToken)
 }
 def usageLiteral = { value -> groovy.json.JsonOutput.toJson(value) }
 
+// Verification and Debug can use an SDK-only local.properties; release cannot.
+def ngidPropertiesFile = rootProject.layout.projectDirectory.file('local.properties')
+def validateProductionNgidClient = tasks.register('validateProductionNgidClient') {
+    inputs.file(ngidPropertiesFile).optional()
+    doLast {
+        def properties = new Properties()
+        if (ngidPropertiesFile.asFile.isFile()) {
+            ngidPropertiesFile.asFile.withInputStream { properties.load(it) }
+        }
+        def clientId = properties.getProperty('client.id')
+        if (!clientId || !(clientId ==~ /[A-Za-z0-9._~-]+/)
+                || ['null', 'undefined'].any { it.equalsIgnoreCase(clientId) }) {
+            throw new GradleException('Release requires a valid NextGIS ID client.id in local.properties.')
+        }
+    }
+}
 
 android {
     namespace "com.nextgis.mobile"
@@ -260,6 +276,12 @@ androidComponents {
     beforeVariants(selector().withBuildType("debug")) { variantBuilder ->
         if (variantBuilder.productFlavors.any { it.second == "belka" }) {
             variantBuilder.enable = false
+        }
+    }
+    onVariants(selector().withBuildType("release")) { variant ->
+        def preBuildName = "pre${variant.name.capitalize()}Build"
+        tasks.matching { it.name == preBuildName }.configureEach {
+            dependsOn(validateProductionNgidClient)
         }
     }
     // AGP 9.x does not expose application versionCode/versionName on buildTypes.
