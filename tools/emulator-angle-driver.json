@@ -1,0 +1,43 @@
+{
+  "schema_version": 2,
+  "purpose": "Validated Windows CPU-only GuestAngle profile; no product rendering API change",
+  "emulator": {
+    "version": "37.2.13",
+    "build_id": 16740729,
+    "exe_sha256": "06af3c5da3c2cef7266822fe653f54371fc746d78db6f4282e1b2338a70970c8",
+    "archive_url": "https://dl.google.com/android/repository/emulator-windows_x64-16740729.zip",
+    "archive_sha256": "625276a1d3ac6b15d00f8aad5e233e7dc3a7cb71435f97d64e3be298399e171d",
+    "files_sha256": {
+      "lib64/vulkan/libvulkan_lvp.dll": "b1618e7a522dfece00eadcdd890cf7a087000c62f42601e167bd4de654ae8be7",
+      "lib64/vulkan/lvp_icd.json": "86fca984943cbc73b18c7a3ede313e9791b5b62f3f8c434e09345fc782c59d4c",
+      "lib64/vulkan/vulkan-1.dll": "87449a67c282cad51ae51813acb49823e548b06269a44d33fa5a4333486a835b"
+    }
+  },
+  "system_image": {
+    "package": "system-images;android-36;google_apis;x86_64",
+    "revision": 7,
+    "fingerprint": "google/sdk_gphone64_x86_64/emu64xa:16/BE2A.250530.026.F3/13894323:userdebug/dev-keys",
+    "archive_url": "https://dl.google.com/android/repository/sys-img/google_apis/x86_64-36_r07.zip",
+    "archive_sha1": "c6bf44bdcd885bb902b4ba752d111a073ad7a817",
+    "gles_library_sha256": "dcc976ff973aa9c57bdd6b93c8bbc80376e7af570b6e8a99c416c9b3f8b286fb"
+  },
+  "graphics": {
+    "gpu": "lavapipe",
+    "features": [
+      "Vulkan",
+      "GuestAngle"
+    ],
+    "api": "OpenGL ES via system ANGLE",
+    "hardware_gpu_allowed": false
+  },
+  "resources": {
+    "cpu_cores": 2,
+    "guest_memory_mib": 2560,
+    "admission_available_gib": 6,
+    "admission_commit_max_percent": 75,
+    "stop_available_gib": 1.5,
+    "stop_commit_percent": 82,
+    "stop_samples": 3,
+    "sample_seconds": 2
+  }
+}

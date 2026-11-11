@@ -23,7 +23,9 @@ from mobile_style_evidence import collect_style_images
 from mobile_sqlite_evidence import SQLITE_CLASS, collect_sqlite_evidence
 from mobile_native_log import start_native_log_capture
 from mobile_render_acceptance import STRESS_CLASS, STRESS_CASE, STRESS_SEED, record_stress
-from mobile_emulator_safety import SOFTWARE_GPU, require_software_graphics
+from mobile_emulator_safety import (SOFTWARE_GPU, require_software_graphics, require_whpx,
+                                    windows_resources, require_windows_resources, require_memory_limit, launch_environment, require_cpu_vulkan, WindowsEmulatorProcess)
+from mobile_angle_driver import SystemAngleProbe, cached_probe, file_sha256, require_runtime_files
 from mobile_build_identity import (GRADLE_ARGUMENTS, build_and_record, load_basis,
                                    recipe as build_recipe, verify_pair)
 
@@ -61,12 +63,32 @@ class Verification:
         self.devices={}
         self.owned_emulator=None
         self.emulator_process=None
+        self.angle_session=None
         self.saved_emulator={}
         self.project_fixture=None
         self.build_basis=None
+        self.emulator_profile={}
+        mode=getattr(args,'emulator_graphics','auto')
+        local=ROOT/'build/verification/emulator-profile.json'
+        if mode!='native' and not (mode=='auto' and getattr(args,'phone_only',False)) and local.is_file():
+            profile=json.loads(local.read_text(encoding='utf-8'))
+            if profile.get('schema_version')!=1 or not all(isinstance(profile.get(key),str) and profile[key] for key in ('runtime','avd','avd_home','emulator_home','runtime_exe_sha256')):
+                raise ValueError('The local emulator profile is incomplete; no emulator was launched')
+            if getattr(args,'avd',None) and args.avd!=profile['avd'] and mode=='auto':
+                raise ValueError('An explicit AVD differs from the verified local profile; choose a graphics mode explicitly')
+            self.emulator_profile=profile
+        self.graphics_mode=('guest-angle' if self.emulator_profile else 'native') if mode=='auto' else ('guest-angle' if mode=='angle' else mode)
+
+    def guest_angle(self):
+        return getattr(self,'graphics_mode',getattr(self.args,'emulator_graphics','native')) in ('angle','guest-angle')
 
     def command(self, argv, *, name=None, timeout=900, allow_failure=False, input_text=None,
                 native_startup_timeout=None):
+        if (getattr(self,'emulator_transport_bound',False) and len(argv)>2
+                and str(argv[0])==str(self.adb) and argv[1]=='-s' and argv[2]==self.owned_emulator):
+            process=self.emulator_process
+            if isinstance(process,WindowsEmulatorProcess) and not process.owns_console(int(self.owned_emulator.removeprefix('emulator-'))):
+                raise RuntimeError('The owned emulator transport disappeared or changed owner; no ADB command was sent')
         if name:
             print('RUN '+name,flush=True)
             log=self.output/(name+'.log')
@@ -97,6 +119,10 @@ class Verification:
                 if not reported_start:
                     reported_start=bool(re.search(r'^INSTRUMENTATION_STATUS_CODE:\s*1\s*$',
                                                  log.read_text(encoding='utf-8',errors='replace'),re.M))
+                    attempt=getattr(self,'active_native_attempt',None)
+                    if reported_start and attempt is not None:
+                        attempt['phase']='after-test-start'
+                        self.write_progress()
                     if not reported_start and elapsed>=startup_timeout:
                         startup_expired=True
                         raise NativeStartupTimeout('Instrumentation did not report a test start within '
@@ -115,6 +141,8 @@ class Verification:
                     'created_at':datetime.now(timezone.utc).isoformat()},indent=2),encoding='utf-8')
 
     def shell(self,serial,*argv):
+        if getattr(self,'restoring',False):
+            return self.command([self.adb,'-s',serial,'shell',*argv],timeout=8).strip()
         return self.command([self.adb,'-s',serial,'shell',*argv]).strip()
 
     def identity(self,serial,kind):
@@ -131,6 +159,9 @@ class Verification:
 
     def select_devices(self):
         phone_only=getattr(self.args,'phone_only',False)
+        angle=self.guest_angle()
+        if angle and phone_only:
+            raise ValueError('ANGLE routing is restricted to an owned emulator; PhoneOnly stays unchanged')
         if phone_only and (self.args.scope!='related' or not self.args.phone_serial):
             raise ValueError('Phone-only checks require Related and an explicit phone serial')
         if not phone_only and not getattr(self.args, 'allow_emulator', False):
@@ -160,21 +191,32 @@ class Verification:
         if self.args.scope!='full' and getattr(self.args,'test_project_fixture',None) and not self.project_fixture:
             self.select_project()
         emulators=[serial for serial in connected if serial.startswith('emulator-')]
+        if angle and (self.args.emulator_serial or emulators):
+            raise ValueError('ANGLE requires a new owned emulator with verified software Vulkan; do not borrow an AVD')
         if not self.args.emulator_serial and len(emulators)>1:
             raise ValueError('Select --emulator-serial when more than one emulator is running')
         selected=self.args.emulator_serial or (emulators[0] if emulators else self.start_emulator())
         self.emulator=self.identity(selected,'emulator')
-        self.devices['emulator']['graphics'] = require_software_graphics(
-            self.shell(self.emulator,'dumpsys','SurfaceFlinger'))
+        surface=self.shell(self.emulator,'dumpsys','SurfaceFlinger')
+        (self.output/'emulator-surfaceflinger.txt').write_text(surface,encoding='utf-8')
+        if self.guest_angle():
+            raw=self.command([self.adb,'-s',self.emulator,'shell','cmd','gpu','vkjson'],timeout=25)
+            (self.output/'emulator-vulkan.json').write_text(raw,encoding='utf-8')
+            proof=require_cpu_vulkan(surface,json.loads(raw),(self.output/'emulator-start.log').read_text(encoding='utf-8',errors='replace'))
+            self.checks['emulator_vulkan']=proof
+            self.devices['emulator']['graphics']='Vulkan CPU: '+proof['device_name']
+        else:self.devices['emulator']['graphics']=require_software_graphics(surface)
         for key,command in [('font',['settings','get','system','font_scale']),
                             ('density',['wm','density']),('wifi',['settings','get','global','wifi_on']),
                             ('data',['settings','get','global','mobile_data']),
-                            ('location',['cmd','location','is-location-enabled'])]:
+                            ('location',['cmd','location','is-location-enabled']),
+                            ('screen_timeout',['settings','get','system','screen_off_timeout'])]:
             self.saved_emulator[key]=self.shell(self.emulator,*command)
         for key in ('window_animation_scale','transition_animation_scale','animator_duration_scale'):
             self.saved_emulator[key]=self.shell(self.emulator,'settings','get','global',key)
             self.shell(self.emulator,'settings','put','global',key,'0')
         self.shell(self.emulator,'cmd','location','set-location-enabled','true')
+        self.shell(self.emulator,'settings','put','system','screen_off_timeout','2147483647')
 
     def select_project(self):
         source=getattr(self.args,'test_project_fixture',None)
@@ -212,29 +254,78 @@ class Verification:
         print('Test project '+str(project['id'])+': read-only layer policy snapshot',flush=True)
 
     def start_emulator(self):
-        binary=self.sdk/'emulator'/('emulator.exe' if os.name=='nt' else 'emulator')
-        avds=[self.args.avd] if self.args.avd else avd_names(self.command([binary,'-list-avds']))
-        if not avds: raise ValueError('Install an API 36 AVD first, then use --avd NAME')
+        guest=self.guest_angle()
+        profile=getattr(self,'emulator_profile',{})
+        runtime=Path(getattr(self.args,'emulator_runtime',None) or profile.get('runtime') or self.sdk/'emulator')
+        binary=runtime/('emulator.exe' if os.name=='nt' else 'emulator')
+        memory_mib=2560 if guest else 2048
+        if guest:
+            contract=json.loads((ROOT/'tools/emulator-angle-driver.json').read_text(encoding='utf-8'))
+            if contract.get('schema_version')!=2:raise ValueError('Invalid software emulator contract')
+            if file_sha256(binary)!=contract['emulator']['exe_sha256']:raise ValueError('The software runtime differs from its verified identity')
+            runtime_files=require_runtime_files(runtime,contract)
+            if os.name!='nt':raise ValueError('The GuestAngle profile is currently validated on Windows only')
+            expected=profile.get('runtime_exe_sha256')
+            if expected and file_sha256(binary)!=expected:raise ValueError('The selected emulator runtime changed since profile verification')
+            version=self.command([binary,'-version'],timeout=15)
+            if '37.2.13.0' not in version:raise ValueError('GuestAngle requires the validated Emulator37.2.13 runtime')
+            self.checks['emulator_runtime']={'version':'37.2.13','binary':str(binary),'sha256':file_sha256(binary),'files_sha256':runtime_files,'backend':'lavapipe'}
+        if os.name=='nt':
+            acceleration=self.command([binary,'-accel-check'],timeout=15)
+            require_whpx(acceleration)
+            self.checks['emulator_host']={'acceleration':acceleration,
+                'resources':require_windows_resources(windows_resources(),6 if guest else 4.5),'cores':2,'memory_mib':memory_mib}
+        if guest:self.angle_inputs=cached_probe(ROOT,self.sdk,ROOT/'build/verification/emulator-gles-cache')
+        avd=getattr(self.args,'avd',None) or profile.get('avd')
+        environment=launch_environment(runtime,guest,avd_home=profile.get('avd_home'),emulator_home=profile.get('emulator_home'))
+        avds=[avd] if avd else avd_names(self.command([binary,'-list-avds']))
+        if not avds:raise ValueError('Install an API36 AVD first, then use --avd NAME')
         for port in range(5556,5680,2):
             with socket.socket() as check:
-                if check.connect_ex(('127.0.0.1',port))!=0: break
+                if check.connect_ex(('127.0.0.1',port))!=0:break
+        else:raise RuntimeError('No unused emulator console port is available')
         serial='emulator-'+str(port)
-        stream=(self.output/'emulator-start.log').open('w',encoding='utf-8')
-        process=subprocess.Popen([str(binary),'-avd',avds[0],'-port',str(port),'-read-only','-no-snapshot',
-                          '-no-window','-no-audio','-gpu',SOFTWARE_GPU,'-feature','-Vulkan'],stdout=stream,stderr=subprocess.STDOUT,
-                         creationflags=subprocess.CREATE_NO_WINDOW if os.name=='nt' else 0)
-        stream.close()
-        self.owned_emulator=serial
-        self.emulator_process=process
+        argv=[str(binary),'-avd',avds[0],'-port',str(port),'-read-only','-no-snapshot','-no-window','-no-audio',
+              '-accel','on','-cores','2','-memory',str(memory_mib),'-gpu','lavapipe' if guest else SOFTWARE_GPU,
+              '-feature','Vulkan,GuestAngle' if guest else '-Vulkan']
+        with (self.output/'emulator-start.log').open('w',encoding='utf-8') as stream:
+            if os.name=='nt':process=WindowsEmulatorProcess(argv,stream,environment,ROOT)
+            else:process=subprocess.Popen(argv,stdout=stream,stderr=subprocess.STDOUT,env=environment)
+        self.owned_emulator=serial;self.emulator_process=process
         print('Starting isolated read-only emulator '+serial,flush=True)
         until=time.monotonic()+180
         while time.monotonic()<until:
-            if process.poll() is not None:
-                raise RuntimeError('The isolated emulator exited before boot; see emulator-start.log')
-            text=self.command([self.adb,'-s',serial,'shell','getprop','sys.boot_completed'],allow_failure=True)
-            if text.strip()=='1': return serial
+            require_memory_limit((self.output/'emulator-start.log').read_text(encoding='utf-8',errors='replace'),memory_mib)
+            if process.poll() is not None:raise RuntimeError('The isolated emulator exited before boot; see emulator-start.log')
+            text=self.command([self.adb,'-s',serial,'shell','getprop','sys.boot_completed'],allow_failure=True,timeout=8)
+            if text.strip()=='1':
+                if os.name=='nt':
+                    if 'Windows Hypervisor Platform accelerator is operational' not in (self.output/'emulator-start.log').read_text(encoding='utf-8',errors='replace'):
+                        raise RuntimeError('The launched emulator did not confirm actual WHPX execution')
+                    if not process.owns_console(port):raise RuntimeError('The selected console belongs to a different process')
+                self.emulator_transport_bound=True
+                return serial
             time.sleep(2)
         raise RuntimeError('The isolated emulator did not boot; see emulator-start.log')
+
+    def configure_emulator_graphics(self):
+        if not self.guest_angle():return
+        if not self.owned_emulator or self.owned_emulator!=self.emulator:
+            raise ValueError("GuestAngle is restricted to the current run's owned read-only emulator")
+        memory=re.search(r'^MemTotal:\s+(\d+)\s+kB',self.shell(self.emulator,'cat','/proc/meminfo'),re.M)
+        if not memory or int(memory.group(1))>2560*1024:raise ValueError('The guest exceeded the admitted RAM limit')
+        self.devices['emulator']['memory_total_kib']=int(memory.group(1))
+        self.angle_session=SystemAngleProbe(self.command,self.adb,self.emulator,self.output,self.angle_inputs)
+        proof=self.angle_session.verify()
+        contract=json.loads((ROOT/'tools/emulator-angle-driver.json').read_text(encoding='utf-8'))
+        fingerprint=self.shell(self.emulator,'getprop','ro.build.fingerprint')
+        if fingerprint!=contract['system_image']['fingerprint']:
+            raise ValueError('The GuestAngle system image differs from the validated API36 revision7 build')
+        if set(proof['system_library_sha256'].values())!={contract['system_image']['gles_library_sha256']}:
+            raise ValueError('The actual system ANGLE library differs from the validated image')
+        self.devices['emulator']['fingerprint']=fingerprint
+        self.checks['emulator_angle']=proof
+        self.devices['emulator']['graphics_mode']='guest-system-angle-over-lavapipe'
 
     def build(self):
         if self.args.skip_build and self.args.scope=='full':
@@ -414,9 +505,19 @@ class Verification:
                 self.checks.setdefault('native_uid_logs',[]).append(
                     {'case':name,'status':'diagnostic_failure','error_type':type(error).__name__,
                      'error_code':getattr(error,'code','unknown')})
+        attempt={'name':name,'device':serial,'selectors':list(selectors),'expected_cases':sorted(expected),
+                 'passed':[],'skipped':[],'expected_crash':False,'failed':False,
+                 'status':'running','phase':'startup-pending','log':str(self.output/(name+'.log'))}
+        self.results.append(attempt)
+        self.active_native_attempt=attempt
+        self.write_progress()
+        command_error=None
         try:
             text=self.command(argv+[RUNNER],name=name,allow_failure=bool(fatal),native_startup_timeout=60)
+        except Exception as error:
+            command_error=error
         finally:
+            self.active_native_attempt=None
             if native_log is not None:
                 try: log_state=native_log.stop()
                 except Exception as error:
@@ -435,6 +536,18 @@ class Verification:
                               'error':type(error).__name__+': '+str(error)[:640]}
                 self.checks.setdefault('native_sqlite_evidence',[]).append(evidence)
                 print('SQLite diagnostic artifacts '+evidence['status']+': '+case,flush=True)
+        if command_error is not None:
+            log=self.output/(name+'.log')
+            try: partial=log.read_text(encoding='utf-8',errors='replace')
+            except OSError: partial=''
+            started=bool(re.search(r'^INSTRUMENTATION_STATUS_CODE:\s*1\s*$',partial,re.M))
+            attempt.update({'status':'failed','name':name,'device':serial,'selectors':list(selectors),
+                'expected_cases':sorted(expected),'passed':[],'skipped':[],'expected_crash':False,
+                'failed':True,'interrupted':True,'phase':'after-test-start' if started else 'before-test-start',
+                'error':str(command_error),'error_type':type(command_error).__name__,'log':str(log)})
+            self.write_progress()
+            # Transport/startup failures abort the environment; the started attempt remains visible.
+            raise command_error
         if any(selector.startswith('com.nextgis.mobile.rendering.')
                or selector.startswith('com.nextgis.mobile.util.MaintenanceRemindersNativeTest')
                or selector.startswith('com.nextgis.mobile.reliability.LargeTextLayoutTest') for selector in selectors):
@@ -459,14 +572,21 @@ class Verification:
             # Each independent check resets only the disposable verification workspace.
             # Preserve the failure and finish the roster; transport/setup failures still abort.
             result={'passed':[],'skipped':[],'expected_crash':False,'failed':True,'error':message}
-        self.results.append({'name':name,'device':serial,**result})
-        (self.output/'progress.json').write_text(json.dumps(self.receipt('running'),ensure_ascii=False,indent=2),encoding='utf-8')
+        attempt.update(status='failed' if result.get('failed') else 'passed',phase='completed',**result)
+        self.write_progress()
         if result.get('failed'):
             print('FAIL '+name+'; retained in receipt',flush=True)
         else:
             print('PASS '+name+': '+str(len(result['passed']))+' cases'+(' (expected fatal)' if fatal else ''),flush=True)
         if native_failure is not None and self.args.scope!='full': raise NativeCheckFailure(native_failure)
         return result
+
+    def write_progress(self):
+        temporary=self.output/'progress.pending'
+        with temporary.open('w',encoding='utf-8') as stream:
+            json.dump(self.receipt('running'),stream,ensure_ascii=False,indent=2)
+            stream.flush();os.fsync(stream.fileno())
+        temporary.replace(self.output/'progress.json')
 
     def require_native_success(self):
         failures=[result['name'] for result in self.results if result.get('failed')]
@@ -574,8 +694,7 @@ class Verification:
             print('FAIL diagnostic-receiver; retained in receipt, continuing independent Full checks',flush=True)
 
     def receipt(self,status):
-        stress = ROOT/'build/verification/render-stress.json'
-        if stress.is_file(): self.checks['render_stress'] = json.loads(stress.read_text(encoding='utf-8'))
+        # Native stress owns its current evidence; an unrelated disk receipt must not replace it.
         return {'schema_version':2,'scope':self.args.scope,'status':status,
                 'created_at':datetime.now(timezone.utc).isoformat(),'source_fingerprint':self.fingerprint,
                 'build_basis':getattr(self,'build_basis',None),
@@ -583,50 +702,86 @@ class Verification:
                 'passed_cases':sorted({case for result in self.results for case in result['passed']})}
 
     def restore(self):
+        self.restoring=True
+        process=getattr(self,'emulator_process',None)
+        guarded=process is not None and isinstance(process,WindowsEmulatorProcess)
         cleanup={'owned_emulator':self.owned_emulator,'settings_restored':None,
                  'owned_console_closed':None,'owned_process_exited':None}
+        watchdog=None
+        if guarded:
+            watchdog=threading.Timer(45,process.terminate)
+            watchdog.daemon=True;watchdog.start()
         try:
             for device in self.devices.values():
                 for package in (PACKAGE,PACKAGE+'.test'):
                     self.command([self.adb,'-s',device['serial'],'shell','am','force-stop',package],
-                                 allow_failure=True,timeout=30)
-            if not self.saved_emulator: return
+                                 allow_failure=True,timeout=8)
+            angle_error=None
+            if getattr(self,'angle_session',None) is not None:
+                try:
+                    self.angle_session.close()
+                    cleanup['angle_restored']=True
+                except Exception as error:
+                    angle_error=error;cleanup['angle_restore_error']=str(error)
+            if not self.saved_emulator:
+                if angle_error:raise angle_error
+                return
             serial=self.emulator
             for key in ('window_animation_scale','transition_animation_scale','animator_duration_scale'):
+                if key not in self.saved_emulator:continue
                 value=self.saved_emulator[key]
                 self.shell(serial,'settings','delete','global',key) if value=='null' else self.shell(serial,'settings','put','global',key,value)
-            self.shell(serial,'settings','put','system','font_scale',self.saved_emulator['font'])
-            density=re.search(r'Override density:\s*(\d+)',self.saved_emulator['density'])
-            self.shell(serial,'wm','density',density.group(1) if density else 'reset')
+            if 'font' in self.saved_emulator:self.shell(serial,'settings','put','system','font_scale',self.saved_emulator['font'])
+            if 'density' in self.saved_emulator:
+                density=re.search(r'Override density:\s*(\d+)',self.saved_emulator['density'])
+                self.shell(serial,'wm','density',density.group(1) if density else 'reset')
             for key,service in [('wifi','wifi'),('data','data')]:
-                self.shell(serial,'svc',service,'enable' if self.saved_emulator[key]=='1' else 'disable')
-            self.shell(serial,'cmd','location','set-location-enabled',self.saved_emulator['location'])
+                if key in self.saved_emulator:self.shell(serial,'svc',service,'enable' if self.saved_emulator[key]=='1' else 'disable')
+            if 'location' in self.saved_emulator:self.shell(serial,'cmd','location','set-location-enabled',self.saved_emulator['location'])
+            if 'screen_timeout' in self.saved_emulator:
+                value=self.saved_emulator['screen_timeout']
+                self.shell(serial,'settings','delete','system','screen_off_timeout') if value=='null' else self.shell(serial,'settings','put','system','screen_off_timeout',value)
             cleanup['settings_restored']=True
+            if angle_error:raise angle_error
         except Exception as error:
             cleanup['restore_error']=str(error)
             raise
         finally:
             try:
                 if self.owned_emulator:
-                    # The owned emulator console remains reachable even if its ADB transport broke.
-                    self.command([self.adb,'-s',self.owned_emulator,'emu','kill'],allow_failure=True)
                     port=int(self.owned_emulator.removeprefix('emulator-'))
-                    deadline=time.monotonic()+10
-                    while True:
-                        with socket.socket() as probe:
-                            probe.settimeout(.2)
-                            closed=probe.connect_ex(('127.0.0.1',port))!=0
-                        if closed or time.monotonic()>=deadline: break
-                        time.sleep(.1)
-                    cleanup['owned_console_closed']=closed
-                    if not closed: raise RuntimeError('Owned emulator console remained open: '+self.owned_emulator)
-                    process=getattr(self,'emulator_process',None)
+                    owns_console=not guarded or process.owns_console(port)
+                    cleanup['owned_console_verified']=owns_console
+                    if owns_console:
+                        self.command([self.adb,'-s',self.owned_emulator,'emu','kill'],allow_failure=True,timeout=10)
                     if process is not None:
                         cleanup['owned_process_exited']=False
-                        process.wait(timeout=10)
+                        forced_shutdown=False
+                        try:process.wait(timeout=26)
+                        except subprocess.TimeoutExpired:
+                            if not guarded:raise
+                            process.terminate();process.wait(timeout=10)
+                            forced_shutdown=True
                         cleanup['owned_process_exited']=True
+                    with socket.socket() as probe:
+                        probe.settimeout(.2)
+                        cleanup['owned_console_closed']=probe.connect_ex(('127.0.0.1',port))!=0
+                    if guarded:
+                        cleanup['owned_job_remaining']=process.active()
+                        cleanup['forced_stop']=process.forced
+                        cleanup['resource_guard_error']=process.resource_error
+                        cleanup['last_host_resources']=process.resource_stats
+                        if process.resource_error:raise RuntimeError(process.resource_error)
+                        if forced_shutdown:raise RuntimeError('The emulator failed bounded shutdown; its entire owned job was stopped')
+                    if owns_console and not cleanup['owned_console_closed']:
+                        raise RuntimeError('Owned emulator console remained open: '+self.owned_emulator)
             finally:
-                (self.output/'cleanup.json').write_text(json.dumps(cleanup,indent=2),encoding='utf-8')
+                try:
+                    if guarded:process.close()
+                finally:
+                    if watchdog:watchdog.cancel()
+                    self.restoring=False
+                    (self.output/'cleanup.json').write_text(json.dumps(cleanup,indent=2),encoding='utf-8')
 
     def run(self):
         if self.args.scope=='check-publication':
@@ -638,13 +793,16 @@ class Verification:
             return
         if self.args.scope=='list':
             print(json.dumps(self.plan,ensure_ascii=False,indent=2)); return
+        primary_error=None
         try:
             if self.args.scope=='full':
                 # A failed/interrupted new acceptance must not leave a prior green gate behind.
                 (ROOT/'build/verification/full-passed.json').unlink(missing_ok=True)
             # Reject stale/missing skip-build provenance before the first ADB/device action.
             self.build(); self.select_devices()
-            if hasattr(self,'emulator'): self.install(self.emulator)
+            if hasattr(self,'emulator'):
+                self.install(self.emulator)
+                self.configure_emulator_graphics()
             if self.args.scope=='related' and hasattr(self,'phone'):
                 self.install(self.phone)
             if self.args.scope=='full':
@@ -680,15 +838,18 @@ class Verification:
                 if related_failures: raise NativeCheckFailure('\n'.join(related_failures))
             self.assert_build_pair()
         except Exception as error:
+            primary_error=error
             receipt=self.receipt('failed'); receipt['error']=str(error)
             (self.output/'result.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2),encoding='utf-8')
             raise
         finally:
             try: self.restore()
             except Exception as error:
-                receipt=self.receipt('failed');receipt['error']='Cleanup failed: '+str(error)
+                receipt=self.receipt('failed')
+                receipt['error']=str(primary_error) if primary_error is not None else 'Cleanup failed: '+str(error)
+                receipt['cleanup_error']=str(error)
                 (self.output/'result.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2),encoding='utf-8')
-                raise
+                if primary_error is None: raise
         # A run becomes successful only after its owned resources have been finalized.
         try: self.assert_build_pair()
         except Exception as error:
@@ -709,6 +870,9 @@ def main():
     parser.add_argument('--phone-serial'); parser.add_argument('--emulator-serial')
     parser.add_argument('--phone-only',action='store_true',help='Related stationary verification checks only; explicit phone serial required')
     parser.add_argument('--allow-emulator',action='store_true',help='Explicitly approved software-only emulator execution after reviewing host safety; never use host GPU')
+    parser.add_argument('--emulator-graphics',choices=('auto','native','angle','guest-angle'),default='auto',
+                        help='GuestAngle uses system OpenGL ES over verified CPU Vulkan; auto uses the verified local profile when configured')
+    parser.add_argument('--emulator-runtime',help='Directory containing the validated emulator executable; SDK and ADB remain separate')
     parser.add_argument('--test-project',help='Explicitly authorized Collector ID, name or workspace directory; default 1403')
     parser.add_argument('--test-project-fixture',help='Explicitly authorized metadata-only policy snapshot with a matching --test-project ID')
     parser.add_argument('--avd'); parser.add_argument('--sdk'); parser.add_argument('--output')

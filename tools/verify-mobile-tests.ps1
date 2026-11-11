@@ -12,7 +12,9 @@ param(
     [string]$OutputPath,
     [switch]$SkipBuild,
     [switch]$PhoneOnly,
-    [switch]$AllowEmulator
+    [switch]$AllowEmulator,
+    [ValidateSet('Auto','Native','Angle','GuestAngle')][string]$EmulatorGraphics='Auto',
+    [string]$EmulatorRuntime
 )
 $ErrorActionPreference='Stop'
 $repoTaskPath=Split-Path -Parent $PSScriptRoot
@@ -35,10 +37,12 @@ try {
     if($TestProject) {$runArgs+=@('--test-project',$TestProject)}
     if($TestProjectFixture) {$runArgs+=@('--test-project-fixture',$TestProjectFixture)}
     if($Avd) {$runArgs+=@('--avd',$Avd)}
+    if($EmulatorRuntime) {$runArgs+=@('--emulator-runtime',$EmulatorRuntime)}
     if($OutputPath) {$runArgs+=@('--output',$OutputPath)}
     if($SkipBuild) {$runArgs+='--skip-build'}
     if($PhoneOnly) {$runArgs+='--phone-only'}
     if($AllowEmulator) {$runArgs+='--allow-emulator'}
+    $runArgs+=@('--emulator-graphics',$(if($EmulatorGraphics -eq 'GuestAngle') {'guest-angle'} else {$EmulatorGraphics.ToLowerInvariant()}))
     Push-Location $repoTaskPath
     try { & $PythonPath @pythonPrefix @runArgs; $runExitTask=$LASTEXITCODE }
     finally {Pop-Location}

@@ -1,7 +1,7 @@
 ---
 title: Отличия GeonicalSystem от официального NextGIS Mobile
 type: reference
-last_verified: 2026-11-10
+last_verified: 2026-11-11
 related_code:
   - app/build.gradle
   - app/src/main
@@ -12,6 +12,25 @@ related_code:
 ---
 
 # Отличия от официального NextGIS Mobile
+
+## Программная графика эмулятора и реальные касания — 2026-11-11
+
+MOB-03 добавляет developer profile WHPX/system GuestAngle/CPU Lavapipe, проверку
+фактически загруженной GLES library и независимые прежние shader/pixel expectations.
+Приложение и MapLibre продолжают использовать OpenGL ES; production implementation,
+данные, версии и submodule pins этой доработкой не меняются.
+
+Real-window regression больше не хранит координаты X до PNG: первый GPS callback
+может изменить высоту статуса и положение панели. Тест воспроизводит этот reflow,
+получает свежие transformed bounds перед одним настоящим DOWN/UP и сохраняет
+проверки закрытия режима/диалога. Cancel использует тот же путь; прямого
+performClick, повторов клика и ослабления layout/pixel ожиданий нет.
+
+Job-owned shutdown и memory-pressure guard ограничивают собственные процессы SDK.
+Физическая Full матрица сохранена. Это локальная инфраструктура fork; новое
+сравнение upstream/runtime и выпуск APK не заявлены. Уникальная причина прежнего
+whole-PC hang не доказана; hardware GPU/performance не сертифицируются.
+Команды и границы: [автотесты](../runbooks/automated-tests.md).
 
 ## Git tooling: переносы строк — 2026-11-02
 

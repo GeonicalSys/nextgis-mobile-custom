@@ -263,6 +263,42 @@ public class LargeTextLayoutTest {
         InstrumentationRegistry.getInstrumentation().waitForIdleSync();
     }
 
+    private static void tapCurrentView(ActivityScenario<MainActivity> scenario,
+            java.util.function.Supplier<View> window, java.util.function.Supplier<View> action) throws Exception {
+        awaitInputWindow(scenario, window);
+        android.app.Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        java.util.concurrent.atomic.AtomicReference<RectF> target = new java.util.concurrent.atomic.AtomicReference<>();
+        AtomicBoolean downReceived = new AtomicBoolean(), upReceived = new AtomicBoolean();
+        scenario.onActivity(activity -> {
+            ViewGroup decor = (ViewGroup) window.get();
+            View button = action.get();
+            assertTrue("The current touch target is shown and enabled", button.isShown() && button.isEnabled());
+            RectF current = bounds(decor, button);
+            int[] origin = new int[2]; decor.getLocationOnScreen(origin);
+            current.offset(origin[0], origin[1]); target.set(current);
+            android.util.Log.i("LargeTextQa", "Current physical target " + name(button) + " " + current);
+            button.setOnTouchListener((view, event) -> {
+                if (event.getActionMasked() == MotionEvent.ACTION_DOWN) downReceived.set(true);
+                if (event.getActionMasked() == MotionEvent.ACTION_UP) upReceived.set(true);
+                return false;
+            });
+        });
+        // No bitmap capture or other window-changing work between resolving the view and input.
+        RectF current = target.get(); long start = android.os.SystemClock.uptimeMillis();
+        MotionEvent down = MotionEvent.obtain(start, start, MotionEvent.ACTION_DOWN,
+                current.centerX(), current.centerY(), 0);
+        down.setSource(android.view.InputDevice.SOURCE_TOUCHSCREEN);
+        try { instrumentation.sendPointerSync(down); } finally { down.recycle(); }
+        android.os.SystemClock.sleep(50);
+        MotionEvent up = MotionEvent.obtain(start, android.os.SystemClock.uptimeMillis(), MotionEvent.ACTION_UP,
+                current.centerX(), current.centerY(), 0);
+        up.setSource(android.view.InputDevice.SOURCE_TOUCHSCREEN);
+        try { instrumentation.sendPointerSync(up); } finally { up.recycle(); }
+        instrumentation.waitForIdleSync();
+        assertTrue("The current displayed action receives physical DOWN at " + current, downReceived.get());
+        assertTrue("The same displayed action receives physical UP at " + current, upReceived.get());
+    }
+
     private static void actionsFit(ViewGroup root, int... ids) {
         for (int id : ids) {
             View action = root.findViewById(id);
@@ -915,7 +951,6 @@ public class LargeTextLayoutTest {
             java.util.concurrent.atomic.AtomicReference<View> activeWindow = new java.util.concurrent.atomic.AtomicReference<>();
             scenario.onActivity(activity -> activeWindow.set(activity.getWindow().getDecorView()));
             awaitInputWindow(scenario, activeWindow::get);
-            java.util.concurrent.atomic.AtomicReference<RectF> closeBounds = new java.util.concurrent.atomic.AtomicReference<>();
             scenario.onActivity(activity -> {
                 ViewGroup decor = (ViewGroup) activity.getWindow().getDecorView();
                 textFits(activity.findViewById(R.id.main_toolbar));
@@ -931,9 +966,6 @@ public class LargeTextLayoutTest {
                 assertTrue("Close stays in the usable window", rect.left >= visible.left - 1 && rect.right <= visible.right + 1
                         && rect.top >= visible.top - 1 && rect.bottom <= visible.bottom + 1);
                 assertTrue("Close remains usable after fitting", rect.width() >= dp(activity, 20) && rect.height() >= dp(activity, 20));
-                int[] origin = new int[2]; decor.getLocationOnScreen(origin);
-                RectF physicalClose = new RectF(rect); physicalClose.offset(origin[0], origin[1]);
-                closeBounds.set(physicalClose);
                 ViewGroup rail = activity.findViewById(R.id.map_control_rail);
                 boolean reachable = false;
                 for (int i = 0; i < rail.getChildCount(); i++) {
@@ -949,11 +981,13 @@ public class LargeTextLayoutTest {
                 assertTrue("Map tools remain reachable beside enlarged telemetry", reachable);
                 image(decor, "real-azimuth-" + expectedOrientation);
             });
-            RectF close = closeBounds.get(); long now = android.os.SystemClock.uptimeMillis();
-            MotionEvent down = MotionEvent.obtain(now, now, MotionEvent.ACTION_DOWN, close.centerX(), close.centerY(), 0);
-            MotionEvent up = MotionEvent.obtain(now, now + 50, MotionEvent.ACTION_UP, close.centerX(), close.centerY(), 0);
-            instrumentation.sendPointerSync(down); instrumentation.sendPointerSync(up); down.recycle(); up.recycle();
-            instrumentation.waitForIdleSync();
+            // Reproduce the producer transition that invalidated coordinates cached before PNG capture:
+            // the first GPS fix expands/reflows the real status panel below this action.
+            android.location.Location fix = new android.location.Location(android.location.LocationManager.GPS_PROVIDER);
+            fix.setLatitude(39.237255); fix.setLongitude(-123.150032); fix.setAccuracy(5f);
+            fix.setTime(System.currentTimeMillis()); fix.setElapsedRealtimeNanos(android.os.SystemClock.elapsedRealtimeNanos());
+            scenario.onActivity(activity -> activity.getMapFragment().onLocationChanged(fix));
+            tapCurrentView(scenario, activeWindow::get, () -> activeWindow.get().findViewById(R.id.azimuth_stop));
             scenario.onActivity(activity -> assertEquals("A displayed X actually closes the panel",
                     MapFragment.MODE_NORMAL, (int) ((com.nextgis.maplib.map.MaplibreMapInteraction) activity.getMapFragment()).getMode()));
             scenario.onActivity(activity -> {
@@ -966,7 +1000,6 @@ public class LargeTextLayoutTest {
             });
             boolean compat = "compat".equals(InstrumentationRegistry.getArguments().getString("dialogStyle"));
             AtomicBoolean cancelled = new AtomicBoolean();
-            java.util.concurrent.atomic.AtomicReference<RectF> cancelBounds = new java.util.concurrent.atomic.AtomicReference<>();
             java.util.concurrent.atomic.AtomicReference<android.app.Dialog> dialog = new java.util.concurrent.atomic.AtomicReference<>();
             scenario.onActivity(activity -> {
                 EditText input = new EditText(activity); input.setText("Проверка крупного интерфейса");
@@ -1015,14 +1048,10 @@ public class LargeTextLayoutTest {
                             target.left >= visible.left - 1
                             && target.right <= visible.right + 1 && target.top >= visible.top - 1 && target.bottom <= visible.bottom + 1);
                     assertTrue("Dialog action retains a usable touch target", target.width() >= dp(activity, 20) && target.height() >= dp(activity, 20));
-                    if (buttonId == android.R.id.button2) cancelBounds.set(target);
                 }
             });
-            RectF cancel = cancelBounds.get(); now = android.os.SystemClock.uptimeMillis();
-            down = MotionEvent.obtain(now, now, MotionEvent.ACTION_DOWN, cancel.centerX(), cancel.centerY(), 0);
-            up = MotionEvent.obtain(now, now + 50, MotionEvent.ACTION_UP, cancel.centerX(), cancel.centerY(), 0);
-            instrumentation.sendPointerSync(down); instrumentation.sendPointerSync(up); down.recycle(); up.recycle();
-            instrumentation.waitForIdleSync();
+            tapCurrentView(scenario, () -> dialog.get().getWindow().getDecorView(),
+                    () -> dialog.get().findViewById(android.R.id.button2));
             assertTrue("The fitted Cancel button receives an actual touch", cancelled.get());
             assertFalse("Cancel closes the dialog", dialog.get().isShowing());
             scenario.onActivity(activity -> ((android.view.inputmethod.InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE))

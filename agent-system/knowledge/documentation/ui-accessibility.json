@@ -40,7 +40,7 @@
       "value": [
         "title: Адаптация интерфейса к крупному шрифту и размеру отображения",
         "type: architecture",
-        "last_verified: 2026-10-26",
+        "last_verified: 2026-11-11",
         "related_code:",
         "  - maplibui/src/main/java/com/nextgis/maplibui/view/WrappingRow.java",
         "  - maplibui/src/main/java/com/nextgis/maplibui/view/ReflowingGuidanceHeader.java",
