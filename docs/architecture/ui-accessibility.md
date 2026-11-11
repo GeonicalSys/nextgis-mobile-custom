@@ -1,7 +1,7 @@
 ---
 title: Адаптация интерфейса к крупному шрифту и размеру отображения
 type: architecture
-last_verified: 2026-10-26
+last_verified: 2026-11-11
 related_code:
   - maplibui/src/main/java/com/nextgis/maplibui/view/WrappingRow.java
   - maplibui/src/main/java/com/nextgis/maplibui/view/ReflowingGuidanceHeader.java
@@ -168,6 +168,13 @@ density 420/540/620, ширине 280/320/360/568 dp, portrait/landscape и об
 Проверяются полный Layout текста, отсутствие ellipsis и скрытых строк,
 преобразованные границы действий и touch delivery после уменьшения панели.
 PNG сохраняются в synthetic Debug files/large-text-qa для визуального просмотра.
+
+2026-11-11: реальные X и Cancel получают координаты текущего преобразованного view
+после сохранения PNG и завершения новой layout/frame. First GPS fix намеренно
+обновляет настоящую панель статуса перед касанием: координаты, сохранённые до
+такого reflow, больше не используются. Один physical DOWN/UP должен дойти
+до действия и закрыть исходный режим/диалог. PerformClick и повторов клика нет.
+
 В CI отдельно проверяются настоящие окна при font scale 2.0 и density 620:
 тест явно задаёт и проверяет portrait/landscape, закрывает панель реальным
 нажатием, проверяет отсутствие перекрытия кнопок карты и доступность действий

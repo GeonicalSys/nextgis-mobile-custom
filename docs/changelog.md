@@ -1,7 +1,7 @@
 ---
 title: История документационной системы
 type: changelog
-last_verified: 2026-11-10
+last_verified: 2026-11-11
 related_code:
   - docs
 ---
@@ -11,6 +11,14 @@ related_code:
 > Журнал собирается из записей App. Чтобы добавить событие, следуйте
 > [порядку редактирования](guides/documentation-maintenance.md#журнал-документации). Сведения в датированных
 > разделах относятся к указанным в них событиям и проверкам.
+
+## 2026-11-11 — Безопасный software profile и проверка графики эмулятора
+
+Добавлен Windows GuestAngle/CPU Lavapipe profile с проверкой runtime/image и actual
+system-library identity. Независимая GLSL UBO probe сохраняет прежние pixel expectations.
+WHPX, resource guard и Windows Job ограничивают собственное дерево SDK; receipts сохраняют
+primary/cleanup failure и interrupted native attempt. Физическая Full матрица сохранена.
+Команды и границы: [автотесты](runbooks/automated-tests.md).
 
 ## 2026-11-10 — Защита публикации от неверного идентификатора NextGIS ID
 

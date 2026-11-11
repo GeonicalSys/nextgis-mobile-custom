@@ -41,6 +41,13 @@
         "GPS/radio/crash сценарии остаются на эмуляторе. Новый тест автоматически входит",
         "в required catalog, отсутствие маршрута блокирует runner. Полный receipt",
         "проверяется Check-Publication по содержимому всех четырёх checkout.",
+        "",
+        "Проверенный Windows software profile использует WHPX/CPU Lavapipe, системный GuestAngle",
+        "и SkiaVK на API36 Google APIs revision7. Приложение продолжает использовать OpenGL ES.",
+        "До native workload проверяются actual loaded system library, CPU identities и независимые",
+        "pixel oracles. Windows Job ограничивает собственное дерево SDK; settings/probe восстанавливаются.",
+        "Full graphics/stress остаются на физических устройствах. Профиль, cache и ограничения:",
+        "[руководство по автотестам](../../docs/runbooks/automated-tests.md).",
         ""
       ]
     }

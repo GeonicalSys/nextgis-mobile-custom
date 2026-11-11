@@ -40,7 +40,7 @@
       "value": [
         "title: Матрица сборки и версий",
         "type: reference",
-        "last_verified: 2026-11-10",
+        "last_verified: 2026-11-11",
         "related_code:",
         "  - build.gradle",
         "  - gradle/wrapper/gradle-wrapper.properties",
@@ -437,6 +437,18 @@
         "suite. Диагностика contract 3 не повышает release/debug versions; выпуск APK",
         "не входит в этот разбор. Linked library/root Draft PR имеют незакрытую",
         "зависимость до Merge Commit maplib и замены временного feature pin в root.",
+        "",
+        "",
+        "## Локальный software profile эмулятора — 2026-11-11",
+        "",
+        "Проверенный runtime/image и независимая GLES probe описаны в",
+        "[автотестах](../runbooks/automated-tests.md). Один probe APK собирается установленными",
+        "SDK/JDK; production dependency и Gradle module не добавляются. Кэш",
+        "`build/verification/emulator-gles-cache` проверяет recipe/toolchain/fixture/APK hashes.",
+        "Системный ANGLE используется из API36 Google APIs revision7, внешний пакет не устанавливается.",
+        "Windows Job, фактическая принадлежность console, pressure guard и сохранение interrupted",
+        "attempt проверяются отдельно от native graphics. Runtime37.2.13 и API36r7 имеют pinned hashes;",
+        "пути конкретной машины находятся только в private local profile. Версии APK не изменяются.",
         ""
       ]
     }

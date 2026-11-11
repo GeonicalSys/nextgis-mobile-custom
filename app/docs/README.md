@@ -1,7 +1,7 @@
 ---
 title: app — Android-приложение Lisa/Belka
 module_id: app
-last_verified: 2026-11-02
+last_verified: 2026-11-11
 ---
 
 # app — Android-приложение Lisa/Belka
@@ -1193,6 +1193,13 @@ Full перед публикацией. Opt-in `fieldVerificationChecks=true` с
 GPS/radio/crash сценарии остаются на эмуляторе. Новый тест автоматически входит
 в required catalog, отсутствие маршрута блокирует runner. Полный receipt
 проверяется Check-Publication по содержимому всех четырёх checkout.
+
+Проверенный Windows software profile использует WHPX/CPU Lavapipe, системный GuestAngle
+и SkiaVK на API36 Google APIs revision7. Приложение продолжает использовать OpenGL ES.
+До native workload проверяются actual loaded system library, CPU identities и независимые
+pixel oracles. Windows Job ограничивает собственное дерево SDK; settings/probe восстанавливаются.
+Full graphics/stress остаются на физических устройствах. Профиль, cache и ограничения:
+[руководство по автотестам](../../docs/runbooks/automated-tests.md).
 
 LayerSelectionDialogTest проверяет три строки/геометрии и настоящие touches,
 36 enlarged UI profiles. ProjectLayerSelectionTest проверяет штатное создание

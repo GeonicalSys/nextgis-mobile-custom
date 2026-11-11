@@ -103,13 +103,13 @@
     },
     "app/docs/manifest.yaml": {
       "layout_id": "lisa:mobile:metadata:app-module-manifest",
-      "sha256_utf8_lf": "f18988b5aa3002c27751b14d9261446cf19462e74cd5bf582f3534ded7c8348e",
+      "sha256_utf8_lf": "a0cd118d3f568271814f2d393211830df9f33cbc5fa16c2c7456ccee72df1298",
       "source_fingerprints": {
         "agent-system/provenance/app-module-manifest.json": "b272578296400a9bb749e4242f9c1b4502b9234a54e40089554a97279bc1cbdc",
         "docs/scripts/module_manifest_knowledge.py": "6010dfb9a7cfc2cfe4f1afbfde9d865f9d225f07878bac5cf1e99d3ade68405c",
         "docs/scripts/structured_view_proof.py": "bae9d5c0273dbe26bfa4c4467c2c7210cbc75c1677cc25a9a6a4cf347b6bb54c"
       },
-      "ordered_records_sha256": "9d794b32e9f85342c1351d6bc000fd6f0d3b761a8fb7adf8e35163bf2c8f7409",
+      "ordered_records_sha256": "9e8254b05095e99e0319e828223b1915cca259af7eb00bb376f0f140681a2824",
       "ordered_count": 212
     },
     "docs/registry/ui-contracts.json": {

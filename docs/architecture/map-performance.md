@@ -1,7 +1,7 @@
 ---
 title: Производительность запуска карты
 type: architecture
-last_verified: 2026-11-02
+last_verified: 2026-11-11
 related_code:
   - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
   - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
@@ -349,6 +349,11 @@ Peak RSS/PSS/Java/native остаются наблюдениями; без от�
 ownership/plateau oracle новые hard caps и leak PASS не вводятся. Этот stress
 не измеряет p50/p95 появления корректного кадра и не подменяет парный787/Азимут
 benchmark на plain release.
+
+Software GuestAngle/Lavapipe Related на эмуляторе проверяет прежние GLES/MapLibre fixtures
+с independent UBO pixel oracle и actual system-library identity. Его receipt не подменяет
+stress на двух физических устройствах, hardware acceptance или benchmark. Условия:
+[автотесты](../runbooks/automated-tests.md).
 
 Unit/build результаты не доказывают native экономию или устранение исходного
 std::bad_alloc. Текущая Related/Full приёмка на устройстве и эмуляторе остаётся

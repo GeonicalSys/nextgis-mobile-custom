@@ -41,7 +41,7 @@
       "value": [
         "title: История документационной системы",
         "type: changelog",
-        "last_verified: 2026-11-10",
+        "last_verified: 2026-11-11",
         "related_code:",
         "  - docs"
       ]
@@ -95,6 +95,11 @@
     {
       "type": "contains",
       "target": "lisa:mobile:resource:documentation-changelog-authoring",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-11-software-angle",
       "status": "source_backed"
     },
     {

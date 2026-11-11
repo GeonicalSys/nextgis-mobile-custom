@@ -41,7 +41,7 @@
       "role": "module_manifest_ordered_value",
       "value": {
         "path": "app/src/androidTest/java/com/nextgis/mobile/util/VerificationTestRunner.java",
-        "responsibility": "Admit only isolated verification APK and explicitly selected phone, then await real delayed startup callbacks and workspace operations before native fixtures; production data and identities remain outside tests."
+        "responsibility": "Admit only isolated verification APK and explicitly selected phone, then await real delayed startup callbacks and workspace operations before native fixtures; production data and identities remain outside tests. The validated Windows GuestAngle profile uses pinned system ANGLE/CPU Lavapipe, independent loaded-library/pixel proof, WHPX, bounded resources and Job-owned cleanup; physical Full routing remains required."
       }
     }
   },

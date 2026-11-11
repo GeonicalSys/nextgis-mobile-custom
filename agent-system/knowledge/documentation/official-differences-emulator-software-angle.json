@@ -1,0 +1,64 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:official-differences-emulator-software-angle",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed developer-profile and test-observation contract with its dated task evidence."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Программная графика эмулятора и реальные касания — 2026-11-11",
+        "",
+        "MOB-03 добавляет developer profile WHPX/system GuestAngle/CPU Lavapipe, проверку",
+        "фактически загруженной GLES library и независимые прежние shader/pixel expectations.",
+        "Приложение и MapLibre продолжают использовать OpenGL ES; production implementation,",
+        "данные, версии и submodule pins этой доработкой не меняются.",
+        "",
+        "Real-window regression больше не хранит координаты X до PNG: первый GPS callback",
+        "может изменить высоту статуса и положение панели. Тест воспроизводит этот reflow,",
+        "получает свежие transformed bounds перед одним настоящим DOWN/UP и сохраняет",
+        "проверки закрытия режима/диалога. Cancel использует тот же путь; прямого",
+        "performClick, повторов клика и ослабления layout/pixel ожиданий нет.",
+        "",
+        "Job-owned shutdown и memory-pressure guard ограничивают собственные процессы SDK.",
+        "Физическая Full матрица сохранена. Это локальная инфраструктура fork; новое",
+        "сравнение upstream/runtime и выпуск APK не заявлены. Уникальная причина прежнего",
+        "whole-PC hang не доказана; hardware GPU/performance не сертифицируются.",
+        "Команды и границы: [автотесты](../runbooks/automated-tests.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:official-differences-emulator-software-angle"
+    ]
+  }
+}

@@ -1,4 +1,5 @@
 import sys
+import json
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from types import SimpleNamespace
@@ -6,7 +7,7 @@ import unittest
 from unittest.mock import Mock, patch
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from run_mobile_tests import OFFLINE_TILE_CLASS, Verification, NativeCheckFailure
+from run_mobile_tests import OFFLINE_TILE_CLASS, Verification, NativeCheckFailure, NativeStartupTimeout
 from mobile_sqlite_evidence import SQLITE_CLASS
 
 CASE='example.Test#works'
@@ -95,7 +96,57 @@ class NativeFailureCollectionTest(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError,'Device unavailable'):
                 runner.native('phone',['example.Test'],'class')
             self.assertEqual(1,runner.prepare.call_count)
-            self.assertFalse(runner.results)
+            self.assertEqual(1,len(runner.results))
+            self.assertTrue(runner.results[0]['failed'])
+            self.assertTrue(runner.results[0]['interrupted'])
+            self.assertEqual('before-test-start',runner.results[0]['phase'])
+
+    def test_attempt_is_saved_before_entering_a_command_that_never_returns(self):
+        class AbruptStop(BaseException):pass
+        with TemporaryDirectory() as folder:
+            runner=self.runner(folder,'related')
+            def abrupt(*args,**kwargs):
+                checkpoint=json.loads((Path(folder)/'progress.json').read_text())
+                self.assertEqual([],checkpoint['passed_cases'])
+                self.assertEqual('running',checkpoint['runs'][0]['status'])
+                self.assertEqual([CASE],checkpoint['runs'][0]['expected_cases'])
+                raise AbruptStop()
+            runner.command=Mock(side_effect=abrupt)
+            with self.assertRaises(AbruptStop):runner.native('phone',[CASE],'abrupt')
+            self.assertIsNone(runner.active_native_attempt)
+            self.assertEqual('running',json.loads((Path(folder)/'progress.json').read_text())['runs'][0]['status'])
+
+    def test_transport_after_test_start_retains_the_attempt_and_never_passes_it(self):
+        with TemporaryDirectory() as folder:
+            runner=self.runner(folder,'related')
+            def interrupt(*args,**kwargs):
+                (Path(folder)/'interrupted.log').write_text('INSTRUMENTATION_STATUS_CODE: 1\n')
+                raise RuntimeError('original disconnected transport')
+            runner.command=Mock(side_effect=interrupt)
+            with self.assertRaisesRegex(RuntimeError,'original disconnected transport'):
+                runner.native('phone',[CASE],'interrupted')
+            self.assertEqual(1,runner.command.call_count)
+            receipt=json.loads((Path(folder)/'progress.json').read_text())
+            self.assertEqual([],receipt['passed_cases'])
+            attempt=receipt['runs'][0]
+            self.assertEqual('after-test-start',attempt['phase'])
+            self.assertEqual([CASE],attempt['expected_cases'])
+            self.assertEqual([CASE],attempt['selectors'])
+            self.assertTrue(attempt['failed']);self.assertTrue(attempt['interrupted'])
+            self.assertEqual('RuntimeError',attempt['error_type'])
+
+    def test_startup_timeout_is_recorded_as_an_unstarted_failed_attempt(self):
+        with TemporaryDirectory() as folder:
+            runner=self.runner(folder,'related')
+            failure=NativeStartupTimeout('no test start')
+            runner.command=Mock(side_effect=failure)
+            with self.assertRaises(NativeStartupTimeout) as raised:
+                runner.native('phone',[CASE],'unstarted')
+            self.assertIs(failure,raised.exception)
+            attempt=json.loads((Path(folder)/'progress.json').read_text())['runs'][0]
+            self.assertEqual('before-test-start',attempt['phase'])
+            self.assertEqual('NativeStartupTimeout',attempt['error_type'])
+            self.assertEqual([],attempt['passed'])
 
     def test_sqlite_log_is_finalized_before_artifact_collection_and_original_failure_survives(self):
         with TemporaryDirectory() as folder:
@@ -144,7 +195,8 @@ class NativeFailureCollectionTest(unittest.TestCase):
         with TemporaryDirectory() as folder:
             runner=self.runner(folder);runner.command=Mock(side_effect=RuntimeError('Device unavailable'))
             with self.assertRaisesRegex(RuntimeError,'Device unavailable'):runner.native('phone',[CASE],'first')
-            self.assertFalse(runner.results)
+            self.assertEqual(1,len(runner.results))
+            self.assertTrue(runner.results[0]['failed'])
 
     def test_successful_roster_is_not_rejected(self):
         with TemporaryDirectory() as folder:

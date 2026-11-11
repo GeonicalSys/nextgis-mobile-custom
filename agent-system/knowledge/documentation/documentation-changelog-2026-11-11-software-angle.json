@@ -1,0 +1,62 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-11-11-software-angle",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep this dated documentation change with its original source scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-11-11 — Безопасный software profile и проверка графики эмулятора",
+        "",
+        "Добавлен Windows GuestAngle/CPU Lavapipe profile с проверкой runtime/image и actual",
+        "system-library identity. Независимая GLSL UBO probe сохраняет прежние pixel expectations.",
+        "WHPX, resource guard и Windows Job ограничивают собственное дерево SDK; receipts сохраняют",
+        "primary/cleanup failure и interrupted native attempt. Физическая Full матрица сохранена.",
+        "Команды и границы: [автотесты](runbooks/automated-tests.md).",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-11-11",
+        "heading": "2026-11-11 — Безопасный software profile и проверка графики эмулятора",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-11-11-software-angle"
+    ]
+  }
+}
