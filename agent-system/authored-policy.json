@@ -34,6 +34,17 @@
         "body_sha256": "78cbfa7b37d7caf07f6f9d8694ed798b359a5cfb24c184633ca5be662555bdb7",
         "other_fields_sha256": "43bcce76674ac9d643233f598e9b3a7a076989f8c13556bc2458a7ffa2456e28"
       }
+    },
+    {
+      "id": "lisa:mobile:instruction:workspace.local-checks-and-cloud-boundary",
+      "review": "Owner explicitly requested the lightweight documentation route on 2026-11-12. Reviewed the narrow prose/plan exception, preservation of deferred state, direct record/projection checks and unchanged Git hooks, branch/security/runtime gates; no compiler or product change.",
+      "base_revision": "cb51e6dc1b23d584381df6816e5d1c55eb0f130d",
+      "record_sha256": "f82fc04096b9d5a06e338104bb53eb282c4b5f89038021019f31dc467abf154c",
+      "base_proof": {
+        "record_sha256": "6a500e6921bcf5e9c987f381b628c7c1017a204e466510d3644f119b0e8a1660",
+        "body_sha256": "9ac55492f3a3a38103d9a16bfb89d2c92363b13e02994401bc10237131cdd076",
+        "other_fields_sha256": "5b5ee8ac0aaf4432b76e0a011cf37fe324310feb1fa2aa9fdafe9a7f5b372a72"
+      }
     }
   ]
 }
