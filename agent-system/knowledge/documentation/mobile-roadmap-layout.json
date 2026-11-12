@@ -40,7 +40,7 @@
       "value": [
         "title: Дорожная карта мобильного приложения ЛИСА и БЕЛКА",
         "type: roadmap",
-        "last_verified: 2026-11-11",
+        "last_verified: 2026-11-12",
         "related_code:",
         "  - AGENTS.md",
         "  - .github/PULL_REQUEST_TEMPLATE.md",
@@ -333,6 +333,11 @@
     {
       "type": "contains",
       "target": "lisa:mobile:task:mobile-roadmap-incremental-server-sync",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-project-layer-form-binding",
       "status": "source_backed"
     },
     {

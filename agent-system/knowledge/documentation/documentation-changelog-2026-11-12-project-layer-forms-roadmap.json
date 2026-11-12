@@ -1,0 +1,62 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-11-12-project-layer-forms-roadmap",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep this dated documentation change with its original source scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-11-12 — Назначение форм в дорожной карте",
+        "",
+        "В [дорожную карту мобильного приложения](roadmap/mobile.md#form-01-явное-назначение-ngfp-форм-слоям-в-collector-проекте)",
+        "добавлен FORM-01: выбор NGFP-формы для слоя через метаданные Collector-проекта",
+        "по ключам ресурсов, с прежним выбором первой формы при отсутствии назначения,",
+        "изоляцией проектов и критериями проверки повторной синхронизации.",
+        "Реализация отложена владельцем; приоритет не назначен. LISA Web не меняется.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-11-12",
+        "heading": "2026-11-12 — Назначение форм в дорожной карте",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-11-12-project-layer-forms-roadmap"
+    ]
+  }
+}
