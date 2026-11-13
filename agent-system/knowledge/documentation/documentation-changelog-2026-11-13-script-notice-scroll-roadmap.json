@@ -1,0 +1,64 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-11-13-script-notice-scroll-roadmap",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep this dated documentation change with its original source scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-11-13 — План прокрутки сообщений внешних скриптов",
+        "",
+        "В [дорожную карту](roadmap/mobile.md#script-ui-01-читаемые-сообщения-внешних-скриптов-с-прокруткой)",
+        "добавлен SCRIPT-UI-01: обычный размер текста с системным масштабом, вертикальная",
+        "прокрутка длинных сообщений и неподвижные заголовок/кнопки окна «Проверка проекта».",
+        "Зафиксированы граница MaplibUI/App, сохранение warn/block и подтверждений,",
+        "совместимость старых пакетов и проверки длинной истории/доступности.",
+        "Сохранён только план; реализация, проверки на устройстве и выпуск не начаты.",
+        "Прежние изменения дорожной карты сохранены по прямому разрешению владельца.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-11-13",
+        "heading": "2026-11-13 — План прокрутки сообщений внешних скриптов",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-11-13-script-notice-scroll-roadmap"
+    ]
+  }
+}

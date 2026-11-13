@@ -41,7 +41,7 @@
       "value": [
         "title: История документационной системы",
         "type: changelog",
-        "last_verified: 2026-11-12",
+        "last_verified: 2026-11-13",
         "related_code:",
         "  - docs"
       ]
@@ -95,6 +95,26 @@
     {
       "type": "contains",
       "target": "lisa:mobile:resource:documentation-changelog-authoring",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-13-menu-edit-recovery-roadmap",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-13-background-gps-roadmap",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-13-script-notice-scroll-roadmap",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-12-release-observability-plan",
       "status": "source_backed"
     },
     {

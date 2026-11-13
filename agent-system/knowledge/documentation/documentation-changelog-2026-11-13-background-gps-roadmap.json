@@ -1,0 +1,66 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-11-13-background-gps-roadmap",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep this dated documentation change with its original source scope."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-11-13 — План управления обычным фоновым GPS",
+        "",
+        "В [дорожную карту](roadmap/mobile.md#geo-02-управление-обычным-фоновым-gps)",
+        "добавлен GEO-02: остановка обычного GPS при смахивании задачи и кнопка",
+        "«Отключить GPS в фоне» до нового запуска после явного закрытия приложения.",
+        "Зафиксированы сохранение активных трека, обхода и выноса, независимость",
+        "постоянной настройки, границы пользовательского сеанса и критерии проверок.",
+        "Причина поведения установленного APK пока не установлена; наличие обработчика",
+        "смахивания в исходниках не выдано за исправление на устройстве.",
+        "Сохранён только план. Реализация, проверки на устройстве и выпуск не начаты.",
+        "Все прежние изменения сохранены по прямому поручению владельца.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-11-13",
+        "heading": "2026-11-13 — План управления обычным фоновым GPS",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-11-13-background-gps-roadmap"
+    ]
+  }
+}
