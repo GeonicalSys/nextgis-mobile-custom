@@ -1,0 +1,62 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-11-12-release-observability-plan",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Сохранить дату и границы добавления плана; запись не подтверждает реализацию или выпуск."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-11-12 — План обязательной статистики и отчётов при выпуске",
+        "",
+        "В дорожную карту добавлена MOB-REL-03: обязательная production-конфигурация,",
+        "полный перенос приватных входов, независимая проверка подписанных APK,",
+        "привязка к SHA-256, подтверждение доставки и проверки отказа публикации.",
+        "Сохранены причина сбоя 225/226 и план исправленного выпуска ЛИСЫ и БЕЛКИ.",
+        "Реализация не начата; код, действующие правила и приватные настройки не менялись.",
+        ""
+      ]
+    },
+    "entry": {
+      "role": "dated_documentation_change",
+      "value": {
+        "date": "2026-11-12",
+        "heading": "2026-11-12 — План обязательной статистики и отчётов при выпуске",
+        "level": 2,
+        "parent": null
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-11-12-release-observability-plan"
+    ]
+  }
+}

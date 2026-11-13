@@ -40,7 +40,7 @@
       "value": [
         "title: Дорожная карта мобильного приложения ЛИСА и БЕЛКА",
         "type: roadmap",
-        "last_verified: 2026-11-12",
+        "last_verified: 2026-11-13",
         "related_code:",
         "  - AGENTS.md",
         "  - .github/PULL_REQUEST_TEMPLATE.md",
@@ -103,6 +103,11 @@
     {
       "type": "contains",
       "target": "lisa:mobile:task:mobile-roadmap-release-ngid-226",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-release-observability",
       "status": "source_backed"
     },
     {
@@ -312,6 +317,11 @@
     },
     {
       "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-edit-session-recovery",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
       "target": "lisa:mobile:resource:mobile-roadmap-performance-measurement-heading",
       "status": "source_backed"
     },
@@ -392,12 +402,22 @@
     },
     {
       "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-background-gps-control",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
       "target": "lisa:mobile:task:mobile-roadmap-login-diagnostics",
       "status": "source_backed"
     },
     {
       "type": "contains",
       "target": "lisa:mobile:resource:mobile-roadmap-usability-and-expansion-scope",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-script-notice-scroll",
       "status": "source_backed"
     },
     {
@@ -423,6 +443,11 @@
     {
       "type": "contains",
       "target": "lisa:mobile:task:mobile-roadmap-stale-data-and-update-reminders",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-menu-maintenance",
       "status": "source_backed"
     },
     {
