@@ -39,11 +39,11 @@
       "value": {
         "repository": "root",
         "path": "app/src/main/res/xml/preferences_general.xml",
-        "purpose": "Reviewed reset_settings Preference key/title and common general-settings binding; no invented Android widget ID.",
+        "purpose": "Reviewed reset_settings Preference key/title and common general-settings binding; no invented Android widget ID. Review 2026-11-13: GEO-02 retains active guidance and separates temporary automatic GPS mute; UX-06 removes only track/cleanup main-menu entries and adds confirmed maintenance; REL-04 scopes editor cleanup. Existing independent consumers and their guarded requirements are preserved.",
         "contract_ids": [
           "UI-SETTINGS-RESET-WORKSPACE"
         ],
-        "sha256": "1cb80f9294eefbdf9348d15ba042195d3f9dc82c6668f908e5d8ef01c859d42b"
+        "sha256": "64063d1376cfc3ce4f01646f8c01cd58156b6f1fc9c90047c32baac4300f2688"
       }
     }
   },

@@ -4,32 +4,39 @@
   "kind": "task",
   "owner": "android_projects/android_gisapp",
   "topic": "documentation",
-  "status": "planned",
+  "status": "active",
   "execution_permission": false,
   "applicability": {
     "review_status": "reviewed",
     "paths": [],
-    "scope_refs": ["lisa:mobile:resource:mobile-roadmap-layout"],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
   },
   "lifecycle": {
     "goal": "open",
-    "implementation": "planned",
-    "source_verification": "NOT_RUN",
-    "merge": "not_applicable",
-    "runtime_verification": "NOT_RUN",
+    "implementation": "implemented",
+    "source_verification": "PASS",
+    "merge": "open",
+    "runtime_verification": "PASS",
     "release": "unpublished",
-    "retention": "Сохранить план REL-04 и границы сохранности пользовательских данных. Реализация, воспроизведение на устройстве и выпуск APK не выполнены."
+    "retention": "Реализация и локальные проверки эмулятора завершены. Сохранить исходники, журнал и receipts; телефон, Full, слияние и публикация остаются отдельными стадиями."
   },
   "facets": {
-    "view-path": {"role": "published_markdown_path", "value": "docs/roadmap/mobile.md"},
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
     "body": {
       "role": "markdown_body_lines",
       "value": [
         "## REL-04 Завершение редактирования после отказа от восстановления",
         "",
-        "Приоритет P1. Состояние: Предложена; план записан по поручению владельца 13.11.2026. Реализация не начата. Очерёдность остальных задач сохраняется.",
+        "Приоритет P1. Состояние: реализована и проверена на эмуляторе 13.11.2026. Проверка на телефоне и Full — перед публикацией; выпуск APK не выполнен.",
+        "",
+        "Ниже сохранены исходный запрос и план на момент постановки; фактический результат и проверки приведены в конце карточки.",
         "",
         "Сценарий пользователя: начать создание точки в слое, открыть форму атрибутов, оставить её незавершённой, выйти из приложения и открыть его снова. После отказа от восстановления/завершения скетча в списке слоёв остаётся карандаш, а выключить редактирование не получается. Требуется согласованно завершить отменённый сеанс и вернуть управление слоем; скрытие значка без снятия причины блокировки исправлением не считается.",
         "",
@@ -52,14 +59,35 @@
         "- Continue восстанавливает всю незавершённую работу; Save создаёт ровно один объект и завершает редактирование. Discard существующей правки не меняет сохранённый объект. Данные другого слоя/проекта, вложения, очередь отправки, активные трек/обход/вынос и новые сеансы после старого callback остаются сохранны.",
         "- Результат одинаков при возврате из фона, пересоздании экрана и холодном восстановлении. Проверены список слоёв, состояние модели, наличие/отсутствие нужных журналов и БД, а не только значок. Source/unit, Related, устройство и выпуск учитываются раздельно; текущий анализ исходников не является runtime PASS.",
         "",
-        "Граница текущего поручения: только проработка и сохранение плана. Код, пользовательские слои и черновики не изменяются; реализация, сброс блокировок в рабочем приложении, тесты на устройстве и выпуск APK не начинаются.",
+        "Текущее поручение от 13.11.2026 разрешает реализацию и проверки на эмуляторе. Прежняя граница «только план» сохранена в истории Git; публикация и проверка на рабочем телефоне в эту стадию не входят.",
+        "",
+        "",
+        "Результат реализации: отказ от формы/геометрии завершает только соответствующий редактор и освобождает его слой; устаревшее решение не очищает новый черновик. Карандаш связан с нажатой строкой и её владельцем; доказанно осиротевшая блокировка снимается адресно.",
+        "",
+        "Общая локальная проверка GEO-02 / UX-06 / REL-04: сборка PASS; 17 профильных unit-проверок PASS; Related на изолированном эмуляторе — 48 сценариев PASS и 6 real-window profiles при 620 dpi / 200% шрифте, портрет/альбом. После адресного обновления открытого списка слоёв повторены 4 затронутых recovery-сценария, все PASS, включая настоящий клик по карандашу и проверку БД. Телефон и Full не проверялись по текущему поручению владельца. Это не допуск к публикации.",
+        "",
+        "[Карточка реализации](../../update-reports/entries/android-20261113-rel04-edit-recovery.md); [контракты и локальные проверки](../../update-reports/entries/android-20261113-mobile-contracts-verification.md).",
         ""
       ]
     },
-    "legacy-id": {"role": "published_roadmap_alias", "value": "REL-04"},
-    "priority": {"role": "priority_at_roadmap_authoring", "value": "P1"},
-    "lifecycle-basis": {"role": "scope_of_independent_lifecycle_at_roadmap_authoring", "value": "Установлены source-причины показа карандаша и точки возможного рассогласования Discard/finish. Причина пользовательского случая, реализация и runtime-приёмка будущего исправления пока не подтверждены."}
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "REL-04"
+    },
+    "priority": {
+      "role": "priority_at_roadmap_authoring",
+      "value": "P1"
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_roadmap_authoring",
+      "value": "Реализация по новому поручению владельца 13.11.2026; сборка, профильные unit и эмуляторные Related-проверки пройдены. Приёмка эмулятора ограничена выбранными сценариями; телефон, Full и публикация отложены."
+    }
   },
   "relations": [],
-  "provenance": {"manifest": "agent-system/provenance/documentation.json", "scopes": ["lisa:mobile:task:mobile-roadmap-edit-session-recovery"]}
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-edit-session-recovery"
+    ]
+  }
 }

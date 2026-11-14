@@ -97,6 +97,8 @@ public class FormSaveRecoveryTest {
             FeatureFormDraftStore.Snapshot failed = FeatureFormDraftStore.load(app);
             assertNotNull(failed);
             assertTrue(failed.featureId >= 0);
+            assertFalse("A committed feature with a missing photo is not a completed form",
+                    com.nextgis.maplib.util.FeatureSaveJournal.isFormComplete(map.getDatabase(false),layer.getPath().getName(),failed.operationId,failed.featureId));
             assertEquals(1, DatabaseUtils.queryNumEntries(map.getDatabase(false), layer.getPath().getName()));
             Bitmap photo = Bitmap.createBitmap(4, 4, Bitmap.Config.ARGB_8888);
             try (FileOutputStream output = new FileOutputStream(missingPhoto)) {
@@ -108,6 +110,8 @@ public class FormSaveRecoveryTest {
             assertNull(FeatureFormDraftStore.load(app));
             assertEquals(1, DatabaseUtils.queryNumEntries(map.getDatabase(false), layer.getPath().getName()));
             assertNotNull(layer.getFeature(failed.featureId));
+            assertTrue("The actual successful photo retry records full form completion",
+                    com.nextgis.maplib.util.FeatureSaveJournal.isFormComplete(map.getDatabase(false),layer.getPath().getName(),failed.operationId,failed.featureId));
         } finally {
             FeatureFormDraftStore.clear(app);
             assertTrue(layer.delete(false));

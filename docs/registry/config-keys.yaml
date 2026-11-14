@@ -452,9 +452,9 @@ build_inputs:
     owner: app
     source: usage.properties
     secret_values_forbidden: true
-    optional: true
-    purpose: Private release-only HTTPS usage.endpoint and write-only usage.uploadToken. Debug and field verification embed
-      empty values; no foreground duration collection.
+    optional: false
+    purpose: Mandatory Release usage.endpoint and write-only usage.uploadToken from the approved production input contract.
+      Debug/verification embed empty values; foreground duration collection is unchanged.
   fieldVerificationChecks:
     owner: app
     source: app/build.gradle
@@ -471,15 +471,15 @@ build_inputs:
     owner: app
     source: app/build.gradle
     optional: true
-    purpose: Explicit Gradle property permits empty Sentry DSN only when private sentry.properties is absent during CI reliability
-      checks.
+    purpose: Gradle test-suite enablement only. Does not waive mandatory Release client, statistics, Sentry or diagnostic
+      archive inputs.
   sentry.properties:
     owner: app
     source: sentry.properties
     secret_values_forbidden: true
-    optional: true
-    purpose: Private Sentry Gradle configuration required by normal builds; optional only with explicit ciReliabilityChecks=true
-      when the file is absent
+    optional: false
+    purpose: Mandatory Release private sentry.dsn for the approved apps-geonical.ru/errors/1 project. Debug/verification embed
+      empty values. ciReliabilityChecks cannot bypass Release validation.
   local.properties:
     owner: root
     source: local.properties
@@ -494,6 +494,18 @@ build_inputs:
     optional: true
     purpose: NextGIS ID client identifier injected into MaplibUI BuildConfig; required for each Lisa/Belka release build,
       optional for Debug. The publisher independently verifies the identifier in the signed APK.
+  diagnostics.properties:
+    owner: app
+    source: tools/production-telemetry-contract.json
+    secret_values_forbidden: true
+    optional: false
+    purpose: 'Mandatory Release diagnostics.artifactEndpoint=https://apps-geonical.ru/error-artifacts and write-only diagnostics.artifactUploadToken.
+      Debug/verification production values are empty. Archives contain only already-approved SDK envelopes; no expanded GIS/log/photo
+      scan. Private input filename: diagnostics.properties; the source path points to the public authoritative declaration
+      because private inputs are never manufactured or tracked. Approved existing archive values map from private Desktop
+      LISA_ERROR_REPORT_ARTIFACTS_URL/LISA_ERROR_REPORT_UPLOAD_TOKEN (or server desktop-envs.fragment); verify the upload
+      token against configured/running UPLOAD_TOKEN_SHA256. Android receives only explicit private build inputs and never
+      reads Desktop files at runtime. Operator read credentials are separate.'
 storage:
   diagnostic-process-owner:
     owner: app

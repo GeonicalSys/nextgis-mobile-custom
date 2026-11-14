@@ -49,6 +49,8 @@ class ProjectSettingsActivity : AppCompatActivity() {
             findViewById(R.id.project_sync),
             findViewById(R.id.project_create_local),
             findViewById(R.id.project_rename),
+            findViewById(R.id.project_recovery),
+            findViewById(R.id.project_changes),
             findViewById(R.id.project_reset_rebuild_guard),
             findViewById(R.id.project_delete)
         )
@@ -56,6 +58,12 @@ class ProjectSettingsActivity : AppCompatActivity() {
         findViewById<Button>(R.id.project_sync).setOnClickListener { syncCurrentProject() }
         findViewById<Button>(R.id.project_create_local).setOnClickListener { createLocalProject() }
         findViewById<Button>(R.id.project_rename).setOnClickListener { renameProject() }
+        findViewById<Button>(R.id.project_recovery).setOnClickListener {
+            startActivity(Intent(this, ProjectRecoveryActivity::class.java))
+        }
+        findViewById<Button>(R.id.project_changes).setOnClickListener {
+            startActivity(Intent(this, ChangesCentreActivity::class.java))
+        }
         findViewById<Button>(R.id.project_reset_rebuild_guard).setOnClickListener {
             SchemaRebuildRetryGuard.clearForWorkspace(
                 this, ProjectOperationCoordinator.activeWorkspaceKey(this))

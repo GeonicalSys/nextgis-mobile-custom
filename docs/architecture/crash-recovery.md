@@ -214,6 +214,9 @@ Key types: `GeometryEditDraftStore`, `MapFragment.persistManualGeometryDraft`,
 | Validation | A draft for an existing feature is offered only while that feature row still exists; typed control values retain their Bundle type |
 | Save result after cold restore | The result carries layer id and whether the row was newly inserted. `MapFragment` resolves the layer from the active map and reloads the persisted feature without assuming that the pre-crash `mSelectedLayer` or temporary MapLibre edit object still exists. When the new id is absent from the process-local GeoJSON list, `MapDrawable` performs a full layer-data reload instead of a style-only refresh, so the object becomes visible without restarting the app. Every successful result then terminates creation/existing-feature editing, clears edit and view selection, and returns the standard `MODE_NORMAL` map UI |
 
+REL-04: Discard формы сверяет operationId и map path; Discard геометрии — map/layer/feature, WKT и timestamp предложенного снимка. Отмена нового черновика не меняет сохранённую строку. Выход в MODE_NORMAL очищает обработчик завершения; снимается только lock слоя отменённого ручного редактора после проверки form/geometry/Walk/point владельцев. Формат существующих журналов сохраняется.
+Карандаш на строке слоя открывает её форму либо штатное завершение живого редактора, восстановление геометрии или управление обходом. Для адресного снятия orphan lock сначала исключаются все известные владельцы; общий сброс lock при запуске запрещён.
+
 No layer insert until the user explicitly Saves.
 
 NGFP [cascading lists](cascading-form-lists.md) store a SHA-256 reference to the

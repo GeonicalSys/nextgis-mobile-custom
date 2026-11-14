@@ -41,7 +41,7 @@
       "role": "module_manifest_ordered_value",
       "value": {
         "path": "app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java",
-        "responsibility": "Admit storage move and confirmed Reset only under an exclusive project lease before default-directory/prefs/task effects; defer proposed-path and Reset publication through actual-path worker commit and owned UI completion; distinguish Activity drawable refresh from move ACK and preserve ordinary failure/cancel rebind, unexpected worker error propagation and exact terminal cleanup."
+        "responsibility": "Admit storage move and confirmed Reset only under an exclusive project lease before default-directory/prefs/task effects; defer proposed-path and Reset publication through actual-path worker commit and owned UI completion; distinguish Activity drawable refresh from move ACK and preserve ordinary failure/cancel rebind, unexpected worker error propagation and exact terminal cleanup. General maintenance uses independent MaintenanceActions with confirmed scoped log/backup deletion and honest failure results; actions are nonpersistent."
       }
     }
   },

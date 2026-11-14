@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="project_recovery">Резервные копии и восстановление</string>
+    <string name="recovery_description">Архив включает сохранённые объекты и фото, формы, настройки проекта, офлайн подложки и неотправленные правки. Незаконченные формы восстанавливаются отдельно — ниже. Восстановление создаёт отдельную копию; её правки требуют сверки перед отправкой. Экспортируйте архив, чтобы сохранить его вне приложения.</string>
+    <string name="recovery_wait">Дождитесь завершения текущей операции или рабочего режима. Запись трека, обход и вынос продолжают работать.</string>
+    <string name="recovery_create">Создать архив проекта</string>
+    <string name="recovery_import">Восстановить из файла</string>
+    <string name="recovery_working">Выполняется…</string>
+    <string name="recovery_cancelling">Отмена операции…</string>
+    <string name="recovery_cancelled">Операция отменена. Исходные данные сохранены.</string>
+    <string name="recovery_archives">Архивы проектов · последние 50</string>
+    <string name="recovery_no_archives">Архивов проектов пока нет.</string>
+    <string name="recovery_restore">Восстановить отдельную копию</string>
+    <string name="recovery_export">Экспортировать файл</string>
+    <string name="recovery_archive_entry">%1$s · %2$s</string>
+    <string name="recovery_archive_unchecked">%1$s · требуется проверка перед восстановлением</string>
+    <string name="recovery_archive_created">Архив создан и проверен. Нажмите «Экспортировать файл», чтобы сохранить его вне приложения.</string>
+    <string name="recovery_restore_confirmation">Проверить архив и создать отдельную копию проекта? Неотправленные правки в копии будут заблокированы до сверки. Текущий проект остаётся выбранным.</string>
+    <string name="recovery_copy_name">%1$s — восстановленная копия</string>
+    <string name="recovery_copy_created">Восстановленная копия создана</string>
+    <string name="recovery_copy_ready">«%1$s» доступна в выборе проектов. Перед отправкой правок на сервер выполните их сверку.</string>
+    <string name="recovery_open_copy">Открыть копию</string>
+    <string name="recovery_drafts">Сохранённые исходники форм · последние 50</string>
+    <string name="recovery_drafts_description">Здесь сохраняются повреждённые и заменённые черновики. Повторная попытка требует исходного проекта и слоя и не заменяет другую незаконченную форму. Если восстановление невозможно, исходник можно экспортировать.</string>
+    <string name="recovery_no_drafts">Сохранённых в карантине черновиков нет.</string>
+    <string name="recovery_draft_entry">%1$s · %2$d байт · %3$s</string>
+    <string name="recovery_draft_preserved">исходник сохранён</string>
+    <string name="recovery_draft_recovered">восстановлен; исходник сохранён</string>
+    <string name="recovery_retry_draft">Попробовать восстановить форму</string>
+    <string name="recovery_draft_ready">Черновик формы восстановлен. Вернитесь на карту, чтобы продолжить.</string>
+    <string name="recovery_source_problem">Повреждённый черновик не удалось перенести в карантин. Исходник сохранён на месте. Экспортируйте его перед повторной попыткой.</string>
+    <string name="recovery_export_source">Экспортировать повреждённый исходник</string>
+    <string name="recovery_export_done">Файл экспортирован.</string>
+    <string name="recovery_wrong_source">Архив относится к другому проекту, аккаунту или серверу. Выберите соответствующие проект и аккаунт.</string>
+    <string name="recovery_no_space">Для завершения недостаточно свободного места. Исходные данные сохранены.</string>
+    <string name="recovery_no_memory">Для этого проекта недостаточно свободной памяти. Закройте другие приложения и повторите попытку.</string>
+    <string name="recovery_draft_not_recoverable">Этот черновик сейчас открыть нельзя. Выберите его исходный проект и завершите текущую форму либо экспортируйте исходник для восстановления.</string>
+    <string name="recovery_failed">Не удалось завершить операцию. Проверьте архив, доступ и свободное место. Исходный проект и черновики сохранены.</string>
+</resources>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:padding="16dp">
+        <TextView android:id="@+id/recovery_project" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" android:text="@string/recovery_description" />
+        <TextView android:id="@+id/recovery_wait" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_marginTop="12dp" android:text="@string/recovery_wait"
+            android:visibility="gone" />
+        <Button android:id="@+id/recovery_create" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_marginTop="16dp"
+            android:textAllCaps="false" android:text="@string/recovery_create" />
+        <Button android:id="@+id/recovery_import" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:textAllCaps="false" android:text="@string/recovery_import" />
+        <ProgressBar android:id="@+id/recovery_progress" style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:indeterminate="true" android:visibility="gone" />
+        <Button android:id="@+id/recovery_cancel" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:textAllCaps="false" android:text="@android:string/cancel"
+            android:visibility="gone" />
+        <TextView android:id="@+id/recovery_status" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_marginTop="12dp"
+            android:accessibilityLiveRegion="polite" android:textIsSelectable="true" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="20dp" android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/recovery_archives" />
+        <LinearLayout android:id="@+id/recovery_archives" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:orientation="vertical" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="24dp" android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/recovery_drafts" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="8dp" android:text="@string/recovery_drafts_description" />
+        <TextView android:id="@+id/recovery_source_problem" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_marginTop="12dp"
+            android:text="@string/recovery_source_problem" android:visibility="gone" />
+        <Button android:id="@+id/recovery_source_export" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:textAllCaps="false" android:text="@string/recovery_export_source"
+            android:visibility="gone" />
+        <LinearLayout android:id="@+id/recovery_drafts" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:orientation="vertical" />
+    </LinearLayout>
+</ScrollView>

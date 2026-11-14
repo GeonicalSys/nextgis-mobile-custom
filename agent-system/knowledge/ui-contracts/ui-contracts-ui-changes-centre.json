@@ -1,0 +1,112 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-changes-centre",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-CHANGES-CENTRE"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "units": "Операции/ID и время, либо архивы/байты; без физических единиц.",
+        "updates": [
+          "Обновление после выбора проекта, команды или завершения операции."
+        ],
+        "unknowns": [
+          "Full, физический телефон/планшет, полная матрица шрифтов и публикация NOT_RUN.",
+          "Эмуляторные receipts имеют отдельную область; каталог не является общей runtime-приёмкой.",
+          "Отсутствующие локальные копии/исходы на другом устройстве требуют ручной сверки. P2P не реализован."
+        ],
+        "id": "UI-CHANGES-CENTRE",
+        "group": "sync",
+        "title": "Судьба отдельных правок и безопасная сверка",
+        "surface": "Меню и настройки проекта → Изменения и синхронизация",
+        "widgets": [
+          "menu_changes_centre",
+          "project_changes",
+          "changes_project",
+          "changes_send",
+          "changes_release",
+          "changes_recovery"
+        ],
+        "meaning": "Правки и вложения выбранного проекта показаны поштучно, с причиной и подходящей командой. Подтверждение операции не означает полный обмен.",
+        "value_origin": "Зарегистрированный projectUid, read-only owning SQLite/config, immutable UUID очереди и метаданные ACK. Просмотр не переключает карту.",
+        "actions": [
+          "Отправить ожидающие правки",
+          "Сверить по ID сервера либо отдельно подтвердить повтор после проверки",
+          "Завершить локальную фиксацию, продолжить форму или открыть восстановление",
+          "Выбрать одну сверенную копию для отправки"
+        ],
+        "conditions": [
+          "При записи трека, обходе, выносе и занятой операции изменяющие проект команды откладываются; активный режим продолжается.",
+          "Повторно проверяются owning project/layer/UUID. Копия остаётся под HOLD до сверки всех операций.",
+          "Выбор копии явно приостанавливает синхронизацию исходника и связанных копий с сохранением их данных. Известный ACK того же создания требует сверки."
+        ],
+        "saved_state": "UID и страница сохраняются при пересоздании Activity. Очередь, квитанции и delivery-owner принадлежат workspace. Push-only не меняет время полного обмена.",
+        "source_ids": [
+          "WF-CHANGES-CENTRE-VIEW",
+          "WF-CHANGES-CENTRE-ACTIONS",
+          "WF-LOCAL-CHANGES-READONLY"
+        ],
+        "expectations": [
+          "Правка отправляется без повторного сохранения формы; неизвестный исход сохраняется до сверки.",
+          "После отправки выбранной копии исходник не выполняет второй POST, сохраняя объекты/очередь.",
+          "ACK после архива не обходится устаревшим разрешением повторить."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-changes-centre-view",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-changes-centre-actions",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-local-changes-readonly",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-changes-centre"
+    ]
+  }
+}

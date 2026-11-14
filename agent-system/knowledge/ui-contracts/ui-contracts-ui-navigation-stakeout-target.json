@@ -62,7 +62,7 @@
           "Both shared portrait/land layouts bind the same panel and metre formatter for Lisa/Belka; no runtime resource-merge proof is inferred.",
           "Polygon stakeout currently targets outer/inner boundaries even for an inside fix; an 'arrive anywhere inside' goal would be another explicit policy, not an inferred bug fix."
         ],
-        "saved_state": "Target holds private geometry/index, no layer/FID/workspace token. MapFragment saves mode plus selected layer/FID/geometry blob; same-process Boolean marker permits reconstructing guidance from that selected blob, while process death suppresses audible restart. This does not prove workspace/FID replacement safety or migrate live target/draft/account identity.",
+        "saved_state": "Target holds a private geometry/index snapshot, no layer/FID/workspace token. SharedStakeoutSession retains the live controller in the application process; Activity recreation/task removal only detach UI. Reopening attaches to the same live owner. A Bundle cannot restart guidance or sound after cold process death. Workspace/FID replacement policy remains UNKNOWN.",
         "source_ids": [
           "map-stakeout-start",
           "stakeout-start",

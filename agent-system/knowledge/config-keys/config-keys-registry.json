@@ -129,7 +129,8 @@
             "ciReliabilityChecks",
             "sentry.properties",
             "local.properties",
-            "maplibui-client-id"
+            "maplibui-client-id",
+            "diagnostics.properties"
           ]
         },
         {
@@ -574,6 +575,11 @@
     {
       "type": "contains",
       "target": "lisa:mobile:contract:config-keys-build-inputs-maplibui-client-id",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:config-keys-build-inputs-diagnostics-properties",
       "status": "source_backed"
     },
     {

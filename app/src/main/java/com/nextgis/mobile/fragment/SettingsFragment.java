@@ -154,6 +154,19 @@ public class SettingsFragment
                         AppSettingsConstants.KEY_PREF_LAYER_BACKUP_MAX_GB);
                 initializeLayerBackupQuota(getActivity(), backupQuota);
 
+                final Preference clearLog = findPreference(com.nextgis.mobile.util.MaintenanceActions.KEY_CLEAR_LOG);
+                if (clearLog != null) clearLog.setOnPreferenceClickListener(preference -> {
+                    Activity activity = getActivity();
+                    if (activity != null) com.nextgis.mobile.util.MaintenanceActions.confirmClearLog(activity);
+                    return true;
+                });
+                final Preference clearBackups = findPreference(com.nextgis.mobile.util.MaintenanceActions.KEY_CLEAR_BACKUPS);
+                if (clearBackups != null) clearBackups.setOnPreferenceClickListener(preference -> {
+                    Activity activity = getActivity();
+                    if (activity != null) com.nextgis.mobile.util.MaintenanceActions.confirmClearBackups(activity);
+                    return true;
+                });
+
                 break;
             case SettingsConstantsUI.ACTION_PREFS_MAP:
                 setPreferencesFromResource(R.xml.preferences_map, null);

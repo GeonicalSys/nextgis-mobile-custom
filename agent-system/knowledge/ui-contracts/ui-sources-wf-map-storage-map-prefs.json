@@ -46,7 +46,7 @@
           "initializeReset(getActivity(), reset)"
         ],
         "forbids": [],
-        "sha256": "0c84fad78b1bd382e51bd13caf041c804e1995a0e2b280f286235ec3153e7ce0"
+        "sha256": "6b57a7e0157f862a155fd16d1f08d65a0830f94552e541a1f604e47a79414e48"
       }
     }
   },

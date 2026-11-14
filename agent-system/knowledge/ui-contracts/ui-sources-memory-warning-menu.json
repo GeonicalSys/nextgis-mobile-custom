@@ -43,7 +43,26 @@
           "mapFragment?.showRenderMemoryStatus()"
         ],
         "forbids": [],
-        "sha256": "cde7b032024f19e8ebaac2e7c641838a30e43f3a3fb66897fcac701200afd0cd"
+        "sha256": "530a2270f257630611e0580594e674ca2419242a709c0510749dd90bc07fec40"
+      }
+    },
+    "review-20261114": {
+      "role": "semantic_review_and_preserved_consumers",
+      "value": "Settings and memory-status branches retain original requires/forbids; this handler adds only a separate changes-centre route."
+    },
+    "prior-reviewed-method": {
+      "role": "retained_previous_review_definition",
+      "value": {
+        "id": "memory-warning-menu",
+        "repository": "root",
+        "path": "app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt",
+        "marker": "override fun onOptionsItemSelected(item: MenuItem): Boolean",
+        "requires": [
+          "R.id.menu_render_memory",
+          "mapFragment?.showRenderMemoryStatus()"
+        ],
+        "forbids": [],
+        "sha256": "c10c19a9acc56b31d379c8daf6615593aa5cbb2eeede0a876709a003c8bd6188"
       }
     }
   },

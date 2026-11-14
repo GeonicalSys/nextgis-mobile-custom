@@ -10,7 +10,7 @@
     "review_status": "reviewed",
     "paths": [],
     "scope_refs": [
-      "lisa:mobile:resource:mobile-roadmap-layout",
+      "lisa:mobile:resource:mobile-roadmap-history-layout",
       "lisa:mobile:task:mobile-roadmap-heavy-map-diagnostics"
     ],
     "conditions": [],
@@ -28,7 +28,7 @@
   "facets": {
     "view-path": {
       "role": "published_markdown_path",
-      "value": "docs/roadmap/mobile.md"
+      "value": "docs/roadmap/mobile-history.md"
     },
     "body": {
       "role": "markdown_body_lines",

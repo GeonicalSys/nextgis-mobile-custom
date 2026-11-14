@@ -94,6 +94,11 @@
   "relations": [
     {
       "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-13-mobile-roadmap-review",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
       "target": "lisa:mobile:resource:documentation-changelog-authoring",
       "status": "source_backed"
     },

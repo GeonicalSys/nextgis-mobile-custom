@@ -402,45 +402,17 @@ public class LayersFragment
         mListAdapter = new LayersListAdapter(activityRef.get(), mapFragmentForInit.getMMapRef().get());
         mListAdapter.setOnLayerDataChangedListener(this::refreshPendingChangesBadge);
         mListAdapter.setDrawer(drawerLayout);
-        mListAdapter.setOnPencilClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mapFragmentRef.get()!= null
-                //        &&   !mapFragmentRef.get().hasEdits()
-                ) {
-                    if (mapFragmentRef.get().getMFinishListener() != null)
-                        mapFragmentRef.get().getMFinishListener().onClick(null);
-                    return;
-                }
-
-                if (activityRef.get() == null)
-                    return;
-                AlertDialog builder = com.nextgis.maplibui.util.FittedDialogs.compatBuilder(activityRef.get())
-                        .setTitle(com.nextgis.maplibui.R.string.save)
-                        .setMessage(com.nextgis.maplibui.R.string.has_edits)
-                        .setPositiveButton(com.nextgis.maplibui.R.string.save, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (mapFragmentRef.get()!= null ) {
-                                    mapFragmentRef.get().saveEdits();
-                                    mapFragmentRef.get().setNewMode(MapFragment.MODE_NORMAL);
-                                }
-                            }
-                        })
-                        .setNegativeButton(com.nextgis.maplibui.R.string.discard, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (mapFragmentRef.get()!= null ) {
-                                    mapFragmentRef.get().cancelEdits();
-                                    mapFragmentRef.get().setNewMode(MapFragment.MODE_NORMAL);
-                                }
-                            }
-                        }).create();
-                builder.show();
-            }
+        mListAdapter.setOnPencilClickListener(v -> {
+            MapFragment mapFragment = mapFragmentRef.get();
+            if (mapFragment == null || mLayersListView == null || mListAdapter == null) return;
+            int position = mLayersListView.getPositionForView(v);
+            if (position == android.widget.AdapterView.INVALID_POSITION) return;
+            ILayer layer = mListAdapter.getItem(position);
+            if (layer == null) return;
+            mapFragment.manageLayerEditing(layer.getId());
+            mListAdapter.notifyDataSetChanged();
+            toggle();
         });
-
-
 
         mListAdapter.setOnLayerEditListener(new LayerEditListener(this, activityRef, mapFragmentRef));
 //                new LayersListAdapter.onEdit() {
@@ -792,7 +764,7 @@ public class LayersFragment
         if (trimmed.length() <= SYNC_ERROR_MESSAGE_MAX) {
             return trimmed;
         }
-        return trimmed.substring(0, SYNC_ERROR_MESSAGE_MAX - 1) + "…";
+        return trimmed.substring(0, SYNC_ERROR_MESSAGE_MAX - 1) + "вЂ¦";
     }
 
     private void showSyncFailureDialog(final String error) {

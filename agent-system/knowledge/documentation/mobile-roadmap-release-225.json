@@ -10,30 +10,30 @@
     "review_status": "reviewed",
     "paths": [],
     "scope_refs": [
-      "lisa:mobile:resource:mobile-roadmap-layout"
+      "lisa:mobile:resource:mobile-roadmap-history-layout"
     ],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
   },
   "lifecycle": {
-    "goal": "open",
+    "goal": "complete",
     "implementation": "implemented",
     "source_verification": "UNKNOWN",
     "merge": "merged",
     "runtime_verification": "NOT_RUN",
-    "release": "unpublished",
+    "release": "published",
     "retention": "Retain the signed b165046d artifacts, distinct fingerprints and failure evidence before any retest."
   },
   "facets": {
     "lifecycle-review": {
       "role": "reviewed_lifecycle_scope_and_evidence",
       "value": {
-        "goal": "Release 3.1.2.31/225 awaits final candidate acceptance and a separate publication order.",
+        "goal": "Historical release 225 preparation is superseded by published corrective release 226. Remaining acceptance stays open under MOB-03/MOB-04 and MOB-REL-03.",
         "implementation": "The version bump and signed b165046d candidate preceded direct SQLite routing, Debug underlay progress and warning layout changes.",
         "source_verification": "The first version matrix and signed artifacts belong to b165046d. The later candidate has compile and static evidence. The final APK matrix and new regression execution remain open.",
         "merge": "App 88 merged at b165046d. App 89 merged at f05ded46 with maplib 66 and maplibui 48 pins. App 90 updates the line-ending chain.",
         "runtime_verification": "The b165046d Full recorded 256 passes and 17 failures. The later source has no fresh Full or device acceptance. SM-X115 was explicitly excluded from the earlier run.",
-        "release": "225 remains unpublished. Publisher dry-run and Check-Publication are separate admission steps.",
+        "release": "Release 225 was public and was superseded by 226. Both public channel manifests showed 226 on 2026-11-13. Historical FAIL/NOT_RUN remain unchanged.",
         "references": [
           {
             "repository": "android_projects/android_gisapp",
@@ -55,30 +55,19 @@
     },
     "view-path": {
       "role": "published_markdown_path",
-      "value": "docs/roadmap/mobile.md"
+      "value": "docs/roadmap/mobile-history.md"
     },
     "body": {
       "role": "markdown_body_lines",
       "value": [
-        "Приоритет P1, прямое поручение владельца1 ноября2026: повысить версию и",
-        "подготовить приложение к публикации с подключённым смартфоном. Владелец",
-        "отдельно разрешил программный эмулятор локально; GitHub Actions запрещены.",
-        "Это подготовка выпуска поверх уже слитых MOB-02/04, MOB-UI-01 и MOB-SYNC-01,",
-        "без изменения очереди продуктовых доработок.",
+        "## MOB-REL-01 Подготовка выпуска 3.1.2.31/225",
         "",
-        "Владельцы: maplib (release diagnostic version) → app (production metadata,",
-        "независимая APK matrix, release notes и проверки) → upload_mobile (dry-run",
-        "после приёмки). Data/schema/sync API/фоновая политика и батарея bump-ом не",
-        "меняются; пользовательское состояние должно сохраняться при обычном обновлении.",
+        "Историческая подготовка выпуска 225. Этот выпуск уже сменён опубликованным 3.1.2.32/226; отдельную подготовку 225 больше не вести. Состояние публичных каналов проверено 13.11.2026: [ЛИСА](https://apps-geonical.ru/lisa-mobile/lisa/manifest.json), [БЕЛКА](https://apps-geonical.ru/lisa-mobile/belka/manifest.json).",
         "",
-        "Приёмка: закрытая матрица исходников и merged pins, обе release flavors и",
-        "Lisa Debug с согласованной maplib version, ожидаемая release подпись,",
-        "локальные Full и Check-Publication, затем publisher tests/dry-run.",
-        "Для Full требуется нагрузка на физическом смартфоне и другом физическом планшете.",
-        "10 ноября владелец поручил публикацию после прохождения выпускных проверок.",
-        "Состояние и доказательства:",
-        "[подготовка выпуска](../reference/mobile-release-3.1.2.31-2026-11-01.md).",
-        "Карточки: android-20261101-release-31231, maplib-20261101-release-31231.",
+        "Прежние FAIL/NOT_RUN и различия кандидатов остаются в свидетельствах ниже: публикация не превращает их в PASS. Оставшиеся проверки тяжёлой карты и памяти относятся к MOB-03/MOB-04; новые требования к отправке и диагностике — к REL-01/REL-02 и MOB-REL-03. Старый выпуск не даёт права пропустить проверки следующего.",
+        "",
+        "[Подготовка и доказательства 225](../reference/mobile-release-3.1.2.31-2026-11-01.md), [передача выпуска](../handoffs/2026-11-01-mobile-release-31231.md). Карточки: android-20261101-release-31231, maplib-20261101-release-31231.",
+        "",
         ""
       ]
     },

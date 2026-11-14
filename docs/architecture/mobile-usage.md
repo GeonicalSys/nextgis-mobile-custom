@@ -15,7 +15,11 @@ related_code:
 Debug/verification имеют пустые BuildConfig endpoint/token и не создают
 production-событий. Конфигурация — игнорируемый `usage.properties` в root:
 `usage.endpoint` и write-only `usage.uploadToken`; содержимое не коммитить.
-Пустая конфигурация отключает функцию. Не требуется доработка NextGIS Web.
+Для Release пустая, отсутствующая или неверная конфигурация останавливает сборку
+каждого бренда. ciReliabilityChecks не отключает эту проверку; Debug остаётся
+изолированным. Обязательные входы и безопасный перенос перечислены в
+tools/production-telemetry-contract.json и tools/telemetry_inputs.py. Не требуется
+доработка NextGIS Web. Статистика и очередь диагностических архивов независимы.
 
 Собираются модель/производитель/Android, полный ANDROID_ID (fallback UUID
 установки), бренд/версия APK, связанные server/login, состав проектов и даты

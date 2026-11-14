@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-wf-project-recovery-restore",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "WF-PROJECT-RECOVERY-RESTORE"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "WF-PROJECT-RECOVERY-RESTORE",
+        "repository": "root",
+        "path": "app/src/main/java/com/nextgis/mobile/activity/ProjectRecoveryActivity.kt",
+        "marker": "private fun restore(file: File, project: CollectorProjectRegistry.ProjectInfo)",
+        "requires": [
+          "runOperation(true, after =",
+          "ProjectArchiveManager.restore(this, file, project,",
+          "R.string.recovery_open_copy",
+          "openCopy(result)"
+        ],
+        "forbids": [],
+        "sha256": "2c2ec5b50b610b51426884e3d919d9844e9b9a927f78b0f52ff365b49ce3e911"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-wf-project-recovery-restore"
+    ]
+  }
+}

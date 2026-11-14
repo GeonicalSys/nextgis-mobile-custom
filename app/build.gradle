@@ -24,6 +24,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'io.sentry.android.gradle'
 apply plugin: 'kotlin-android'
+apply from: rootProject.file('gradle/production-telemetry.gradle')
 
 // Sentry's injected Application.onCreate probe runs before our isolated-process
 // guard and calls APIs forbidden to an isolated UID. Keep crash reporting and
@@ -38,8 +39,8 @@ sentry {
 //apply plugin: 'kotlin-android-extensions'
 //apply plugin: 'kotlin-kapt'
 
-def productionVersionCode = 226
-def productionVersionName = '3.1.2.32'
+def productionVersionCode = 227
+def productionVersionName = '3.1.2.33'
 def debugVersionCode = 218
 def debugVersionName = '3.1.2.23'
 def fieldVerificationChecks = providers.gradleProperty('fieldVerificationChecks')
@@ -86,16 +87,8 @@ def geonicalSigningConfigured =
         geonicalSigningPropertyCount == geonicalSigningPropertyNames.size()
 
 // Write-only analytics credentials are local build inputs, never committed.
-def usageProperties = new Properties()
-def usagePropertiesFile = rootProject.file('usage.properties')
-if (usagePropertiesFile.exists()) {
-    usagePropertiesFile.withInputStream { usageProperties.load(it) }
-}
-def usageEndpoint = usageProperties.getProperty('usage.endpoint', '')
-def usageUploadToken = usageProperties.getProperty('usage.uploadToken', '')
-if (usageEndpoint && !(usageEndpoint.startsWith('https://') && usageUploadToken)) {
-    throw new GradleException('Usage reporting requires an HTTPS endpoint and upload token')
-}
+def usageEndpoint = productionTelemetryValues.usageEndpoint
+def usageUploadToken = productionTelemetryValues.usageToken
 def usageLiteral = { value -> groovy.json.JsonOutput.toJson(value) }
 
 // Verification and Debug can use an SDK-only local.properties; release cannot.
@@ -123,26 +116,7 @@ android {
         buildConfig = true
     }
 
-    // Setup the Sentry DSN from the file 'sentry.properties', which should contain
-    // sentry.dsn=https://publicKey:secretKey@host:port/1?options
-    // DO NOT PUBLIC the file 'sentry.properties' !!!
-    File sentryPropFile = rootProject.file('sentry.properties')
-    String sentryDsn = ""
-    if (fieldVerificationChecks) {
-        // The isolated verification APK never embeds the production diagnostics endpoint.
-        sentryDsn = ''
-    } else if (sentryPropFile.exists()) {
-        Properties sentryProp = new Properties()
-        sentryProp.load(sentryPropFile.newDataInputStream())
-        sentryDsn = sentryProp.get("sentry.dsn")
-        if (sentryDsn == null || sentryDsn.trim().isEmpty()) {
-            throw new GradleException("sentry.dsn is missing or empty in sentry.properties")
-        }
-    } else if (!providers.gradleProperty('ciReliabilityChecks').getOrElse('false').toBoolean()) {
-        throw new GradleException("Missing required file: sentry.properties. Build cannot continue.")
-    }
-    // CI compiles/tests with crash reporting disabled and never needs a production DSN.
-
+    String sentryDsn = productionTelemetryValues.sentryDsn
 
     defaultConfig {
         applicationId 'com.nextgis.mobile'
@@ -157,12 +131,14 @@ android {
         // Fork versioning: docs/reference/build-matrix.md and docs/runbooks/release-apk.md
         versionCode productionVersionCode
         versionName productionVersionName
-        buildConfigField "String", "SENTRY_DSN", "\"${sentryDsn}\""
+        buildConfigField 'String', 'SENTRY_DSN', usageLiteral(sentryDsn)
         buildConfigField "String", "SOURCE_REVISION", "\"${sourceRevision}\""
         buildConfigField 'boolean', 'FIELD_VERIFICATION', fieldVerificationChecks.toString()
         buildConfigField 'boolean', 'PRIVATE_RESOURCE_PROFILING', privateResourceProfiling.toString()
         buildConfigField 'String', 'USAGE_ENDPOINT', usageLiteral(fieldVerificationChecks ? '' : usageEndpoint)
         buildConfigField 'String', 'USAGE_UPLOAD_TOKEN', usageLiteral(fieldVerificationChecks ? '' : usageUploadToken)
+        buildConfigField 'String', 'DIAGNOSTIC_ARTIFACT_ENDPOINT', usageLiteral(productionTelemetryValues.artifactEndpoint)
+        buildConfigField 'String', 'DIAGNOSTIC_ARTIFACT_UPLOAD_TOKEN', usageLiteral(productionTelemetryValues.artifactToken)
 
         def props = new Properties()
         file("../local.properties").withInputStream { props.load(it) }
@@ -232,6 +208,9 @@ android {
             // Debug and verification never send test activity to the production receiver.
             buildConfigField 'String', 'USAGE_ENDPOINT', '""'
             buildConfigField 'String', 'USAGE_UPLOAD_TOKEN', '""'
+            buildConfigField 'String', 'SENTRY_DSN', '""'
+            buildConfigField 'String', 'DIAGNOSTIC_ARTIFACT_ENDPOINT', '""'
+            buildConfigField 'String', 'DIAGNOSTIC_ARTIFACT_UPLOAD_TOKEN', '""'
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -239,7 +218,7 @@ android {
             manifestPlaceholders = [updateFlavor: "debug"]
             resValue 'string', 'APP_NAME', fieldVerificationChecks ? 'ЛИСА автотесты' : 'ЛИСА тест'
             resValue 'string', 'app_name', fieldVerificationChecks ? 'ЛИСА автотесты' : 'ЛИСА тест'
-            resValue 'string', 'SENTRY_DSN', sentryDsn
+            resValue 'string', 'SENTRY_DSN', ''
             resValue 'string', 'provider_auth', debugProvider
             resValue 'string', 'nextgis_mobile_accounts_auth', fieldVerificationChecks ? 'com.nextgis.mobile.verification.account.debug' : 'com.nextgis.mobile.account.debug'
             resValue 'string', 'nextgis_accounts_auth', debugAccount

@@ -10,6 +10,7 @@ related_code:
 # Документация GeonicalSystem NextGIS Mobile
 
 - [Дорожная карта мобильного приложения и согласование всех доработок](roadmap/mobile.md).
+- [История дорожной карты: прежние выпуски и датированные свидетельства](roadmap/mobile-history.md).
 - [Управление треками и точки над линиями](architecture/track-controls.md).
 - [Квитанция проверки треков от 25 октября](reference/track-controls-verification-2026-10-25.md).
 - [Выпуск ЛИСЫ224: исправления, приёмка и пользовательское исключение](reference/mobile-release-fixes-2026-10-26.md).

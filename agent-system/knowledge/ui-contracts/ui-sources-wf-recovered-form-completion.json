@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-wf-recovered-form-completion",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "WF-RECOVERED-FORM-COMPLETION"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "WF-RECOVERED-FORM-COMPLETION",
+        "repository": "maplib",
+        "path": "src/main/java/com/nextgis/maplib/util/FeatureSaveJournal.java",
+        "marker": "public static boolean releaseRecoveredHolds(SQLiteDatabase db,org.json.JSONObject baseline,String layer,long row) throws org.json.JSONException",
+        "requires": [
+          "if(!db.inTransaction())",
+          "queueDigest(db,layer,row)",
+          "baseline.getLong(\"completion_watermark\")",
+          "db.rawQuery(\"SELECT 1 FROM \"+COMPLETED+\" WHERE _id>? AND layer=? AND row_id=? AND queue_sha256=? LIMIT 1\",",
+          "old.getString(\"operation\")"
+        ],
+        "forbids": [],
+        "sha256": "7875a3757e85b60089748e6305bf31a9bf529aff89925453acf11d02b44706a4"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-wf-recovered-form-completion"
+    ]
+  }
+}

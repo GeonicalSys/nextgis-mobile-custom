@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-wf-changes-centre-actions",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "WF-CHANGES-CENTRE-ACTIONS"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "WF-CHANGES-CENTRE-ACTIONS",
+        "repository": "root",
+        "path": "app/src/main/java/com/nextgis/mobile/activity/ChangesCentreActivity.kt",
+        "marker": "private fun updateEnabled()",
+        "requires": [
+          "page?.deliveryBlocked != true",
+          "!activeWork()",
+          "!ProjectOperationCoordinator.isBusy()"
+        ],
+        "forbids": [],
+        "sha256": "091049dd40c118bc18305077888b3ecb1f706a5c2c27356a1b050e02864f75dd"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-wf-changes-centre-actions"
+    ]
+  }
+}

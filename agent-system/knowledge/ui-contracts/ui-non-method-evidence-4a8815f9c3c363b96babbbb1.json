@@ -39,13 +39,17 @@
       "value": {
         "repository": "maplib",
         "path": "src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java",
-        "purpose": "Manually reviewed typed HTTP provenance fields and positively classified PULL/PUSH/lookup/initial-import origin sites. Whole-file drift catches producer changes outside the bounded UI-method guards; it does not claim all layer behavior/native correctness reviewed.",
+        "purpose": "Manually reviewed typed HTTP provenance fields and positively classified PULL/PUSH/lookup/initial-import origin sites. Whole-file drift catches producer changes outside the bounded UI-method guards; it does not claim all layer behavior/native correctness reviewed. Review 2026-11-14: typed HTTP provenance retained. Immutable operation ACK/remap and recovery delivery-owner gates preserve pending data. Push-only is not full sync. Targeted receipts have separate scope, without universal NGW runtime acceptance.",
         "contract_ids": [
           "UI-SYNC-FAILURE-MESSAGES",
           "UI-LAYER-IMPORT-ERROR-MESSAGES"
         ],
-        "sha256": "ae854ebd35870ed09db3daef810c80f705f1ce0ed1ba05148e333d5a3644a81d"
+        "sha256": "d9216da0a2dc7685f1b7e98aa606eaccfcecab8decd089e0fccbdea993fc0e5b"
       }
+    },
+    "review-20261114": {
+      "role": "semantic_review_and_preserved_consumers",
+      "value": "Review 2026-11-14: typed HTTP provenance retained. Immutable operation ACK/remap and recovery delivery-owner gates preserve pending data. Push-only is not full sync. Targeted receipts have separate scope, without universal NGW runtime acceptance."
     }
   },
   "relations": [

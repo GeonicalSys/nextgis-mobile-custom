@@ -1,0 +1,124 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:ui-contracts-ui-project-recovery",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "contracts"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "UI-PROJECT-RECOVERY"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "variants": [
+          "lisa",
+          "belka"
+        ],
+        "units": "Операции/ID и время, либо архивы/байты; без физических единиц.",
+        "updates": [
+          "Обновление после выбора проекта, команды или завершения операции."
+        ],
+        "unknowns": [
+          "Full, физический телефон/планшет, полная матрица шрифтов и публикация NOT_RUN.",
+          "Эмуляторные receipts имеют отдельную область; каталог не является общей runtime-приёмкой.",
+          "Автоматическое восстановление любого повреждения SharedPreferences/неизвестного формата не обещается.",
+          "Неизвестные динамические внешние ссылки не объявляются покрытыми."
+        ],
+        "id": "UI-PROJECT-RECOVERY",
+        "group": "project",
+        "title": "Архив и отдельная восстановленная копия",
+        "surface": "Настройки проекта → Резервные копии и восстановление",
+        "widgets": [
+          "project_recovery",
+          "recovery_create",
+          "recovery_import",
+          "recovery_source_export"
+        ],
+        "meaning": "Проверяемый архив сохранённого проекта и отдельная копия сохраняют исходник и неподтверждённые правки. Повреждённые/заменённые формы доступны отдельно.",
+        "value_origin": "Активный зарегистрированный проект, consistent SQLite snapshot, файлы и связанные подложки; ZIP manifest с identity и хешами. Карантин содержит исходные байты формы.",
+        "actions": [
+          "Создать и экспортировать архив",
+          "Проверить архив и восстановить отдельную копию",
+          "Открыть копию отдельным подтверждённым действием",
+          "Повторить восстановление формы или экспортировать исходник"
+        ],
+        "conditions": [
+          "Активные запись трека, обход и вынос продолжаются; создание/восстановление ждёт их завершения.",
+          "До регистрации проверяются файлы, хеши, account/server/login, схема, пути и место. Исходник не заменяется.",
+          "Копия не активируется автоматически и не обменивается до сверки.",
+          "Скопированное удержание формы снимается только после нового полного Save с точным digest очереди; текущие владельцы остаются защищены."
+        ],
+        "saved_state": "Экспортная identity сохраняется при пересоздании Activity. Копия имеет свой UID, происхождение, HOLD и baseline полных сохранений. Общая история треков и незаконченная глобальная форма не объявляются частью архива проекта.",
+        "source_ids": [
+          "WF-PROJECT-RECOVERY-CREATE",
+          "WF-PROJECT-RECOVERY-RESTORE",
+          "WF-RECOVERED-FORM-COMPLETION",
+          "WF-FORM-DRAFT-STORE",
+          "WF-FORM-SAVE"
+        ],
+        "expectations": [
+          "Офлайн копия сохраняет объекты, геометрию, фото/файлы; исходник и active UID прежние.",
+          "Подмена, повреждение и нехватка места не меняют рабочий проект.",
+          "Частичный Save фото не разрешает очередь; новый полный Save не снимает удержания соседней формы."
+        ]
+      }
+    }
+  },
+  "relations": [
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-project-recovery-create",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-project-recovery-restore",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-recovered-form-completion",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-draft-store",
+      "status": "source_backed"
+    },
+    {
+      "type": "evidenced_by",
+      "target": "lisa:mobile:evidence:ui-sources-wf-form-save",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:contract:ui-contracts-ui-project-recovery"
+    ]
+  }
+}

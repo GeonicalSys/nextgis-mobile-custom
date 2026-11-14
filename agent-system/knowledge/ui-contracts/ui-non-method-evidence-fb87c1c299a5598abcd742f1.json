@@ -39,12 +39,16 @@
       "value": {
         "repository": "root",
         "path": "app/build.gradle",
-        "purpose": "Effective Lisa/Belka brand declarations and absence of custom sourceSets rerouting for the reviewed shared main UI. Reviewed 2026-11-01: only production version constants change to 3.1.2.31/225; sourceSets, IDs and UI bindings are unchanged. Reviewed 2026-11-10: Release 3.1.2.32/226 and a Release-only client.id check; sourceSets, brand/package/provider identities and UI bindings are unchanged.",
+        "purpose": "Effective Lisa/Belka brand declarations and absence of custom sourceSets rerouting for the reviewed shared main UI. Reviewed 2026-11-01: only production version constants change to 3.1.2.31/225; sourceSets, IDs and UI bindings are unchanged. Reviewed 2026-11-10: Release 3.1.2.32/226 and a Release-only client.id check; sourceSets, brand/package/provider identities and UI bindings are unchanged. Review 2026-11-14: mandatory Release private inputs, empty Debug telemetry, isolated Release exclusion and source version 227/3.1.2.33. Brand/application/account/provider IDs and sourceSets retain shared UI bindings. Signed production positive acceptance and publication NOT_RUN.",
         "contract_ids": [
           "UI-SETTINGS-MAP-STORAGE-MOVE"
         ],
-        "sha256": "c15f7732f57ada543bb782a6fdbee51050f83af945e142b09ad3f45b9d97715c"
+        "sha256": "d153dd54aff3d7e0c0838e27ebbb8fdbc8b0007fcfc9a13184fb206aa88973b7"
       }
+    },
+    "review-20261114": {
+      "role": "semantic_review_and_preserved_consumers",
+      "value": "Review 2026-11-14: mandatory Release private inputs, empty Debug telemetry, isolated Release exclusion and source version 227/3.1.2.33. Brand/application/account/provider IDs and sourceSets retain shared UI bindings. Signed production positive acceptance and publication NOT_RUN."
     }
   },
   "relations": [

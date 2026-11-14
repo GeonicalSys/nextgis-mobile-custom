@@ -1,0 +1,3 @@
+<resources>
+    <string name="edit_session_unavailable">Редактированием управляет другая активная операция. Вернитесь к её панели, чтобы завершить работу.</string>
+</resources>

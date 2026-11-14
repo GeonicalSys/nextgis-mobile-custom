@@ -62,6 +62,15 @@ final class DiagnosticsTransport implements ITransport {
                         if (notification.isFlushable(envelope.getHeader().getEventId())) notification.markFlushed();
                     });
         }
+        DiagnosticArtifacts artifacts=DiagnosticArtifacts.current();
+        if(artifacts==null&&ProductionTelemetry.enabled()) {complete(hint,false,true);return;}
+        if(artifacts!=null) {
+            try {artifacts.store(options.getSerializer(),envelope);}
+            catch(Exception unavailable) {
+                options.getLogger().log(SentryLevel.WARNING,"Diagnostic archive persistence deferred");
+                complete(hint,false,true);return;
+            }
+        }
         try {
             executor.execute(() -> deliver(envelope, hint, cached));
             HintUtils.runIfHasType(hint, Enqueable.class, Enqueable::markEnqueued);

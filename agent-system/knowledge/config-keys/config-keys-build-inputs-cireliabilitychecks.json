@@ -37,7 +37,7 @@
         "owner": "app",
         "source": "app/build.gradle",
         "optional": true,
-        "purpose": "Explicit Gradle property permits empty Sentry DSN only when private sentry.properties is absent during CI reliability checks."
+        "purpose": "Gradle test-suite enablement only. Does not waive mandatory Release client, statistics, Sentry or diagnostic archive inputs."
       }
     }
   },

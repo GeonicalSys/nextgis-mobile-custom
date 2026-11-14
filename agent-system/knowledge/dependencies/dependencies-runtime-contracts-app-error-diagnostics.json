@@ -42,7 +42,7 @@
         "callers": [
           "app"
         ],
-        "contract": "Typed operation breadcrumbs, classified GPS episode snapshots with paired outcomes, and selected handled failures; emitted GPS reports alone may attach the app-owned passive numeric cache witness while preserving historical replay identity. SDK event cache, transport extension and WorkManager delivery remain independent of GIS sync and draft storage."
+        "contract": "Typed operation breadcrumbs, classified GPS episode snapshots with paired outcomes, and selected handled failures; emitted GPS reports alone may attach the app-owned passive numeric cache witness while preserving historical replay identity. SDK event cache, transport extension and WorkManager delivery remain independent of GIS sync and draft storage. Production Release additionally persists a ZIP of the already-approved SDK envelope in an independent bounded private queue; exact event ID and SHA-256 acknowledgements precede deletion. Durable local ACK receipts prevent archive recreation on SDK replay. Wrong acknowledgements, redirects and temporary failure retain the archive; WorkManager retries after restart/offline. Statistics, GIS outbox and form ownership remain independent; Debug test seams require the isolated verification package and loopback. The unchanged server/error_artifacts producer also accepts the mobile approved-envelope ZIP: PUT /api/<32hex> with exact SHA256 yields 201/200 event_id+sha256; conflicting bytes yield 409. Its existing write-only credential is imported only at build time; operator download credentials and Desktop DSN remain outside the mobile input. Local signed-APK admission and emulator transport results do not establish live-server receipt or publication."
       }
     }
   },

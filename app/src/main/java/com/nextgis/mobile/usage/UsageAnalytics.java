@@ -48,8 +48,7 @@ public final class UsageAnalytics implements Application.ActivityLifecycleCallba
     private UsageAnalytics(Application application) { this.application = application; }
 
     public static boolean enabled() {
-        return !BuildConfig.DEBUG && !BuildConfig.FIELD_VERIFICATION && !BuildConfig.USAGE_ENDPOINT.isEmpty()
-                && !BuildConfig.USAGE_UPLOAD_TOKEN.isEmpty();
+        return com.nextgis.mobile.util.ProductionTelemetry.enabled();
     }
 
     public static synchronized void start(Application application) {

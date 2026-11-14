@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="project_recovery">Backups and recovery</string>
+    <string name="recovery_description">An archive includes saved objects and photos, forms, project settings, offline underlays and pending edits. Unfinished forms have a separate recovery route below. Restore creates a separate copy whose edits require review before sending. Export the archive to keep it outside the app.</string>
+    <string name="recovery_wait">Please wait until the current operation or field mode finishes. Active track recording, walking and stakeout continue.</string>
+    <string name="recovery_create">Create project archive</string>
+    <string name="recovery_import">Restore from file</string>
+    <string name="recovery_working">Working…</string>
+    <string name="recovery_cancelling">Cancelling…</string>
+    <string name="recovery_cancelled">Cancelled. The original data is preserved.</string>
+    <string name="recovery_archives">Project archives · latest 50</string>
+    <string name="recovery_no_archives">No project archives yet.</string>
+    <string name="recovery_restore">Restore a separate copy</string>
+    <string name="recovery_export">Export file</string>
+    <string name="recovery_archive_entry">%1$s · %2$s</string>
+    <string name="recovery_archive_unchecked">%1$s · verification required before restoring</string>
+    <string name="recovery_archive_created">Archive created and verified. Use Export file to save it outside the app.</string>
+    <string name="recovery_restore_confirmation">Verify this archive and create a separate project copy? Pending edits in the copy stay blocked until reviewed. The current project remains selected.</string>
+    <string name="recovery_copy_name">%1$s — recovered copy</string>
+    <string name="recovery_copy_created">Recovered copy created</string>
+    <string name="recovery_copy_ready">“%1$s” is available in the project chooser. Review its pending edits before sending them to the server.</string>
+    <string name="recovery_open_copy">Open copy</string>
+    <string name="recovery_drafts">Preserved form originals · latest 50</string>
+    <string name="recovery_drafts_description">Unreadable and replaced checkpoints are preserved here. A retry requires the original project and layer and must not replace another unfinished form. Export remains available when automatic recovery is impossible.</string>
+    <string name="recovery_no_drafts">No quarantined checkpoints.</string>
+    <string name="recovery_draft_entry">%1$s · %2$d bytes · %3$s</string>
+    <string name="recovery_draft_preserved">original preserved</string>
+    <string name="recovery_draft_recovered">restored; original preserved</string>
+    <string name="recovery_retry_draft">Try to recover form</string>
+    <string name="recovery_draft_ready">Form checkpoint restored. Return to the map to continue it.</string>
+    <string name="recovery_source_problem">An unreadable checkpoint could not be quarantined. Its source is still preserved. Export it before another recovery attempt.</string>
+    <string name="recovery_export_source">Export unreadable source</string>
+    <string name="recovery_export_done">File exported.</string>
+    <string name="recovery_wrong_source">This archive belongs to another project, account or server. Select the matching project and account.</string>
+    <string name="recovery_no_space">Not enough free space to finish. The original data is preserved.</string>
+    <string name="recovery_no_memory">Not enough free memory for this project. Close other apps and retry.</string>
+    <string name="recovery_draft_not_recoverable">This checkpoint cannot be opened here. Select its original project and finish the current form, or export the original for recovery.</string>
+    <string name="recovery_failed">The operation could not be completed. Check the archive, access and available space. The original project and checkpoints are preserved.</string>
+</resources>

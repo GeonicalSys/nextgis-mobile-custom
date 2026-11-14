@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-wf-changes-centre-view",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "WF-CHANGES-CENTRE-VIEW"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "WF-CHANGES-CENTRE-VIEW",
+        "repository": "root",
+        "path": "app/src/main/java/com/nextgis/mobile/activity/ChangesCentreActivity.kt",
+        "marker": "private fun render(data: LocalChangesRepository.Page)",
+        "requires": [
+          "data.project.name",
+          "data.lastFullSync",
+          "data.deliveryBlocked",
+          "row.attachmentName",
+          "row.action"
+        ],
+        "forbids": [],
+        "sha256": "c961baa33cb6c4117f389322912f6f2d0d1043eca9aef8d61e8262d5b82b96b6"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-wf-changes-centre-view"
+    ]
+  }
+}

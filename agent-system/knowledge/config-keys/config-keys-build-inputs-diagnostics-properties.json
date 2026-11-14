@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:config-keys-build-inputs-diagnostics-properties",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "config-keys",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_registry_section",
+      "value": "build_inputs"
+    },
+    "registry-key": {
+      "role": "incumbent_mapping_or_list_key",
+      "value": "diagnostics.properties"
+    },
+    "definition": {
+      "role": "complete_registry_definition",
+      "value": {
+        "owner": "app",
+        "source": "tools/production-telemetry-contract.json",
+        "secret_values_forbidden": true,
+        "optional": false,
+        "purpose": "Mandatory Release diagnostics.artifactEndpoint=https://apps-geonical.ru/error-artifacts and write-only diagnostics.artifactUploadToken. Debug/verification production values are empty. Archives contain only already-approved SDK envelopes; no expanded GIS/log/photo scan. Private input filename: diagnostics.properties; the source path points to the public authoritative declaration because private inputs are never manufactured or tracked. Approved existing archive values map from private Desktop LISA_ERROR_REPORT_ARTIFACTS_URL/LISA_ERROR_REPORT_UPLOAD_TOKEN (or server desktop-envs.fragment); verify the upload token against configured/running UPLOAD_TOKEN_SHA256. Android receives only explicit private build inputs and never reads Desktop files at runtime. Operator read credentials are separate."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/sectioned-docs-registries.json",
+    "scopes": [
+      "lisa:mobile:contract:config-keys-build-inputs-diagnostics-properties"
+    ]
+  }
+}

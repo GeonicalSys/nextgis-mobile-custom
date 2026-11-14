@@ -1,0 +1,8 @@
+<resources>
+    <string name="maintenance_actions_title">Maintenance</string>
+    <string name="maintenance_clear">Clear</string>
+    <string name="maintenance_clear_backups">Clear layer backups</string>
+    <string name="maintenance_log_summary">Clear the application log. Projects and field data are kept.</string>
+    <string name="maintenance_backups_summary">Delete saved layer backup copies. Working projects and data are kept.</string>
+    <string name="maintenance_log_clear_error">The log could not be cleared completely. Try again.</string>
+</resources>

@@ -41,8 +41,12 @@
         "repository": "root",
         "path": "app/src/main/res/menu/main.xml",
         "id": "menu_map_rotation",
-        "sha256": "ad1512099be9cb10b67c531b905473f36dbf145f48bd5e18075cea63b487f3a0"
+        "sha256": "15dfa85661b72203f8dc7790c1ec5accd1c0f9dd2fb70c3084b505f44be95c35"
       }
+    },
+    "review-20261114": {
+      "role": "semantic_review_and_preserved_consumers",
+      "value": "Existing declarations are byte-identical after subtracting only menu_changes_centre. Settings, locate, rotation and project switch consumers retain original requirements."
     }
   },
   "relations": [],

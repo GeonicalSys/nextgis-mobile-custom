@@ -41,7 +41,7 @@
       "role": "module_manifest_ordered_value",
       "value": {
         "path": "app/src/main/java/com/nextgis/mobile/location/BackgroundLocationService.kt",
-        "responsibility": "Promote a location foreground service before acquiring an independent shared GPS lease; cancel pending launches safely, handle recent-task removal through the app controller and preserve explicit recorder owners."
+        "responsibility": "Promote a location foreground service before acquiring an independent shared GPS lease; cancel pending launches safely, handle recent-task removal through the app controller and preserve explicit recorder owners. BackgroundLocationActionReceiver handles an explicit immutable session-bound notification action; temporary background mute and task closure preserve foreground and work-mode owners."
       }
     }
   },

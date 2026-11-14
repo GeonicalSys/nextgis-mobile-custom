@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-wf-local-changes-readonly",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "WF-LOCAL-CHANGES-READONLY"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "WF-LOCAL-CHANGES-READONLY",
+        "repository": "maplibui",
+        "path": "src/main/java/com/nextgis/maplibui/util/LocalChangesRepository.java",
+        "marker": "public static Page load(Context context,String uid,int limit,long offset) throws Exception",
+        "requires": [
+          "project(context,uid)",
+          "SQLiteDatabase.OPEN_READONLY",
+          "UnderlayFiles.requireChild(workspace,link.directory)",
+          "ProjectRecoveryGuard.isDeliveryBlocked(workspace)"
+        ],
+        "forbids": [],
+        "sha256": "84e43ff7b1686c7d7e917f0671e719ff439d52fa81d44ded56e5e38dcfe720c3"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-wf-local-changes-readonly"
+    ]
+  }
+}

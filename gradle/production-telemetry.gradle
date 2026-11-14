@@ -1,0 +1,63 @@
+import groovy.json.JsonSlurper
+import org.gradle.api.GradleException
+
+/** Errors name the input, never its private value. Also exercised directly by local tests. */
+class ProductionTelemetryInputs {
+    static Map read(File workspace,Map contract,boolean validate) {
+        Map files=[:],values=[:]
+        contract.inputs.each { name,rule ->
+            if(!files.containsKey(rule.file)) {
+                Properties properties=new Properties();File source=new File(workspace,rule.file as String)
+                if(source.isFile()) {
+                    try {source.withInputStream {properties.load(it)}}
+                    catch(Exception ignored) {throw new IllegalArgumentException("Cannot read private input: ${rule.file}")}
+                }
+                files[rule.file]=properties
+            }
+            String value=files[rule.file].getProperty(rule.key as String,'')
+            boolean valid=value && value==value.trim() && value.length()<=4096
+            if(valid) {
+                switch(rule.kind) {
+                    case 'client':valid=value==~ /[A-Za-z0-9._~-]+/;break
+                    case 'token':valid=value==~ /[A-Za-z0-9._~+\/=\-]{16,4096}/;break
+                    case 'endpoint':valid=value==rule.expected;break
+                    case 'sentry':
+                        try {
+                            URI uri=new URI(value)
+                            valid=uri.scheme=='https' && uri.host==rule.host && uri.path==rule.path && uri.port==-1
+                                    && uri.rawQuery==null && uri.rawFragment==null && uri.userInfo!=null
+                                    && uri.rawPath==uri.path && uri.rawUserInfo==uri.userInfo
+                                    && (uri.userInfo==~ /[A-Za-z0-9_-]{16,128}/)
+                        }catch(Exception ignored) {valid=false}
+                        break
+                    default:valid=false
+                }
+            }
+            if(value.toLowerCase(Locale.ROOT) in ['null','undefined','changeme','your_token'])valid=false
+            if(validate&&!valid)throw new IllegalArgumentException("Missing or invalid ${rule.key} in ${rule.file}")
+            values[name]=value
+        }
+        return values
+    }
+}
+
+def telemetryContract=new JsonSlurper().parse(rootProject.file('tools/production-telemetry-contract.json')) as Map
+ext.productionTelemetryValues=ProductionTelemetryInputs.read(rootDir,telemetryContract,false)
+def frozenTelemetry=productionTelemetryValues.clone()
+def validateProductionTelemetry=tasks.register('validateProductionTelemetry') {
+    // A missing optional input must reach our named, secret-free error rather than
+    // Gradle's pre-execution file validation. This task has no cached outputs.
+    inputs.files(telemetryContract.inputs.values().collect {rootProject.file(it.file)}.unique().findAll {it.isFile()})
+    doLast {
+        if(providers.gradleProperty('fieldVerificationChecks').getOrElse('false').toBoolean())
+            throw new GradleException('An isolated verification profile cannot produce a production APK')
+        Map current
+        try {current=ProductionTelemetryInputs.read(rootDir,telemetryContract,true)}
+        catch(IllegalArgumentException error) {throw new GradleException(error.message)}
+        if(current!=frozenTelemetry)throw new GradleException('Private production inputs changed during the build; restart it')
+    }
+}
+tasks.configureEach {
+    if(name==~ /(?:pre(?:Lisa|Belka)ReleaseBuild|generate(?:Lisa|Belka)Release(?:BuildConfig|ResValues))/)
+        dependsOn(validateProductionTelemetry)
+}

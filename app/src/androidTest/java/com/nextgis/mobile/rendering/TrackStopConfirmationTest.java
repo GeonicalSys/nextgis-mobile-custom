@@ -134,6 +134,7 @@ public class TrackStopConfirmationTest {
         }
 
         void assertTrackModeChooserIsReachable() throws Exception {
+            assertMainMenuIsCompact();
             tapMapTrackControl();
             for (int mode : new int[]{com.nextgis.maplibui.R.string.track_mode_pedestrian,
                     com.nextgis.maplibui.R.string.track_mode_walk_drive}) {
@@ -150,6 +151,19 @@ public class TrackStopConfirmationTest {
             }
             assertTrue(TrackControlsTest.Ui.automation().performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK));
             assertFalse(TrackerService.hasRecordingSession(app));
+        }
+
+        void assertMainMenuIsCompact() {
+            tracks.f.screen.onActivity(activity -> {
+                android.widget.PopupMenu popup = new android.widget.PopupMenu(activity,
+                        activity.findViewById(android.R.id.content));
+                activity.getMenuInflater().inflate(R.menu.main, popup.getMenu());
+                for (String name : new String[]{"menu_track", "menu_clear_log", "menu_clear_layer_backups"}) {
+                    int id = app.getResources().getIdentifier(name, "id", app.getPackageName());
+                    assertTrue(name + " must be absent", id == 0 || popup.getMenu().findItem(id) == null);
+                }
+                assertNotNull(popup.getMenu().findItem(R.id.menu_settings));
+            });
         }
 
         private int stopPromptWindow() throws Exception {
@@ -257,10 +271,10 @@ public class TrackStopConfirmationTest {
         }
     }
 
-    @Test public void menuAndRealNotificationActionAskBeforeStopping() throws Exception {
+    @Test public void mapAndRealNotificationActionAskBeforeStopping() throws Exception {
         try (Session s = new Session()) {
-            TrackControlsTest.Ui.menuItem(s.tracks.f.screen,R.id.menu_track,
-                    s.app.getString(com.nextgis.maplibui.R.string.track_stop),false);
+            s.assertMainMenuIsCompact();
+            s.tapMapTrackControl();
             s.answerStop(android.R.id.button2); s.unchanged();
             PendingIntent stop = s.notificationStop();
             stop.send();

@@ -1,0 +1,8 @@
+<resources>
+    <string name="maintenance_actions_title">Обслуживание</string>
+    <string name="maintenance_clear">Очистить</string>
+    <string name="maintenance_clear_backups">Очистить резервные копии</string>
+    <string name="maintenance_log_summary">Очистить журнал приложения. Проекты и полевые данные сохранятся.</string>
+    <string name="maintenance_backups_summary">Удалить сохранённые резервные копии слоёв. Рабочие проекты и данные сохранятся.</string>
+    <string name="maintenance_log_clear_error">Не удалось полностью очистить журнал. Повторите попытку.</string>
+</resources>

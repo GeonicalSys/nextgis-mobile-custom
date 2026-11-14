@@ -427,7 +427,7 @@ public class MapFragment
     private var mStakeoutStop: ImageButton? = null
     private var mStakeoutCorrectionValue: TextView? = null
     private var mStakeoutCorrectionReset: TextView? = null
-    private var mStakeoutController: StakeoutController? = null
+    private var mStakeoutController: com.nextgis.mobile.stakeout.SharedStakeoutSession.UiHandle? = null
     private var lastStakeoutUiState: StakeoutController.UiState? = null
     private var deviceHeadingProvider: DeviceHeadingProvider? = null
     private var azimuthStartPoint: GeoPoint? = null
@@ -532,10 +532,7 @@ public class MapFragment
         mApp = mActivity!!.application as MainApplication
         mVibrator = mActivity!!.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         mGpsEventSource = mApp!!.gpsEventSource
-        mStakeoutController = StakeoutController(
-            mActivity!!,
-            mPreferences!!,
-            mGpsEventSource!!,
+        mStakeoutController = mApp!!.stakeoutSession.attach(
             object : StakeoutController.Listener {
                 override fun onStakeoutStateChanged(state: StakeoutController.UiState) {
                     updateStakeoutWidget(state)
@@ -544,6 +541,9 @@ public class MapFragment
                 override fun onStakeoutUnavailable() {
                     showStakeoutUnavailable()
                 }
+            },
+            onDetach = {
+                if (mode == MODE_STAKEOUT) mSelectedLayer?.isLocked = false
             }
         )
 
@@ -2028,7 +2028,6 @@ public class MapFragment
 
         this.mode = mode
         walkUiAttachedInProcess = mode == MODE_EDIT_BY_WALK
-        stakeoutUiAttachedInProcess = mode == MODE_STAKEOUT
 
         hideMainButton()
         hideAddByTapButton()
@@ -2043,6 +2042,8 @@ public class MapFragment
 
         when (mode) {
             MODE_NORMAL -> {
+                mFinishListener = null
+                toolbar.setNavigationOnClickListener(null)
                 if (mSelectedLayer != null) mSelectedLayer!!.isLocked = false
 
                 editLayerOverlay?.showAllFeatures()
@@ -2185,11 +2186,11 @@ public class MapFragment
             }
 
             MODE_STAKEOUT -> {
-                if (mSelectedLayer == null || mStakeoutController?.isActive != true) {
+                if (mStakeoutController?.isActive != true) {
                     setNewMode(MODE_NORMAL)
                     return
                 }
-                mSelectedLayer!!.isLocked = true
+                mSelectedLayer?.isLocked = true
                 toolbar.visibility = View.GONE
                 mActivity!!.title = getString(R.string.stakeout_title)
                 mActivity!!.setSubtitle(null)
@@ -2572,13 +2573,10 @@ public class MapFragment
     }
 
     override fun onDestroy() {
-        if (mStakeoutController?.isActive == true) {
-            mSelectedLayer?.isLocked = false
-        }
         if (isMapAzimuthMode(mode)) {
             clearAzimuthMeasurement()
         }
-        mStakeoutController?.release()
+        mStakeoutController?.detach()
         mStakeoutController = null
         mPreferences?.unregisterOnSharedPreferenceChangeListener(declinationCorrectionListener)
         super.onDestroy()
@@ -2900,27 +2898,9 @@ public class MapFragment
 
         val savedStakeoutSession =
             savedInstanceState?.getInt(KEY_MODE, MODE_NORMAL) == MODE_STAKEOUT
-        if (savedStakeoutSession) {
-            if (stakeoutUiAttachedInProcess) {
-                val geometry = editLayerOverlay?.selectedFeatureGeometry
-                if (geometry != null) {
-                    try {
-                        mStakeoutController?.start(geometry)
-                    } catch (exception: RuntimeException) {
-                        HyperLog.w(
-                            Constants.TAG,
-                            "Stakeout restore after configuration change failed",
-                            exception
-                        )
-                        mode = MODE_SELECT_FOR_VIEW
-                    }
-                } else {
-                    mode = MODE_SELECT_FOR_VIEW
-                }
-            } else {
-                // Do not silently restart audible guidance after process death.
-                mode = if (mSelectedLayer != null) MODE_SELECT_FOR_VIEW else MODE_NORMAL
-            }
+        if (savedStakeoutSession && mStakeoutController?.isRetained != true) {
+            // Only an actually live owner can restore guidance. A Bundle cannot restart it.
+            mode = if (mSelectedLayer != null) MODE_SELECT_FOR_VIEW else MODE_NORMAL
         }
 
         val ctx = context
@@ -3409,11 +3389,14 @@ public class MapFragment
         return true
     }
 
-    fun discardManualGeometryDraft() {
-        val draft = GeometryEditDraftStore.load(context)
+    @JvmOverloads
+    fun discardManualGeometryDraft(expected: GeometryEditDraftStore.Snapshot? = GeometryEditDraftStore.load(context)) {
+        val draft = GeometryEditDraftStore.load(context) ?: return
+        if (expected == null || !sameGeometryDraft(draft, expected)
+            || draft.mapPath != currentMapDraftPath()) return
         val walk = WalkSessionStore.load(context)
-        if (walk != null && walk.isPointActive && walk.pointLayer == draft?.layerId) {
-            pointSessionId = walk.pointId
+        if (walk != null && walk.isPointActive && walk.pointLayer == draft.layerId
+            && pointSessionId == walk.pointId) {
             finishPointCreation()
         }
         pendingManualGeometryResume = false
@@ -3421,7 +3404,90 @@ public class MapFragment
         manualGeometryResumeRetryCount = 0
         mMapRef.get()?.removeCallbacks(manualGeometryResumeRunnable)
         GeometryEditDraftStore.clear(context, "user-discard")
+        finishDiscardedEditor(draft.layerId, draft.featureId)
+        releaseUnownedLayerLock(draft.layerId)
         HyperLog.v(Constants.TAG, "GeometryDraft Discard selected")
+    }
+
+    private fun sameGeometryDraft(a: GeometryEditDraftStore.Snapshot, b: GeometryEditDraftStore.Snapshot) =
+        a.mapPath == b.mapPath && a.layerId == b.layerId && a.featureId == b.featureId
+            && a.updatedAtMs == b.updatedAtMs && a.geometryWkt == b.geometryWkt
+
+    /** A dialog owns the captured operation, never a replacement form or a newer sketch. */
+    fun discardRecoveredForm(expected: FeatureFormDraftStore.Snapshot) {
+        val ctx = context ?: return
+        val current = FeatureFormDraftStore.load(ctx) ?: return
+        if (current.operationId != expected.operationId || current.mapPath != currentMapDraftPath()) return
+        FeatureFormDraftStore.discard(ctx)
+        if (pointSessionId == current.pointSessionId) pointSessionId = null
+        val walk = WalkSessionStore.load(ctx)
+        if (walk != null && walk.id == current.walkSessionId
+            && walk.phase == WalkSessionPolicy.Phase.FINISHED && !walk.isPointActive) {
+            WalkSessionStore.clear(ctx, walk.id)
+            if (finishedWalkEditId == walk.id) finishedWalkEditId = null
+            if (pendingWalkFormId == walk.id) pendingWalkFormId = null
+        }
+        // Handoff clears the geometry journal. A journal now present belongs to later work.
+        if (GeometryEditDraftStore.load(ctx) == null)
+            finishDiscardedEditor(current.layerId, current.featureId)
+        releaseUnownedLayerLock(current.layerId)
+        walkPanel?.refresh()
+    }
+
+    private fun finishDiscardedEditor(layerId: Int, featureId: Long) {
+        if (mode != MODE_EDIT || mSelectedLayer?.id != layerId
+            || editLayerOverlay?.selectedFeatureId != featureId) return
+        if (mApp?.isLayerReservedForWalk(layerId) == true) return
+        editLayerOverlay?.setHasEdits(false)
+        mMapRef.get()?.map?.cancelFeatureEdit(featureId != Constants.NOT_FOUND.toLong())
+        newFeatureDefaults = null
+        mNewFeatureFormLaunchInProgress = false
+        setNewMode(MODE_NORMAL)
+    }
+
+    /** Repair only this row, after all known owners and journals have been excluded. */
+    private fun releaseUnownedLayerLock(layerId: Int): Boolean {
+        val ctx = context ?: return false
+        if (mSelectedLayer?.id == layerId && mode != MODE_NORMAL) return false
+        if (mApp?.isLayerReservedForWalk(layerId) == true) return false
+        val form = FeatureFormDraftStore.load(ctx)
+        if (form?.layerId == layerId && form.mapPath == currentMapDraftPath()) return false
+        val geometry = GeometryEditDraftStore.load(ctx)
+        if (geometry?.layerId == layerId && geometry.mapPath == currentMapDraftPath()) return false
+        val map = mMapRef.get()?.map ?: return false
+        if (map.editingObject != null && mSelectedLayer == null) return false
+        val layer = map.getLayerById(layerId) as? VectorLayer ?: return false
+        layer.isLocked = false
+        mModeListener?.onModeChangeListener()
+        return true
+    }
+
+    fun manageLayerEditing(layerId: Int) {
+        val ctx = context ?: return
+        val form = FeatureFormDraftStore.load(ctx)
+        if (form?.layerId == layerId && form.mapPath == currentMapDraftPath()) {
+            if (LayerUtil.isEditFormDraftRecoverable(requireActivity(), form))
+                LayerUtil.showEditFormFromDraft(requireActivity(), form)
+            else Toast.makeText(ctx, R.string.edit_session_unavailable, Toast.LENGTH_LONG).show()
+            return
+        }
+        val draft = GeometryEditDraftStore.load(ctx)
+        if (mSelectedLayer?.id == layerId && mode != MODE_NORMAL && mFinishListener != null) {
+            mFinishListener?.onClick(null)
+            return
+        }
+        if (draft?.layerId == layerId && draft.mapPath == currentMapDraftPath()) {
+            if (!resumeManualGeometryFromDraft())
+                Toast.makeText(ctx, R.string.edit_session_unavailable, Toast.LENGTH_LONG).show()
+            return
+        }
+        if (mApp?.isLayerReservedForWalk(layerId) == true) {
+            walkPanel?.refresh()
+            Toast.makeText(ctx, com.nextgis.maplibui.R.string.walk_already_active, Toast.LENGTH_LONG).show()
+            return
+        }
+        if (!releaseUnownedLayerLock(layerId))
+            Toast.makeText(ctx, R.string.edit_session_unavailable, Toast.LENGTH_LONG).show()
     }
 
     private fun clearManualGeometryDraft(reason: String) {
@@ -3608,6 +3674,10 @@ public class MapFragment
         }
         if (null != mGpsEventSource) {
             mGpsEventSource!!.addListener(this)
+            if (mStakeoutController?.isRetained == true && mode == MODE_NORMAL) {
+                // A new task can reattach the guidance panel without resolving an old FID.
+                setNewMode(MODE_STAKEOUT)
+            }
             mStakeoutController?.setForeground(true)
             if (mGPSDialog == null || !mGPSDialog!!.isShowing) mGPSDialog =
                 NotificationHelper.showLocationInfo(
@@ -5748,9 +5818,6 @@ public class MapFragment
         @Volatile
         private var walkUiAttachedInProcess = false
 
-        @Volatile
-        private var stakeoutUiAttachedInProcess = false
-
         const val MODE_NORMAL: Int = 0
         const val MODE_SELECT_ACTION: Int = 1
         const val MODE_EDIT: Int = 2
@@ -6045,7 +6112,7 @@ public class MapFragment
             ?: layer.getLargeGeometryForId(featureId)
             ?: return
         try {
-            mStakeoutController?.start(geometry)
+            mStakeoutController?.start(geometry, retainOnDetach = true)
             setNewMode(MODE_STAKEOUT)
         } catch (exception: RuntimeException) {
             HyperLog.w(Constants.TAG, "Stakeout target initialization failed", exception)

@@ -4,6 +4,67 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class BackgroundLocationPolicyTest {
+    @Test public void notificationMuteSurvivesForegroundNavigationAndRotation() {
+        BackgroundLocationPolicy policy = new BackgroundLocationPolicy();
+        policy.foreground(1_000);
+        String session = policy.getSessionId();
+        assertTrue(policy.disableBackground(session));
+        policy.background(2_000);
+        assertFalse(policy.wanted(true, 2_001));
+        policy.foreground(3_000);
+        assertEquals(session, policy.getSessionId());
+        policy.background(4_000);
+        policy.foreground(5_000);
+        assertFalse(policy.wanted(true, 5_000));
+        assertTrue(policy.isOpened());
+    }
+
+    @Test public void notificationMuteDoesNotEndTheUserSessionOrDependOnTheSetting() {
+        BackgroundLocationPolicy policy = new BackgroundLocationPolicy();
+        policy.foreground(1_000);
+        String session = policy.getSessionId();
+        assertTrue(policy.disableBackground(session));
+        assertTrue(policy.disableBackground(session));
+        assertFalse(policy.wanted(false, 1_001));
+        assertFalse(policy.wanted(true, 1_002));
+        assertEquals(session, policy.getSessionId());
+    }
+
+    @Test public void newOpeningResetsMuteAndRejectsTheOldNotification() {
+        BackgroundLocationPolicy policy = new BackgroundLocationPolicy();
+        policy.foreground(1_000);
+        String old = policy.getSessionId();
+        assertTrue(policy.disableBackground(old));
+        policy.close();
+        assertNull(policy.getSessionId());
+        policy.foreground(2_000);
+        assertNotEquals(old, policy.getSessionId());
+        assertFalse(policy.disableBackground(old));
+        assertTrue(policy.wanted(true, 2_001));
+        assertFalse(policy.wanted(false, 2_001));
+    }
+
+    @Test public void foreignOrMissingSessionCannotMuteOrOpenGps() {
+        BackgroundLocationPolicy first = new BackgroundLocationPolicy();
+        BackgroundLocationPolicy second = new BackgroundLocationPolicy();
+        first.foreground(1_000);
+        assertFalse(second.disableBackground(first.getSessionId()));
+        assertFalse(second.isOpened());
+        second.foreground(1_000);
+        assertFalse(second.disableBackground(first.getSessionId()));
+        assertFalse(second.disableBackground(null));
+        assertTrue(second.wanted(true, 1_001));
+    }
+
+    @Test public void returningAfterTheTimeoutDoesNotClearNotificationMute() {
+        BackgroundLocationPolicy policy = new BackgroundLocationPolicy();
+        policy.foreground(1_000);
+        assertTrue(policy.disableBackground(policy.getSessionId()));
+        policy.background(2_000);
+        policy.foreground(2_000 + BackgroundLocationPolicy.INACTIVITY_TIMEOUT_MS);
+        assertFalse(policy.wanted(true, 2_001 + BackgroundLocationPolicy.INACTIVITY_TIMEOUT_MS));
+    }
+
     @Test public void explicitExitDisarmsGpsUntilTheNextForegroundEntry() {
         BackgroundLocationPolicy policy = new BackgroundLocationPolicy();
         policy.foreground(1_000);
