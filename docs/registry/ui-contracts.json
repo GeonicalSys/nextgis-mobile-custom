@@ -86,7 +86,7 @@
         "mGpsEventSource!!.addListener(this)"
       ],
       "forbids": [],
-      "sha256": "cd855682aaad8c4fb79586bba3972e146b50fe24e927cfcc579afed0b4791942"
+      "sha256": "adafc778bc64c2b7e1b81cb9b59bd624b4d07bcdac5e77c9e979b03cd40488ff"
     },
     {
       "id": "gps-current-fix",
@@ -507,11 +507,11 @@
         "editLayerOverlay?.selectedFeatureId",
         "editLayerOverlay?.selectedFeatureGeometry",
         "layer.getLargeGeometryForId(featureId)",
-        "mStakeoutController?.start(geometry)",
+        "mStakeoutController?.start(geometry, retainOnDetach = true)",
         "setNewMode(MODE_STAKEOUT)"
       ],
       "forbids": [],
-      "sha256": "ed73bba5c6977efe9b3bc1e55f4278145ac61345ed738b4d5aef445a617ad7ee"
+      "sha256": "65100a8f8a57b7958aa443c699a7beb2de0634e490bc21626f597df35ec2cdc3"
     },
     {
       "id": "stakeout-start",
@@ -919,15 +919,17 @@
       "id": "WF-FORM-DRAFT-STORE",
       "repository": "maplibui",
       "path": "src/main/java/com/nextgis/maplibui/util/FeatureFormDraftStore.java",
-      "marker": "public static boolean save(Context context, Snapshot snapshot)",
+      "marker": "public static synchronized boolean save(Context context, Snapshot snapshot)",
       "requires": [
         "!snapshot.isValid()",
         "snapshot.updatedAtMs = System.currentTimeMillis()",
         ".putString(KEY_STATE, encode(snapshot).toString()) .commit()",
-        "return committed"
+        "return committed",
+        "DraftQuarantineStore.preserve(context, existing, \"invalid_before_replace\")",
+        "DraftQuarantineStore.preserve(context, existing, \"replaced_operation\")"
       ],
       "forbids": [],
-      "sha256": "f0c7223194d68ab6f29a68c18c3347807ba9a50f82beec148bf66f98002d4853"
+      "sha256": "0dd3b9d77b6298a482ea912ce36c10097525ad4c2e29e1347d9e89e805b59029"
     },
     {
       "id": "WF-FORM-SAVE",
@@ -939,10 +941,15 @@
         "FeatureSaveJournal.find(",
         "if (!validateRequiredFields(values)) return false",
         "app.getMap() != com.nextgis.maplib.util.DatabaseContext.getMapForLayer(mLayer)",
-        "getContentResolver().update(updateUri, values, null, null) == 1"
+        "getContentResolver().update(ContentUris.withAppendedId(uri, savedId), values, null, null) != 1",
+        "FeatureSaveJournal.holdUpload(saveDb,",
+        "FeatureSaveJournal.completeForm(saveDb,",
+        "ProjectRecoveryGuard.releaseCompletedFormHolds(",
+        "if (!putSign())",
+        "if (!clearFormDraft()) return false"
       ],
       "forbids": [],
-      "sha256": "95ec3775ffbfb64d3fb8c4ebbe9fb5339d0ba4c57c635540aa4615a25546fb54"
+      "sha256": "6542b2e80d74ee6c8b541c82e4f5e803e828a3ab9eeaaa6d615e2ff841ce5df0"
     },
     {
       "id": "WF-FORM-ABSENT-FIELD",
@@ -1164,7 +1171,7 @@
         "app.showSettings("
       ],
       "forbids": [],
-      "sha256": "cde7b032024f19e8ebaac2e7c641838a30e43f3a3fb66897fcac701200afd0cd"
+      "sha256": "530a2270f257630611e0580594e674ca2419242a709c0510749dd90bc07fec40"
     },
     {
       "id": "WF-MAP-STORAGE-SETTINGS-INTENT",
@@ -1275,7 +1282,7 @@
         "initializeReset(getActivity(), reset)"
       ],
       "forbids": [],
-      "sha256": "0c84fad78b1bd382e51bd13caf041c804e1995a0e2b280f286235ec3153e7ce0"
+      "sha256": "6b57a7e0157f862a155fd16d1f08d65a0830f94552e541a1f604e47a79414e48"
     },
     {
       "id": "WF-MAP-STORAGE-STORAGE-CHOOSER",
@@ -1965,12 +1972,13 @@
         "getLayerById(layerId)",
         "GeoGeometryFactory.fromBlob(",
         "savedInstanceState.getLong(BUNDLE_KEY_FEATURE_ID)",
-        "if (stakeoutUiAttachedInProcess)",
-        "mStakeoutController?.start(geometry)",
-        "mode = if (mSelectedLayer != null) MODE_SELECT_FOR_VIEW else MODE_NORMAL"
+        "mode = if (mSelectedLayer != null) MODE_SELECT_FOR_VIEW else MODE_NORMAL",
+        "mStakeoutController?.isRetained != true"
       ],
-      "forbids": [],
-      "sha256": "5f7de7e07ae3ee9fbb9b4a23cc4b5f4cc7b5e6778a47bdf81acef2feedd37e84"
+      "forbids": [
+        "mStakeoutController?.start(geometry)"
+      ],
+      "sha256": "859696554000cd969d8ce8a39d8fe0ca59af5b6a2f4e1f415809ffd2cbf52d0a"
     },
     {
       "id": "WF-STAKEOUT-TARGET-STOP",
@@ -3490,7 +3498,7 @@
         "mapFragment?.showRenderMemoryStatus()"
       ],
       "forbids": [],
-      "sha256": "cde7b032024f19e8ebaac2e7c641838a30e43f3a3fb66897fcac701200afd0cd"
+      "sha256": "530a2270f257630611e0580594e674ca2419242a709c0510749dd90bc07fec40"
     },
     {
       "id": "warning-dialog-layout",
@@ -3755,6 +3763,90 @@
       ],
       "forbids": [],
       "sha256": "e3e70242df452ca8db7e3ed15dd8361d5d4b9fc0ce056428ce1502754e0a08ad"
+    },
+    {
+      "id": "WF-CHANGES-CENTRE-VIEW",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/activity/ChangesCentreActivity.kt",
+      "marker": "private fun render(data: LocalChangesRepository.Page)",
+      "requires": [
+        "data.project.name",
+        "data.lastFullSync",
+        "data.deliveryBlocked",
+        "row.attachmentName",
+        "row.action"
+      ],
+      "forbids": [],
+      "sha256": "c961baa33cb6c4117f389322912f6f2d0d1043eca9aef8d61e8262d5b82b96b6"
+    },
+    {
+      "id": "WF-CHANGES-CENTRE-ACTIONS",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/activity/ChangesCentreActivity.kt",
+      "marker": "private fun updateEnabled()",
+      "requires": [
+        "page?.deliveryBlocked != true",
+        "!activeWork()",
+        "!ProjectOperationCoordinator.isBusy()"
+      ],
+      "forbids": [],
+      "sha256": "091049dd40c118bc18305077888b3ecb1f706a5c2c27356a1b050e02864f75dd"
+    },
+    {
+      "id": "WF-PROJECT-RECOVERY-CREATE",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/activity/ProjectRecoveryActivity.kt",
+      "marker": "private fun createArchive()",
+      "requires": [
+        "if (!canChangeProject()) return",
+        "CollectorProjectRegistry.getActiveProject(this)",
+        "ProjectArchiveManager.create(this, map, project)"
+      ],
+      "forbids": [],
+      "sha256": "f5dcac4b9e249421ba959aa9a4491c1fe00fd455c2664bdacb5280dfe56e2ccf"
+    },
+    {
+      "id": "WF-PROJECT-RECOVERY-RESTORE",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/activity/ProjectRecoveryActivity.kt",
+      "marker": "private fun restore(file: File, project: CollectorProjectRegistry.ProjectInfo)",
+      "requires": [
+        "runOperation(true, after =",
+        "ProjectArchiveManager.restore(this, file, project,",
+        "R.string.recovery_open_copy",
+        "openCopy(result)"
+      ],
+      "forbids": [],
+      "sha256": "2c2ec5b50b610b51426884e3d919d9844e9b9a927f78b0f52ff365b49ce3e911"
+    },
+    {
+      "id": "WF-LOCAL-CHANGES-READONLY",
+      "repository": "maplibui",
+      "path": "src/main/java/com/nextgis/maplibui/util/LocalChangesRepository.java",
+      "marker": "public static Page load(Context context,String uid,int limit,long offset) throws Exception",
+      "requires": [
+        "project(context,uid)",
+        "SQLiteDatabase.OPEN_READONLY",
+        "UnderlayFiles.requireChild(workspace,link.directory)",
+        "ProjectRecoveryGuard.isDeliveryBlocked(workspace)"
+      ],
+      "forbids": [],
+      "sha256": "84e43ff7b1686c7d7e917f0671e719ff439d52fa81d44ded56e5e38dcfe720c3"
+    },
+    {
+      "id": "WF-RECOVERED-FORM-COMPLETION",
+      "repository": "maplib",
+      "path": "src/main/java/com/nextgis/maplib/util/FeatureSaveJournal.java",
+      "marker": "public static boolean releaseRecoveredHolds(SQLiteDatabase db,org.json.JSONObject baseline,String layer,long row) throws org.json.JSONException",
+      "requires": [
+        "if(!db.inTransaction())",
+        "queueDigest(db,layer,row)",
+        "baseline.getLong(\"completion_watermark\")",
+        "db.rawQuery(\"SELECT 1 FROM \"+COMPLETED+\" WHERE _id>? AND layer=? AND row_id=? AND queue_sha256=? LIMIT 1\",",
+        "old.getString(\"operation\")"
+      ],
+      "forbids": [],
+      "sha256": "7875a3757e85b60089748e6305bf31a9bf529aff89925453acf11d02b44706a4"
     }
   ],
   "contracts": [
@@ -4273,7 +4365,7 @@
         "Both shared portrait/land layouts bind the same panel and metre formatter for Lisa/Belka; no runtime resource-merge proof is inferred.",
         "Polygon stakeout currently targets outer/inner boundaries even for an inside fix; an 'arrive anywhere inside' goal would be another explicit policy, not an inferred bug fix."
       ],
-      "saved_state": "Target holds private geometry/index, no layer/FID/workspace token. MapFragment saves mode plus selected layer/FID/geometry blob; same-process Boolean marker permits reconstructing guidance from that selected blob, while process death suppresses audible restart. This does not prove workspace/FID replacement safety or migrate live target/draft/account identity.",
+      "saved_state": "Target holds a private geometry/index snapshot, no layer/FID/workspace token. SharedStakeoutSession retains the live controller in the application process; Activity recreation/task removal only detach UI. Reopening attaches to the same live owner. A Bundle cannot restart guidance or sound after cold process death. Workspace/FID replacement policy remains UNKNOWN.",
       "source_ids": [
         "map-stakeout-start",
         "stakeout-start",
@@ -4615,16 +4707,18 @@
       "units": "Булевы состояния; не количество объектов.",
       "updates": [
         "Повторное bind сбрасывает видимость badge для переиспользованной строки.",
-        "Глаз инвертирует сохранённую видимость."
+        "Глаз инвертирует сохранённую видимость.",
+        "После адресного Discard/освобождения lock уже открытый список обновляет карандаш и обычные кнопки строки сразу, без повторного открытия панели."
       ],
       "actions": [
-        "Показать/скрыть слой"
+        "Показать/скрыть слой",
+        "Карандаш управляет владельцем именно нажатого слоя: форма, ручной редактор, восстановление или обход; orphan lock снимается только после проверки отсутствия владельцев."
       ],
       "conditions": [
         "Lookup tables не получают обычную строку.",
         "Locked/walk-reserved слой скрывает btMore и btShow и показывает ivEdited."
       ],
-      "saved_state": "Видимость сохраняется в слое; pending badge берётся из отдельного состояния очереди.",
+      "saved_state": "Видимость сохраняется в слое; pending badge берётся из отдельного состояния очереди. REL-04 не меняет editing rights и формат журналов; Discard сверяет сохранённую identity и завершает только соответствующий редактор.",
       "source_ids": [
         "WF-LAYER-ROW"
       ],
@@ -6321,6 +6415,110 @@
       "unknowns": [
         "Native post-removal selection/source matrix is NOT_RUN; source and compiled policy fixtures are not device acceptance."
       ]
+    },
+    {
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "units": "Операции/ID и время, либо архивы/байты; без физических единиц.",
+      "updates": [
+        "Обновление после выбора проекта, команды или завершения операции."
+      ],
+      "unknowns": [
+        "Full, физический телефон/планшет, полная матрица шрифтов и публикация NOT_RUN.",
+        "Эмуляторные receipts имеют отдельную область; каталог не является общей runtime-приёмкой.",
+        "Отсутствующие локальные копии/исходы на другом устройстве требуют ручной сверки. P2P не реализован."
+      ],
+      "id": "UI-CHANGES-CENTRE",
+      "group": "sync",
+      "title": "Судьба отдельных правок и безопасная сверка",
+      "surface": "Меню и настройки проекта → Изменения и синхронизация",
+      "widgets": [
+        "menu_changes_centre",
+        "project_changes",
+        "changes_project",
+        "changes_send",
+        "changes_release",
+        "changes_recovery"
+      ],
+      "meaning": "Правки и вложения выбранного проекта показаны поштучно, с причиной и подходящей командой. Подтверждение операции не означает полный обмен.",
+      "value_origin": "Зарегистрированный projectUid, read-only owning SQLite/config, immutable UUID очереди и метаданные ACK. Просмотр не переключает карту.",
+      "actions": [
+        "Отправить ожидающие правки",
+        "Сверить по ID сервера либо отдельно подтвердить повтор после проверки",
+        "Завершить локальную фиксацию, продолжить форму или открыть восстановление",
+        "Выбрать одну сверенную копию для отправки"
+      ],
+      "conditions": [
+        "При записи трека, обходе, выносе и занятой операции изменяющие проект команды откладываются; активный режим продолжается.",
+        "Повторно проверяются owning project/layer/UUID. Копия остаётся под HOLD до сверки всех операций.",
+        "Выбор копии явно приостанавливает синхронизацию исходника и связанных копий с сохранением их данных. Известный ACK того же создания требует сверки."
+      ],
+      "saved_state": "UID и страница сохраняются при пересоздании Activity. Очередь, квитанции и delivery-owner принадлежат workspace. Push-only не меняет время полного обмена.",
+      "source_ids": [
+        "WF-CHANGES-CENTRE-VIEW",
+        "WF-CHANGES-CENTRE-ACTIONS",
+        "WF-LOCAL-CHANGES-READONLY"
+      ],
+      "expectations": [
+        "Правка отправляется без повторного сохранения формы; неизвестный исход сохраняется до сверки.",
+        "После отправки выбранной копии исходник не выполняет второй POST, сохраняя объекты/очередь.",
+        "ACK после архива не обходится устаревшим разрешением повторить."
+      ]
+    },
+    {
+      "variants": [
+        "lisa",
+        "belka"
+      ],
+      "units": "Операции/ID и время, либо архивы/байты; без физических единиц.",
+      "updates": [
+        "Обновление после выбора проекта, команды или завершения операции."
+      ],
+      "unknowns": [
+        "Full, физический телефон/планшет, полная матрица шрифтов и публикация NOT_RUN.",
+        "Эмуляторные receipts имеют отдельную область; каталог не является общей runtime-приёмкой.",
+        "Автоматическое восстановление любого повреждения SharedPreferences/неизвестного формата не обещается.",
+        "Неизвестные динамические внешние ссылки не объявляются покрытыми."
+      ],
+      "id": "UI-PROJECT-RECOVERY",
+      "group": "project",
+      "title": "Архив и отдельная восстановленная копия",
+      "surface": "Настройки проекта → Резервные копии и восстановление",
+      "widgets": [
+        "project_recovery",
+        "recovery_create",
+        "recovery_import",
+        "recovery_source_export"
+      ],
+      "meaning": "Проверяемый архив сохранённого проекта и отдельная копия сохраняют исходник и неподтверждённые правки. Повреждённые/заменённые формы доступны отдельно.",
+      "value_origin": "Активный зарегистрированный проект, consistent SQLite snapshot, файлы и связанные подложки; ZIP manifest с identity и хешами. Карантин содержит исходные байты формы.",
+      "actions": [
+        "Создать и экспортировать архив",
+        "Проверить архив и восстановить отдельную копию",
+        "Открыть копию отдельным подтверждённым действием",
+        "Повторить восстановление формы или экспортировать исходник"
+      ],
+      "conditions": [
+        "Активные запись трека, обход и вынос продолжаются; создание/восстановление ждёт их завершения.",
+        "До регистрации проверяются файлы, хеши, account/server/login, схема, пути и место. Исходник не заменяется.",
+        "Копия не активируется автоматически и не обменивается до сверки.",
+        "Скопированное удержание формы снимается только после нового полного Save с точным digest очереди; текущие владельцы остаются защищены."
+      ],
+      "saved_state": "Экспортная identity сохраняется при пересоздании Activity. Копия имеет свой UID, происхождение, HOLD и baseline полных сохранений. Общая история треков и незаконченная глобальная форма не объявляются частью архива проекта.",
+      "source_ids": [
+        "WF-PROJECT-RECOVERY-CREATE",
+        "WF-PROJECT-RECOVERY-RESTORE",
+        "WF-RECOVERED-FORM-COMPLETION",
+        "WF-FORM-DRAFT-STORE",
+        "WF-FORM-SAVE"
+      ],
+      "expectations": [
+        "Офлайн копия сохраняет объекты, геометрию, фото/файлы; исходник и active UID прежние.",
+        "Подмена, повреждение и нехватка места не меняют рабочий проект.",
+        "Частичный Save фото не разрешает очередь; новый полный Save не снимает удержания соседней формы."
+      ]
     }
   ],
   "widget_evidence": [
@@ -6484,13 +6682,13 @@
       "repository": "root",
       "path": "app/src/main/res/menu/main.xml",
       "id": "menu_map_rotation",
-      "sha256": "ad1512099be9cb10b67c531b905473f36dbf145f48bd5e18075cea63b487f3a0"
+      "sha256": "15dfa85661b72203f8dc7790c1ec5accd1c0f9dd2fb70c3084b505f44be95c35"
     },
     {
       "repository": "root",
       "path": "app/src/main/res/menu/main.xml",
       "id": "menu_locate",
-      "sha256": "ad1512099be9cb10b67c531b905473f36dbf145f48bd5e18075cea63b487f3a0"
+      "sha256": "15dfa85661b72203f8dc7790c1ec5accd1c0f9dd2fb70c3084b505f44be95c35"
     },
     {
       "repository": "root",
@@ -6520,7 +6718,7 @@
       "repository": "root",
       "path": "app/src/main/res/menu/main.xml",
       "id": "menu_collector_projects",
-      "sha256": "ad1512099be9cb10b67c531b905473f36dbf145f48bd5e18075cea63b487f3a0"
+      "sha256": "15dfa85661b72203f8dc7790c1ec5accd1c0f9dd2fb70c3084b505f44be95c35"
     },
     {
       "repository": "maplibui",
@@ -6604,7 +6802,7 @@
       "repository": "root",
       "path": "app/src/main/res/menu/main.xml",
       "id": "menu_settings",
-      "sha256": "ad1512099be9cb10b67c531b905473f36dbf145f48bd5e18075cea63b487f3a0"
+      "sha256": "15dfa85661b72203f8dc7790c1ec5accd1c0f9dd2fb70c3084b505f44be95c35"
     },
     {
       "repository": "root",
@@ -6749,6 +6947,66 @@
       "path": "app/src/main/res/layout/layout_map_content.xml",
       "id": "mapViewMaplibre",
       "sha256": "71f97f596b223be777984bf4cc5973286c4bdf2e312ac6956485446486f80590"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/menu/main.xml",
+      "id": "menu_changes_centre",
+      "sha256": "15dfa85661b72203f8dc7790c1ec5accd1c0f9dd2fb70c3084b505f44be95c35"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/activity_project_settings.xml",
+      "id": "project_changes",
+      "sha256": "153f2161dc2d333d3cdd621218edfef99d4470d579a58ac28fdaaa16df9c46bf"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/activity_project_settings.xml",
+      "id": "project_recovery",
+      "sha256": "153f2161dc2d333d3cdd621218edfef99d4470d579a58ac28fdaaa16df9c46bf"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/activity_changes_centre.xml",
+      "id": "changes_project",
+      "sha256": "8c24e6cffd49a07ea17e269ec5f55493a01f054dfab1437015d5250cdd9e77cd"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/activity_changes_centre.xml",
+      "id": "changes_send",
+      "sha256": "8c24e6cffd49a07ea17e269ec5f55493a01f054dfab1437015d5250cdd9e77cd"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/activity_changes_centre.xml",
+      "id": "changes_release",
+      "sha256": "8c24e6cffd49a07ea17e269ec5f55493a01f054dfab1437015d5250cdd9e77cd"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/activity_changes_centre.xml",
+      "id": "changes_recovery",
+      "sha256": "8c24e6cffd49a07ea17e269ec5f55493a01f054dfab1437015d5250cdd9e77cd"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/activity_project_recovery.xml",
+      "id": "recovery_create",
+      "sha256": "7ceccac00aa1ab5730c5da38d5e1801784ef486b040838d6390bbb6f1fa9ad86"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/activity_project_recovery.xml",
+      "id": "recovery_import",
+      "sha256": "7ceccac00aa1ab5730c5da38d5e1801784ef486b040838d6390bbb6f1fa9ad86"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/activity_project_recovery.xml",
+      "id": "recovery_source_export",
+      "sha256": "7ceccac00aa1ab5730c5da38d5e1801784ef486b040838d6390bbb6f1fa9ad86"
     }
   ],
   "coverage": {
@@ -7551,14 +7809,14 @@
     {
       "repository": "root",
       "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
-      "purpose": "Non-method rulerText getter and zoomText delegation: screenToMap/WebMercator/GeoLineString/formatLength, separate camera zoom and saved viewport. Reviewed2026-11-02: only memory-dialog builder gains bounded scrolling; prior guarded methods/ruler/zoom remain exact. Review dated 2026-11-09 covers a saved measurement waiting for the current style and camera. The scale ruler, zoom, rotation and memory notice have independent source checks. Review dated 2026-11-09 covers track-mode and measurement popups anchored to the visible rail overflow when their direct button is hidden.",
+      "purpose": "Non-method rulerText getter and zoomText delegation: screenToMap/WebMercator/GeoLineString/formatLength, separate camera zoom and saved viewport. Reviewed2026-11-02: only memory-dialog builder gains bounded scrolling; prior guarded methods/ruler/zoom remain exact. Review dated 2026-11-09 covers a saved measurement waiting for the current style and camera. The scale ruler, zoom, rotation and memory notice have independent source checks. Review dated 2026-11-09 covers track-mode and measurement popups anchored to the visible rail overflow when their direct button is hidden. Review 2026-11-13: GEO-02 retains active guidance and separates temporary automatic GPS mute; UX-06 removes only track/cleanup main-menu entries and adds confirmed maintenance; REL-04 scopes editor cleanup. Existing independent consumers and their guarded requirements are preserved.",
       "contract_ids": [
         "UI-MAP-SCALE-RULER",
         "UI-MAP-ZOOM",
         "UI-MAP-CAMERA-ROTATION-STATE",
         "UI-RENDER-MEMORY-WARNING"
       ],
-      "sha256": "949f1e7a95a7b466ed2ad388996e231e2e8b45fe50b3576f039ac6d89c026e79"
+      "sha256": "4e8ed17efdcf8ebd46b09374ce91c948447532183edf4053eb6a4f0044f26d1c"
     },
     {
       "repository": "maplib",
@@ -7642,20 +7900,20 @@
     {
       "repository": "root",
       "path": "app/build.gradle",
-      "purpose": "Effective Lisa/Belka brand declarations and absence of custom sourceSets rerouting for the reviewed shared main UI. Reviewed 2026-11-01: only production version constants change to 3.1.2.31/225; sourceSets, IDs and UI bindings are unchanged. Reviewed 2026-11-10: Release 3.1.2.32/226 and a Release-only client.id check; sourceSets, brand/package/provider identities and UI bindings are unchanged.",
+      "purpose": "Effective Lisa/Belka brand declarations and absence of custom sourceSets rerouting for the reviewed shared main UI. Reviewed 2026-11-01: only production version constants change to 3.1.2.31/225; sourceSets, IDs and UI bindings are unchanged. Reviewed 2026-11-10: Release 3.1.2.32/226 and a Release-only client.id check; sourceSets, brand/package/provider identities and UI bindings are unchanged. Review 2026-11-14: mandatory Release private inputs, empty Debug telemetry, isolated Release exclusion and source version 227/3.1.2.33. Brand/application/account/provider IDs and sourceSets retain shared UI bindings. Signed production positive acceptance and publication NOT_RUN.",
       "contract_ids": [
         "UI-SETTINGS-MAP-STORAGE-MOVE"
       ],
-      "sha256": "c15f7732f57ada543bb782a6fdbee51050f83af945e142b09ad3f45b9d97715c"
+      "sha256": "d153dd54aff3d7e0c0838e27ebbb8fdbc8b0007fcfc9a13184fb206aa88973b7"
     },
     {
       "repository": "root",
       "path": "app/src/main/AndroidManifest.xml",
-      "purpose": "Shared SettingsActivity declaration; no Lisa/Belka-specific replacement in app/src.",
+      "purpose": "Shared SettingsActivity declaration; no Lisa/Belka-specific replacement in app/src. Review 2026-11-13: GEO-02 retains active guidance and separates temporary automatic GPS mute; UX-06 removes only track/cleanup main-menu entries and adds confirmed maintenance; REL-04 scopes editor cleanup. Existing independent consumers and their guarded requirements are preserved. Review 2026-11-14: two shared non-exported recovery/changes Activities added. Existing SettingsActivity, brand/provider/account declarations and consumers retained.",
       "contract_ids": [
         "UI-SETTINGS-MAP-STORAGE-MOVE"
       ],
-      "sha256": "fa3483dd90b4cbadce68e4180ef8a2c80df4734de3226a50a629d57f38dc6193"
+      "sha256": "a576c9af9a5b50623d82ab74eb0ef90174de99598377955c0f6e734b540d1640"
     },
     {
       "repository": "maplibui",
@@ -7687,11 +7945,11 @@
     {
       "repository": "root",
       "path": "app/src/main/res/xml/preferences_general.xml",
-      "purpose": "Reviewed reset_settings Preference key/title and common general-settings binding; no invented Android widget ID.",
+      "purpose": "Reviewed reset_settings Preference key/title and common general-settings binding; no invented Android widget ID. Review 2026-11-13: GEO-02 retains active guidance and separates temporary automatic GPS mute; UX-06 removes only track/cleanup main-menu entries and adds confirmed maintenance; REL-04 scopes editor cleanup. Existing independent consumers and their guarded requirements are preserved.",
       "contract_ids": [
         "UI-SETTINGS-RESET-WORKSPACE"
       ],
-      "sha256": "1cb80f9294eefbdf9348d15ba042195d3f9dc82c6668f908e5d8ef01c859d42b"
+      "sha256": "64063d1376cfc3ce4f01646f8c01cd58156b6f1fc9c90047c32baac4300f2688"
     },
     {
       "repository": "maplibui",
@@ -7734,13 +7992,13 @@
     {
       "repository": "maplib",
       "path": "build.gradle",
-      "purpose": "Reviewed declared org.locationtech.jts:jts-core:1.20.0 dependency, whose IndexedFacetDistance contract defines planar target-facet and polygon-boundary selection. Reviewed 2026-11-01: only release diagnostic version changes to 3.1.2.31; JTS dependency and target geometry semantics are unchanged. Declaration is not proof of installed JAR/APK/native acceptance. Reviewed 2026-11-10: only the Release diagnostic version changes to 3.1.2.32; JTS 1.20.0, OpenGL and target geometry are unchanged.",
+      "purpose": "Reviewed declared org.locationtech.jts:jts-core:1.20.0 dependency, whose IndexedFacetDistance contract defines planar target-facet and polygon-boundary selection. Reviewed 2026-11-01: only release diagnostic version changes to 3.1.2.31; JTS dependency and target geometry semantics are unchanged. Declaration is not proof of installed JAR/APK/native acceptance. Reviewed 2026-11-10: only the Release diagnostic version changes to 3.1.2.32; JTS 1.20.0, OpenGL and target geometry are unchanged. Reviewed 2026-11-14: subtracting only the Release diagnostic version 3.1.2.33 reproduces the exact previous reviewed file hash. JTS 1.20.0, OpenGL and target geometry semantics are unchanged. This is source preservation, not native target acceptance.",
       "contract_ids": [
         "UI-NAVIGATION-STAKEOUT-TARGET",
         "UI-NAVIGATION-AZIMUTH-CURRENT",
         "UI-NAVIGATION-AZIMUTH-TWO-POINTS"
       ],
-      "sha256": "3ee27f8be5e41747d4ffbd58f541d1c30881a65b4ff84b9f839dead77a6d29d6"
+      "sha256": "844aed1d6a4ecfe42e9802d7d4919f85dc031f3c20ba96ec543b1971ada746fc"
     },
     {
       "repository": "maplib",
@@ -7902,12 +8160,12 @@
     {
       "repository": "maplib",
       "path": "src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java",
-      "purpose": "Manually reviewed typed HTTP provenance fields and positively classified PULL/PUSH/lookup/initial-import origin sites. Whole-file drift catches producer changes outside the bounded UI-method guards; it does not claim all layer behavior/native correctness reviewed.",
+      "purpose": "Manually reviewed typed HTTP provenance fields and positively classified PULL/PUSH/lookup/initial-import origin sites. Whole-file drift catches producer changes outside the bounded UI-method guards; it does not claim all layer behavior/native correctness reviewed. Review 2026-11-14: typed HTTP provenance retained. Immutable operation ACK/remap and recovery delivery-owner gates preserve pending data. Push-only is not full sync. Targeted receipts have separate scope, without universal NGW runtime acceptance.",
       "contract_ids": [
         "UI-SYNC-FAILURE-MESSAGES",
         "UI-LAYER-IMPORT-ERROR-MESSAGES"
       ],
-      "sha256": "ae854ebd35870ed09db3daef810c80f705f1ce0ed1ba05148e333d5a3644a81d"
+      "sha256": "d9216da0a2dc7685f1b7e98aa606eaccfcecab8decd089e0fccbdea993fc0e5b"
     },
     {
       "repository": "maplib",
@@ -8256,6 +8514,42 @@
         "UI-DEBUG-UNDERLAY-TRANSFER-PROGRESS"
       ],
       "sha256": "961e9ed5e8a69fd2ba04e54927ab3b89cbc2eb9ecff68eaa04a9357b09976c0b"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/activity_changes_centre.xml",
+      "purpose": "Distinct full-sync clock, project selection, row actions, review/recovery/send and progress.",
+      "contract_ids": [
+        "UI-CHANGES-CENTRE"
+      ],
+      "sha256": "8c24e6cffd49a07ea17e269ec5f55493a01f054dfab1437015d5250cdd9e77cd"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/layout/activity_project_recovery.xml",
+      "purpose": "Preserved source, archive/copy workflow, draft export and wait/cancel status.",
+      "contract_ids": [
+        "UI-PROJECT-RECOVERY"
+      ],
+      "sha256": "7ceccac00aa1ab5730c5da38d5e1801784ef486b040838d6390bbb6f1fa9ad86"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/values-ru/local_changes.xml",
+      "purpose": "Russian uncertainty/repeat warnings and explicit single-copy choice with source sync pause and data preservation; active work continues.",
+      "contract_ids": [
+        "UI-CHANGES-CENTRE"
+      ],
+      "sha256": "a9d314e73275d693b48788003de7db82d01c149eef01ef6fee47bf68f1e567be"
+    },
+    {
+      "repository": "root",
+      "path": "app/src/main/res/values-ru/project_recovery.xml",
+      "purpose": "Russian saved-project/unfinished-form distinction, identity/space errors, separate copy, export and no automatic delivery.",
+      "contract_ids": [
+        "UI-PROJECT-RECOVERY"
+      ],
+      "sha256": "99104b6b35a8fbaa03ad85c4379ecc8f1e5ba001667023cc81e950c98fe0b0ff"
     }
   ]
 }

@@ -21,6 +21,8 @@ captures/
 # Sentry settings
 sentry.properties
 usage.properties
+diagnostics.properties
+private-input-inventory.json
 
 # Python documentation tooling
 __pycache__/

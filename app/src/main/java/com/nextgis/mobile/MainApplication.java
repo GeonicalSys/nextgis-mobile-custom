@@ -94,10 +94,32 @@ public class MainApplication extends GISApplication
     public static final String LAYER_OSM = "osm";
     public static final String LAYER_TRACKS = "tracks";
     private com.nextgis.mobile.location.BackgroundLocationController backgroundLocationController;
+    private com.nextgis.mobile.stakeout.SharedStakeoutSession stakeoutSession;
+
+    @androidx.annotation.MainThread
+    public com.nextgis.mobile.stakeout.SharedStakeoutSession getStakeoutSession() {
+        if (stakeoutSession == null) {
+            stakeoutSession = new com.nextgis.mobile.stakeout.SharedStakeoutSession(this,
+                    android.preference.PreferenceManager.getDefaultSharedPreferences(this), getGpsEventSource());
+        }
+        return stakeoutSession;
+    }
 
     /** Explicit UI/task exit cancels automatic GPS, independently of recording sessions. */
     public void closeAutomaticLocation() {
         if (backgroundLocationController != null) backgroundLocationController.closeExplicitly();
+    }
+
+    public void closeAutomaticLocationIfTaskRemoved() {
+        if (backgroundLocationController != null) backgroundLocationController.closeRemovedTask();
+    }
+
+    public void disableAutomaticBackgroundLocation(String sessionId) {
+        if (backgroundLocationController != null) backgroundLocationController.disableBackground(sessionId);
+    }
+
+    public boolean isAutomaticBackgroundLocationWanted(String sessionId) {
+        return backgroundLocationController != null && backgroundLocationController.isBackgroundWanted(sessionId);
     }
 
     @Override

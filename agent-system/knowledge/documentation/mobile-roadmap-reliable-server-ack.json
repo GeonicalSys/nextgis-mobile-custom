@@ -17,35 +17,56 @@
   },
   "lifecycle": {
     "goal": "open",
-    "implementation": "unknown",
-    "source_verification": "UNKNOWN",
-    "merge": "unknown",
-    "runtime_verification": "UNKNOWN",
-    "release": "unknown",
-    "retention": "Retain the exact create and queue witnesses and the distinction between orphaned, transient and corrupt records."
+    "implementation": "implemented",
+    "source_verification": "PASS",
+    "merge": "open",
+    "runtime_verification": "PASS",
+    "release": "unpublished",
+    "retention": "Локальная реализация, 38 адресных JVM-проверок и 21 адресный native-сценарий эмулятора сохранены с exact APK/hash receipt. Full/телефон, merge и выпуск — отдельные стадии."
   },
   "facets": {
     "lifecycle-review": {
       "role": "reviewed_lifecycle_scope_and_evidence",
       "value": {
-        "goal": "Keep REL-01 open for validation of the remote ID, transactional remap and queue confirmation, and reconciliation after a lost response.",
-        "implementation": "The adopted maplib pin keeps separate missing-ID and empty-cursor paths. It still reaches successful NEW cleanup when the creation result has no ID.",
-        "source_verification": "The reviewed NGWVectorLayer path is source evidence of the current condition. The newer downloader and journal changes have separate scopes.",
-        "merge": "The adopted pin identifies the existing code. Delivery of the REL-01 acceptance work remains open.",
-        "runtime_verification": "A server-accepted POST with a lost response, process death, restart and invalid ID cases still need their own oracles.",
-        "release": "This review establishes the source finding and its limits.",
-        "references": [
-          {
-            "repository": "android_projects/android_gisapp/maplib",
-            "revision": "7152e3cd403f9020cebcf752b8299538a85136c1",
-            "path": "src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java"
-          },
-          {
-            "repository": "android_projects/android_gisapp",
-            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
-            "path": "docs/reference/mobile-reliability-audit.md"
+        "prior_basis_review": {
+          "goal": "Keep REL-01 open for validation of the remote ID, transactional remap and queue confirmation, and reconciliation after a lost response.",
+          "implementation": "The adopted maplib pin keeps separate missing-ID and empty-cursor paths. It still reaches successful NEW cleanup when the creation result has no ID.",
+          "source_verification": "The reviewed NGWVectorLayer path is source evidence of the current condition. The newer downloader and journal changes have separate scopes.",
+          "merge": "The adopted pin identifies the existing code. Delivery of the REL-01 acceptance work remains open.",
+          "runtime_verification": "A server-accepted POST with a lost response, process death, restart and invalid ID cases still need their own oracles.",
+          "release": "This review establishes the source finding and its limits.",
+          "references": [
+            {
+              "repository": "android_projects/android_gisapp/maplib",
+              "revision": "7152e3cd403f9020cebcf752b8299538a85136c1",
+              "path": "src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java"
+            },
+            {
+              "repository": "android_projects/android_gisapp",
+              "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+              "path": "docs/reference/mobile-reliability-audit.md"
+            }
+          ]
+        },
+        "current_local_checkpoint": {
+          "date": "2026-11-14",
+          "task": "android-20261114-reliability-contracts-and-version",
+          "source": "Local owned session; REL-01/REL-02/UX-02 implemented. Production build and Publisher controls implemented; signed positive admission awaits the approved diagnostics.properties.",
+          "verification": "Native-10: 21/21 selected native cases PASS, emulator cleanup PASS. Includes actual centre/recovery screens, lost/invalid responses, real process restart, complete recovered form and single-copy delivery. Targeted JVM 38/38 PASS; App/native compile PASS.",
+          "limits": [
+            "Full and physical devices NOT_RUN by current owner scope.",
+            "Production signed Lisa/Belka positive checks NOT_RUN; approved diagnostics.properties unavailable.",
+            "No live server change, publication, merge, push or release acceptance.",
+            "Cross-device missing sibling outcomes require manual server review; no backend exactly-once claim."
+          ],
+          "native_receipt": {
+            "path": "native-10/result.json",
+            "tested_source_fingerprint": "aa1c8f2d8c449f42bafb1343e50654367631be62cfce865faa2ae1742d5f83b9",
+            "app_sha256": "5c5682739ff79ffdb99075727ee9b5201a8b10a27654a0001d26cca824a1f851",
+            "test_sha256": "dc8fd01caddb32338128cdc1891e71de214ce44dc7e8c2be2f86f3189c5da13e",
+            "scope": "related emulator only; not Full/physical/production admission"
           }
-        ]
+        }
       }
     },
     "view-path": {
@@ -57,15 +78,16 @@
       "value": [
         "## REL-01 Достоверное подтверждение отправки",
         "",
-        "Приоритет P0. Состояние: Исследуется. Основание: подтверждено кодом. Владельцы реализации — maplib, интеграция app/maplibui.",
+        "Приоритет P0. Состояние: локальная реализация завершена, адресные эмуляторные проверки пройдены. Добавлены неизменяемые идентификаторы операций, журнал исходов, строгая проверка server ID, согласованные remap/ACK для объектов и вложений. Потерянный или неверный ответ сохраняет правку для явной сверки. Слияния и выпуска нет.",
         "",
-        "В NGWVectorLayer успешный HTTP ответ создания с JSON без поля id возвращается как успех; вызывающий код после этого удаляет NEW из очереди. При пустом cursor для создания/изменения также действует политика «обработано». Это требует исправления и адресной проверки; потеря данных на конкретном телефоне этим аудитом не установлена.",
+        "Центр изменений показывает конкретную операцию и предлагает сверку с сервером либо отдельно подтверждённый повтор. Сверка выполняет чтение и сопоставляет отправленные значения, геометрию или содержимое вложения; неподтверждённое создание автоматически не повторяется. Частичная отправка не обновляет время полного обмена. Более поздние правки не поглощаются подтверждением старого запроса.",
         "",
-        "Приёмка: отсутствующий, неверный и недопустимый server ID не очищает правку; remap локального ID и подтверждение очереди согласованы. Временная ошибка чтения, действительно осиротевшая запись и повреждение БД различаются; неопределённые операции сохраняются для восстановления, обычная очередь продолжает работу.",
+        "Проверки: Native-07 подтвердил доставку очереди и её сохранение при сбоях, неверный ID, потерю ответа и отдельную пару остановки/перезапуска процесса. Последние 38 адресных JVM-проверок очереди, SQLite и восстановления прошли; Native-10 прошёл все 21 сценарий очереди, формы, восстановления и центра изменений, включая запрет второго POST исходника.",
         "",
-        "Отдельно проверить «сервер принял POST, ответ потерялся» и смерть процесса между ответом и локальной фиксацией. Пока backend не даёт подходящей поддержки, нельзя обещать однократное создание при любых повторах. Нужен явный способ сверки неопределённого результата.",
+        "Граница приёмки: без серверной поддержки нельзя обещать однократное создание при любых сетевых сбоях и повторах. Неизвестный исход требует сверки. Full, физические устройства, merge и публикация учитываются отдельно. Исходный аудит описывал код до исправления; прежние свидетельства ниже сохранены.",
         "",
         "Основание: [создание и ACK](https://github.com/GeonicalSys/android_maplib/blob/7e7055e54002b116e7a147fcd2791486913ddd9a/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java#L3883), [очистка очереди](https://github.com/GeonicalSys/android_maplib/blob/7e7055e54002b116e7a147fcd2791486913ddd9a/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java#L1357).",
+        "",
         ""
       ]
     },

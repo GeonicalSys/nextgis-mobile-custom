@@ -43,6 +43,33 @@
           "FeatureSaveJournal.find(",
           "if (!validateRequiredFields(values)) return false",
           "app.getMap() != com.nextgis.maplib.util.DatabaseContext.getMapForLayer(mLayer)",
+          "getContentResolver().update(ContentUris.withAppendedId(uri, savedId), values, null, null) != 1",
+          "FeatureSaveJournal.holdUpload(saveDb,",
+          "FeatureSaveJournal.completeForm(saveDb,",
+          "ProjectRecoveryGuard.releaseCompletedFormHolds(",
+          "if (!putSign())",
+          "if (!clearFormDraft()) return false"
+        ],
+        "forbids": [],
+        "sha256": "6542b2e80d74ee6c8b541c82e4f5e803e828a3ab9eeaaa6d615e2ff841ce5df0"
+      }
+    },
+    "review-20261114": {
+      "role": "semantic_review_and_preserved_consumers",
+      "value": "View-only, required fields, scripts and owning map preserved. Exactly one updated row remains required: !=1 throws in the feature/hold transaction. Photo/signature completion precedes full-form receipt; only proven copied old holds are released. Current draft must clear before success. Actual failed photo and successful retry are tested separately."
+    },
+    "prior-reviewed-method": {
+      "role": "retained_previous_review_definition",
+      "value": {
+        "id": "WF-FORM-SAVE",
+        "repository": "maplibui",
+        "path": "src/main/java/com/nextgis/maplibui/activity/ModifyAttributesActivity.java",
+        "marker": "protected boolean saveFeatureInternal(\n            PhotoOverlayData overlayData,\n            PhotoOverlaySettings overlaySettings)",
+        "requires": [
+          "if (mIsViewOnly)",
+          "FeatureSaveJournal.find(",
+          "if (!validateRequiredFields(values)) return false",
+          "app.getMap() != com.nextgis.maplib.util.DatabaseContext.getMapForLayer(mLayer)",
           "getContentResolver().update(updateUri, values, null, null) == 1"
         ],
         "forbids": [],

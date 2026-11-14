@@ -40,24 +40,48 @@ public class LocalChangesUploadTest {
         volatile int status = 200;
         volatile Throwable error;
         volatile boolean holdRead = false;
+        volatile boolean dropCreationResponse = false, serveFeatures = false;
+        volatile String creationReply;
+        final java.util.Map<Integer,String> remoteFeatures = new ConcurrentHashMap<>();
         final CountDownLatch readEntered = new CountDownLatch(1), releaseRead = new CountDownLatch(1);
         final java.util.concurrent.atomic.AtomicInteger remoteId = new java.util.concurrent.atomic.AtomicInteger(42);
         final Thread thread;
+        private static String headerLine(InputStream input) throws IOException {
+            ByteArrayOutputStream line=new ByteArrayOutputStream();int next;
+            while((next=input.read())!=-1) {
+                if(next=='\n')return line.toString(StandardCharsets.US_ASCII.name()).replaceFirst("\r$","");
+                if(line.size()>=8192)throw new IOException("Oversized fixture header");line.write(next);
+            }
+            return line.size()==0?null:line.toString(StandardCharsets.US_ASCII.name());
+        }
         Endpoint() throws Exception {
             thread = new Thread(() -> {
                 while (!server.isClosed()) try (Socket socket = server.accept()) {
                     socket.setSoTimeout(10000);
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
-                    String request = reader.readLine(), line; int length = 0;
-                    while ((line = reader.readLine()) != null && !line.isEmpty())
+                    InputStream reader = socket.getInputStream();
+                    String request = headerLine(reader), line; int length = 0;
+                    while ((line = headerLine(reader)) != null && !line.isEmpty())
                         if (line.toLowerCase(Locale.ROOT).startsWith("content-length:")) length = Integer.parseInt(line.substring(line.indexOf(':') + 1).trim());
-                    char[] body = new char[length]; int read = 0, count;
+                    if(length<0||length>8*1024*1024)throw new IOException("Oversized fixture request");
+                    byte[] body = new byte[length]; int read = 0, count;
                     while (read < length && (count = reader.read(body, read, length - read)) > 0) read += count;
+                    if(read!=length)throw new EOFException("Incomplete fixture request");
                     boolean mutation = !request.startsWith("GET ");
-                    if (mutation) mutations.add(request + "\n" + new String(body, 0, read));
+                    if (mutation) mutations.add(request + "\n" + new String(body, 0, read,StandardCharsets.UTF_8));
                     if (!mutation && holdRead) { readEntered.countDown(); assertTrue(releaseRead.await(30, TimeUnit.SECONDS)); }
                     int code = mutation ? status : 404;
-                    String response = request.startsWith("POST ") && code == 200 ? "{\"id\":" + remoteId.getAndIncrement() + "}" : "{}";
+                    String response = "{}";
+                    if (request.startsWith("POST ") && code == 200) {
+                        int id = remoteId.getAndIncrement();
+                        remoteFeatures.put(id, new JSONObject(new String(body,0,read,StandardCharsets.UTF_8)).put("id",id).toString());
+                        if (dropCreationResponse) continue;
+                        response = creationReply != null ? creationReply : "{\"id\":" + id + "}";
+                    } else if (!mutation && serveFeatures) {
+                        java.util.regex.Matcher match = java.util.regex.Pattern.compile("/feature/(\\d+)").matcher(request);
+                        if (match.find() && remoteFeatures.containsKey(Integer.parseInt(match.group(1)))) {
+                            code = 200; response = remoteFeatures.get(Integer.parseInt(match.group(1)));
+                        }
+                    }
                     byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
                     socket.getOutputStream().write(("HTTP/1.1 " + code + " Result\r\nContent-Type: application/json\r\nContent-Length: "
                             + bytes.length + "\r\nConnection: close\r\n\r\n").getBytes(StandardCharsets.US_ASCII));
@@ -77,6 +101,8 @@ public class LocalChangesUploadTest {
         final String path = map.getPath().getCanonicalPath();
         final File registry = new File(app.getExternalFilesDir(SettingsConstants.KEY_PREF_MAP), "collector_projects/collector_projects_registry.json");
         final byte[] registryBefore = registry.isFile() ? Files.readAllBytes(registry.toPath()) : null;
+        final File deliveryOwner = new File(map.getPath(),ProjectRecoveryGuard.DELIVERY_OWNER);
+        final byte[] deliveryOwnerBefore = deliveryOwner.isFile()?Files.readAllBytes(deliveryOwner.toPath()):null;
         Fixture(Endpoint endpoint) throws Exception {
             assertTrue("Isolated emulator only", "ranchu".equals(android.os.Build.HARDWARE) || "goldfish".equals(android.os.Build.HARDWARE));
             cancelJobs();
@@ -114,6 +140,8 @@ public class LocalChangesUploadTest {
             Thread.sleep(1200); cancelJobs();
             assertTrue(layer.delete(false)); map.save();
             assertTrue(AccountManager.get(app).removeAccountExplicitly(account));
+            if(deliveryOwnerBefore!=null)Files.write(deliveryOwner.toPath(),deliveryOwnerBefore);
+            else if(deliveryOwner.exists())assertTrue(deliveryOwner.delete());
         }
     }
     @Test public void savingLineUploadsImmediatelyEvenWhenFullAutoSyncIsDisabledWithoutChangingTime() throws Exception {
@@ -127,11 +155,12 @@ public class LocalChangesUploadTest {
             assertEquals(42, f.layer.getFeature(42).getId());
         }
     }
-    @Test public void offlineAndHttpFailureKeepLineUntilRetryThenUpdateAndDeleteAreDelivered() throws Exception {
+    @Test public void offlineAndRejectedRequestKeepLineUntilRetryThenUpdateAndDeleteAreDelivered() throws Exception {
         try (Endpoint endpoint = new Endpoint(); Fixture f = new Fixture(endpoint)) {
             f.savedLine(f.layer, false); long before = ProjectSyncState.lastComplete(f.app, f.path);
             network.connected(false); assertFalse(f.send()); assertEquals(1, f.pending(f.layer)); assertTrue(endpoint.mutations.isEmpty());
-            network.connected(true); endpoint.status = 503;
+            // A definite rejection can be retried; an ambiguous 5xx requires reconciliation.
+            network.connected(true); endpoint.status = 403;
             assertFalse(f.send()); assertEquals(1, f.pending(f.layer));
             endpoint.status = 200; assertTrue(f.send()); assertEquals(0, f.pending(f.layer));
             f.layer.setSyncDirection(2);

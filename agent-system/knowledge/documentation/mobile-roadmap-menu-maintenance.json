@@ -4,32 +4,39 @@
   "kind": "task",
   "owner": "android_projects/android_gisapp",
   "topic": "documentation",
-  "status": "planned",
+  "status": "active",
   "execution_permission": false,
   "applicability": {
     "review_status": "reviewed",
     "paths": [],
-    "scope_refs": ["lisa:mobile:resource:mobile-roadmap-layout"],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
   },
   "lifecycle": {
     "goal": "open",
-    "implementation": "planned",
-    "source_verification": "NOT_RUN",
-    "merge": "not_applicable",
-    "runtime_verification": "NOT_RUN",
+    "implementation": "implemented",
+    "source_verification": "PASS",
+    "merge": "open",
+    "runtime_verification": "PASS",
     "release": "unpublished",
-    "retention": "Сохранить план UX-06 по поручению владельца 13.11.2026. Запись плана и его Git-доставка не означают реализации или выпуска APK."
+    "retention": "Реализация и локальные проверки эмулятора завершены. Сохранить исходники, журнал и receipts; телефон, Full, слияние и публикация остаются отдельными стадиями."
   },
   "facets": {
-    "view-path": {"role": "published_markdown_path", "value": "docs/roadmap/mobile.md"},
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
     "body": {
       "role": "markdown_body_lines",
       "value": [
         "## UX-06 Упрощение главного меню и обслуживание в настройках",
         "",
-        "Приоритет P2. Состояние: Предложена; план записан по поручению владельца 13.11.2026. Реализация не начата. Очерёдность остальных задач сохраняется.",
+        "Приоритет P2. Состояние: реализована и проверена на эмуляторе 13.11.2026. Проверка на телефоне и Full — перед публикацией; выпуск APK не выполнен.",
+        "",
+        "Ниже сохранены исходный запрос и план на момент постановки; фактический результат и проверки приведены в конце карточки.",
         "",
         "Запрос: полностью убрать из главного меню «Выбрать режим записи трека»; действия «Очистить лог» и «Очистить рез. копии» перенести в настройки. Предлагаемое место: «Настройки → Общие → Обслуживание», с понятным полным названием «Очистить резервные копии». Действия экспорта журнала и резервных копий остаются на прежнем месте.",
         "",
@@ -46,14 +53,35 @@
         "",
         "Приёмка будущей реализации: в главном меню отсутствуют все три прежних пункта; обе очистки доступны через общие настройки на смартфоне и планшете. Cancel/Back в подтверждении ничего не удаляют; подтверждение каждой очистки затрагивает только её данные и показывает реальный результат, включая пустое хранилище и отказ удаления. Выбор обоих режимов трека, Start/Stop и подтверждение остановки доступны на карте при обычном и увеличенном интерфейсе и сохраняют текущую запись, UUID и накопленные точки. Проверены обе темы, поворот экрана, русские названия и 200% шрифт. Существующая настройка квоты и команды экспорта работают по прежним правилам.",
         "",
-        "Граница текущего поручения: только проработка и запись плана с сохранением прежних изменений. Изменение меню, настроек и кода очисток, фактическая очистка данных, тесты на устройстве, установка и выпуск APK не выполняются.",
+        "Текущее поручение от 13.11.2026 разрешает реализацию и проверки на эмуляторе. Прежняя граница «только план» сохранена в истории Git; публикация и проверка на рабочем телефоне в эту стадию не входят.",
+        "",
+        "",
+        "Результат реализации: все три прежних пункта удалены из главного меню; очистки доступны в «Настройки → Общие → Обслуживание» с подтверждением и точным результатом. Запуск/остановка трека и выбор режима остаются на карте.",
+        "",
+        "Общая локальная проверка GEO-02 / UX-06 / REL-04: сборка PASS; 17 профильных unit-проверок PASS; Related на изолированном эмуляторе — 48 сценариев PASS и 6 real-window profiles при 620 dpi / 200% шрифте, портрет/альбом. После адресного обновления открытого списка слоёв повторены 4 затронутых recovery-сценария, все PASS, включая настоящий клик по карандашу и проверку БД. Телефон и Full не проверялись по текущему поручению владельца. Это не допуск к публикации.",
+        "",
+        "[Карточка реализации](../../update-reports/entries/android-20261113-ux06-menu-maintenance.md); [контракты и локальные проверки](../../update-reports/entries/android-20261113-mobile-contracts-verification.md).",
         ""
       ]
     },
-    "legacy-id": {"role": "published_roadmap_alias", "value": "UX-06"},
-    "priority": {"role": "priority_at_roadmap_authoring", "value": "P2"},
-    "lifecycle-basis": {"role": "scope_of_independent_lifecycle_at_roadmap_authoring", "value": "Проверены исходные точки главного меню, существующий вход трека с карты и место общих настроек. Реализация нового интерфейса и runtime-приёмка не выполнены."}
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "UX-06"
+    },
+    "priority": {
+      "role": "priority_at_roadmap_authoring",
+      "value": "P2"
+    },
+    "lifecycle-basis": {
+      "role": "scope_of_independent_lifecycle_at_roadmap_authoring",
+      "value": "Реализация по новому поручению владельца 13.11.2026; сборка, профильные unit и эмуляторные Related-проверки пройдены. Приёмка эмулятора ограничена выбранными сценариями; телефон, Full и публикация отложены."
+    }
   },
   "relations": [],
-  "provenance": {"manifest": "agent-system/provenance/documentation.json", "scopes": ["lisa:mobile:task:mobile-roadmap-menu-maintenance"]}
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-menu-maintenance"
+    ]
+  }
 }

@@ -459,6 +459,31 @@ class Verification:
         return directory+'/'+relative
 
     def native(self,serial,selectors,name,*,reset=True,extra=None,fatal=None):
+        reliable='com.nextgis.mobile.reliability.ReliableChangesNativeTest'
+        if selectors == [reliable]:
+            if serial != self.emulator: raise RuntimeError('Reliable changes fixtures require the isolated emulator')
+            results=[]
+            def phase(method,label,**options):
+                try: result=self.native(serial,[reliable+'#'+method],name+'-'+label,**options)
+                except NativeCheckFailure:
+                    result=self.results[-1]
+                results.append(result)
+                return result
+            methods=('missingIdentifierKeepsTheObjectVisibleAndRequiresReconciliation',
+                     'acceptedPostWithLostResponseIsNotRepeatedAndOtherObjectsStillUpload',
+                     'serverFailureRequiresReviewRatherThanAutomaticDuplicateCreation',
+                     'failedFormSaveHoldSurvivesRetryUntilItsOwnOperationCompletes')
+            for method in methods: phase(method,method)
+            seed=phase('seedAcceptedReceiptBeforeProcessDeath','seed')
+            if not seed.get('failed'):
+                self.shell(serial,'am','force-stop',PACKAGE)
+                self.shell(serial,'am','force-stop',PACKAGE+'.test')
+                phase('acceptedReceiptCompletesAfterRealProcessRestartWithoutAnotherPost','restart',reset=False)
+            if self.args.scope!='full' and any(result.get('failed') for result in results):
+                raise NativeCheckFailure('Reliable changes checks failed; independent phases were retained')
+            return {'passed':[case for result in results for case in result['passed']],
+                    'skipped':[case for result in results for case in result['skipped']],
+                    'expected_crash':False,'failed':any(result.get('failed') for result in results)}
         if selectors == ['com.nextgis.mobile.util.DiagnosticsDeliveryTest']:
             return self.diagnostics()
         if selectors == [STRESS_CLASS]:
@@ -563,6 +588,7 @@ class Verification:
                 for suffix, args in [('crash', ['logcat','-d','-b','crash','-v','threadtime']),
                                      ('logcat', ['logcat','-d','-v','threadtime','-t','1200']),
                                      ('exit', ['dumpsys','activity','exit-info',PACKAGE]),
+                                     ('anr', ['dumpsys','activity','lastanr-traces']),
                                      ('activity', ['dumpsys','activity','activities']),
                                      ('workload', ['run-as',PACKAGE,'cat','files/render-stress-evidence.json'])]:
                     evidence = self.command([self.adb,'-s',serial,'shell',*args],allow_failure=True,timeout=30)

@@ -26,7 +26,8 @@ public final class UsageUploadWorker extends Worker {
         try (UsageStore store = new UsageStore(getApplicationContext())) {
             UsageAnalytics.snapshot(getApplicationContext(), store, "");
             return UsageDelivery.send(store, UsageAnalytics.device(getApplicationContext(), store),
-                    BuildConfig.USAGE_ENDPOINT, BuildConfig.USAGE_UPLOAD_TOKEN, false) ? Result.success() : Result.retry();
+                    com.nextgis.mobile.util.ProductionTelemetry.usageEndpoint(),
+                    com.nextgis.mobile.util.ProductionTelemetry.usageToken(), false) ? Result.success() : Result.retry();
         } catch (Exception error) { return Result.retry(); }
     }
 }

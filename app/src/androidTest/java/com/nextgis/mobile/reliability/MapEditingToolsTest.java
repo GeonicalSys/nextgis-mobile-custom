@@ -160,6 +160,218 @@ public class MapEditingToolsTest {
         }
     }
 
+    @Test public void decliningFormRecoveryUnlocksItsLayerAndAnotherPointCanBeSaved() throws Exception {
+        addLayer(0, true);
+        VectorLayerUI layer = layers.get(0);
+        android.app.Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        android.app.Instrumentation.ActivityMonitor monitor = instrumentation.addMonitor(
+                com.nextgis.maplibui.activity.ModifyAttributesActivity.class.getName(), null, false);
+        try {
+            startPointSketch(layer);
+            scenario.onActivity(activity -> assertTrue(activity.getMapFragment().saveEdits()));
+            com.nextgis.maplibui.activity.ModifyAttributesActivity form =
+                    (com.nextgis.maplibui.activity.ModifyAttributesActivity) instrumentation.waitForMonitorWithTimeout(monitor, 20000);
+            assertNotNull("A real unfinished form opened", form);
+            instrumentation.waitForIdleSync();
+            // ActivityMonitor can return before the form is resumed. Wait for its real
+            // periodic checkpoint before simulating interruption, rather than closing onCreate.
+            waitForMapState(() -> com.nextgis.maplibui.util.FeatureFormDraftStore.load(app) != null);
+            instrumentation.runOnMainSync(form::finish);
+            instrumentation.waitForIdleSync();
+            assertNotNull("Leaving the unfinished form checkpoints its draft",
+                    com.nextgis.maplibui.util.FeatureFormDraftStore.load(app));
+            scenario.recreate();
+            clickDialogButton("android:id/button2");
+            instrumentation.waitForIdleSync();
+            scenario.onActivity(activity -> {
+                assertEquals(MapFragment.MODE_NORMAL, mode(activity));
+                assertFalse(layer.isLocked());
+                assertFalse(app.isLayerReservedForWalk(layer.getId()));
+                assertNull(((MapDrawable) app.getMap()).editingObject);
+                assertNull(com.nextgis.maplibui.util.FeatureFormDraftStore.load(app));
+                assertNull(com.nextgis.maplibui.util.GeometryEditDraftStore.load(app));
+                assertEquals(1, layer.getCount());
+                assertNotNull(layer.getFeature(ids.get(0)));
+            });
+            // waitForMonitorWithTimeout removes its one-shot monitor after the first form.
+            monitor = instrumentation.addMonitor(
+                    com.nextgis.maplibui.activity.ModifyAttributesActivity.class.getName(), null, false);
+            startPointSketch(layer);
+            scenario.onActivity(activity -> assertTrue(activity.getMapFragment().saveEdits()));
+            com.nextgis.maplibui.activity.ModifyAttributesActivity second =
+                    (com.nextgis.maplibui.activity.ModifyAttributesActivity) instrumentation.waitForMonitorWithTimeout(monitor, 20000);
+            assertNotNull(second);
+            waitForMapState(() -> com.nextgis.maplibui.util.FeatureFormDraftStore.load(app) != null);
+            instrumentation.runOnMainSync(() -> {
+                android.widget.PopupMenu menu = new android.widget.PopupMenu(second, new View(second));
+                second.onOptionsItemSelected(menu.getMenu().add(0, com.nextgis.maplibui.R.id.menu_apply, 0, "Save"));
+            });
+            waitForMapState(() -> {
+                if (layer.getCount() != 2 || com.nextgis.maplibui.util.FeatureFormDraftStore.load(app) != null)
+                    return false;
+                AtomicBoolean finished = new AtomicBoolean();
+                scenario.onActivity(activity -> finished.set(mode(activity) == MapFragment.MODE_NORMAL
+                        && !layer.isLocked()));
+                return finished.get();
+            });
+            scenario.onActivity(activity -> {
+                assertEquals(MapFragment.MODE_NORMAL, mode(activity));
+                assertFalse(layer.isLocked());
+            });
+        } finally {
+            instrumentation.removeMonitor(monitor);
+            com.nextgis.maplibui.util.FeatureFormDraftStore.clear(app);
+        }
+    }
+
+    @Test public void staleRecoveryChoicesKeepNewDraftsAndPencilRepairsOnlyAnUnownedLayer() throws Exception {
+        addLayer(0, true);
+        addLayer(100, true);
+        java.util.concurrent.atomic.AtomicReference<com.nextgis.maplibui.util.FeatureFormDraftStore.Snapshot> offered =
+                new java.util.concurrent.atomic.AtomicReference<>();
+        scenario.onActivity(activity -> {
+            MapFragment fragment = activity.getMapFragment();
+            VectorLayerUI layer = layers.get(0), other = layers.get(1);
+            com.nextgis.maplibui.util.FeatureFormDraftStore.Snapshot old = new com.nextgis.maplibui.util.FeatureFormDraftStore.Snapshot();
+            old.layerId = layer.getId(); old.featureId = ids.get(0); old.mapPath = app.getMap().getPath().getAbsolutePath();
+            assertTrue(com.nextgis.maplibui.util.FeatureFormDraftStore.save(app, old));
+            com.nextgis.maplibui.util.FeatureFormDraftStore.Snapshot next = new com.nextgis.maplibui.util.FeatureFormDraftStore.Snapshot();
+            next.layerId = layer.getId(); next.featureId = ids.get(0); next.mapPath = old.mapPath;
+            assertTrue(com.nextgis.maplibui.util.FeatureFormDraftStore.save(app, next));
+            layer.setLocked(true); other.setLocked(true);
+            fragment.discardRecoveredForm(old);
+            assertEquals(next.operationId, com.nextgis.maplibui.util.FeatureFormDraftStore.load(app).operationId);
+            assertTrue(layer.isLocked()); assertTrue(other.isLocked());
+            offered.set(next);
+            android.widget.ListView list = activity.findViewById(R.id.layer_list);
+            assertNotNull(list);
+            ((android.widget.BaseAdapter) list.getAdapter()).notifyDataSetChanged();
+            boolean found = false;
+            for (androidx.fragment.app.Fragment screen : activity.getSupportFragmentManager().getFragments()) {
+                if (!(screen instanceof com.nextgis.mobile.fragment.LayersFragment)) continue;
+                com.nextgis.mobile.fragment.LayersFragment drawer = (com.nextgis.mobile.fragment.LayersFragment) screen;
+                if (!drawer.isDrawerOpen()) drawer.toggle();
+                found = true;
+            }
+            assertTrue("Actual layers drawer is attached", found);
+        });
+        waitForMapState(() -> {
+            AtomicBoolean visible = new AtomicBoolean();
+            scenario.onActivity(activity -> {
+                View row = editingLayerRow(activity, layers.get(0).getId());
+                visible.set(row != null && row.isShown()
+                        && row.findViewById(com.nextgis.maplibui.R.id.ivEdited).getVisibility() == View.VISIBLE);
+            });
+            return visible.get();
+        });
+        scenario.onActivity(activity -> {
+            activity.getMapFragment().discardRecoveredForm(offered.get());
+            assertNull(com.nextgis.maplibui.util.FeatureFormDraftStore.load(app));
+            assertFalse(layers.get(0).isLocked()); assertTrue(layers.get(1).isLocked());
+        });
+        waitForMapState(() -> {
+            AtomicBoolean updated = new AtomicBoolean();
+            scenario.onActivity(activity -> {
+                View row = editingLayerRow(activity, layers.get(0).getId());
+                updated.set(row != null && row.findViewById(com.nextgis.maplibui.R.id.ivEdited).getVisibility() == View.GONE
+                        && row.findViewById(com.nextgis.maplibui.R.id.btMore).getVisibility() == View.VISIBLE
+                        && row.findViewById(com.nextgis.maplibui.R.id.btShow).getVisibility() == View.VISIBLE);
+            });
+            return updated.get();
+        });
+        scenario.onActivity(activity -> {
+            View row = editingLayerRow(activity, layers.get(1).getId());
+            assertNotNull(row);
+            assertTrue(row.findViewById(com.nextgis.maplibui.R.id.ivEdited).performClick());
+            assertFalse(layers.get(1).isLocked());
+            assertFalse(layers.get(0).isLocked());
+            assertEquals(1, layers.get(0).getCount()); assertEquals(1, layers.get(1).getCount());
+        });
+    }
+
+    private View editingLayerRow(MainActivity activity, int layerId) {
+        android.widget.ListView list = activity.findViewById(R.id.layer_list);
+        if (list == null || list.getAdapter() == null) return null;
+        for (int position = 0; position < list.getAdapter().getCount(); position++) {
+            if (list.getAdapter().getItemId(position) != layerId) continue;
+            int index = position - list.getFirstVisiblePosition();
+            if (index >= 0 && index < list.getChildCount()) return list.getChildAt(index);
+            list.setSelection(position);
+            return null;
+        }
+        return null;
+    }
+
+    private void startPointSketch(VectorLayerUI layer) throws Exception {
+        scenario.onActivity(activity -> activity.getMapFragment().onFinishChooseLayerDialog(MapFragment.EDIT_LAYER, layer, false, false));
+        waitForMapState(() -> {
+            AtomicBoolean editing = new AtomicBoolean();
+            scenario.onActivity(activity -> editing.set(mode(activity) == MapFragment.MODE_EDIT
+                    && activity.getMapFragment().getEditLayerOverlay().getSelectedFeatureGeometry() != null));
+            return editing.get();
+        });
+    }
+
+    @Test public void manualDraftDiscardKeepsReplacementAndExistingGeometry() throws Exception {
+        addLayer(0, true);
+        scenario.onActivity(activity -> {
+            VectorLayerUI layer = layers.get(0);
+            MapFragment fragment = activity.getMapFragment();
+            com.nextgis.maplibui.util.GeometryEditDraftStore.Snapshot old = new com.nextgis.maplibui.util.GeometryEditDraftStore.Snapshot();
+            old.layerId = layer.getId(); old.featureId = ids.get(0);
+            old.mapPath = app.getMap().getPath().getAbsolutePath();
+            old.editMode = MapFragment.MODE_EDIT; old.geometryWkt = "POINT (100 200)";
+            assertTrue(com.nextgis.maplibui.util.GeometryEditDraftStore.save(app, old, "test-old"));
+            com.nextgis.maplibui.util.GeometryEditDraftStore.Snapshot next = new com.nextgis.maplibui.util.GeometryEditDraftStore.Snapshot();
+            next.layerId = old.layerId; next.featureId = old.featureId; next.mapPath = old.mapPath;
+            next.editMode = old.editMode; next.geometryWkt = "POINT (300 400)";
+            assertTrue(com.nextgis.maplibui.util.GeometryEditDraftStore.save(app, next, "test-next"));
+            layer.setLocked(true);
+            fragment.discardManualGeometryDraft(old);
+            assertEquals(next.geometryWkt, com.nextgis.maplibui.util.GeometryEditDraftStore.load(app).geometryWkt);
+            assertTrue(layer.isLocked());
+            fragment.discardManualGeometryDraft(next);
+            assertNull(com.nextgis.maplibui.util.GeometryEditDraftStore.load(app));
+            assertFalse(layer.isLocked());
+            GeoPoint saved = (GeoPoint) layer.getFeature(ids.get(0)).getGeometry();
+            assertEquals(0, saved.getX(), 0); assertEquals(0, saved.getY(), 0);
+        });
+        waitForMapState(() -> {
+            AtomicBoolean ready = new AtomicBoolean();
+            scenario.onActivity(activity -> {
+                com.nextgis.maplib.map.SqliteVectorTileProvider provider =
+                        ((MapDrawable) app.getMap()).getSqliteVectorProvider(layers.get(0).getId());
+                ready.set(provider != null && provider.isCurrent());
+            });
+            return ready.get();
+        });
+        scenario.onActivity(activity -> {
+            MapDrawable map = (MapDrawable) app.getMap();
+            MapFragment fragment = activity.getMapFragment();
+            map.getMaplibreMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(0, .01), 16));
+            select(activity, 0);
+            assertTrue(activity.getBottomToolbar().getMenu().performIdentifierAction(R.id.menu_feature_edit, 0));
+            assertTrue(fragment.onOptionsItemSelected(com.nextgis.maplibui.R.id.menu_edit_move_point_to_center));
+            GeoPoint changed = (GeoPoint) fragment.getEditLayerOverlay().getSelectedFeatureGeometry();
+            assertNotEquals(0, changed.getX(), 1);
+            com.nextgis.maplibui.util.GeometryEditDraftStore.Snapshot draft =
+                    com.nextgis.maplibui.util.GeometryEditDraftStore.load(app);
+            assertNotNull(draft);
+            fragment.discardManualGeometryDraft(draft);
+            assertEquals(MapFragment.MODE_NORMAL, mode(activity));
+            assertFalse(layers.get(0).isLocked());
+            assertNull(map.editingObject);
+            GeoPoint saved = (GeoPoint) layers.get(0).getGeometryForId(ids.get(0));
+            assertEquals(0, saved.getX(), 0); assertEquals(0, saved.getY(), 0);
+        });
+    }
+
+    private void waitForMapState(java.util.function.BooleanSupplier condition) throws Exception {
+        long end = android.os.SystemClock.uptimeMillis() + 30000;
+        while (!condition.getAsBoolean() && android.os.SystemClock.uptimeMillis() < end) Thread.sleep(50);
+        assertTrue("Editor/SQLite state did not settle", condition.getAsBoolean());
+    }
+
     private void addLayer(double x, boolean editable) {
         scenario.onActivity(activity -> {
             try {

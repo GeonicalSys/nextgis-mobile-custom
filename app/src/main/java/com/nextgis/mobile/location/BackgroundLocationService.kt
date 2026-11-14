@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.net.Uri
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.hypertrack.hyperlog.HyperLog
@@ -39,23 +40,31 @@ class BackgroundLocationService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val requested = intent?.getStringExtra(SESSION_ID)
-        val current = session?.takeIf { it.id == requested }
-        if (current == null && session != null) return START_NOT_STICKY
+        val current = session
+        if (owner !== current) owner?.let {
+            (application as IGISApplication).gpsEventSource.releaseBackgroundUpdates(it)
+        }
         owner = current
         var diagnosticStage = "notification"
         try {
-            val notification = notification()
+            val notification = notification(current?.userSessionId)
             diagnosticStage = "start_foreground"
             if (Build.VERSION.SDK_INT >= 29) {
                 startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION)
             } else startForeground(NOTIFICATION_ID, notification)
             current?.promoted = true
-            if (current == null || !PermissionUtil.hasAnyLocationPermission(this)) {
+            if (current == null || !PermissionUtil.hasAnyLocationPermission(this)
+                || !(application as MainApplication).isAutomaticBackgroundLocationWanted(current.userSessionId)) {
                 // Fulfil a pending FGS launch even if setting/timeout cancelled its owner.
+                if (session === current) session = null
+                current?.let { (application as IGISApplication).gpsEventSource.releaseBackgroundUpdates(it) }
                 stopForeground(STOP_FOREGROUND_REMOVE)
                 stopSelfResult(startId)
                 return START_NOT_STICKY
             }
+            // Promote even an obsolete queued start, but never acquire GPS for that command.
+            // The current owner's matching queued delivery (or existing lease) remains independent.
+            if (current.id != requested) return START_NOT_STICKY
             diagnosticStage = "acquire_background_updates"
             (application as IGISApplication).gpsEventSource.acquireBackgroundUpdates(current)
             HyperLog.i(Constants.TAG, "Background GPS started owner=${current.id}")
@@ -76,7 +85,7 @@ class BackgroundLocationService : Service() {
 
     override fun onBind(intent: Intent?): IBinder? = null
     override fun onTaskRemoved(rootIntent: Intent?) {
-        (application as MainApplication).closeAutomaticLocation()
+        (application as MainApplication).closeAutomaticLocationIfTaskRemoved()
         super.onTaskRemoved(rootIntent)
     }
 
@@ -90,7 +99,7 @@ class BackgroundLocationService : Service() {
         super.onDestroy()
     }
 
-    private fun notification(): android.app.Notification {
+    private fun notification(userSessionId: String?): android.app.Notification {
         val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         val channel = "$packageName.background_gps"
         if (Build.VERSION.SDK_INT >= 26) {
@@ -104,26 +113,38 @@ class BackgroundLocationService : Service() {
         val open = PendingIntent.getActivity(this, NOTIFICATION_ID,
             Intent(this, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP),
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-        return NotificationCompat.Builder(this, channel)
+        val builder = NotificationCompat.Builder(this, channel)
             .setSmallIcon(com.nextgis.maplibui.R.drawable.ic_location)
             .setContentTitle(getString(R.string.background_gps_title))
             .setContentText(getString(R.string.background_gps_notification))
             .setStyle(NotificationCompat.BigTextStyle().bigText(getString(R.string.background_gps_notification)))
             .setContentIntent(open).setOngoing(true).setSilent(true).setOnlyAlertOnce(true)
             .setCategory(NotificationCompat.CATEGORY_LOCATION_SHARING)
-            .build()
+        if (userSessionId != null) {
+            val disable = PendingIntent.getBroadcast(this, NOTIFICATION_ID,
+                Intent(this, BackgroundLocationActionReceiver::class.java)
+                    .setAction(BackgroundLocationActionReceiver.ACTION_DISABLE_BACKGROUND)
+                    .setData(Uri.Builder().scheme(packageName).authority("background-gps")
+                        .appendPath(userSessionId).build())
+                    .putExtra(BackgroundLocationActionReceiver.EXTRA_USER_SESSION, userSessionId),
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+            builder.addAction(0, getString(R.string.background_gps_disable), disable)
+        }
+        return builder.build()
     }
 
     companion object {
         private const val SESSION_ID = "background_gps_session"
         private const val NOTIFICATION_ID = 18_406
         private class Session(val request: DiagnosticsBackgroundLocationStart.Request,
+                              val userSessionId: String,
                               val id: String = UUID.randomUUID().toString()) { var promoted = false }
         private var session: Session? = null // Controller and service run on the main thread.
 
-        @JvmStatic fun start(context: Context) {
-            if (session != null) return
-            val created = Session(DiagnosticsBackgroundLocationStart.request(context))
+        @JvmStatic fun start(context: Context, userSessionId: String) {
+            if (session?.userSessionId == userSessionId) return
+            stop(context)
+            val created = Session(DiagnosticsBackgroundLocationStart.request(context), userSessionId)
             session = created
             try {
                 ContextCompat.startForegroundService(context, Intent(context, BackgroundLocationService::class.java)

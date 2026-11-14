@@ -46,7 +46,7 @@ callback старой карты игнорируется, диалог закр
 
 ## Подтверждение остановки
 
-Кнопка карты, меню и Stop в уведомлении открывают один FittedDialogs confirm.
+Кнопка карты и Stop в уведомлении открывают один FittedDialogs confirm. Пункт выбора режима трека удалён из главного меню; выбор обоих режимов остаётся на карте.
 До положительного ответа запись/очередь не меняются; Cancel/Back оставляют
 сеанс активным. Notification PendingIntent напрямую открывает неэкспортируемую
 TrackStopConfirmationActivity. Durable track_recording_session — UUID

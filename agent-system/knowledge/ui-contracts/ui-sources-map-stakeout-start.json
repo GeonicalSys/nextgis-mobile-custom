@@ -42,11 +42,11 @@
           "editLayerOverlay?.selectedFeatureId",
           "editLayerOverlay?.selectedFeatureGeometry",
           "layer.getLargeGeometryForId(featureId)",
-          "mStakeoutController?.start(geometry)",
+          "mStakeoutController?.start(geometry, retainOnDetach = true)",
           "setNewMode(MODE_STAKEOUT)"
         ],
         "forbids": [],
-        "sha256": "ed73bba5c6977efe9b3bc1e55f4278145ac61345ed738b4d5aef445a617ad7ee"
+        "sha256": "65100a8f8a57b7958aa443c699a7beb2de0634e490bc21626f597df35ec2cdc3"
       }
     }
   },

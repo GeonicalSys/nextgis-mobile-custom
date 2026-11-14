@@ -470,13 +470,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         grantResults: IntArray ) {
         when (requestCode) {
             TrackerService.PERMISSIONS_REQUEST_ZERO_LOCATION_POSPONDED -> if (com.nextgis.maplib.util.PermissionUtil.hasLocationPermissions(this)) {
-                var item: MenuItem? = null
-                try {
-                    item = mToolbar!!.menu.findItem(R.id.menu_track)
-                } catch (ex: Exception) {
-                    HyperLog.w(Constants.TAG, "MainActivity.onRequestPermissionsResult: " + ex.message, ex)
-                }
-                askBackgroundPerm(item)
+                askBackgroundPerm(null)
             }
 
             PERMISSIONS_REQUEST_LOC -> {
@@ -633,6 +627,10 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         val app = application as IGISApplication
 
         when (item.itemId) {
+            R.id.menu_changes_centre -> {
+                startActivity(Intent(this, ChangesCentreActivity::class.java))
+                return true
+            }
             R.id.menu_render_memory -> {
                 mapFragment?.showRenderMemoryStatus()
                 return true
@@ -670,12 +668,6 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
                 return true
             }
 
-            R.id.menu_track -> {
-                toggleTrackRecordingFromMap(findViewById<View>(R.id.menu_track)
-                    ?: mToolbar ?: window.decorView)
-                return true
-            }
-
 //            R.id.menu_refresh -> {
 //                if (null != mapFragment) {
 //                    mapFragment!!.refreshSyncButtonAnimateState()
@@ -693,18 +685,8 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
                 return true
             }
 
-            R.id.menu_clear_log -> {
-                clearLog()
-                return true
-            }
-
             R.id.menu_share_layer_backups -> {
                 shareLayerBackups()
-                return true
-            }
-
-            R.id.menu_clear_layer_backups -> {
-                clearLayerBackups()
                 return true
             }
 
@@ -843,23 +825,6 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         UiUtil.share(files, type, this, true)
     }
 
-    private fun clearLog() {
-        com.nextgis.maplibui.util.FittedDialogs.compatBuilder(this)
-            .setTitle(R.string.clear_log)
-            .setMessage(R.string.clear_log_message)
-            .setPositiveButton(R.string.clear_log) { _, _ ->
-                HyperLog.deleteLogs()
-                val dir = File(getExternalFilesDir(null), "LogFiles")
-                dir.listFiles()?.forEach { file ->
-                    file.deleteRecursively()
-                }
-                Toast.makeText(this, R.string.log_cleared, Toast.LENGTH_LONG).show()
-            }
-            .setNegativeButton(android.R.string.cancel, null)
-            .create()
-            .show()
-    }
-
     private fun shareLayerBackups() {
         try {
             val file = LayerBackupManager.zipBackupsForShare(this)
@@ -873,22 +838,6 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             HyperLog.w(Constants.TAG, "MainActivity.shareLayerBackups: " + ignored.message, ignored)
             Toast.makeText(this, R.string.layer_backups_share_error, Toast.LENGTH_LONG).show()
         }
-    }
-
-    private fun clearLayerBackups() {
-        com.nextgis.maplibui.util.FittedDialogs.compatBuilder(this)
-            .setTitle(R.string.clear_layer_backups)
-            .setMessage(R.string.clear_layer_backups_message)
-            .setPositiveButton(R.string.clear_layer_backups) { _, _ ->
-                if (LayerBackupManager.clearBackups(this)) {
-                    Toast.makeText(this, R.string.layer_backups_cleared, Toast.LENGTH_LONG).show()
-                } else {
-                    Toast.makeText(this, R.string.layer_backups_clear_error, Toast.LENGTH_LONG).show()
-                }
-            }
-            .setNegativeButton(android.R.string.cancel, null)
-            .create()
-            .show()
     }
 
     private fun maybeShowCollectorProjectSelectorOnStartup() {
@@ -984,6 +933,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
         }
         crashRecoveryOffered = true
         HyperLog.v(Constants.TAG, "CrashRecovery offering manual geometry draft")
+        val offeredDraft = com.nextgis.maplibui.util.GeometryEditDraftStore.load(this)
         com.nextgis.maplibui.util.FittedDialogs.compatBuilder(this)
             .setTitle(com.nextgis.maplibui.R.string.geometry_edit_interrupted_title)
             .setMessage(com.nextgis.maplibui.R.string.geometry_edit_interrupted_message)
@@ -994,7 +944,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             }
             .setNegativeButton(com.nextgis.maplibui.R.string.discard) { _, _ ->
                 HyperLog.v(Constants.TAG, "CrashRecovery geometry Discard selected")
-                map.discardManualGeometryDraft()
+                map.discardManualGeometryDraft(offeredDraft)
                 maybeOfferFormDraftRecovery()
             }
             .setCancelable(false)
@@ -1034,9 +984,7 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
             }
             .setNegativeButton(com.nextgis.maplibui.R.string.discard) { _, _ ->
                 HyperLog.v(Constants.TAG, "CrashRecovery form Discard selected")
-                FeatureFormDraftStore.discard(this)
-                if (draft.pointSessionId != null || draft.walkSessionId != null)
-                    mapFragment?.discardManualGeometryDraft()
+                mapFragment?.discardRecoveredForm(draft)
             }
             .setCancelable(false)
             .show()
@@ -2038,16 +1986,6 @@ class MainActivity : NGActivity(), GpsEventListener, IChooseLayerResult {
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         menu.findItem(R.id.menu_render_memory)?.isVisible = mapFragment?.hasRenderMemoryRestrictions() == true
         if (null != mLayersFragment && !mLayersFragment!!.isDrawerOpen) {
-            val state = TrackerService.getRecordingState(this)
-            val title = when (state) {
-                TrackerService.RecordingState.STOPPED -> com.nextgis.maplibui.R.string.track_mode_choose
-                TrackerService.RecordingState.STARTING -> com.nextgis.maplibui.R.string.track_pending
-                TrackerService.RecordingState.RECORDING -> com.nextgis.maplibui.R.string.track_stop
-                TrackerService.RecordingState.ERROR -> com.nextgis.maplibui.R.string.track_error
-            }
-            val icon =
-                if (state == TrackerService.RecordingState.RECORDING) com.nextgis.maplibui.R.drawable.ic_track_recording else com.nextgis.maplibui.R.drawable.ic_action_maps_directions_walk
-            setTrackItem(menu.findItem(R.id.menu_track), title, icon)
             mapFragment?.refreshTrackStatusButton()
         }
 

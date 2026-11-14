@@ -39,13 +39,13 @@
       "value": {
         "repository": "maplib",
         "path": "build.gradle",
-        "purpose": "Reviewed declared org.locationtech.jts:jts-core:1.20.0 dependency, whose IndexedFacetDistance contract defines planar target-facet and polygon-boundary selection. Reviewed 2026-11-01: only release diagnostic version changes to 3.1.2.31; JTS dependency and target geometry semantics are unchanged. Declaration is not proof of installed JAR/APK/native acceptance. Reviewed 2026-11-10: only the Release diagnostic version changes to 3.1.2.32; JTS 1.20.0, OpenGL and target geometry are unchanged.",
+        "purpose": "Reviewed declared org.locationtech.jts:jts-core:1.20.0 dependency, whose IndexedFacetDistance contract defines planar target-facet and polygon-boundary selection. Reviewed 2026-11-01: only release diagnostic version changes to 3.1.2.31; JTS dependency and target geometry semantics are unchanged. Declaration is not proof of installed JAR/APK/native acceptance. Reviewed 2026-11-10: only the Release diagnostic version changes to 3.1.2.32; JTS 1.20.0, OpenGL and target geometry are unchanged. Reviewed 2026-11-14: subtracting only the Release diagnostic version 3.1.2.33 reproduces the exact previous reviewed file hash. JTS 1.20.0, OpenGL and target geometry semantics are unchanged. This is source preservation, not native target acceptance.",
         "contract_ids": [
           "UI-NAVIGATION-STAKEOUT-TARGET",
           "UI-NAVIGATION-AZIMUTH-CURRENT",
           "UI-NAVIGATION-AZIMUTH-TWO-POINTS"
         ],
-        "sha256": "3ee27f8be5e41747d4ffbd58f541d1c30881a65b4ff84b9f839dead77a6d29d6"
+        "sha256": "844aed1d6a4ecfe42e9802d7d4919f85dc031f3c20ba96ec543b1971ada746fc"
       }
     }
   },

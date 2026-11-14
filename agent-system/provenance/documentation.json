@@ -11088,6 +11088,11 @@
         "docs/registry/README.md",
         "docs/guides/documentation-maintenance.md"
       ]
+    },
+    {
+      "path": "docs/roadmap/mobile-history.md",
+      "record": "mobile-roadmap-history-layout.json",
+      "id": "lisa:mobile:resource:mobile-roadmap-history-layout"
     }
   ]
 }

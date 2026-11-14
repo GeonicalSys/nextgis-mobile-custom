@@ -1,0 +1,3 @@
+<resources>
+    <string name="edit_session_unavailable">Editing is managed by another active operation. Return to its panel to finish it.</string>
+</resources>

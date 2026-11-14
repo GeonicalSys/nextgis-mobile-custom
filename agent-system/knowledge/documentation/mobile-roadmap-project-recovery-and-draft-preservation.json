@@ -17,35 +17,56 @@
   },
   "lifecycle": {
     "goal": "open",
-    "implementation": "unknown",
-    "source_verification": "UNKNOWN",
-    "merge": "unknown",
-    "runtime_verification": "UNKNOWN",
-    "release": "unknown",
-    "retention": "Keep the original draft bytes and backup policy separate from any proposed recovery mechanism."
+    "implementation": "implemented",
+    "source_verification": "PASS",
+    "merge": "open",
+    "runtime_verification": "PASS",
+    "release": "unpublished",
+    "retention": "Локальная реализация, 38 адресных JVM-проверок и 21 адресный native-сценарий эмулятора сохранены с exact APK/hash receipt. Full/телефон, merge и выпуск — отдельные стадии."
   },
   "facets": {
     "lifecycle-review": {
       "role": "reviewed_lifecycle_scope_and_evidence",
       "value": {
-        "goal": "Keep the P0 original-draft safeguard separate from the P1 complete offline project recovery.",
-        "implementation": "FeatureFormDraftStore at the adopted pin still calls clear on corrupt JSON. Existing format 2 layer backup covers a narrower layer and attachment recovery.",
-        "source_verification": "The draft store blob matches the original roadmap source at the adopted pin. Full project contents and replay admission require independent evidence.",
-        "merge": "The pin establishes the currently delivered draft behavior. The quarantine and full-archive gates remain open.",
-        "runtime_verification": "Offline restore, attachment hashes, mismatched identity, disk shortage and non-delivery of restored queued changes still require a separate copy and acceptance.",
-        "release": "A future release needs verified recovery evidence at its own frame.",
-        "references": [
-          {
-            "repository": "android_projects/android_gisapp/maplibui",
-            "revision": "69cccf208689c2e443994aca123c4b5ebeab0a50",
-            "path": "src/main/java/com/nextgis/maplibui/util/FeatureFormDraftStore.java"
-          },
-          {
-            "repository": "android_projects/android_gisapp",
-            "revision": "23b23239f458123ea40b0b2717c136625179e66a",
-            "path": "docs/runbooks/incident-and-rollback.md"
+        "prior_basis_review": {
+          "goal": "Keep the P0 original-draft safeguard separate from the P1 complete offline project recovery.",
+          "implementation": "FeatureFormDraftStore at the adopted pin still calls clear on corrupt JSON. Existing format 2 layer backup covers a narrower layer and attachment recovery.",
+          "source_verification": "The draft store blob matches the original roadmap source at the adopted pin. Full project contents and replay admission require independent evidence.",
+          "merge": "The pin establishes the currently delivered draft behavior. The quarantine and full-archive gates remain open.",
+          "runtime_verification": "Offline restore, attachment hashes, mismatched identity, disk shortage and non-delivery of restored queued changes still require a separate copy and acceptance.",
+          "release": "A future release needs verified recovery evidence at its own frame.",
+          "references": [
+            {
+              "repository": "android_projects/android_gisapp/maplibui",
+              "revision": "69cccf208689c2e443994aca123c4b5ebeab0a50",
+              "path": "src/main/java/com/nextgis/maplibui/util/FeatureFormDraftStore.java"
+            },
+            {
+              "repository": "android_projects/android_gisapp",
+              "revision": "23b23239f458123ea40b0b2717c136625179e66a",
+              "path": "docs/runbooks/incident-and-rollback.md"
+            }
+          ]
+        },
+        "current_local_checkpoint": {
+          "date": "2026-11-14",
+          "task": "android-20261114-reliability-contracts-and-version",
+          "source": "Local owned session; REL-01/REL-02/UX-02 implemented. Production build and Publisher controls implemented; signed positive admission awaits the approved diagnostics.properties.",
+          "verification": "Native-10: 21/21 selected native cases PASS, emulator cleanup PASS. Includes actual centre/recovery screens, lost/invalid responses, real process restart, complete recovered form and single-copy delivery. Targeted JVM 38/38 PASS; App/native compile PASS.",
+          "limits": [
+            "Full and physical devices NOT_RUN by current owner scope.",
+            "Production signed Lisa/Belka positive checks NOT_RUN; approved diagnostics.properties unavailable.",
+            "No live server change, publication, merge, push or release acceptance.",
+            "Cross-device missing sibling outcomes require manual server review; no backend exactly-once claim."
+          ],
+          "native_receipt": {
+            "path": "native-10/result.json",
+            "tested_source_fingerprint": "aa1c8f2d8c449f42bafb1343e50654367631be62cfce865faa2ae1742d5f83b9",
+            "app_sha256": "5c5682739ff79ffdb99075727ee9b5201a8b10a27654a0001d26cca824a1f851",
+            "test_sha256": "dc8fd01caddb32338128cdc1891e71de214ce44dc7e8c2be2f86f3189c5da13e",
+            "scope": "related emulator only; not Full/physical/production admission"
           }
-        ]
+        }
       }
     },
     "view-path": {
@@ -57,15 +78,20 @@
       "value": [
         "## REL-02 Восстановление проекта и сохранение повреждённых черновиков",
         "",
-        "Приоритет P0 для сохранения оригинала черновика, P1 для полного восстановления. Состояние: Исследуется. Основание: подтверждено кодом и действующим описанием backup.",
+        "Приоритет P0 для сохранения оригинала черновика, P1 для полного восстановления. Состояние: локально реализованы карантин, проверяемый архив сохранённого проекта и экран восстановления; адресные эмуляторные проверки пройдены. Слияния и выпуска нет.",
         "",
-        "FeatureFormDraftStore очищает повреждённый/некорректный черновик при чтении. Сначала нужно сохранять исходные байты в карантин и давать повторную попытку или экспорт. Нельзя обещать автоматическое восстановление любого повреждённого содержимого.",
+        "Повреждённый, заменённый или отклонённый черновик сначала сохраняется в карантин. Доступны повторная попытка и экспорт исходника; другая незавершённая форма не заменяется. Если карантин недоступен, исходник остаётся на месте, а интерфейс предлагает экспорт. Автоматическое восстановление любого повреждения не обещается.",
         "",
-        "LayerBackup format2 уже сохраняет данные слоя и вложения, но не является полным архивом проекта: config/forms/assets включены не полностью, готового универсального restore нет. Нужны проверяемый формат полного архива, совместимость схемы и мастер восстановления на отдельной копии.",
+        "Архив включает сохранённую SQLite-базу с крупными значениями, объекты и геометрию, фото, формы, настройки и файлы проекта, а также связанные офлайн-подложки. Хеши, пути, identity, аккаунт/сервер/логин и версия проверяются до восстановления. Создаётся отдельный зарегистрированный проект; исходная карта остаётся выбранной. Незавершённая глобальная форма и общая история треков имеют собственные механизмы и не выдаются за содержимое проекта.",
         "",
-        "Приёмка: проверить архив до destructive действия; восстановить проект офлайн с объектами, геометрией, фото, формами, настройками и несинхронизированными правками. Сравнить ID, значения и хеши вложений. Чужая identity, повреждённый архив, нехватка места и несовместимая версия отклоняются без изменения рабочей копии. Восстановленная очередь не отправляется на сервер до согласованной сверки.",
+        "Восстановленная копия заблокирована для обмена до сверки всех ожидающих операций. Разрешение отправки явно выбирает одну копию: синхронизация исходника и связанных локальных копий приостанавливается, их данные и очереди сохраняются. Подтверждение того же создания в другом проекте требует сверки по серверному ID. Удаление скопированной блокировки формы возможно только после нового полного сохранения именно этой формы с фото/подписью; текущие владельцы других форм остаются защищены.",
+        "",
+        "Проверки: Native-07 подтвердил офлайн-восстановление, сохранность исходника и связанных файлов, отклонение подмены/повреждения и запрет отправки копии до сверки. Крупные SQLite-значения и идентичность операций проверены адресными JVM-тестами. Native-10 прошёл все 21 сценарий: новый полный Save восстановленной формы сохраняет удержания текущих владельцев, а исходник не повторяет отправку выбранной копии. Активные запись трека, обход и вынос продолжаются; операции восстановления откладываются до их завершения.",
+        "",
+        "Граница приёмки: Full, физические устройства, сбои иных форматов/устройств и выпуск остаются отдельными этапами. Неизвестные результаты на другом устройстве требуют ручной сверки. Существующая резервная копия отдельного слоя сохраняет собственный формат и назначение.",
         "",
         "Основание: [FeatureFormDraftStore](https://github.com/GeonicalSys/android_maplibui/blob/ff4a1cce63d11fea864843550173ec22a508d334/src/main/java/com/nextgis/maplibui/util/FeatureFormDraftStore.java#L115), [границы восстановления](https://github.com/GeonicalSys/nextgis-mobile-custom/blob/8cc630ad2abd04d49470ea54715f7f69f9d32618/docs/runbooks/incident-and-rollback.md#L41).",
+        "",
         ""
       ]
     },

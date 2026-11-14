@@ -42,12 +42,13 @@
           "getLayerById(layerId)",
           "GeoGeometryFactory.fromBlob(",
           "savedInstanceState.getLong(BUNDLE_KEY_FEATURE_ID)",
-          "if (stakeoutUiAttachedInProcess)",
-          "mStakeoutController?.start(geometry)",
-          "mode = if (mSelectedLayer != null) MODE_SELECT_FOR_VIEW else MODE_NORMAL"
+          "mode = if (mSelectedLayer != null) MODE_SELECT_FOR_VIEW else MODE_NORMAL",
+          "mStakeoutController?.isRetained != true"
         ],
-        "forbids": [],
-        "sha256": "5f7de7e07ae3ee9fbb9b4a23cc4b5f4cc7b5e6778a47bdf81acef2feedd37e84"
+        "forbids": [
+          "mStakeoutController?.start(geometry)"
+        ],
+        "sha256": "859696554000cd969d8ce8a39d8fe0ca59af5b6a2f4e1f415809ffd2cbf52d0a"
       }
     }
   },

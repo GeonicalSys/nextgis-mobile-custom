@@ -104,6 +104,10 @@
             android:exported="false"
             android:foregroundServiceType="location" />
 
+        <receiver
+            android:name=".location.BackgroundLocationActionReceiver"
+            android:exported="false" />
+
         <meta-data
             android:name="io.sentry.dsn"
             android:value="@string/SENTRY_DSN" />
@@ -158,6 +162,15 @@
         <activity
             android:name=".activity.ProjectSettingsActivity"
             android:label="@string/project_settings"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activity.ProjectRecoveryActivity"
+            android:label="@string/project_recovery"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activity.ChangesCentreActivity"
+            android:exported="false"
+            android:label="@string/changes_centre"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.LegacyUnderlayExportActivity"

@@ -1,6 +1,8 @@
 {
   "schema_version": 1,
   "isolated_methods": [
+    "com.nextgis.mobile.util.DiagnosticArtifactsNativeTest",
+    "com.nextgis.mobile.reliability.ChangesCentreNativeTest",
     "com.nextgis.mobile.rendering.NativeSqliteVectorRenderingTest",
     "com.nextgis.mobile.rendering.RenderMemorySafetyTest",
     "com.nextgis.mobile.rendering.VisibleLineLabelsTest",
@@ -15,7 +17,8 @@
     "com.nextgis.mobile.rendering.LocationOrbitTest",
     "com.nextgis.mobile.util.LegacyUnderlayProgressNativeTest",
     "com.nextgis.mobile.rendering.DirectVectorTilesTest",
-    "com.nextgis.mobile.rendering.DirectVectorTilesOfflineTest"
+    "com.nextgis.mobile.rendering.DirectVectorTilesOfflineTest",
+    "com.nextgis.mobile.reliability.ProjectRecoveryNativeTest"
   ],
   "phone": [
     "com.nextgis.mobile.rendering.NativeSqliteVectorRenderingTest",
@@ -57,6 +60,10 @@
     "com.nextgis.mobile.rendering.DirectVectorTilesOfflineTest"
   ],
   "emulator": [
+    "com.nextgis.mobile.util.DiagnosticArtifactsNativeTest",
+    "com.nextgis.mobile.reliability.ChangesCentreNativeTest",
+    "com.nextgis.mobile.reliability.ProjectRecoveryNativeTest",
+    "com.nextgis.mobile.reliability.ReliableChangesNativeTest",
     "com.nextgis.mobile.util.AppUpdateNativeTest",
     "com.nextgis.mobile.util.SyncRecoveryJournalNativeTest",
     "com.nextgis.mobile.usage.UsageDeliveryTest",
@@ -74,7 +81,8 @@
     "com.nextgis.mobile.reliability.TrackUploadTest",
     "com.nextgis.mobile.reliability.WalkCheckpointTest",
     "com.nextgis.mobile.util.ProjectSyncRunnerTest",
-    "com.nextgis.mobile.reliability.SharedTracksTest"
+    "com.nextgis.mobile.reliability.SharedTracksTest",
+    "com.nextgis.mobile.reliability.SettingsMaintenanceTest"
   ],
   "diagnostics": [
     "com.nextgis.mobile.util.DiagnosticsDeliveryTest"
@@ -112,6 +120,11 @@
     "underlay-migration": ["com.nextgis.mobile.util.LegacyUnderlayProgressNativeTest"]
   },
   "areas": {
+    "project-recovery": ["com.nextgis.mobile.reliability.ProjectRecoveryNativeTest"],
+    "changes-centre": ["com.nextgis.mobile.reliability.ChangesCentreNativeTest"],
+    "diagnostic-artifacts": ["com.nextgis.mobile.util.DiagnosticArtifactsNativeTest"],
+    "form-save-recovery": ["com.nextgis.mobile.reliability.FormSaveRecoveryTest"],
+    "reliable-changes": ["com.nextgis.mobile.reliability.ReliableChangesNativeTest", "com.nextgis.mobile.reliability.LocalChangesUploadTest", "com.nextgis.mobile.reliability.FormSaveRecoveryTest"],
     "orbit-structure": ["com.nextgis.mobile.rendering.LocationOrbitTest#orbitUsesCompassThenCourseWithACenteredAnchorAndConfigurableSector"],
     "editing-source": ["com.nextgis.mobile.reliability.MapEditingToolsTest#layerChoiceOffersCategoryBeforeSketchAndHandsDefaultsToRealForm", "com.nextgis.mobile.reliability.MapEditingToolsTest#wholeObjectGesturesKeepCameraFixedAndUndoEachDragOrRotationOnce"],
     "memory-dialog": ["com.nextgis.mobile.rendering.RenderMemorySafetyTest"],
@@ -134,7 +147,9 @@
     "form-navigation": ["com.nextgis.mobile.reliability.CascadingFormsTest"],
     "track-candidates": ["com.nextgis.mobile.rendering.TrackControlsTest#crossingTracksPointsLinesAndPolygonsShareOneChooserInBothSelectionDirections", "com.nextgis.mobile.rendering.TrackControlsTest#mixedCandidateDialogKeepsLongRowsScrollableAndCancelVisibleAtLargeScales", "com.nextgis.mobile.rendering.TrackControlsTest#nativeGlowAndPointGroupsStayAboveTracksAfterLiteFullAndReorder", "com.nextgis.mobile.rendering.TrackControlsTest#mapTapSupportsColorRenameHideRestoreOverlapsAndConfirmedDelete", "com.nextgis.mobile.rendering.NativeSqliteVectorRenderingTest#sqliteFieldLinesAndWholePointGroupsStayAboveSavedAndCurrentTracks"],
     "cursor-rendering": ["com.nextgis.mobile.rendering.LocationOrbitTest"],
-    "maintenance": ["com.nextgis.mobile.util.MaintenanceRemindersNativeTest", "com.nextgis.mobile.util.AppUpdateNativeTest"],
+    "menu-maintenance": ["com.nextgis.mobile.reliability.SettingsMaintenanceTest", "com.nextgis.mobile.rendering.TrackStopConfirmationTest"],
+    "edit-recovery": ["com.nextgis.mobile.reliability.MapEditingToolsTest#decliningFormRecoveryUnlocksItsLayerAndAnotherPointCanBeSaved", "com.nextgis.mobile.reliability.MapEditingToolsTest#staleRecoveryChoicesKeepNewDraftsAndPencilRepairsOnlyAnUnownedLayer", "com.nextgis.mobile.reliability.FormSaveRecoveryTest", "com.nextgis.mobile.reliability.MapEditingToolsTest#manualDraftDiscardKeepsReplacementAndExistingGeometry"],
+    "maintenance": ["com.nextgis.mobile.util.MaintenanceRemindersNativeTest", "com.nextgis.mobile.util.AppUpdateNativeTest", "com.nextgis.mobile.reliability.SettingsMaintenanceTest"],
     "map-teardown": ["com.nextgis.mobile.reliability.MapEditingToolsTest#pendingNativeTapIsCancelledBeforeViewDestruction", "com.nextgis.mobile.reliability.MapEditingToolsTest#rulerAcceptsFingerDriftAndKeepsPanCancelAndLongPressSeparate"],
     "recording-intent": ["com.nextgis.mobile.reliability.TrackerStopRecoveryTest"],
     "line-labels": ["com.nextgis.mobile.rendering.VisibleLineLabelsTest", "com.nextgis.mobile.rendering.VectorStyleRenderingTest#rulesOtherAndNullCategoriesPreserveStylesAndLabelsForAllGeometries"],

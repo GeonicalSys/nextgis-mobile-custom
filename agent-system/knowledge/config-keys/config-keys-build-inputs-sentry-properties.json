@@ -37,8 +37,8 @@
         "owner": "app",
         "source": "sentry.properties",
         "secret_values_forbidden": true,
-        "optional": true,
-        "purpose": "Private Sentry Gradle configuration required by normal builds; optional only with explicit ciReliabilityChecks=true when the file is absent"
+        "optional": false,
+        "purpose": "Mandatory Release private sentry.dsn for the approved apps-geonical.ru/errors/1 project. Debug/verification embed empty values. ciReliabilityChecks cannot bypass Release validation."
       }
     }
   },

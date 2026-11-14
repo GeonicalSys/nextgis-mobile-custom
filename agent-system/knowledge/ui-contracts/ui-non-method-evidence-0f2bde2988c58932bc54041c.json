@@ -39,12 +39,16 @@
       "value": {
         "repository": "root",
         "path": "app/src/main/AndroidManifest.xml",
-        "purpose": "Shared SettingsActivity declaration; no Lisa/Belka-specific replacement in app/src.",
+        "purpose": "Shared SettingsActivity declaration; no Lisa/Belka-specific replacement in app/src. Review 2026-11-13: GEO-02 retains active guidance and separates temporary automatic GPS mute; UX-06 removes only track/cleanup main-menu entries and adds confirmed maintenance; REL-04 scopes editor cleanup. Existing independent consumers and their guarded requirements are preserved. Review 2026-11-14: two shared non-exported recovery/changes Activities added. Existing SettingsActivity, brand/provider/account declarations and consumers retained.",
         "contract_ids": [
           "UI-SETTINGS-MAP-STORAGE-MOVE"
         ],
-        "sha256": "fa3483dd90b4cbadce68e4180ef8a2c80df4734de3226a50a629d57f38dc6193"
+        "sha256": "a576c9af9a5b50623d82ab74eb0ef90174de99598377955c0f6e734b540d1640"
       }
+    },
+    "review-20261114": {
+      "role": "semantic_review_and_preserved_consumers",
+      "value": "Review 2026-11-14: two shared non-exported recovery/changes Activities added. Existing SettingsActivity, brand/provider/account declarations and consumers retained."
     }
   },
   "relations": [

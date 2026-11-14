@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "inputs": {
+    "clientId": {"file": "local.properties", "key": "client.id", "kind": "client"},
+    "usageEndpoint": {"file": "usage.properties", "key": "usage.endpoint", "kind": "endpoint", "expected": "https://apps-geonical.ru/mobile-stats/api/events"},
+    "usageToken": {"file": "usage.properties", "key": "usage.uploadToken", "kind": "token"},
+    "sentryDsn": {"file": "sentry.properties", "key": "sentry.dsn", "kind": "sentry", "host": "apps-geonical.ru", "path": "/errors/1"},
+    "artifactEndpoint": {"file": "diagnostics.properties", "key": "diagnostics.artifactEndpoint", "kind": "endpoint", "expected": "https://apps-geonical.ru/error-artifacts"},
+    "artifactToken": {"file": "diagnostics.properties", "key": "diagnostics.artifactUploadToken", "kind": "token"}
+  },
+  "external_signing": "Existing private GEONICAL_STORE_FILE/STORE_PASSWORD/KEY_ALIAS/KEY_PASSWORD remain external Gradle inputs; Publisher independently checks the signed APK certificate."
+}

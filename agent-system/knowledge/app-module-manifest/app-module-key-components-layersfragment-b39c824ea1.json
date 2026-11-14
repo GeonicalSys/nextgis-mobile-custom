@@ -41,7 +41,7 @@
       "role": "module_manifest_ordered_value",
       "value": {
         "path": "app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java",
-        "responsibility": "Shared worker snapshot includes enabled-track sent=0 rows, reacts to trackpoint commits and upload-intent changes, and keeps manual track upload available without vector accounts; explain absent network before dispatch, run one serial manual-sync pipeline, reconcile sync animation and the determinate progress ring against worker-owned state and the data-sync lease throughout the visible lifecycle, query pending changes off the main thread with lifecycle and map guards, and confirm explicit rechecking of skipped server geometries on long press."
+        "responsibility": "Shared worker snapshot includes enabled-track sent=0 rows, reacts to trackpoint commits and upload-intent changes, and keeps manual track upload available without vector accounts; explain absent network before dispatch, run one serial manual-sync pipeline, reconcile sync animation and the determinate progress ring against worker-owned state and the data-sync lease throughout the visible lifecycle, query pending changes off the main thread with lifecycle and map guards, and confirm explicit rechecking of skipped server geometries on long press. Pencil resolves the clicked layer row and invokes owner-aware management instead of a nullable global finish callback."
       }
     }
   },

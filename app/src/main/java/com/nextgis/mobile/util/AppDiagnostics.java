@@ -88,7 +88,8 @@ public final class AppDiagnostics {
     }
 
     public static void initialize(Context context) {
-        initialize(context, BuildConfig.SENTRY_DSN);
+        DiagnosticArtifacts.initializeProduction(context);
+        initialize(context, ProductionTelemetry.sentryDsn());
     }
 
     /** Called by explicit log ZIP export, never by a crash callback or at startup. */
@@ -170,18 +171,25 @@ public final class AppDiagnostics {
         options.setSendClientReports(false);
         options.setTransportFactory(DiagnosticsTransport::new);
         options.setBeforeSend((event, hint) -> {
-            if ("process_exit_fallback".equals(event.getTag("failure_kind"))) return prepareCachedForSend(event);
+            if ("process_exit_fallback".equals(event.getTag("failure_kind"))) return withArtifactLink(prepareCachedForSend(event));
             if (HintUtils.hasType(hint, Cached.class) || HintUtils.hasType(hint, Backfillable.class)) {
                 DiagnosticsExitInfo.attach(context, event);
-                return prepareCachedForSend(event);
+                return withArtifactLink(prepareCachedForSend(event));
             }
             preserveHttpContext(event, hint);
-            return prepareForSend(event, SystemClock.elapsedRealtime(), HTTP_POLICY);
+            return withArtifactLink(prepareForSend(event, SystemClock.elapsedRealtime(), HTTP_POLICY));
         });
         options.setBeforeBreadcrumb((breadcrumb, hint) -> sanitize(breadcrumb));
     }
 
-    private static void scheduleRetry(Context context) {
+    private static SentryEvent withArtifactLink(SentryEvent event) {
+        DiagnosticArtifacts artifacts=DiagnosticArtifacts.current();
+        if(event!=null&&event.getEventId()!=null&&artifacts!=null)
+            event.setExtra("artifacts_url",artifacts.url(event.getEventId().toString()));
+        return event;
+    }
+
+    static void scheduleRetry(Context context) {
         try {
             PeriodicWorkRequest request = new PeriodicWorkRequest.Builder(
                     DiagnosticsRetryWorker.class, 15, TimeUnit.MINUTES)
@@ -190,6 +198,10 @@ public final class AppDiagnostics {
                     .build();
             WorkManager.getInstance(context).enqueueUniquePeriodicWork(
                     RETRY_WORK, ExistingPeriodicWorkPolicy.KEEP, request);
+            WorkManager.getInstance(context).enqueueUniqueWork(RETRY_WORK+"-upload",androidx.work.ExistingWorkPolicy.KEEP,
+                    new androidx.work.OneTimeWorkRequest.Builder(DiagnosticsRetryWorker.class)
+                            .setConstraints(new Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
+                            .setBackoffCriteria(BackoffPolicy.EXPONENTIAL,30,TimeUnit.SECONDS).addTag(RETRY_WORK).build());
         } catch (RuntimeException error) {
             // The SDK still retries on startup/network changes if the system scheduler is unavailable.
             Log.w(TAG, "Diagnostic retry scheduling deferred", error);

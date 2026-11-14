@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-widget-evidence-reliability-recovery-import",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "widget_evidence"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": [
+        "root",
+        "app/src/main/res/layout/activity_project_recovery.xml",
+        "recovery_import"
+      ]
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "repository": "root",
+        "path": "app/src/main/res/layout/activity_project_recovery.xml",
+        "id": "recovery_import",
+        "sha256": "7ceccac00aa1ab5730c5da38d5e1801784ef486b040838d6390bbb6f1fa9ad86"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-widget-evidence-reliability-recovery-import"
+    ]
+  }
+}

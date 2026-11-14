@@ -203,6 +203,33 @@ class NativeFailureCollectionTest(unittest.TestCase):
             runner=self.runner(folder);runner.command=Mock(return_value=output(0))
             runner.native('phone',[CASE],'first');runner.require_native_success()
 
+    def test_restart_uses_its_successful_seed_even_when_an_independent_earlier_check_failed(self):
+        reliable='com.nextgis.mobile.reliability.ReliableChangesNativeTest'
+        with TemporaryDirectory() as folder:
+            runner=self.runner(folder);runner.results=[{'name':'unrelated','failed':True}];runner.shell=Mock()
+            runner.native=Mock(return_value={'passed':['case'],'skipped':[],'failed':False})
+            result=Verification.native(runner,runner.emulator,[reliable],'reliable')
+            self.assertFalse(result['failed']);self.assertEqual(6,runner.native.call_count)
+            self.assertEqual({'reset':False},runner.native.call_args.kwargs)
+            self.assertEqual(2,runner.shell.call_count)
+
+    def test_a_failed_seed_cannot_run_the_restart_phase(self):
+        reliable='com.nextgis.mobile.reliability.ReliableChangesNativeTest'
+        with TemporaryDirectory() as folder:
+            runner=self.runner(folder);runner.shell=Mock()
+            runner.native=Mock(side_effect=[{'passed':['case'],'skipped':[],'failed':False}]*4
+                                          +[{'passed':[],'skipped':[],'failed':True}])
+            result=Verification.native(runner,runner.emulator,[reliable],'reliable')
+            self.assertTrue(result['failed']);self.assertEqual(5,runner.native.call_count);runner.shell.assert_not_called()
+
+    def test_anr_trace_capture_is_limited_to_the_owned_emulator(self):
+        for serial in ('phone','emulator-5554'):
+            with self.subTest(serial=serial),TemporaryDirectory() as folder:
+                runner=self.runner(folder);runner.command=Mock(return_value=output(-2))
+                runner.native(serial,[CASE],'case')
+                captures=[call.args[0][4:] for call in runner.command.call_args_list[1:]]
+                self.assertEqual(serial.startswith('emulator-'),['dumpsys','activity','lastanr-traces'] in captures)
+
     def test_full_keeps_missing_malformed_or_incomplete_receiver_as_failure_and_continues(self):
         import gzip
         for bodies in ([],[b'bad',b'bad'],[gzip.compress(b'other'),gzip.compress(b'other')]):

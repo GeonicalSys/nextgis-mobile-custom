@@ -119,6 +119,20 @@
             android:visibility="gone" />
 
         <Button
+            android:id="@+id/project_recovery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/project_recovery" />
+
+        <Button
+            android:id="@+id/project_changes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/changes_centre" />
+
+        <Button
             android:id="@+id/project_delete"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

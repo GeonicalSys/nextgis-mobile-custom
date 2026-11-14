@@ -10,18 +10,18 @@
     "review_status": "reviewed",
     "paths": [],
     "scope_refs": [
-      "lisa:mobile:resource:mobile-roadmap-layout"
+      "lisa:mobile:resource:mobile-roadmap-history-layout"
     ],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
   },
   "lifecycle": {
-    "goal": "open",
-    "implementation": "planned",
+    "goal": "complete",
+    "implementation": "implemented",
     "source_verification": "UNKNOWN",
     "merge": "unknown",
-    "runtime_verification": "UNKNOWN",
-    "release": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "published",
     "retention": "Сохранить историю выпуска 225 и отдельную проверку подписанных APK исправления 226."
   },
   "facets": {
@@ -50,20 +50,19 @@
     },
     "view-path": {
       "role": "published_markdown_path",
-      "value": "docs/roadmap/mobile.md"
+      "value": "docs/roadmap/mobile-history.md"
     },
     "body": {
       "role": "markdown_body_lines",
       "value": [
         "## MOB-REL-02 Восстановление входа в ЛИСЕ и БЕЛКЕ",
         "",
-        "Приоритет P1. Состояние: В работе по прямому поручению владельца. Корректирующий выпуск `3.1.2.32` / `226`.",
+        "Исторический корректирующий выпуск 3.1.2.32/226 опубликован 10.11.2026. Публичные манифесты обоих брендов проверены 13.11.2026: [ЛИСА](https://apps-geonical.ru/lisa-mobile/lisa/manifest.json), [БЕЛКА](https://apps-geonical.ru/lisa-mobile/belka/manifest.json). Он больше не находится в работе.",
         "",
-        "Публичные APK 225 передавали `client_id=null` из-за отсутствующего `client.id` в отдельной рабочей копии. В этом выпуске проверяется входной параметр сборки и фактический запрос внутри каждого подписанного APK, который будет опубликован.",
+        "Исправлялся `client_id=null` в опубликованных APK 225: введены проверка сборочного входа и независимая проверка фактического запроса в подписанном APK. AUTH-01 остаётся самостоятельной диагностической задачей, MOB-REL-03 — исправлением отсутствующей статистики и контролем отчётов.",
         "",
-        "Владельцы: App — допуск сборки и версия; Maplib — связанная диагностическая версия; Publisher — проверка подписанного APK и выдачи сервера. AUTH-01 остаётся отдельной задачей диагностики.",
+        "Тестовые прогоны 226 были пропущены по прямому поручению владельца. Их состояние остаётся NOT_RUN; это не разрешение пропускать Full и физическую проверку будущих выпусков. Публичный манифест подтверждает доступность версии, а не выполнение всей матрицы приёмки.",
         "",
-        "Приёмка: обе стабильные сборки имеют ожидаемые версию, подпись и NextGIS ID; прежний APK 225 не проходит новый контроль; публичные manifest и APK совпадают с проверенными файлами. Тестовые прогоны 226 пропущены по прямому поручению владельца; общее правило Full для будущих выпусков не меняется.",
         ""
       ]
     },

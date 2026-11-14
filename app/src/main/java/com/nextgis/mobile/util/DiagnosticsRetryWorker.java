@@ -17,12 +17,17 @@ public final class DiagnosticsRetryWorker extends Worker {
     }
 
     @NonNull @Override public Result doWork() {
-        if (!Sentry.isEnabled()) return Result.success();
-        SentryOptions options = Sentry.getCurrentScopes().getOptions();
-        if (!AppDiagnostics.hasPendingReports(options)) return Result.success();
         try {
-            AppDiagnostics.retryPendingReports(options);
-            return AppDiagnostics.hasPendingReports(options) ? Result.retry() : Result.success();
+            DiagnosticArtifacts.initializeProduction(getApplicationContext());
+            DiagnosticArtifacts artifacts=DiagnosticArtifacts.current();
+            boolean complete=artifacts==null||artifacts.retry();
+            if(ProductionTelemetry.enabled()&&artifacts==null)complete=false;
+            if(Sentry.isEnabled()) {
+                SentryOptions options=Sentry.getCurrentScopes().getOptions();
+                if(AppDiagnostics.hasPendingReports(options))AppDiagnostics.retryPendingReports(options);
+                complete&=!AppDiagnostics.hasPendingReports(options);
+            }
+            return complete?Result.success():Result.retry();
         } catch (InterruptedException interrupted) {
             Thread.currentThread().interrupt();
             return Result.retry();

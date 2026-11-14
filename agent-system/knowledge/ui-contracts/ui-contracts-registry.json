@@ -32,15 +32,15 @@
       "value": {
         "sources": {
           "shape": "list",
-          "entries": 268
+          "entries": 274
         },
         "contracts": {
           "shape": "list",
-          "entries": 53
+          "entries": 55
         },
         "widget_evidence": {
           "shape": "list",
-          "entries": 71
+          "entries": 81
         },
         "coverage": {
           "shape": "mapping",
@@ -48,7 +48,7 @@
         },
         "non_method_evidence": {
           "shape": "list",
-          "entries": 75
+          "entries": 79
         }
       }
     }
@@ -1396,6 +1396,36 @@
     },
     {
       "type": "contains",
+      "target": "lisa:mobile:evidence:ui-sources-wf-changes-centre-view",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ui-sources-wf-changes-centre-actions",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ui-sources-wf-project-recovery-create",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ui-sources-wf-project-recovery-restore",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ui-sources-wf-local-changes-readonly",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ui-sources-wf-recovered-form-completion",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
       "target": "lisa:mobile:contract:ui-contracts-ui-map-status-coordinates",
       "status": "source_backed"
     },
@@ -1657,6 +1687,16 @@
     {
       "type": "contains",
       "target": "lisa:mobile:contract:ui-contracts-ui-map-identify-visible-vectors",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:ui-contracts-ui-changes-centre",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:ui-contracts-ui-project-recovery",
       "status": "source_backed"
     },
     {
@@ -2012,6 +2052,56 @@
     {
       "type": "contains",
       "target": "lisa:mobile:evidence:ui-widget-evidence-e1f7de246ac087ba91c3ca2d",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ui-widget-evidence-reliability-menu-changes-centre",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ui-widget-evidence-reliability-project-changes",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ui-widget-evidence-reliability-project-recovery",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ui-widget-evidence-reliability-changes-project",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ui-widget-evidence-reliability-changes-send",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ui-widget-evidence-reliability-changes-release",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ui-widget-evidence-reliability-changes-recovery",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ui-widget-evidence-reliability-recovery-create",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ui-widget-evidence-reliability-recovery-import",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ui-widget-evidence-reliability-recovery-source-export",
       "status": "source_backed"
     },
     {
@@ -2487,6 +2577,26 @@
     {
       "type": "contains",
       "target": "lisa:mobile:evidence:ui-non-method-evidence-69e559b721cf0afd9c553c3a",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-changes-centre-screen",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-recovery-screen",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-changes-copy-ru",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ui-non-method-evidence-project-recovery-copy-ru",
       "status": "source_backed"
     }
   ],

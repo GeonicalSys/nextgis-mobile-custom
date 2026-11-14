@@ -37,8 +37,8 @@
         "owner": "app",
         "source": "usage.properties",
         "secret_values_forbidden": true,
-        "optional": true,
-        "purpose": "Private release-only HTTPS usage.endpoint and write-only usage.uploadToken. Debug and field verification embed empty values; no foreground duration collection."
+        "optional": false,
+        "purpose": "Mandatory Release usage.endpoint and write-only usage.uploadToken from the approved production input contract. Debug/verification embed empty values; foreground duration collection is unchanged."
       }
     }
   },

@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-widget-evidence-reliability-changes-send",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "widget_evidence"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": [
+        "root",
+        "app/src/main/res/layout/activity_changes_centre.xml",
+        "changes_send"
+      ]
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "repository": "root",
+        "path": "app/src/main/res/layout/activity_changes_centre.xml",
+        "id": "changes_send",
+        "sha256": "8c24e6cffd49a07ea17e269ec5f55493a01f054dfab1437015d5250cdd9e77cd"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-widget-evidence-reliability-changes-send"
+    ]
+  }
+}

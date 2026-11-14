@@ -108,6 +108,23 @@
             />
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/maintenance_actions_title" app:iconSpaceReserved="false">
+        <Preference
+            android:key="maintenance_clear_log"
+            android:persistent="false"
+            android:title="@string/clear_log"
+            android:summary="@string/maintenance_log_summary"
+            android:singleLineTitle="false"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="maintenance_clear_backups"
+            android:persistent="false"
+            android:title="@string/maintenance_clear_backups"
+            android:summary="@string/maintenance_backups_summary"
+            android:singleLineTitle="false"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/compass_title"
         >
         <CheckBoxPreference

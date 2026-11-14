@@ -46,13 +46,6 @@
 <!--        app:showAsAction="always"/>-->
 
     <item
-        android:id="@+id/menu_track"
-        android:icon="@drawable/ic_action_maps_directions_walk"
-        android:orderInCategory="50"
-        android:title="@string/track_start"
-        app:showAsAction="never"/>
-
-    <item
         android:id="@+id/menu_settings"
         android:icon="@drawable/ic_action_settings"
         android:orderInCategory="75"
@@ -73,6 +66,12 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/menu_changes_centre"
+        android:title="@string/changes_centre"
+        android:orderInCategory="83"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/menu_share_log"
         android:icon="@drawable/ic_action_social_share_light"
         android:title="@string/share_log"
@@ -80,21 +79,9 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/menu_clear_log"
-        android:title="@string/clear_log"
-        android:orderInCategory="86"
-        app:showAsAction="never" />
-
-    <item
         android:id="@+id/menu_share_layer_backups"
         android:title="@string/share_layer_backups"
         android:orderInCategory="87"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/menu_clear_layer_backups"
-        android:title="@string/clear_layer_backups"
-        android:orderInCategory="88"
         app:showAsAction="never" />
 
     <item

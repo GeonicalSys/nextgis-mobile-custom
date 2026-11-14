@@ -68,6 +68,8 @@ LayerUtil сначала сохраняет durable checkpoint с состоян
 имеют приоритет над начальными значениями. Смена родителя использует штатную
 очистку потомков; required, scripts и before-save gate остаются общими.
 
+REL-04: явный отказ от восстановления сверяет operation/map/layer/feature identity и завершает только соответствующий ручной редактор. Его point-owner и lock освобождаются адресно; UUID действующего обхода и чужой черновик сохраняются. Можно сразу создать и сохранить новый объект того же слоя. Формат typed defaults и существующих журналов не меняется.
+
 Новые форматы NGW/NGFP, desktop-публикация и схема SQLite не требуются.
 Порядок интеграции: Merge Commit maplib → Merge Commit maplibui → remote pins
 в app → Squash app → проверка включения → Lisa Release APK 3.1.2.27/221.

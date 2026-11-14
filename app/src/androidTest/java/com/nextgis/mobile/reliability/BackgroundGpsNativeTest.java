@@ -1,13 +1,18 @@
 package com.nextgis.mobile.reliability;
 
 import android.app.NotificationManager;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.ActivityManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.SystemClock;
 import android.os.PowerManager;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.KeyEvent;
+import android.view.View;
 import android.preference.PreferenceManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.test.core.app.ActivityScenario;
@@ -32,6 +37,9 @@ import com.nextgis.mobile.MainApplication;
 import com.nextgis.mobile.activity.MainActivity;
 import com.nextgis.mobile.activity.SettingsActivity;
 import com.nextgis.mobile.location.BackgroundLocationPolicy;
+import com.nextgis.mobile.location.BackgroundLocationService;
+import com.nextgis.mobile.fragment.MapFragment;
+import com.nextgis.mobile.stakeout.SharedStakeoutSession;
 import com.nextgis.mobile.util.AppSettingsConstants;
 import org.junit.After;
 import org.junit.Before;
@@ -41,6 +49,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.*;
 
 /** Real service/Activity lifecycle on an isolated emulator; no track, server or physical device. */
@@ -96,6 +106,151 @@ public class BackgroundGpsNativeTest {
         assertEquals(before[0], counts()[0]);
         assertEquals(before[1], counts()[1]);
         InstrumentationRegistry.getInstrumentation().getUiAutomation().executeShellCommand("input keyevent 4").close();
+    }
+
+    @Test public void notificationMuteKeepsVisibleGpsAndSurvivesNavigationAndRecreation() throws Exception {
+        long stops = counts()[1];
+        sendAction(disableAction());
+        await(() -> !running());
+        assertTrue(prefs.getBoolean(BackgroundLocationPolicy.PREFERENCE, false));
+        assertEquals(stops, counts()[1]);
+        String session = userSessionId();
+        scenario.recreate();
+        scenario.onActivity(activity -> monitoredActivity = activity);
+        assertEquals(session, userSessionId());
+        assertFalse(backgroundWanted(session));
+        scenario.onActivity(activity -> activity.startActivity(new Intent(activity, SettingsActivity.class)));
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+        assertFalse(running());
+        InstrumentationRegistry.getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_BACK);
+        await(() -> activityStage() == Stage.RESUMED);
+        assertTrue(app.getGpsEventSource().getRecordingDiagnostics().contains("wakeLock=true"));
+        InstrumentationRegistry.getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_HOME);
+        await(() -> activityStage() == Stage.STOPPED);
+        await(() -> app.getGpsEventSource().getRecordingDiagnostics().contains("wakeLock=false"));
+        assertTrue(counts()[1] > stops);
+        assertFalse(running());
+    }
+
+    @Test public void notificationMuteWorksWithScreenOffWithoutOpeningAnActivity() throws Exception {
+        PendingIntent action = disableAction();
+        PowerManager power = app.getSystemService(PowerManager.class);
+        try {
+            InstrumentationRegistry.getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_HOME);
+            await(() -> activityStage() == Stage.STOPPED);
+            InstrumentationRegistry.getInstrumentation().getUiAutomation().executeShellCommand("input keyevent 223").close();
+            await(() -> !power.isInteractive());
+            sendAction(action);
+            await(() -> !running());
+            await(() -> app.getGpsEventSource().getRecordingDiagnostics().contains("wakeLock=false"));
+            assertFalse(power.isInteractive());
+            assertEquals(Stage.STOPPED, activityStage());
+            assertTrue(prefs.getBoolean(BackgroundLocationPolicy.PREFERENCE, false));
+        } finally {
+            InstrumentationRegistry.getInstrumentation().getUiAutomation().executeShellCommand("input keyevent 224").close();
+            InstrumentationRegistry.getInstrumentation().getUiAutomation().executeShellCommand("wm dismiss-keyguard").close();
+            await(power::isInteractive);
+        }
+    }
+
+    @Test public void oldNotificationAndOldTaskRemovalCannotDisableTheNewUserSession() throws Exception {
+        addRecorder(); // Keep the same application process through task removal.
+        PendingIntent oldAction = disableAction();
+        String old = userSessionId();
+        sendAction(oldAction);
+        await(() -> !running());
+        removeRecentTask();
+        scenario.close();
+        launchMainActivity();
+        await(this::running);
+        String current = userSessionId();
+        assertNotEquals(old, current);
+        sendAction(oldAction);
+        assertTrue(backgroundWanted(current));
+        assertTrue(running());
+        InstrumentationRegistry.getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_HOME);
+        await(() -> activityStage() == Stage.STOPPED);
+        InstrumentationRegistry.getInstrumentation().runOnMainSync(app::closeAutomaticLocationIfTaskRemoved);
+        assertTrue("The new real task still exists", backgroundWanted(current));
+        assertTrue(running());
+    }
+
+    @Test public void cancelledPendingForegroundStartDoesNotAcquireAnAutomaticBackgroundOwner() throws Exception {
+        String session = userSessionId();
+        scenario.onActivity(activity -> {
+            BackgroundLocationService.stop(app);
+            BackgroundLocationService.start(app, session);
+            app.disableAutomaticBackgroundLocation(session);
+        });
+        await(() -> !running());
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+        assertFalse(backgroundWanted(session));
+        InstrumentationRegistry.getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_HOME);
+        await(() -> activityStage() == Stage.STOPPED);
+        await(() -> app.getGpsEventSource().getRecordingDiagnostics().contains("wakeLock=false"));
+    }
+
+    @Test public void notificationMuteAndSwipeKeepTheActualTrackServiceRecording() throws Exception {
+        assertFalse(TrackerService.hasRecordingSession(app));
+        try {
+            scenario.onActivity(activity -> TrackerService.start_stop_tracking_GetIconWithTitle(activity));
+            await(TrackerService::isTrackRecordingActive);
+            long stops = counts()[1];
+            sendAction(disableAction());
+            await(() -> !running());
+            removeRecentTask();
+            assertEquals(stops, counts()[1]);
+            assertTrue(TrackerService.isTrackRecordingActive());
+            assertTrue(TrackerService.hasRecordingSession(app));
+            assertTrue(app.getGpsEventSource().getRecordingDiagnostics().contains("wakeLock=true"));
+        } finally {
+            if (TrackerService.hasRecordingSession(app)) {
+                InstrumentationRegistry.getInstrumentation().runOnMainSync(() ->
+                        TrackerService.start_stop_tracking_GetIconWithTitle(app));
+                await(() -> !TrackerService.hasRecordingSession(app));
+            }
+        }
+    }
+
+    @Test public void retainedStakeoutSurvivesNotificationMuteRotationSwipeAndReattachesItsStopControl() throws Exception {
+        try {
+            scenario.onActivity(activity -> {
+                try {
+                    MapFragment map = activity.getMapFragment();
+                    Field field = MapFragment.class.getDeclaredField("mStakeoutController");
+                    field.setAccessible(true);
+                    SharedStakeoutSession.UiHandle handle = (SharedStakeoutSession.UiHandle) field.get(map);
+                    GeoPoint target = new GeoPoint(0, 0);
+                    target.setCRS(GeoConstants.CRS_WEB_MERCATOR);
+                    handle.start(target, false, true);
+                    map.setNewMode(MapFragment.MODE_STAKEOUT);
+                } catch (ReflectiveOperationException error) { throw new AssertionError(error); }
+            });
+            await(() -> notification(18_405) != null);
+            long[] before = counts();
+            sendAction(disableAction());
+            await(() -> !running());
+            scenario.recreate();
+            scenario.onActivity(activity -> monitoredActivity = activity);
+            assertTrue(app.getStakeoutSession().isActive());
+            assertNotNull(notification(18_405));
+            removeRecentTask();
+            assertTrue(app.getStakeoutSession().isActive());
+            assertNotNull(notification(18_405));
+            assertEquals(before[1], counts()[1]);
+            scenario.close();
+            launchMainActivity();
+            await(this::running);
+            scenario.onActivity(activity -> {
+                assertEquals(View.VISIBLE, activity.findViewById(com.nextgis.mobile.R.id.stakeout_panel).getVisibility());
+                assertNotNull(activity.getMapFragment().getMFinishListener());
+                activity.getMapFragment().getMFinishListener().onClick(null);
+            });
+            await(() -> !app.getStakeoutSession().isActive());
+            await(() -> notification(18_405) == null);
+        } finally {
+            InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> app.getStakeoutSession().stop());
+        }
     }
 
     @Test public void screenOffKeepsSameGpsSubscriptionAndNotification() throws Exception {
@@ -241,6 +396,14 @@ public class BackgroundGpsNativeTest {
     }
 
     @Test public void removingRecentTaskKeepsTheActualWalkServiceRecording() throws Exception {
+        assertWalkSurvivesClosing(false);
+    }
+
+    @Test public void notificationMuteAndSwipeKeepTheActualWalkServiceRecording() throws Exception {
+        assertWalkSurvivesClosing(true);
+    }
+
+    private void assertWalkSurvivesClosing(boolean muteBackground) throws Exception {
         await(() -> !SharedUnderlayProjects.isMigrationPending() && !ProjectOperationCoordinator.isBusy());
         assertNull(WalkSessionStore.load(app));
         String[] session = {null};
@@ -263,8 +426,14 @@ public class BackgroundGpsNativeTest {
                 androidx.core.content.ContextCompat.startForegroundService(activity, start);
             });
             await(() -> WalkEditService.isSessionRunning(session[0]));
+            long stops = counts()[1];
+            if (muteBackground) {
+                sendAction(disableAction());
+                await(() -> !running());
+            }
             removeRecentTask();
             await(() -> !running());
+            assertEquals(stops, counts()[1]);
             assertTrue(WalkEditService.isSessionRunning(session[0]));
             assertNotNull(WalkSessionStore.load(app));
             assertFalse(WalkSessionStore.load(app).gpsPaused);
@@ -330,9 +499,52 @@ public class BackgroundGpsNativeTest {
     }
 
     private boolean running() {
+        return notification(18_406) != null;
+    }
+
+    private Notification notification(int id) {
         for (android.service.notification.StatusBarNotification n : app.getSystemService(NotificationManager.class).getActiveNotifications())
-            if (n.getId() == 18_406) return true;
-        return false;
+            if (n.getId() == id) return n.getNotification();
+        return null;
+    }
+
+    private PendingIntent disableAction() {
+        Notification value = notification(18_406);
+        assertNotNull(value);
+        assertNotNull(value.actions);
+        assertEquals(1, value.actions.length);
+        assertEquals(app.getString(com.nextgis.mobile.R.string.background_gps_disable), value.actions[0].title.toString());
+        return value.actions[0].actionIntent;
+    }
+
+    private void sendAction(PendingIntent action) throws Exception {
+        CountDownLatch delivered = new CountDownLatch(1);
+        action.send(app, 0, null, (pending, intent, code, data, extras) -> delivered.countDown(),
+                new Handler(Looper.getMainLooper()));
+        assertTrue("Notification broadcast completed", delivered.await(10, TimeUnit.SECONDS));
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+    }
+
+    private String userSessionId() {
+        String[] value = {null};
+        InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
+            try {
+                Field owner = MainApplication.class.getDeclaredField("backgroundLocationController");
+                owner.setAccessible(true);
+                Object controller = owner.get(app);
+                Field policy = controller.getClass().getDeclaredField("policy");
+                policy.setAccessible(true);
+                value[0] = ((BackgroundLocationPolicy) policy.get(controller)).getSessionId();
+            } catch (ReflectiveOperationException error) { throw new AssertionError(error); }
+        });
+        return value[0];
+    }
+
+    private boolean backgroundWanted(String session) {
+        boolean[] value = {false};
+        InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> value[0] =
+                app.isAutomaticBackgroundLocationWanted(session));
+        return value[0];
     }
     private long[] counts() {
         long[] result = new long[2];

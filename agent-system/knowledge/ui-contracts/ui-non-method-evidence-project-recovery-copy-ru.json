@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-non-method-evidence-project-recovery-copy-ru",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "non_method_evidence"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": [
+        "root",
+        "app/src/main/res/values-ru/project_recovery.xml"
+      ]
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "repository": "root",
+        "path": "app/src/main/res/values-ru/project_recovery.xml",
+        "purpose": "Russian saved-project/unfinished-form distinction, identity/space errors, separate copy, export and no automatic delivery.",
+        "contract_ids": [
+          "UI-PROJECT-RECOVERY"
+        ],
+        "sha256": "99104b6b35a8fbaa03ad85c4379ecc8f1e5ba001667023cc81e950c98fe0b0ff"
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-non-method-evidence-project-recovery-copy-ru"
+    ]
+  }
+}

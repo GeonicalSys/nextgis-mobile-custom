@@ -17,23 +17,44 @@
   },
   "lifecycle": {
     "goal": "open",
-    "implementation": "planned",
-    "source_verification": "UNKNOWN",
-    "merge": "unknown",
-    "runtime_verification": "UNKNOWN",
-    "release": "unknown",
-    "retention": "Retain simple project selection and the separate detail route."
+    "implementation": "implemented",
+    "source_verification": "PASS",
+    "merge": "open",
+    "runtime_verification": "PASS",
+    "release": "unpublished",
+    "retention": "Локальная реализация, 38 адресных JVM-проверок и 21 адресный native-сценарий эмулятора сохранены с exact APK/hash receipt. Full/телефон, merge и выпуск — отдельные стадии."
   },
   "facets": {
     "lifecycle-review": {
       "role": "reviewed_lifecycle_scope_and_evidence",
       "value": {
-        "goal": "The proposal makes the fate of individual edits and attachments observable.",
-        "implementation": "Use existing queue and recovery states. Keep saved, waiting, needs reconciliation, server confirmed and any future peer stage distinct.",
-        "source_verification": "Check partial completion, targeted retry and operation identity independently of project list counts.",
-        "merge": "The proposed center needs separate UI and queue delivery evidence.",
-        "runtime_verification": "Verify that a field user can locate and retry one pending edit without resaving the form.",
-        "release": "Release scope follows the approved center and its actual queue acceptance."
+        "prior_basis_review": {
+          "goal": "The proposal makes the fate of individual edits and attachments observable.",
+          "implementation": "Use existing queue and recovery states. Keep saved, waiting, needs reconciliation, server confirmed and any future peer stage distinct.",
+          "source_verification": "Check partial completion, targeted retry and operation identity independently of project list counts.",
+          "merge": "The proposed center needs separate UI and queue delivery evidence.",
+          "runtime_verification": "Verify that a field user can locate and retry one pending edit without resaving the form.",
+          "release": "Release scope follows the approved center and its actual queue acceptance."
+        },
+        "current_local_checkpoint": {
+          "date": "2026-11-14",
+          "task": "android-20261114-reliability-contracts-and-version",
+          "source": "Local owned session; REL-01/REL-02/UX-02 implemented. Production build and Publisher controls implemented; signed positive admission awaits the approved diagnostics.properties.",
+          "verification": "Native-10: 21/21 selected native cases PASS, emulator cleanup PASS. Includes actual centre/recovery screens, lost/invalid responses, real process restart, complete recovered form and single-copy delivery. Targeted JVM 38/38 PASS; App/native compile PASS.",
+          "limits": [
+            "Full and physical devices NOT_RUN by current owner scope.",
+            "Production signed Lisa/Belka positive checks NOT_RUN; approved diagnostics.properties unavailable.",
+            "No live server change, publication, merge, push or release acceptance.",
+            "Cross-device missing sibling outcomes require manual server review; no backend exactly-once claim."
+          ],
+          "native_receipt": {
+            "path": "native-10/result.json",
+            "tested_source_fingerprint": "aa1c8f2d8c449f42bafb1343e50654367631be62cfce865faa2ae1742d5f83b9",
+            "app_sha256": "5c5682739ff79ffdb99075727ee9b5201a8b10a27654a0001d26cca824a1f851",
+            "test_sha256": "dc8fd01caddb32338128cdc1891e71de214ce44dc7e8c2be2f86f3189c5da13e",
+            "scope": "related emulator only; not Full/physical/production admission"
+          }
+        }
       }
     },
     "view-path": {
@@ -45,11 +66,13 @@
       "value": [
         "## UX-02 Центр изменений и синхронизации",
         "",
-        "Приоритет P1. Состояние: Предложена. Использует существующие очередь и статусы.",
+        "Приоритет P1. Состояние: экран локально реализован, адресные эмуляторные проверки пройдены. Открывается отдельно из меню и настроек проекта; список выбора проекта остаётся простым. Использует очередь и достоверные подтверждения REL-01, сверку восстановленных копий REL-02.",
         "",
-        "Показать не только число слоёв с правками, а сами ожидающие объекты/вложения: «сохранено на устройстве», «ожидает отправки», «нужна сверка», «подтверждено сервером». Для сбоя — причина и одна подходящая команда. В P2P добавить отдельный этап доставки через другое устройство.",
+        "Показаны конкретные объекты и вложения, их имена, причина задержки, серверный ID и состояния: «сохранено на устройстве», «ожидает отправки», «отправляется», «нужна сверка», «подтверждено сервером», ошибка чтения и отсутствие исходных данных. Для каждой строки доступна подходящая команда: отправить, сверить, завершить локальную фиксацию, продолжить форму или открыть восстановление. Подтверждение отдельной операции не выдаётся за полную синхронизацию.",
         "",
-        "Приёмка: пользователь может найти конкретную неотправленную правку, понять её судьбу и безопасно повторить. Частичная синхронизация не выглядит полным успехом; повтор не требует заново открывать и пересохранять форму. Простой список выбора проекта остаётся простым — подробности открываются отдельно.",
+        "Просмотр страниц читает базу без переключения карты и фоновой миграции. Команды повторно проверяют зарегистрированный проект, слой и неизменяемую identity операции. Повтор создания требует отдельного предупреждения и подтверждения отсутствия копии на сервере. Выбор восстановленной копии для отправки приостанавливает обмен связанных исходников с сохранением их данных; это явно показано в подтверждении и статусе.",
+        "",
+        "Проверки: Native-07 — реальный экран, статусы, отправка без пересохранения формы, сверка потерянного ответа и пооперационный допуск восстановленного проекта. Native-10 прошёл все 21 сценарий, включая подтверждение исходника после создания архива и отсутствие второго POST после сверки. Запись трека, обход и вынос не прерываются; изменяющие проект команды ожидают окончания активного режима. P2P в этот этап не входит. Full, физические устройства, merge и выпуск ещё не выполнены.",
         ""
       ]
     },

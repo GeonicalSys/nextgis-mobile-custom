@@ -37,6 +37,29 @@
         "id": "WF-FORM-DRAFT-STORE",
         "repository": "maplibui",
         "path": "src/main/java/com/nextgis/maplibui/util/FeatureFormDraftStore.java",
+        "marker": "public static synchronized boolean save(Context context, Snapshot snapshot)",
+        "requires": [
+          "!snapshot.isValid()",
+          "snapshot.updatedAtMs = System.currentTimeMillis()",
+          ".putString(KEY_STATE, encode(snapshot).toString()) .commit()",
+          "return committed",
+          "DraftQuarantineStore.preserve(context, existing, \"invalid_before_replace\")",
+          "DraftQuarantineStore.preserve(context, existing, \"replaced_operation\")"
+        ],
+        "forbids": [],
+        "sha256": "0dd3b9d77b6298a482ea912ce36c10097525ad4c2e29e1347d9e89e805b59029"
+      }
+    },
+    "review-20261114": {
+      "role": "semantic_review_and_preserved_consumers",
+      "value": "Validity, commit result and callers preserved. Synchronized save preserves unreadable/replaced bytes first; failed quarantine retains the source."
+    },
+    "prior-reviewed-method": {
+      "role": "retained_previous_review_definition",
+      "value": {
+        "id": "WF-FORM-DRAFT-STORE",
+        "repository": "maplibui",
+        "path": "src/main/java/com/nextgis/maplibui/util/FeatureFormDraftStore.java",
         "marker": "public static boolean save(Context context, Snapshot snapshot)",
         "requires": [
           "!snapshot.isValid()",
