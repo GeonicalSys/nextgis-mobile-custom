@@ -74,7 +74,8 @@
             "maplibre-renderer-backend",
             "historical-process-exit",
             "stakeout-guidance",
-            "private-resource-profiler"
+            "private-resource-profiler",
+            "ngw-sync-resource-budget"
           ]
         }
       ]
@@ -258,6 +259,11 @@
     {
       "type": "contains",
       "target": "lisa:mobile:contract:dependencies-runtime-contracts-private-resource-profiler",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:dependencies-runtime-contracts-ngw-sync-resource-budget",
       "status": "source_backed"
     }
   ],

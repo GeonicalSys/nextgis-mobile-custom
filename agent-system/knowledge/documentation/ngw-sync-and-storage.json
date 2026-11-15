@@ -571,6 +571,11 @@
       "type": "contains",
       "target": "lisa:mobile:evidence:ngw-sync-and-storage-full-clock-source-verification-and-replay",
       "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:ngw-sync-and-storage-rel03-resource-budgets",
+      "status": "source_backed"
     }
   ],
   "provenance": {

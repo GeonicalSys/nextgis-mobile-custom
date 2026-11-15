@@ -1058,6 +1058,11 @@
     },
     {
       "type": "contains",
+      "target": "lisa:mobile:contract:app-module-key-components-rel03resourcesafetytest",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
       "target": "lisa:mobile:contract:app-module-public-contracts-render-resource-economy-host",
       "status": "source_backed"
     },

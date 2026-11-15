@@ -41,7 +41,7 @@
         "Триггеры backup:",
         "",
         "- remote sync delete/overwrite атрибутов или геометрии",
-        "  (`NGWVectorLayer.getChangesFromServer` → selective feature ZIP);",
+        "  (`NGWVectorLayer.getChangesFromServer` → selective feature ZIP до 512 ID; более крупный план использует прежний full-layer backup gate);",
         "- schema rebuild / Collector layer removal (полный ZIP слоя, если остались",
         "  несинхронизированные правки или удаление из проекта);",
         "- ручное удаление editable слоя из списка слоёв;",

@@ -419,6 +419,11 @@
       "type": "contains",
       "target": "lisa:mobile:resource:crash-recovery-sync-journal-process-and-restart-boundary",
       "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:crash-recovery-rel03-ordered-walk-checkpoints",
+      "status": "source_backed"
     }
   ],
   "provenance": {

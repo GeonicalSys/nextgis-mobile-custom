@@ -32,7 +32,7 @@
     "body": {
       "role": "markdown_body_lines",
       "value": [
-        "| Finish | The disk button confirms finishing and opening attributes. A matching command changes RECORDING to FINISHING; the service flushes its validated tail, persists full geometry and acknowledges FINISHED before the UI hands geometry to the editor and automatically opens its attribute form. No new point can begin during this transition |"
+        "| Finish | The disk button confirms finishing and opening attributes. A matching command changes RECORDING to FINISHING; the service queues a worker barrier after all admitted edits, persists full geometry with its sequence and acknowledges FINISHED only after that barrier succeeds before the UI hands geometry to the editor and automatically opens its attribute form. No new point can begin during this transition |"
       ]
     }
   },

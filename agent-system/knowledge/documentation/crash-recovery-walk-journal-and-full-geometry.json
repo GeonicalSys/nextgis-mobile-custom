@@ -32,7 +32,7 @@
     "body": {
       "role": "markdown_body_lines",
       "value": [
-        "| Durable owner | `WalkSessionStore` in `walkedit_temp` stores session UUID, active map path, complete WKT, target member/ring/insertion, revision, phase and GPS pause state alongside legacy part-only keys |",
+        "| Durable owner | `WalkSessionStore` in `walkedit_temp` stores session UUID, active map path, complete WKT, target member/ring/insertion, revision, phase and GPS pause state alongside legacy part-only keys. Short owner-scoped coordinate edits in `.walk-checkpoints/<sha256 owner>/` are atomically written and fsynced before durable admission; checkpoint sequence plus complete WKT acknowledge the same ordered prefix |",
         "| Geometry | `WalkGeometrySnapshot` changes only the selected part of a private copy, retaining other members and holes; WKT restoration removes the selected ring's synthetic closing duplicate, including a one-node ring |"
       ]
     }

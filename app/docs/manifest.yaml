@@ -700,6 +700,9 @@ key_components:
 - path: app/src/test/java/com/nextgis/maplibui/view/TrackSelectionPanelTest.java
   responsibility: Actual TrackSelectionPanel native-CPU-font widget layout, adaptive column/view-order/listener controls;
     no map/GPU/device/whole-stack acceptance.
+- path: app/src/androidTest/java/com/nextgis/mobile/reliability/Rel03ResourceSafetyTest.java
+  responsibility: Isolated emulator-only synthetic walk journal/Finish/owner tests; seed/replay stages retain evidence across
+    actual process death, reboot and GPS permission loss under the existing guarded Related driver.
 public_contracts:
 - id: render-resource-economy-host
   symbol: MapFragment.onRenderMemoryWarningChanged and showRenderMemoryStatus

@@ -34,7 +34,7 @@
       "value": [
         "Полный untracked snapshot не материализуется целиком в Java heap. HTTP body",
         "пишется во временный app-owned JSON рядом со слоем, первым потоковым проходом",
-        "собираются только remote IDs и план backup/delete, вторым — по одному feature",
+        "на диске строятся remote IDs и план backup/delete, вторым — по одному feature",
         "применяется одна SQLite-транзакция. После commit выполняются одна cache rebuild",
         "и один отложенный MapLibre reload. Объект с отсутствующей или невалидной",
         "геометрией не прерывает слой: его remote ID остаётся в snapshot identity, чтобы",

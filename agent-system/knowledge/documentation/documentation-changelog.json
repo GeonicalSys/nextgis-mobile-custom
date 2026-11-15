@@ -99,6 +99,11 @@
     },
     {
       "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-15-rel03-resource-safety",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
       "target": "lisa:mobile:evidence:documentation-changelog-2026-11-15-roadmap-status-audit",
       "status": "source_backed"
     },

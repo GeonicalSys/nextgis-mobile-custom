@@ -82,16 +82,6 @@
     },
     {
       "type": "contains",
-      "target": "lisa:mobile:resource:mobile-roadmap-data-safety-heading",
-      "status": "source_backed"
-    },
-    {
-      "type": "contains",
-      "target": "lisa:mobile:task:mobile-roadmap-interruption-and-resource-exhaustion",
-      "status": "source_backed"
-    },
-    {
-      "type": "contains",
       "target": "lisa:mobile:resource:mobile-roadmap-performance-measurement-heading",
       "status": "source_backed"
     },
@@ -233,6 +223,16 @@
     {
       "type": "contains",
       "target": "lisa:mobile:resource:mobile-roadmap-started-work-heading",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:mobile-roadmap-data-safety-heading",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-interruption-and-resource-exhaustion",
       "status": "source_backed"
     },
     {
