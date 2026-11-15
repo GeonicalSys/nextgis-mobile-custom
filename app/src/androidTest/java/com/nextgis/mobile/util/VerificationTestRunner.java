@@ -10,6 +10,12 @@ public final class VerificationTestRunner extends AndroidJUnitRunner {
     @Override public void onCreate(Bundle arguments) {
         VerificationTestApplication.phoneOptIn = "true".equals(arguments.getString("verificationPhone"));
         VerificationTestApplication.memoryNoticeUnderTest = arguments.getString("class", "").contains("RenderMemorySafetyTest");
+        String selected = arguments.getString("class", "");
+        String coldRecovery = "com.nextgis.mobile.reliability.ProjectRecoveryColdSyncTest";
+        if (selected.equals(coldRecovery) || selected.startsWith(coldRecovery + "#")) {
+            com.nextgis.mobile.reliability.ProjectRecoveryColdSyncTest
+                    .captureBeforeApplicationCreate(getTargetContext());
+        }
         super.onCreate(arguments);
     }
 

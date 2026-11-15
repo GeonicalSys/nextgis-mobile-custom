@@ -62,6 +62,11 @@
   "relations": [
     {
       "type": "contains",
+      "target": "lisa:mobile:evidence:official-differences-cold-recovery-verification-20261114",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
       "target": "lisa:mobile:resource:official-differences-emulator-software-angle",
       "status": "source_backed"
     },

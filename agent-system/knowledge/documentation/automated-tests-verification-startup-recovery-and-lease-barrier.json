@@ -38,6 +38,21 @@
         "поэтому recovery не удаляет synthetic project/account pairs, создаваемые тестом.",
         "Общий лимит ожидания — 30 секунд; ошибка не превращается в skip. Startup workers",
         "продолжают выполняться, production Application и рабочие данные не меняются.",
+        "",
+        "Адресная область `recovery-cold-sync` запускает ProjectRecoveryColdSyncTest",
+        "по одному методу в свежем процессе отдельного verification APK. Только при",
+        "выборе этого класса runner снимает probe до Application.onCreate: активной",
+        "модели ещё нет, прежний MapBase.getInstance действительно недоступен, а",
+        "ProjectRecoveryGuard читает detached layer без исключения и создания карты.",
+        "Остальные сценарии ждут прежний startup barrier и не открывают Activity.",
+        "Проверяются реальные SQLite/архив/очередь, parent и thread-scope isolation,",
+        "запрет pull/push удержанной копии, один отправитель после review и read-only",
+        "сверка позднего ACK исходника. Endpoint только 127.0.0.1; проекты, аккаунт,",
+        "фото и form sidecar синтетические. Закрываются свои jobs/workspace/account,",
+        "реестр восстанавливается. Системные radio/font/display настройки не меняются.",
+        "Область включена в phone Full и Related stationary routing; прежние",
+        "emulator-only fixtures и их admission assertions сохранены. Это адресная",
+        "приёмка механизма, не Full, живой NGW или выпуск.",
         ""
       ]
     }

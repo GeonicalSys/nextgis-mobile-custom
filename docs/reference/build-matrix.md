@@ -92,6 +92,13 @@ branch, включая первый push новой ветки. Push в default 
 обычными генераторами и упорядоченными записями. После регенерации
 обнови квитанцию командой `python -B docs/scripts/structured_view_proof.py --write`.
 
+Проверка REL-02 от 14.11.2026 обновляет responsibility verification runner
+в App manifest и его structured proof. Рецепт fieldVerification APK,
+версии, identities и submodule pins сохранены. Область recovery-cold-sync
+добавлена в stationary Related и phone Full; планшетные адресные результаты
+не заменяют Full или publication receipt. Описание и границы — в
+[протоколе автотестов](../runbooks/automated-tests.md).
+
 Для пакетов библиотек с производным манифестом валидатор сверяет обязательные
 README, YAML и квитанцию с записями владельца. У maplib к обязательным адресам
 относятся и оба руководства SQLite. При объявленном адресе

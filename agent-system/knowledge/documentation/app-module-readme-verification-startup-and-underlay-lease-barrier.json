@@ -36,6 +36,12 @@
         "pending стартовой миграции подложек и активных workspace operations, до 30 секунд.",
         "Общий VerificationTestRunner также ждёт marker за отложенными startup callbacks,",
         "чтобы штатное восстановление журнала завершилось до создания synthetic очередей.",
+        "Только выбранный ProjectRecoveryColdSyncTest дополнительно снимает probe",
+        "ProjectRecoveryGuard до Application.onCreate и создания первой модели карты.",
+        "Область recovery-cold-sync проверяет фоновые SQLite/restore/delivery пути",
+        "без открытия Activity, на loopback и собственных данных verification APK.",
+        "Класс изолирован по методам и включён в stationary Related и phone Full;",
+        "старые emulator-only сценарии и системные настройки устройства не меняются.",
         ""
       ]
     }

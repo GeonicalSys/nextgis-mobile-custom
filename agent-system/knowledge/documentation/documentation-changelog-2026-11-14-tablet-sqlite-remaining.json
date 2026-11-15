@@ -1,0 +1,51 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-11-14-tablet-sqlite-remaining",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated source wording and independent verification limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-11-14 — завершены четыре оставшихся SQLite-проверки на планшете",
+        "",
+        "Дождались освобождения общей сессии и проверили ровно четыре оставшихся случая из уже разрешённой stationary-области sqlite-render. Свежая изолированная APK-пара; T40 Plus_ROW / Android 11 API 30; все 4 PASS, 0 failures/skips. Продуктовый код и ожидания не менялись. С шестью ранее пройденными случаями покрыт зарегистрированный набор SQLite из 10 сценариев, всего за сверку 62 различных native-сценария. Завершённая четвёрка убрана из остатка активной карты, полные результаты добавлены в историю.",
+        "",
+        "Обе прежние неуспешные попытки сохранены. UID-logcat collector на T40 по-прежнему имеет отдельный diagnostic_failure из-за неподдерживаемого --uid; это не скрыто и не выдано за общий зелёный Full. Только планшет: смартфонная, полная, живая и выпускная приёмка остаются открытыми.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-11-14-tablet-sqlite-remaining"
+    ]
+  }
+}

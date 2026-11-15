@@ -1,6 +1,7 @@
 {
   "schema_version": 1,
   "isolated_methods": [
+    "com.nextgis.mobile.reliability.ProjectRecoveryColdSyncTest",
     "com.nextgis.mobile.util.DiagnosticArtifactsNativeTest",
     "com.nextgis.mobile.reliability.ChangesCentreNativeTest",
     "com.nextgis.mobile.rendering.NativeSqliteVectorRenderingTest",
@@ -21,6 +22,7 @@
     "com.nextgis.mobile.reliability.ProjectRecoveryNativeTest"
   ],
   "phone": [
+    "com.nextgis.mobile.reliability.ProjectRecoveryColdSyncTest",
     "com.nextgis.mobile.rendering.NativeSqliteVectorRenderingTest",
     "com.nextgis.mobile.rendering.RenderMemorySafetyTest",
     "com.nextgis.mobile.rendering.MapRenderStressTest",
@@ -88,6 +90,7 @@
     "com.nextgis.mobile.util.DiagnosticsDeliveryTest"
   ],
   "related_phone_areas": {
+    "recovery-cold-sync": ["com.nextgis.mobile.reliability.ProjectRecoveryColdSyncTest"],
     "offline-tiles": ["com.nextgis.mobile.rendering.DirectVectorTilesOfflineTest"],
     "orbit-structure": ["com.nextgis.mobile.rendering.LocationOrbitTest#orbitUsesCompassThenCourseWithACenteredAnchorAndConfigurableSector"],
     "sqlite-marker": ["com.nextgis.mobile.rendering.NativeSqliteVectorRenderingTest#sqliteMultiPointRulesRetainBothPartsAndTheCustomMarker"],
@@ -120,6 +123,7 @@
     "underlay-migration": ["com.nextgis.mobile.util.LegacyUnderlayProgressNativeTest"]
   },
   "areas": {
+    "recovery-cold-sync": ["com.nextgis.mobile.reliability.ProjectRecoveryColdSyncTest"],
     "project-recovery": ["com.nextgis.mobile.reliability.ProjectRecoveryNativeTest"],
     "changes-centre": ["com.nextgis.mobile.reliability.ChangesCentreNativeTest"],
     "diagnostic-artifacts": ["com.nextgis.mobile.util.DiagnosticArtifactsNativeTest"],
