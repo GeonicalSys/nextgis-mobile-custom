@@ -1,0 +1,51 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-11-14-previous-work-closeout",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Preserve the dated source wording and independent verification limits."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-11-14 — завершение предыдущих мобильных доработок",
+        "",
+        "По поручению владельца перед REL-03 приоритет отдан незавершённой приёмке предыдущего пакета. Подтверждено слияние App #98 и библиотечных pins; завершённые планы и результаты REL-01, REL-02, MOB-REL-03, UX-02, GEO-02, UX-06 и REL-04 сохранены дословно в истории. Активные карточки сокращены до конкретных оставшихся проверок; приоритеты, ID, исходные ограничения и отложенная FORM-01 сохранены. Полная, физическая, живая и выпускная приёмка не объявляются пройденными по факту merge.",
+        "",
+        "Проверены текущие исходники: 1475 JVM и 244 проверки инструментария PASS; на T40 подтверждены 58 разных native-сценариев. Две попытки SQLite остановились до старта следующего теста и сохранены как FAIL. Повторное использование старой native-квитанции не принято из-за содержательного отличия ProjectRecoveryGuard. Full, USB-смартфон, ресурсный допуск эмулятора, живой приём и публикация остаются открытыми.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-11-14-previous-work-closeout"
+    ]
+  }
+}

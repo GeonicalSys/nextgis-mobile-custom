@@ -41,7 +41,7 @@
       "value": [
         "title: История документационной системы",
         "type: changelog",
-        "last_verified: 2026-11-13",
+        "last_verified: 2026-11-14",
         "related_code:",
         "  - docs"
       ]
@@ -94,12 +94,22 @@
   "relations": [
     {
       "type": "contains",
-      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-13-mobile-roadmap-review",
+      "target": "lisa:mobile:resource:documentation-changelog-authoring",
       "status": "source_backed"
     },
     {
       "type": "contains",
-      "target": "lisa:mobile:resource:documentation-changelog-authoring",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-14-tablet-sqlite-remaining",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-14-previous-work-closeout",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-13-mobile-roadmap-review",
       "status": "source_backed"
     },
     {

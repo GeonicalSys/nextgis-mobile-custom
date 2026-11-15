@@ -13,6 +13,22 @@ related_code:
 
 # Отличия от официального NextGIS Mobile
 
+## Фоновое восстановление до открытия карты — 2026-11-14
+
+Fork-only stationary область recovery-cold-sync добавляет пять native-сценариев:
+ранний guard до Application.onCreate/первой модели, parent/thread-scope isolation,
+удержанная копия без pull/push, один отправитель и сверка позднего ACK.
+Runner снимает ранний probe только для явно выбранного нового класса; остальные
+fixtures сохраняют startup barrier и прежний emulator-only admission.
+На T40 Plus Android11 пройдены пять сценариев и два существующих controls
+SQLite-marker/memory-dialog: recovery-cold-native-03/result.json, 7/7 PASS.
+
+Все account/project/SQLite/archive/photo/form sidecar данные синтетические,
+HTTP только loopback, без открытия Activity и смены системных radio/font/display.
+Production поведение, форматы, submodule pins и upstream этим шагом не меняются.
+Это адресная приёмка текущего guard, без заявления Full, live NGW или выпуска.
+Маршрут и границы — [автотесты](../runbooks/automated-tests.md).
+
 ## Программная графика эмулятора и реальные касания — 2026-11-11
 
 MOB-03 добавляет developer profile WHPX/system GuestAngle/CPU Lavapipe, проверку
