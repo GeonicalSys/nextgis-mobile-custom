@@ -25,7 +25,7 @@
     "goal": "not_applicable",
     "implementation": "implemented",
     "source_verification": "PASS",
-    "merge": "open",
+    "merge": "merged",
     "runtime_verification": "PASS",
     "release": "unpublished",
     "retention": "Keep the module component and scoped verification evidence."

@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:contract:app-module-key-components-perf01mapbenchmarktest",
+  "kind": "contract",
+  "owner": "android_projects/android_gisapp",
+  "topic": "app-module-manifest",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/androidTest/java/com/nextgis/mobile/rendering/Perf01MapBenchmarkTest.java"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "implemented",
+    "source_verification": "PASS",
+    "merge": "open",
+    "runtime_verification": "PASS",
+    "release": "not_applicable",
+    "retention": "Keep the module component and scoped verification evidence."
+  },
+  "facets": {
+    "manifest-field": {
+      "role": "module_manifest_section",
+      "value": "key_components"
+    },
+    "definition": {
+      "role": "module_manifest_ordered_value",
+      "value": {
+        "path": "app/src/androidTest/java/com/nextgis/mobile/rendering/Perf01MapBenchmarkTest.java",
+        "responsibility": "Strict isolated emulator-only technical480/6480 polygon fixtures, validated native frame/identity/label coverage, fresh-process and same-live-provider timings with bounded memory evidence; default smoke and guarded host repetition, no phone/energy/full acceptance."
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/app-module-manifest.json",
+    "scopes": [
+      "lisa:mobile:contract:app-module-key-components-perf01mapbenchmarktest"
+    ]
+  }
+}

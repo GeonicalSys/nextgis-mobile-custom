@@ -1,7 +1,7 @@
 ---
 title: Автоматические проверки на смартфоне и эмуляторе
 type: runbook
-last_verified: 2026-11-11
+last_verified: 2026-11-16
 related_code:
   - tools/verify-mobile-tests.ps1
   - tools/run_mobile_tests.py
@@ -16,6 +16,18 @@ related_code:
 ---
 
 # Автоматические проверки
+
+## PERF-01: адресные замеры технических карт
+
+Related area `perf01-map-baseline` содержит только Perf01MapBenchmarkTest. Два emulator-only метода по умолчанию выполняют самодостаточный smoke с удалением собственных fixtures. В phone catalogue они не включены. Исходные selectors, phone areas, изоляция, startup/APK/source checks, ANGLE/WHPX/RAM/Job и штатная очистка сохранены.
+
+Для короткого прогона: `py -3.13 -B tools/perf01_emulator_benchmark.py --samples 1 --output Q:/Codex/Scratch/<task>/evidence/perf01-smoke`. Для baseline заменить1 на20 и выбрать новый каталог. Скрипт запускает только новую Related area, seed и новые процессы для первой сцены, двадцать возвратов в одном процессе для второй. Это44 native attempts и80 измерений при20 повторениях; два различных JUnit cases.
+
+После завершения native чтения хешей выполняется штатная очистка двух собственных слоёв; перед следующим seed очищаются только данные отдельного verification APK. Host сохраняет четыре синтетических снимка и ограниченные JSON, проверяет phase/run identity и не принимает старый файл за результат упавшей попытки. Успех отчёта устанавливается только после завершения guarded driver и его cleanup.
+
+Адресные unit: `py -3.13 -B -m unittest discover -s tools/tests -p test_perf01_emulator_benchmark.py -v`. Семь методов проверяют известные медиану/p95, отсутствие p95 у smoke, отбраковку NaN/boolean/пропусков/дублей, другую геометрию/окно, независимые fresh/warm process/provider fences и отказ до запуска при отсутствии проверенного GuestAngle profile.
+
+Подробные условия и границы — [производительность карты](../architecture/map-performance.md#perf-01-технический-baseline-на-эмуляторе). Full/телефон/планшет/сеть/энергия этой командой не принимаются.
 
 ## Адресные проверки выпуска3.1.2.31
 

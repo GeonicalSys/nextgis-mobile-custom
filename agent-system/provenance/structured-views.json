@@ -103,14 +103,14 @@
     },
     "app/docs/manifest.yaml": {
       "layout_id": "lisa:mobile:metadata:app-module-manifest",
-      "sha256_utf8_lf": "f46b0aa53ddf5de73bba8384d44e056baf8f2e6036ea6aa9de1f3dc5dee5d1bf",
+      "sha256_utf8_lf": "0b374ea1b69345bb56cd752477a6faf36b6b05a06fb866fc1f46ac7ed52be66c",
       "source_fingerprints": {
         "agent-system/provenance/app-module-manifest.json": "b272578296400a9bb749e4242f9c1b4502b9234a54e40089554a97279bc1cbdc",
         "docs/scripts/module_manifest_knowledge.py": "6010dfb9a7cfc2cfe4f1afbfde9d865f9d225f07878bac5cf1e99d3ade68405c",
         "docs/scripts/structured_view_proof.py": "bae9d5c0273dbe26bfa4c4467c2c7210cbc75c1677cc25a9a6a4cf347b6bb54c"
       },
-      "ordered_records_sha256": "b9519033cd7ea4df53a8f26bc9dbb36289c539a03ac1d45a0b755d20f66251de",
-      "ordered_count": 213
+      "ordered_records_sha256": "893dd6dccd78e7fb31d0be4c452236d4ed7d174aaf4831503928ea90b2f28211",
+      "ordered_count": 214
     },
     "docs/registry/ui-contracts.json": {
       "layout_id": "lisa:mobile:metadata:ui-contracts-registry",

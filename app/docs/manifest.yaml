@@ -4,13 +4,17 @@ schema_version: 1
 module_id: app
 repository_id: root
 maturity: maintained
-last_verified: 2026-11-11
+last_verified: 2026-11-16
 entrypoints:
 - app/src/main/java/com/nextgis/mobile/MainApplication.java
 - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
 - app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt
 - app/src/main/AndroidManifest.xml
 key_components:
+- path: app/src/androidTest/java/com/nextgis/mobile/rendering/Perf01MapBenchmarkTest.java
+  responsibility: Strict isolated emulator-only technical480/6480 polygon fixtures, validated native frame/identity/label
+    coverage, fresh-process and same-live-provider timings with bounded memory evidence; default smoke and guarded host repetition,
+    no phone/energy/full acceptance.
 - path: app/src/androidTest/java/com/nextgis/mobile/rendering/DirectVectorTilesOfflineTest.java
   responsibility: Owned emulator radio restoration or explicit manual offline verification on a USB phone, direct same-source
     polygon/anchor glyph/fill/outline pixels and offline live Firefly/polygon style edits; compilation is separate from execution.

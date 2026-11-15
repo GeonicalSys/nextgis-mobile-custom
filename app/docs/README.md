@@ -1,10 +1,14 @@
 ---
 title: app — Android-приложение Lisa/Belka
 module_id: app
-last_verified: 2026-11-11
+last_verified: 2026-11-16
 ---
 
 # app — Android-приложение Lisa/Belka
+
+## PERF-01: технические карты и наблюдение кадра
+
+Perf01MapBenchmarkTest и tools/perf01_emulator_benchmark.py создают отдельные480/6480-object fixtures в verification APK, проверяют видимые исходные ID/подписи и измеряют новый процесс/возврат в живом provider. Ordinary APK startup, реальные проекты и энергия этим не принимаются. [Методика и адресная команда](../../docs/architecture/map-performance.md#perf-01-технический-baseline-на-эмуляторе); Related area perf01-map-baseline, телефонная матрица прежняя.
 
 ## Предупреждения при подготовке3.1.2.31
 
