@@ -40,7 +40,7 @@
       "value": [
         "title: История дорожной карты мобильного приложения",
         "type: reference",
-        "last_verified: 2026-11-14",
+        "last_verified: 2026-11-15",
         "related_code:",
         "  - docs/roadmap/mobile.md"
       ]
@@ -59,6 +59,11 @@
     }
   },
   "relations": [
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:mobile-roadmap-audit-20261115",
+      "status": "source_backed"
+    },
     {
       "type": "contains",
       "target": "lisa:mobile:evidence:mobile-roadmap-implementation-checkpoint-20261114",
