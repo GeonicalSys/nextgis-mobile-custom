@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:ngw-sync-and-storage-rel03-resource-budgets",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-ngw-sync-and-storage"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the REL-03 contract and exact targeted evidence; no release authority."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/ngw-sync-and-storage.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## REL-03: бюджет памяти и временного диска",
+        "",
+        "Полный untracked snapshot использует частный SQLite-индекс ID рядом со слоем: cursor-backed множества, пять счётчиков, cache 512 KiB и temp_store FILE. Индекс и sidecar удаляются после закрытия, включая отмену. До материализации локальной строки проверяется длина её значений SQL; remote feature ограничен при потоковом чтении до создания WKT. Лимит одного feature — heap/64, максимум 8 MiB; диагностический error body — 64 KiB. Дубли ID и int64 membership сохраняют прежнюю семантику.",
+        "",
+        "Staging, запись ZIP и SQLite apply проверяют фактический доступный диск с резервом 32 MiB; неизвестный/ложный Content-Length не заменяет проверку записанных байтов. Проверки стоят до роста индекса и между features; они не резервируют место от других процессов и не предсказывают разовую SQLite allocation. Ошибки IO/SQLite/OOM оставляют старую транзакцию и outbox; typed resource limit не повторяется как transient network failure. Разрушительное применение начинается только после успешной резервной копии. До 512 ID используется selective backup, выше — прежний full-layer backup без нового публичного API. ZIP отдельно ограничивает выбранную строку до hydration.",
+        "",
+        "HTTP 206 по-прежнему отклоняется только full streamed downloader до чтения body/length и создания нового stage. Incremental pull, publisher/NGW metadata, фильтры и публичные save scripts не менялись. Cache rebuild и MapLibre reload остаются после commit. Атомарность проверена на технической SQLite с инъекцией нехватки места/ошибки записи и отмены; физическое заполнение устройства и общий Full здесь не заявляются.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:ngw-sync-and-storage-rel03-resource-budgets"
+    ]
+  }
+}

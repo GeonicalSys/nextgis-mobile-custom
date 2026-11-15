@@ -138,13 +138,13 @@ moving above the creation menu only while it is expanded. A second walk cannot s
 
 | Concern | Behavior |
 |---------|----------|
-| Durable owner | `WalkSessionStore` in `walkedit_temp` stores session UUID, active map path, complete WKT, target member/ring/insertion, revision, phase and GPS pause state alongside legacy part-only keys |
+| Durable owner | `WalkSessionStore` in `walkedit_temp` stores session UUID, active map path, complete WKT, target member/ring/insertion, revision, phase and GPS pause state alongside legacy part-only keys. Short owner-scoped coordinate edits in `.walk-checkpoints/<sha256 owner>/` are atomically written and fsynced before durable admission; checkpoint sequence plus complete WKT acknowledge the same ordered prefix |
 | Geometry | `WalkGeometrySnapshot` changes only the selected part of a private copy, retaining other members and holes; WKT restoration removes the selected ring's synthetic closing duplicate, including a one-node ring |
 | Live preview | Independent `walk-preview-source` shows confirmed geometry without borrowing the point editor. Root CRS is restored on the private copy before conversion from metres to WGS84; full/lite style reload restores the cached preview |
 | Point start | A durable point UUID is acquired before the layer chooser. Only one Point/MultiPoint creation session may accompany the recording; stage progresses through choose, geometry and form |
 | Complete control lock | From point start until successful point Save or explicit Cancel/Discard, all walk controls and notification/backend Pause/Resume/Finish/Discard are disabled. GPS processing and geometry persistence continue |
 | Lifecycle | Camera, backgrounding, screen off, failed Save and process recreation retain the point lock. GPS loss leaves recording intent and the point lock intact; fresh fixes continue recording automatically |
-| Finish | The disk button confirms finishing and opening attributes. A matching command changes RECORDING to FINISHING; the service flushes its validated tail, persists full geometry and acknowledges FINISHED before the UI hands geometry to the editor and automatically opens its attribute form. No new point can begin during this transition |
+| Finish | The disk button confirms finishing and opening attributes. A matching command changes RECORDING to FINISHING; the service queues a worker barrier after all admitted edits, persists full geometry with its sequence and acknowledges FINISHED only after that barrier succeeds before the UI hands geometry to the editor and automatically opens its attribute form. No new point can begin during this transition |
 | Manual pause | The confirmed Pause command flushes already accepted fixes and persists gps_paused under the same owner. New recording callbacks cannot append while paused. Confirmed Resume resets the sampler and warns that the next point connects to the last recorded point. A stale confirmation still checks UUID, phase and point lock in the service |
 | Panel | One themed 48dp row contains layer name and disk/pause-or-play/cross, all with 48dp touch targets, accessibility names and long-press hints. No ordinary status/accuracy label or overflow. Point lock and persistence errors add a readable notice; final geometry keeps Save/Cancel available and disables Pause |
 | Minimum geometry | After FINISHED, every line requires two distinct vertices and every polygon ring three, excluding WKT closure duplicates. Empty collections or short members/rings close the walk with “Собрано недостаточно точек, выхожу без сохранения”, without a feature row or attribute form; existing features are unchanged |
@@ -354,3 +354,15 @@ SyncRecoveryJournal защищает принятый состав project/accou
 Новый процесс читает фактически сохранённые preferences: исходная raw provenance,
 false с новым disk state и crash после pair ACK требуют независимого readback.
 Process view не является restart rollback или full-project completion.
+
+## REL-03: ordered walk checkpoints
+
+GPS callbacks append immutable INSERT/CORRECT/STATE deltas; they never serialize or copy the complete walk. Production uses Android AtomicFile and fd.sync. One private worker owns its geometry and coalesces at most 128 edits into each full checkpoint. The pending tail is bounded at 2048 edits; new point admission also checks the heap budget. A journal write failure retains the admitted edit in bounded RAM, pauses with a visible failure and retries; such an edit is PENDING, not a durable promise across power loss. Later records cannot be acknowledged ahead of that missing prefix.
+
+The existing full-WKT preference checkpoint is the base. New owner/sequence keys acknowledge its applied prefix; cold recovery overlays only later contiguous deltas, preserving other members, holes, insertion and pause intent. Old part-only/full-WKT layouts remain readable. The journal lives inside the owning project, so project archive/restore includes it without a public archive-format change. Invalid committed records or a gap are retained and fail closed; an incomplete trailing first AtomicFile write was never admitted and may be discarded when finishing.
+
+Finish/legacy Stop use an asynchronous ordered barrier. Failed flush keeps the owner/draft recoverable and never publishes FINISHED or opens the form early. An active writer prevents cold Finish/clear. Stale callbacks cannot update a replacement owner or release its point lock. A failed preference commit restores the previous typed in-memory values and keeps the journal; it is not a physical disk rollback guarantee. Service shutdown retains the journal. Null/sticky delivery into the same live service preserves its current geometry and uncommitted tail.
+
+Targeted evidence is retained under Q:/Codex/Scratch/rel03-resource-safety-01a1d9ac/evidence/. REL-03 native stages use only synthetic verification data and an owned software-rendered emulator. The final physical-device/Full acceptance remains separate.
+
+Journal read failures yield no preview geometry and keep the owner visible with the existing checkpoint error message; terminal Finish refuses the unreadable state. No saved base or committed record is discarded automatically.

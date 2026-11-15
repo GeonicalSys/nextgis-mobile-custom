@@ -1219,7 +1219,7 @@ public class MapFragment
     private fun refreshWalkSessionPreview() {
         val ctx = context ?: return
         val session = WalkSessionStore.load(ctx)?.takeIf { WalkSessionStore.isCurrentMap(ctx, it) }
-        val key = session?.let { "${it.id}:${it.revision}:$finishedWalkEditId" }
+        val key = session?.let { "${it.id}:${it.revision}:${it.checkpointSequence}:$finishedWalkEditId" }
         val map = mMapRef.get()?.map
         if (map != null && (key != walkPreviewKey || map !== walkPreviewMap)) {
             walkPreviewKey = key

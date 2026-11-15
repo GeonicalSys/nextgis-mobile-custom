@@ -84,6 +84,7 @@
         "",
         "Исходный запрос, реализованное поведение и прежние результаты сохранены в [снимке реализации](mobile-history.md#снимок-реализации-20261114).",
         "Адресная планшетная проверка 14.11.2026 завершена: пять native-сценариев подтверждают guard до создания первой карты, запрет синхронизации несверенной копии, сохранение исходных строк/фото/form sidecar и отсутствие второго POST после допуска или позднего ACK исходника. Этот пункт снят с остатка; Full и полная приёмка содержимого архива остаются открыты. Квитанции и границы — в [истории](mobile-history.md#rel-02-планшетная-проверка-фонового-восстановления-20261114).",
+        "Адресная проверка того же фонового пути на Samsung SM-A566B / Android 17 завершена: 5/5 PASS на проверенной APK-паре. Это закрывает смартфонную проверку guard без открытой карты; полная проверка содержимого архива и Full остаются в финальной приёмке. [Результаты и ограничения](mobile-history.md#сверка-очереди-и-проверка-rel-02-на-смартфоне-20261115).",
         ""
       ]
     },
@@ -131,6 +132,23 @@
           "Full, comprehensive archive/disk-failure/offline-basemap acceptance, live NGW and publication remain separate.",
           "T40 UID logcat support gap remains diagnostic_failure, independent of native assertions."
         ]
+      }
+    },
+    "smartphone-cold-sync-checkpoint": {
+      "role": "dated_targeted_phone_verification",
+      "value": {
+        "date": "2026-11-14",
+        "device": "Samsung SM-A566B / Android 17 API37",
+        "passed": 5,
+        "failed": 0,
+        "skipped": 0,
+        "receipt": "Q:/Codex/Scratch/mobile-closeout-01a1d9ac/evidence/smartphone-03-rel02-cold/result.json",
+        "source_fingerprint": "d13018b7cf88c2505a292d8b90410655c3c95f2e9dc5da1a3331a310a6200ec9",
+        "apk_sha256": {
+          "app": "26015ce2bb4becbf1899df6dc1f14b6d6ecbc30558875e68be00851741ecb53f",
+          "test": "a71f5375d1f5e0af8d6a836d2ca30d41f59b28f1529e09000f4f6e8481aa9d19"
+        },
+        "limits": "Five cold guards only; full archive, Full, live delivery and publication remain open. Final optional package-data reset/readback is pending next authorized USB connection; device disconnected after fixture finalization."
       }
     }
   },

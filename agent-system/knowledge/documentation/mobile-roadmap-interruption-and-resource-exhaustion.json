@@ -4,7 +4,7 @@
   "kind": "task",
   "owner": "android_projects/android_gisapp",
   "topic": "documentation",
-  "status": "planned",
+  "status": "active",
   "execution_permission": false,
   "applicability": {
     "review_status": "reviewed",
@@ -17,23 +17,23 @@
   },
   "lifecycle": {
     "goal": "open",
-    "implementation": "planned",
-    "source_verification": "UNKNOWN",
-    "merge": "unknown",
-    "runtime_verification": "UNKNOWN",
-    "release": "unknown",
-    "retention": "Keep the baseline measurements with their versions, and preserve the previous database and queued work in any future acceptance."
+    "implementation": "implemented",
+    "source_verification": "PASS",
+    "merge": "open",
+    "runtime_verification": "PASS",
+    "release": "unpublished",
+    "retention": "Разработка REL-03 и адресные проверки завершены локально; сохранить исходные критерии и свидетельства, финальный Full/физическая матрица и доставка остаются открытыми."
   },
   "facets": {
     "lifecycle-review": {
       "role": "reviewed_lifecycle_scope_and_evidence",
       "value": {
-        "goal": "Keep the cross-operation budget and safe resume work open for sync staging, disk, geometry and walk checkpoints.",
-        "implementation": "The existing streaming pull and whole-checkpoint walk storage are the baselines. Budgeting every stage and an ordered final flush remain proposed work.",
-        "source_verification": "The reliability audit's source and checkpoint measurements describe their earlier inputs. The roadmap calls for proof of ENOSPC and the order of checkpoint persistence.",
-        "merge": "The proposed combined change has no evidenced merge in the reviewed roadmap frame.",
-        "runtime_verification": "Process kill, reboot, permission loss, cancellation and resumed work require independent observations with preserved data and queue checks.",
-        "release": "No combined release is established by the earlier diagnostics.",
+        "goal": "Реализация завершена; сохранить открытую финальную интеграционную/физическую приёмку до выпуска.",
+        "implementation": "Дисковый ID-план, бюджеты feature/staging/ZIP/SQLite и упорядоченный журнал обхода с worker/Finish barrier реализованы.",
+        "source_verification": "66 адресных JVM/Robolectric checks PASS; итоговые Lisa/Belka consumer source compile PASS; документы и source guards проверяются отдельной финальной квитанцией.",
+        "merge": "Локальные codex/rel03-resource-safety branches; слияние и публикация не выполнялись. Parent pins сохранены до слияния библиотек.",
+        "runtime_verification": "На owned Android36 r7 software emulator: 7 различных сценариев, 12 фактических запусков PASS, включая свежий процесс, настоящий kernel reboot и реальный отзыв GPS permissions. Полная физическая матрица/long-day/реальный ENOSPC/power-cut не заявляются.",
+        "release": "Не опубликовано. Общая регрессия и Full отложены владельцем до завершения согласованных доработок.",
         "references": [
           {
             "repository": "android_projects/android_gisapp",
@@ -52,13 +52,13 @@
       "value": [
         "## REL-03 Работа при прерывании и нехватке ресурсов",
         "",
-        "Приоритет P1. Состояние: Предложена по результатам анализа. Основание: оставшиеся архитектурные расходы и риски.",
+        "Приоритет P1. Разработка и адресная проверка завершены локально 15.11.2026; повторная реализация не нужна. Исключена из очереди доработок. Изменения ещё не слиты и не опубликованы.",
         "",
-        "Потоковая полная синхронизация уже реализована, но хранит крупные наборы ID в памяти; одна огромная геометрия остаётся отдельным риском. Предварительная проверка диска не покрывает весь рост staging, backup и SQLite. Длинный обход сериализует полный checkpoint синхронно в пути GPS callback.",
+        "Реализованы дисковый индекс ID, ограничение одного feature/строки до материализации, проверки фактического роста staging/backup/SQLite и откат с сохранением outbox. Обход пишет короткий журнал, а полный checkpoint — в фоне с обязательным барьером перед Finish. Ошибка чтения оставляет видимый черновик; предпросмотр учитывает принятую последовательность сразу.",
         "",
-        "Приёмка: контроль бюджета RAM и временного диска на всех стадиях; безопасный отказ при ENOSPC; отсутствие потери предыдущей базы и очереди. Длинные checkpoint переносятся из чувствительного к задержкам пути с упорядоченной записью и обязательным flush перед Finish. Проверить process kill, reboot, отмену, отзыв разрешения и повторное продолжение. Незавершённая работа остаётся видимой и восстанавливаемой.",
+        "Адресная приёмка: 66 JVM/Robolectric проверок и 7 различных Android-сценариев (12 запусков) PASS. Подтверждены сохранность multipart/holes/point owner, отказ/повтор, остановка процесса, реальный reboot и отзыв разрешения. Проверки SQLite/нехватки места используют технические инъекции; физическое заполнение диска и power cut этим не подтверждаются. [Подробности и исходные критерии](mobile-history.md#rel-03-адресная-приёмка-20261115).",
         "",
-        "Основание: NGWVectorLayer.java, WalkEditService.java, WalkSessionStore.java; подробности и исторические замеры — в mobile-reliability-audit.md. Исторический замер не принимается за производительность текущего APK.",
+        "Осталось в финальной приёмке: общая регрессия/Full после согласованных доработок, длительная физическая проверка ресурсов и соответствующая планшетная/выпускная матрица перед публикацией. Отдельно предстоят доставка библиотек и слияние; разрешение на merge/release не выдавалось.",
         ""
       ]
     },
@@ -73,6 +73,45 @@
     "lifecycle-basis": {
       "role": "scope_of_independent_lifecycle_at_pinned_roadmap_basis",
       "value": "Proposal based on architectural limits. Earlier native evidence applies only to named scopes."
+    },
+    "targeted-verification": {
+      "role": "scoped_runtime_evidence_not_publication_acceptance",
+      "value": {
+        "receipt": "Q:/Codex/Scratch/rel03-resource-safety-01a1d9ac/evidence/native-rel03-03/result.json",
+        "source_fingerprint": "4e69ebc6ad5e761dcab7f365c0a9281f6801dfc75c25d0d2f4dd5d258bce838a",
+        "unit_checks": 66,
+        "native_distinct_cases": 7,
+        "native_attempts": 12,
+        "transitions": [
+          {
+            "transition": "process-death",
+            "seed_pid": 4895,
+            "before_boot_id": "c3144e69-e47f-4376-a422-e59e55783b40",
+            "after_boot_id": "c3144e69-e47f-4376-a422-e59e55783b40",
+            "fresh_process_asserted_by_native": true,
+            "passed": true
+          },
+          {
+            "transition": "reboot",
+            "seed_pid": 5367,
+            "before_boot_id": "c3144e69-e47f-4376-a422-e59e55783b40",
+            "after_boot_id": "8fddf33b-d869-474d-be29-1c8a7c2dacd1",
+            "fresh_process_asserted_by_native": true,
+            "passed": true
+          },
+          {
+            "transition": "permission-loss",
+            "seed_pid": 3346,
+            "before_boot_id": "8fddf33b-d869-474d-be29-1c8a7c2dacd1",
+            "after_boot_id": "8fddf33b-d869-474d-be29-1c8a7c2dacd1",
+            "fresh_process_asserted_by_native": true,
+            "passed": true
+          }
+        ],
+        "physical_full": "NOT_RUN; deferred by owner",
+        "merge": "not performed",
+        "release": "unpublished"
+      }
     }
   },
   "relations": [],

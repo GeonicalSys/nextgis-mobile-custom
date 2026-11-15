@@ -1,0 +1,71 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:mobile-roadmap-rel03-20261115",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-history-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain exact targeted evidence and original REL-03 criteria; no publication authority."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile-history.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## REL-03: адресная приёмка 20261115",
+        "",
+        "Разработка завершена локально. 66 адресных unit checks (9 классов), LisaRelease/BelkaRelease source compile и 7 различных Android-сценариев/12 запусков PASS. Native-код включает четыре новых сценария и три прежних проверки реального сервиса обхода. Full/общие suites/планшет/cloud не запускались.",
+        "",
+        "Доказаны свежий PID после остановки процесса, изменение kernel boot_id после настоящего reboot, реальный отзыв fine/coarse permissions и восстановление fsynced tail с неизменными другими частями/отверстиями/point owner. Самый ранний запуск остановлен до VM из-за защитного порога RAM; следующий — из-за отсутствующей SDK environment. Оба не считаются исполненными Android-тестами; их логи/cleanup сохранены. После штатного освобождения памяти и явного SDK third run завершён, VM Job/console закрыты.",
+        "",
+        "Квитанции: Q:/Codex/Scratch/rel03-resource-safety-01a1d9ac/evidence/native-rel03-03/result.json и cleanup.json; final-rel03-units/summary.json. Исходный fingerprint native: `4e69ebc6ad5e761dcab7f365c0a9281f6801dfc75c25d0d2f4dd5d258bce838a`. После прогона меняются только статусы и контрактные записи; отдельная native-doc-closeout-delta.json проверяет неизменность runtime/test bytes. Это не актуальный publication fingerprint.",
+        "",
+        "Дефекты первого варианта и fixture/сборочные отказы сохранены, а не переименованы в PASS. SQLite PRAGMA исправлена на реальный query; fixtures используют настоящий sync owner/authority; test teardown завершает уведомления/закрывает helper до удаления. Итоговая компиляция выполнена с kotlin.incremental=false после ошибки частичного Kotlin-кэша. Генеральная регрессия остаётся отложенной.",
+        "",
+        "Локальные библиотеки не слиты, pins не сдвинуты; release/push/merge не выполнялись. Глобальные UNKNOWN и чужая Desktop работа сохраняются отдельно. Длительные физические ресурсы, реальный ENOSPC/power cut и финальный Full здесь не заявляются.",
+        "",
+        "### Исходные критерии REL-03",
+        "",
+        "",
+        "> ## REL-03 Работа при прерывании и нехватке ресурсов",
+        ">",
+        "> Приоритет P1. Состояние: Предложена по результатам анализа. Основание: оставшиеся архитектурные расходы и риски.",
+        ">",
+        "> Потоковая полная синхронизация уже реализована, но хранит крупные наборы ID в памяти; одна огромная геометрия остаётся отдельным риском. Предварительная проверка диска не покрывает весь рост staging, backup и SQLite. Длинный обход сериализует полный checkpoint синхронно в пути GPS callback.",
+        ">",
+        "> Приёмка: контроль бюджета RAM и временного диска на всех стадиях; безопасный отказ при ENOSPC; отсутствие потери предыдущей базы и очереди. Длинные checkpoint переносятся из чувствительного к задержкам пути с упорядоченной записью и обязательным flush перед Finish. Проверить process kill, reboot, отмену, отзыв разрешения и повторное продолжение. Незавершённая работа остаётся видимой и восстанавливаемой.",
+        ">",
+        "> Основание: NGWVectorLayer.java, WalkEditService.java, WalkSessionStore.java; подробности и исторические замеры — в mobile-reliability-audit.md. Исторический замер не принимается за производительность текущего APK.",
+        ">",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:mobile-roadmap-rel03-20261115"
+    ]
+  }
+}

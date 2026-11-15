@@ -39,15 +39,19 @@
       "value": {
         "repository": "root",
         "path": "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
-        "purpose": "Non-method rulerText getter and zoomText delegation: screenToMap/WebMercator/GeoLineString/formatLength, separate camera zoom and saved viewport. Reviewed2026-11-02: only memory-dialog builder gains bounded scrolling; prior guarded methods/ruler/zoom remain exact. Review dated 2026-11-09 covers a saved measurement waiting for the current style and camera. The scale ruler, zoom, rotation and memory notice have independent source checks. Review dated 2026-11-09 covers track-mode and measurement popups anchored to the visible rail overflow when their direct button is hidden. Review 2026-11-13: GEO-02 retains active guidance and separates temporary automatic GPS mute; UX-06 removes only track/cleanup main-menu entries and adds confirmed maintenance; REL-04 scopes editor cleanup. Existing independent consumers and their guarded requirements are preserved.",
+        "purpose": "Non-method rulerText getter and zoomText delegation: screenToMap/WebMercator/GeoLineString/formatLength, separate camera zoom and saved viewport. Reviewed2026-11-02: only memory-dialog builder gains bounded scrolling; prior guarded methods/ruler/zoom remain exact. Review dated 2026-11-09 covers a saved measurement waiting for the current style and camera. The scale ruler, zoom, rotation and memory notice have independent source checks. Review dated 2026-11-09 covers track-mode and measurement popups anchored to the visible rail overflow when their direct button is hidden. Review 2026-11-13: GEO-02 retains active guidance and separates temporary automatic GPS mute; UX-06 removes only track/cleanup main-menu entries and adds confirmed maintenance; REL-04 scopes editor cleanup. Existing independent consumers and their guarded requirements are preserved. REL-03 review 2026-11-15: the sole MapFragment source change adds accepted checkpointSequence to the walk-preview key, so admitted points remain visible while the full checkpoint worker lags. Ruler getter, zoom/camera/rotation, memory notice, project/UI cleanup and all independent guarded methods remain byte-identical; no method guard or oracle is relaxed. Prior whole-file pin 4e8ed17efdcf8ebd46b09374ce91c948447532183edf4053eb6a4f0044f26d1c.",
         "contract_ids": [
           "UI-MAP-SCALE-RULER",
           "UI-MAP-ZOOM",
           "UI-MAP-CAMERA-ROTATION-STATE",
           "UI-RENDER-MEMORY-WARNING"
         ],
-        "sha256": "4e8ed17efdcf8ebd46b09374ce91c948447532183edf4053eb6a4f0044f26d1c"
+        "sha256": "f24309f259ee1e08563f81951294b622b29a6e985fc8ecb91ca1c99c0e83f1d9"
       }
+    },
+    "review-20261115": {
+      "role": "semantic_review_and_preserved_consumers",
+      "value": "REL-03 review 2026-11-15: the sole MapFragment source change adds accepted checkpointSequence to the walk-preview key, so admitted points remain visible while the full checkpoint worker lags. Ruler getter, zoom/camera/rotation, memory notice, project/UI cleanup and all independent guarded methods remain byte-identical; no method guard or oracle is relaxed. Prior whole-file pin 4e8ed17efdcf8ebd46b09374ce91c948447532183edf4053eb6a4f0044f26d1c."
     }
   },
   "relations": [

@@ -1478,21 +1478,21 @@ invariants:
     owners:
     - maplibui
     - maplib
-    statement: 'For NGW vector layers with retained local data, a successful data backup is required before any destructive
-      mutation — remote sync delete/overwrite, schema rebuild, Collector vector-layer removal, duplicate-layer repair, manual
-      layer delete, manual feature delete, or active project workspace delete. Schema rebuild must retain the old layer until
-      its staged replacement is saved in the same map commit that removes old references. Backup must include every attachment
-      file that is physically present in the layer directory, while server-only attachment metadata remains in the attachment
-      table and must never trigger a network download during backup. If backup fails, local feature data must remain unchanged
-      and the user must see an alert with the failure reason. Current read-only status does not bypass the gate for existing
-      vector data; recreatable raster-style tile caches are not data-backup operations. LayerBackups/ is capped by preference
-      layer_backup_max_gb (default 5); oldest ZIP archives are deleted when the limit is exceeded. After a successful attachment
-      push, the local file stays under the server attach id and FeatureAttachments is updated so identification works without
-      a second sync. Pulling server attachment metadata without downloading its bytes is not destructive: metadata is compared
-      with and persisted to FeatureAttachments, not with optional local META files, and must not trigger a feature backup
-      by itself. Whole-feature deletion remains backup-gated.
-
-      '
+    statement: "For NGW vector layers with retained local data, a successful data backup is required before any destructive\
+      \ mutation — remote sync delete/overwrite, schema rebuild, Collector vector-layer removal, duplicate-layer repair, manual\
+      \ layer delete, manual feature delete, or active project workspace delete. Schema rebuild must retain the old layer\
+      \ until its staged replacement is saved in the same map commit that removes old references. Backup must include every\
+      \ attachment file that is physically present in the layer directory, while server-only attachment metadata remains in\
+      \ the attachment table and must never trigger a network download during backup. If backup fails, local feature data\
+      \ must remain unchanged and the user must see an alert with the failure reason. Current read-only status does not bypass\
+      \ the gate for existing vector data; recreatable raster-style tile caches are not data-backup operations. LayerBackups/\
+      \ is capped by preference layer_backup_max_gb (default 5); oldest ZIP archives are deleted when the limit is exceeded.\
+      \ After a successful attachment push, the local file stays under the server attach id and FeatureAttachments is updated\
+      \ so identification works without a second sync. Pulling server attachment metadata without downloading its bytes is\
+      \ not destructive: metadata is compared with and persisted to FeatureAttachments, not with optional local META files,\
+      \ and must not trigger a feature backup by itself. Whole-feature deletion remains backup-gated.\n REL-03 full-snapshot\
+      \ plans retain the same fail-closed backup gate: selective IDs up to 512, existing whole-layer backup above that bound.\
+      \ Actual ZIP writes preserve a free-space reserve; resource refusal must precede destructive application."
     related_code:
     - maplibui/src/main/java/com/nextgis/maplibui/util/LayerBackupManager.java
     - maplibui/src/main/java/com/nextgis/maplibui/GISApplication.java
@@ -1976,7 +1976,10 @@ invariants:
       \ an application restart.\n Recovery Discard verifies the offered operation/map/layer/feature snapshot before terminal\
       \ cleanup. Only its manual editor/point owner and proven unowned layer lock may be released; replacement drafts, other\
       \ layers and live work-mode owners are preserved. The layer pencil resolves its own row and must not silently depend\
-      \ on a missing finish callback.\n"
+      \ on a missing finish callback.\n REL-03 walk deltas are owner-scoped, immutable and ordered. Full checkpoints run off\
+      \ the GPS callback and atomically acknowledge the applied sequence; Finish requires its final barrier. Failed journal\
+      \ admission is explicitly RAM-pending and bounded, never falsely durable; cold recovery overlays only a contiguous durable\
+      \ tail and preserves point ownership."
     related_code:
     - maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java
     - maplibui/src/main/java/com/nextgis/maplibui/service/BootLoader.java
@@ -1989,6 +1992,8 @@ invariants:
     - maplib/src/main/java/com/nextgis/maplib/datasource/GeoGeometryFactory.java
     - maplib/src/main/java/com/nextgis/maplib/datasource/GeoPolygon.java
     - maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java
+    - maplibui/src/main/java/com/nextgis/maplibui/util/WalkCheckpointWriter.java
+    - maplibui/src/main/java/com/nextgis/maplibui/util/WalkSessionStore.java
     verify_smoke:
     - SMOKE-CRASH-DRAFT-RECOVERY
     must_update_docs:

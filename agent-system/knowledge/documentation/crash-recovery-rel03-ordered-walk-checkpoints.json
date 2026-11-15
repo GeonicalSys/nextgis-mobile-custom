@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:crash-recovery-rel03-ordered-walk-checkpoints",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:crash-recovery"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the REL-03 contract and exact targeted evidence; no release authority."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/crash-recovery.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## REL-03: ordered walk checkpoints",
+        "",
+        "GPS callbacks append immutable INSERT/CORRECT/STATE deltas; they never serialize or copy the complete walk. Production uses Android AtomicFile and fd.sync. One private worker owns its geometry and coalesces at most 128 edits into each full checkpoint. The pending tail is bounded at 2048 edits; new point admission also checks the heap budget. A journal write failure retains the admitted edit in bounded RAM, pauses with a visible failure and retries; such an edit is PENDING, not a durable promise across power loss. Later records cannot be acknowledged ahead of that missing prefix.",
+        "",
+        "The existing full-WKT preference checkpoint is the base. New owner/sequence keys acknowledge its applied prefix; cold recovery overlays only later contiguous deltas, preserving other members, holes, insertion and pause intent. Old part-only/full-WKT layouts remain readable. The journal lives inside the owning project, so project archive/restore includes it without a public archive-format change. Invalid committed records or a gap are retained and fail closed; an incomplete trailing first AtomicFile write was never admitted and may be discarded when finishing.",
+        "",
+        "Finish/legacy Stop use an asynchronous ordered barrier. Failed flush keeps the owner/draft recoverable and never publishes FINISHED or opens the form early. An active writer prevents cold Finish/clear. Stale callbacks cannot update a replacement owner or release its point lock. A failed preference commit restores the previous typed in-memory values and keeps the journal; it is not a physical disk rollback guarantee. Service shutdown retains the journal. Null/sticky delivery into the same live service preserves its current geometry and uncommitted tail.",
+        "",
+        "Targeted evidence is retained under Q:/Codex/Scratch/rel03-resource-safety-01a1d9ac/evidence/. REL-03 native stages use only synthetic verification data and an owned software-rendered emulator. The final physical-device/Full acceptance remains separate.",
+        "",
+        "Journal read failures yield no preview geometry and keep the owner visible with the existing checkpoint error message; terminal Finish refuses the unreadable state. No saved base or committed record is discarded automatically.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:crash-recovery-rel03-ordered-walk-checkpoints"
+    ]
+  }
+}

@@ -40,7 +40,7 @@
       "value": [
         "title: Дорожная карта мобильного приложения ЛИСА и БЕЛКА",
         "type: roadmap",
-        "last_verified: 2026-11-14",
+        "last_verified: 2026-11-15",
         "related_code:",
         "  - AGENTS.md",
         "  - .github/PULL_REQUEST_TEMPLATE.md",
@@ -78,81 +78,6 @@
     {
       "type": "contains",
       "target": "lisa:mobile:resource:mobile-roadmap-state-and-priority-rules",
-      "status": "source_backed"
-    },
-    {
-      "type": "contains",
-      "target": "lisa:mobile:resource:mobile-roadmap-started-work-heading",
-      "status": "source_backed"
-    },
-    {
-      "type": "contains",
-      "target": "lisa:mobile:task:mobile-roadmap-reliable-server-ack",
-      "status": "source_backed"
-    },
-    {
-      "type": "contains",
-      "target": "lisa:mobile:task:mobile-roadmap-project-recovery-and-draft-preservation",
-      "status": "source_backed"
-    },
-    {
-      "type": "contains",
-      "target": "lisa:mobile:task:mobile-roadmap-release-observability",
-      "status": "source_backed"
-    },
-    {
-      "type": "contains",
-      "target": "lisa:mobile:task:mobile-roadmap-sync-and-changes-center",
-      "status": "source_backed"
-    },
-    {
-      "type": "contains",
-      "target": "lisa:mobile:resource:mobile-roadmap-ready-heading",
-      "status": "source_backed"
-    },
-    {
-      "type": "contains",
-      "target": "lisa:mobile:task:mobile-roadmap-background-gps-control",
-      "status": "source_backed"
-    },
-    {
-      "type": "contains",
-      "target": "lisa:mobile:task:mobile-roadmap-menu-maintenance",
-      "status": "source_backed"
-    },
-    {
-      "type": "contains",
-      "target": "lisa:mobile:task:mobile-roadmap-edit-session-recovery",
-      "status": "source_backed"
-    },
-    {
-      "type": "contains",
-      "target": "lisa:mobile:task:mobile-roadmap-stale-data-and-update-reminders",
-      "status": "source_backed"
-    },
-    {
-      "type": "contains",
-      "target": "lisa:mobile:task:mobile-roadmap-styles-and-tracks",
-      "status": "source_backed"
-    },
-    {
-      "type": "contains",
-      "target": "lisa:mobile:task:mobile-roadmap-heavy-map-diagnostics",
-      "status": "source_backed"
-    },
-    {
-      "type": "contains",
-      "target": "lisa:mobile:task:mobile-roadmap-map-memory",
-      "status": "source_backed"
-    },
-    {
-      "type": "contains",
-      "target": "lisa:mobile:resource:mobile-roadmap-data-safety-heading",
-      "status": "source_backed"
-    },
-    {
-      "type": "contains",
-      "target": "lisa:mobile:task:mobile-roadmap-interruption-and-resource-exhaustion",
       "status": "source_backed"
     },
     {
@@ -293,6 +218,81 @@
     {
       "type": "contains",
       "target": "lisa:mobile:task:mobile-roadmap-roadmap-adoption",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:mobile-roadmap-started-work-heading",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:mobile-roadmap-data-safety-heading",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-interruption-and-resource-exhaustion",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-reliable-server-ack",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-project-recovery-and-draft-preservation",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-release-observability",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-sync-and-changes-center",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:mobile-roadmap-ready-heading",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-background-gps-control",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-menu-maintenance",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-edit-session-recovery",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-stale-data-and-update-reminders",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-styles-and-tracks",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-heavy-map-diagnostics",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-map-memory",
       "status": "source_backed"
     },
     {

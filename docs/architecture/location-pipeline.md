@@ -710,6 +710,9 @@ traversal is linear without changing geometry or closing-ring rules. Durability
 limits and native fault checks are in [crash recovery](crash-recovery.md) and
 [the audit](../reference/mobile-reliability-audit.md).
 
+
+REL-03 journals constant-sized coordinate edits in the GPS callback and writes full WKT on one ordered worker. Finish waits for that worker; a failed flush leaves recovery available. Pending RAM after a journal failure is explicitly distinct from fsynced durable edits.
+
 ## Отправка трека после регистрации
 
 track_send по умолчанию true. Старые установки однократно включают отправку

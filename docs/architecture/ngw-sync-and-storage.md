@@ -557,7 +557,7 @@ ID контракта: `INV-NGW-ACCOUNT-IDENTITY`.
 Триггеры backup:
 
 - remote sync delete/overwrite атрибутов или геометрии
-  (`NGWVectorLayer.getChangesFromServer` → selective feature ZIP);
+  (`NGWVectorLayer.getChangesFromServer` → selective feature ZIP до 512 ID; более крупный план использует прежний full-layer backup gate);
 - schema rebuild / Collector layer removal (полный ZIP слоя, если остались
   несинхронизированные правки или удаление из проекта);
 - ручное удаление editable слоя из списка слоёв;
@@ -793,7 +793,7 @@ ID контракта: `INV-SPATIAL-CACHE-CONSISTENCY`.
 
 Полный untracked snapshot не материализуется целиком в Java heap. HTTP body
 пишется во временный app-owned JSON рядом со слоем, первым потоковым проходом
-собираются только remote IDs и план backup/delete, вторым — по одному feature
+на диске строятся remote IDs и план backup/delete, вторым — по одному feature
 применяется одна SQLite-транзакция. После commit выполняются одна cache rebuild
 и один отложенный MapLibre reload. Объект с отсутствующей или невалидной
 геометрией не прерывает слой: его remote ID остаётся в snapshot identity, чтобы
@@ -1447,3 +1447,11 @@ source pin не исполняют реальные failed physical write/backup
 weak-owner GC, full project sync, native redraw/locale/timezone или новый APK.
 `AUDIT-TODO-SYNC-ACK-RECOVERY` сохраняет physical/fresh-process и post-ACK cleanup/
 crash/full-clock retry вопросы. Installed APK/phone acceptance остаётся UNKNOWN.
+
+## REL-03: бюджет памяти и временного диска
+
+Полный untracked snapshot использует частный SQLite-индекс ID рядом со слоем: cursor-backed множества, пять счётчиков, cache 512 KiB и temp_store FILE. Индекс и sidecar удаляются после закрытия, включая отмену. До материализации локальной строки проверяется длина её значений SQL; remote feature ограничен при потоковом чтении до создания WKT. Лимит одного feature — heap/64, максимум 8 MiB; диагностический error body — 64 KiB. Дубли ID и int64 membership сохраняют прежнюю семантику.
+
+Staging, запись ZIP и SQLite apply проверяют фактический доступный диск с резервом 32 MiB; неизвестный/ложный Content-Length не заменяет проверку записанных байтов. Проверки стоят до роста индекса и между features; они не резервируют место от других процессов и не предсказывают разовую SQLite allocation. Ошибки IO/SQLite/OOM оставляют старую транзакцию и outbox; typed resource limit не повторяется как transient network failure. Разрушительное применение начинается только после успешной резервной копии. До 512 ID используется selective backup, выше — прежний full-layer backup без нового публичного API. ZIP отдельно ограничивает выбранную строку до hydration.
+
+HTTP 206 по-прежнему отклоняется только full streamed downloader до чтения body/length и создания нового stage. Incremental pull, publisher/NGW metadata, фильтры и публичные save scripts не менялись. Cache rebuild и MapLibre reload остаются после commit. Атомарность проверена на технической SQLite с инъекцией нехватки места/ошибки записи и отмены; физическое заполнение устройства и общий Full здесь не заявляются.
