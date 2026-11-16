@@ -1,0 +1,61 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-2026-11-16-perf01-technical-baseline",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/changelog.md",
+          "app/src/androidTest/java/com/nextgis/mobile/rendering/Perf01MapBenchmarkTest.java",
+          "tools/perf01_emulator_benchmark.py"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep technical-method provenance and scoped measurement evidence; real projects, physical energy and Full remain separate."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-11-16 — PERF-01: методика технических карт на эмуляторе",
+        "",
+        "Добавлены адресные fixtures480/6480 объектов, защищённый host runner, независимая проверка кадра/исходных геометрий/контрольных подписей и расчёт статистики. Семь адресных unit и сборка PASS; emulator smoke04 прошёл4/4 сцены с cleanup PASS. Основная серия сохраняет отдельные20 повторений каждой сцены и raw/summary receipts. Документы разделяют observer-inclusive upper bound, fresh-process cold PBF и warm live-provider return; общая полевая PERF-01 остаётся открытой.",
+        "",
+        "Зафиксирована фактическая доставка REL-03: Core#72/UI#53/App#100 и общие Desktop#298/Web#7 слиты15.11.2026. Все81 non-report REL-03 файла сохранили точные исходные raw hashes после возврата на чистые основные ветки; Full/планшет/публикация остаются отложенными.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-2026-11-16-perf01-technical-baseline"
+    ]
+  }
+}

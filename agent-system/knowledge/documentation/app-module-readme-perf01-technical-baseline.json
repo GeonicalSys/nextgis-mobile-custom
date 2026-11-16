@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:resource:app-module-readme-perf01-technical-baseline",
+  "kind": "resource",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/docs/README.md",
+          "app/src/androidTest/java/com/nextgis/mobile/rendering/Perf01MapBenchmarkTest.java",
+          "tools/perf01_emulator_benchmark.py"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [
+      "lisa:mobile:resource:app-module-readme"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep technical-method provenance and scoped measurement evidence; real projects, physical energy and Full remain separate."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "app/docs/README.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## PERF-01: технические карты и наблюдение кадра",
+        "",
+        "Perf01MapBenchmarkTest и tools/perf01_emulator_benchmark.py создают отдельные480/6480-object fixtures в verification APK, проверяют видимые исходные ID/подписи и измеряют новый процесс/возврат в живом provider. Ordinary APK startup, реальные проекты и энергия этим не принимаются. [Методика и адресная команда](../../docs/architecture/map-performance.md#perf-01-технический-baseline-на-эмуляторе); Related area perf01-map-baseline, телефонная матрица прежняя.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:resource:app-module-readme-perf01-technical-baseline"
+    ]
+  }
+}

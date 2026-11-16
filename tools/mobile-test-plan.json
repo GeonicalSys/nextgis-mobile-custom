@@ -20,7 +20,8 @@
     "com.nextgis.mobile.rendering.DirectVectorTilesTest",
     "com.nextgis.mobile.rendering.DirectVectorTilesOfflineTest",
     "com.nextgis.mobile.reliability.ProjectRecoveryNativeTest",
-    "com.nextgis.mobile.reliability.Rel03ResourceSafetyTest"
+    "com.nextgis.mobile.reliability.Rel03ResourceSafetyTest",
+    "com.nextgis.mobile.rendering.Perf01MapBenchmarkTest"
   ],
   "phone": [
     "com.nextgis.mobile.reliability.ProjectRecoveryColdSyncTest",
@@ -86,7 +87,8 @@
     "com.nextgis.mobile.util.ProjectSyncRunnerTest",
     "com.nextgis.mobile.reliability.SharedTracksTest",
     "com.nextgis.mobile.reliability.SettingsMaintenanceTest",
-    "com.nextgis.mobile.reliability.Rel03ResourceSafetyTest"
+    "com.nextgis.mobile.reliability.Rel03ResourceSafetyTest",
+    "com.nextgis.mobile.rendering.Perf01MapBenchmarkTest"
   ],
   "diagnostics": [
     "com.nextgis.mobile.util.DiagnosticsDeliveryTest"
@@ -187,6 +189,7 @@
     "styles": ["com.nextgis.mobile.rendering.VectorStyleRenderingTest", "com.nextgis.mobile.rendering.FireflyStyleEditorTest", "com.nextgis.mobile.rendering.DirectVectorTilesTest", "com.nextgis.mobile.rendering.PolygonStyleEditorTest", "com.nextgis.mobile.rendering.PolygonStyleRenderingTest", "com.nextgis.mobile.rendering.DirectVectorTilesOfflineTest"],
     "direct-vector-tiles": ["com.nextgis.mobile.rendering.VectorStyleRenderingTest", "com.nextgis.mobile.rendering.DirectVectorTilesTest", "com.nextgis.mobile.rendering.PolygonStyleRenderingTest", "com.nextgis.mobile.rendering.TrackControlsTest#crossingTracksPointsLinesAndPolygonsShareOneChooserInBothSelectionDirections", "com.nextgis.mobile.rendering.DirectVectorTilesOfflineTest"],
     "underlay-migration": ["com.nextgis.mobile.util.LegacyUnderlayProgressNativeTest"],
-    "rel03-resource-safety": ["com.nextgis.mobile.reliability.Rel03ResourceSafetyTest", "com.nextgis.mobile.reliability.SyncOfflineAndWalkGpsTest#gpsLossKeepsOwnerAndPointLockAndAutomaticallyAcceptsNextFix", "com.nextgis.mobile.reliability.SyncOfflineAndWalkGpsTest#timestampGapDoesNotDropFirstFreshFixOrReplayDuplicates", "com.nextgis.mobile.reliability.SyncOfflineAndWalkGpsTest#stickyRecoveryPreservesRecordingAndExplicitPauseStillBlocksFixes"]
+    "rel03-resource-safety": ["com.nextgis.mobile.reliability.Rel03ResourceSafetyTest", "com.nextgis.mobile.reliability.SyncOfflineAndWalkGpsTest#gpsLossKeepsOwnerAndPointLockAndAutomaticallyAcceptsNextFix", "com.nextgis.mobile.reliability.SyncOfflineAndWalkGpsTest#timestampGapDoesNotDropFirstFreshFixOrReplayDuplicates", "com.nextgis.mobile.reliability.SyncOfflineAndWalkGpsTest#stickyRecoveryPreservesRecordingAndExplicitPauseStillBlocksFixes"],
+    "perf01-map-baseline": ["com.nextgis.mobile.rendering.Perf01MapBenchmarkTest"]
   }
 }

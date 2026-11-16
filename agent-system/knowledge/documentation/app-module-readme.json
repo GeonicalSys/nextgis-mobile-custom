@@ -40,7 +40,7 @@
       "value": [
         "title: app — Android-приложение Lisa/Belka",
         "module_id: app",
-        "last_verified: 2026-11-11"
+        "last_verified: 2026-11-16"
       ]
     },
     "body": {
@@ -53,6 +53,11 @@
     }
   },
   "relations": [
+    {
+      "type": "contains",
+      "target": "lisa:mobile:resource:app-module-readme-perf01-technical-baseline",
+      "status": "source_backed"
+    },
     {
       "type": "contains",
       "target": "lisa:mobile:resource:app-module-readme-warning-dialog-measurement-and-scope",

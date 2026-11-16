@@ -42,7 +42,7 @@
         "",
         "Дефекты первого варианта и fixture/сборочные отказы сохранены, а не переименованы в PASS. SQLite PRAGMA исправлена на реальный query; fixtures используют настоящий sync owner/authority; test teardown завершает уведомления/закрывает helper до удаления. Итоговая компиляция выполнена с kotlin.incremental=false после ошибки частичного Kotlin-кэша. Генеральная регрессия остаётся отложенной.",
         "",
-        "Локальные библиотеки не слиты, pins не сдвинуты; release/push/merge не выполнялись. Глобальные UNKNOWN и чужая Desktop работа сохраняются отдельно. Длительные физические ресурсы, реальный ENOSPC/power cut и финальный Full здесь не заявляются.",
+        "На момент первичной приёмки библиотеки были локальными. Доставка завершена15.11.2026: [Core#72](https://github.com/GeonicalSys/android_maplib/pull/72), [UI#53](https://github.com/GeonicalSys/android_maplibui/pull/53), [App#100](https://github.com/GeonicalSys/nextgis-mobile-custom/pull/100); pins переведены на слитые commits. Публикация APK не выполнялась. Глобальные UNKNOWN сохранены; проверенные общие Desktop/Web файлы слиты по прямому поручению владельца. Длительные физические ресурсы, реальный ENOSPC/power cut и финальный Full здесь не заявляются.",
         "",
         "### Исходные критерии REL-03",
         "",

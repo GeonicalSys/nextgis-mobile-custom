@@ -42,7 +42,7 @@
         "module_id": "app",
         "repository_id": "root",
         "maturity": "maintained",
-        "last_verified": "2026-11-11"
+        "last_verified": "2026-11-16"
       }
     },
     "manifest-field-order": {
@@ -64,6 +64,11 @@
     {
       "type": "contains",
       "target": "lisa:mobile:resource:app-module-entrypoints",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:contract:app-module-key-components-perf01mapbenchmarktest",
       "status": "source_backed"
     },
     {

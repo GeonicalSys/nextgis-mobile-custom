@@ -4,7 +4,7 @@
   "kind": "task",
   "owner": "android_projects/android_gisapp",
   "topic": "documentation",
-  "status": "planned",
+  "status": "active",
   "execution_permission": false,
   "applicability": {
     "review_status": "reviewed",
@@ -19,9 +19,9 @@
     "goal": "open",
     "implementation": "planned",
     "source_verification": "UNKNOWN",
-    "merge": "unknown",
+    "merge": "open",
     "runtime_verification": "UNKNOWN",
-    "release": "unknown",
+    "release": "not_applicable",
     "retention": "Preserve the named measurements and avoid aggregating incomparable scenes or devices."
   },
   "facets": {
@@ -29,10 +29,10 @@
       "role": "reviewed_lifecycle_scope_and_evidence",
       "value": {
         "goal": "The agreed real project and device baseline is still required before general acceleration claims.",
-        "implementation": "The map-performance and diagnostic receipts give scoped examples. The combined sync, map, memory, disk and energy baseline remains a proposal.",
-        "source_verification": "Keep exact source, APK, project, device, network, configuration and sample provenance. Existing scenes each have narrower oracles.",
-        "merge": "Measure the baseline on its declared source frame before selecting a candidate optimization.",
-        "runtime_verification": "Collect the agreed cold/warm and change-volume matrix on authorized real data. Separate synthetic technical load and physical measurements.",
+        "implementation": "Технический harness ordinary/heavy реализован; единый полевой/sync/energy baseline остаётся незавершённым.",
+        "source_verification": "Семь адресных unit статистики/profile guard и сборка verification APK PASS; это не общая регрессия.",
+        "merge": "Новая рабочая сессия после слитой REL-03; инструмент PERF-01 ещё не доставлен.",
+        "runtime_verification": "Технический emulator smoke04:4/4 сцены PASS16.11.2026, cleanup PASS. Основная серия имеет отдельную квитанцию; реальные данные/устройства и энергия остаются открытыми.",
         "release": "Measured budgets are an acceptance input rather than a product release.",
         "references": [
           {
@@ -52,7 +52,7 @@
       "value": [
         "## PERF-01 Единый набор полевых замеров",
         "",
-        "Приоритет P1, обязателен до заявления об ускорении. Состояние: Предложена; требуется выбрать набор проектов. Владельцы — app/maplib/maplibui и технический ответственный PostgreSQL.",
+        "Приоритет P1, обязателен до заявления об ускорении. Состояние: В работе. Владелец выбрал первый этап: обычная и тяжёлая технические карты на эмуляторе; рабочие проекты/физические измерения — следующий отдельный этап. Владельцы — app/maplib/maplibui и технический ответственный PostgreSQL.",
         "",
         "Синхронизация: без изменений; единичная правка; около 1% и 10% изменений; удаления; фото; фильтрованные слои; повтор после обрыва. Измерять p50/p95 общего времени и стадий, HTTP запросы/байты, RAM, временный диск, время блокировки SQLite и задержки карты/GPS.",
         "",
@@ -61,6 +61,8 @@
         "Фиксировать устройство, Android, APK/commit, настройки, характеристики и происхождение данных, сеть и батарею. Численные бюджеты скорости, памяти и энергии утвердить по этому baseline; проценты ускорения заранее не обещать.",
         "",
         "Синтетические технические сбои и настоящие рабочие данные учитывать раздельно. Обычная style matrix не подтверждает local-vector-tile путь. Существующая основа: [map-performance.md](https://github.com/GeonicalSys/nextgis-mobile-custom/blob/8cc630ad2abd04d49470ea54715f7f69f9d32618/docs/architecture/map-performance.md).",
+        "",
+        "Первый технический набор:480 и6480 исходных полигонов, фиксированные камера/стили, новый процесс с пустым PBF и возврат в том же provider; по20 повторений на сцену. Методика/границы — [технический baseline](../architecture/map-performance.md#perf-01-технический-baseline-на-эмуляторе). Адресный smoke16.11.2026 прошёл4/4 сцены; основная серия и её p50/p95 фиксируются отдельными raw JSON/summary с APK/source hashes. Технический этап не закрывает всю полевую PERF-01.",
         ""
       ]
     },
