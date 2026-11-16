@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:documentation-changelog-perf01-phone-20261116",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/changelog.md",
+          "docs/architecture/map-performance.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-changelog"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the scoped real-layer measurement, input/APK/source hashes and cleanup receipts; no business-write, general Full, signed-app UI or energy acceptance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/changelog.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 2026-11-16 — PERF-01: рабочий PostGIS-слой на смартфоне",
+        "",
+        "Добавлены opt-in read-only сценарий и60 адресных замеров на A56/API37, независимый пересчёт p50/p95 и проверка неизменности исходных данных. Только частная копия разрешённого слоя400 проекта482; normal isolated account, фильтр и стили сохранены, отправка запрещена. Дорожная карта убирает уже выполненные технические/смартфонные этапы из очереди и сохраняет запись, тяжёлые реальные сцены, точные фазы и энергию открытыми. Full/общие тесты и планшет остаются финальными.",
+        "",
+        "Методика, числа и ограничения: [производительность карты](architecture/map-performance.md#perf-01-рабочий-postgis-слой-на-смартфоне--16-ноября-2026). Временные данные смартфона удалены, вход сохранён; отчёты/хеши/квитанции удерживаются на Q до завершения доставки.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:documentation-changelog-perf01-phone-20261116"
+    ]
+  }
+}

@@ -94,6 +94,11 @@
   "relations": [
     {
       "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-perf01-phone-20261116",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
       "target": "lisa:mobile:evidence:documentation-changelog-2026-11-16-perf01-technical-baseline",
       "status": "source_backed"
     },
