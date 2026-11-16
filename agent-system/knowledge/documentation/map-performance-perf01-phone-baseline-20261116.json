@@ -1,0 +1,122 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:map-performance-perf01-phone-baseline-20261116",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/architecture/map-performance.md",
+          "app/src/androidTest/java/com/nextgis/mobile/rendering/Perf01WorkingProjectBenchmarkTest.java",
+          "tools/perf01_working_project_benchmark.py",
+          "tools/tests/test_perf01_working_project_benchmark.py",
+          "tools/mobile-test-plan.json"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [
+      "lisa:mobile:resource:map-performance",
+      "lisa:mobile:task:mobile-roadmap-field-measurement-baseline"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the scoped real-layer measurement, input/APK/source hashes and cleanup receipts; no business-write, general Full, signed-app UI or energy acceptance."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/architecture/map-performance.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## PERF-01: рабочий PostGIS-слой на смартфоне — 16 ноября 2026",
+        "",
+        "Согласованный этап использует физический Samsung A56 (SM-A566B), Android17/API37 и отдельное приложение «ЛИСА автотесты». Проект482 «Инженер Олонец», прямой PostGIS-ресурс400 «Лесосеки активные», download-only: после фильтра района1294 объекта из3569 без фильтра. Рабочее приложение, его проект и серверные бизнес-данные не менялись. В отдельной локальной копии546204 байта исходных геометрических BLOB. Настройка origin render_mode=classic сохранена; фактический текущий SQLite provider подтверждён отдельно.",
+        "",
+        "Сцены:20 открытий Activity в разных процессах,20 возвратов после ухода камеры на2° в одном живом provider и20 входящих получений неизменённых данных. Вместе60 наблюдений/24 native запуска; короткий smoke учитывается отдельно. Камера, исходная геометрия, фильтр и стили фиксированы для серии; viewport1080×2113,420dpi,fontScale≈1.15, bearing/tilt0. Системные настройки и OS/font cache не изменялись.",
+        "",
+        "| Сцена | n | p50, мс | p95, мс | Максимум наблюдаемого RSS, МиБ |",
+        "|---|---:|---:|---:|---:|",
+        "| Первое открытие карты в новом процессе | 20 | 1454.644 | 1570.503 | 331.4 |",
+        "| Возврат к участку в том же процессе | 20 | 96.935 | 261.831 | 335.3 |",
+        "| Входящее получение без изменений | 20 | 8059.225 | 8893.013 | 326.3 |",
+        "",
+        "p50 — медиана, p95 — empirical nearest rank (19-е из20 значений). Пересчёт выполнен независимо от замерщика; неполные, повторные и смешанные серии отклоняются. RSS измеряется процессным наблюдателем и не является бюджетом слоя или доказательством отсутствия утечки. CPU, Java/native heap/PSS/RSS и байты UID сохранены в raw JSON; UID traffic включает фоновую активность и не доказывает точное число/размер HTTP запросов.",
+        "",
+        "Готовность карты требует fully-rendered callback, видимое сфокусированное окно с объявленной камерой и ожидаемые исходные FID. Независимый oracle берёт bbox из полных оригинальных SQLite геометрий, а не из тайлов; полностью вписанные в viewport исходные объекты должны присутствовать среди отрисованных. Все40 map наблюдений подтвердили current SQLite provider и пустые глобальные feature lists; warm сохраняет тот же provider. Подписи визуально присутствуют на PNG, но независимая полнота/качество подписей не приняты этим этапом.",
+        "",
+        "validated_ready_upper_ms включает ActivityScenario, установку камеры, ожидание кадра и quality probes. Application/TestRunner startup находится вне таймера. Это консервативная оценка инструментированной сборки; она не означает время обычного запуска подписанного APK, p95 отдельного тайла или показатели всего проекта.",
+        "",
+        "Замерщик использует NGWVectorLayer.createFromNGW и только входящий getChangesFromServer на частном ReadOnlyLayer; sendLocalChanges запрещён явным assertion. SYNC_DATA без вложений и sync_direction=2 задаются перед каждым pull; district override повторяется, поскольку он одноразовый. Общий sync аккаунта/проекта не вызывается. Новая копия берёт живую схему66 полей, исходная сохранённая конфигурация содержит67: расхождение не исправлялось в рабочем проекте. Хеш всех исходных SQLite значений/геометрий совпал до и после серии.",
+        "",
+        "Обычный аккаунт изолированного приложения подтвердил GET метаданных и счётчика HTTP200 до замеров и после удаления временного слоя. Запись активации у тестовой сборки отсутствует; зависшее окно подключения и подписанное рабочее приложение этим результатом не принимаются. Пароли/токены и рабочая база не экспортировались.",
+        "",
+        "Запуск: `py -3.13 -B tools/perf01_working_project_benchmark.py --phone-serial <serial> --stage baseline --output Q:/Codex/Scratch/<task>/evidence/<new-run>`. Это opt-in работа на заранее разрешённом проекте482, слое400 и обычном аккаунте verification APK; не команда для произвольных рабочих проектов. Подготовить нормальный вход вручную, не извлекать чужие credentials. Сборка обязательна; --skip-build допускается только штатным exact-source/APK guard. Обычный Full-каталог запускает только guard-only метод без чтения реальных данных и аккаунта.",
+        "",
+        "Host допускает только явно выбранный физический телефон/пользователя0 и Related area perf01-working-project; prepare/pm clear запрещены. Он останавливает только verification APK и вызывает native с reset=False. Native проверяет private root и nonce, resource400/type4/direction2. Runtime account и исходные renderer/label/origin/фильтр берутся обычными API; рабочие копии не переключаются и не очищаются.",
+        "",
+        "Временный слой/state/oracle удалены штатно; после переподключения смартфона сверены physical paths и SHA256 и удалены4 оставшихся owned файла (219998 байт), отсутствие подтверждено. Вход сохранён; рабочие конфигурации и версия приложения226/3.1.2.32 совпали при завершающей проверке. Отчёты и compact provenance находятся только на Q; чужие приложения, настройки и профиль пользователя10 не менялись.",
+        "",
+        "Основа: native implementation89a544068bac1a38b95d9a67903baec460d189db; runtime source fingerprint6b87102e7fe56b92bd4f5d6f184c07a6d0d8625c98a9854be09382282007e2e1. App APK SHA25638861992e265596383ba4a8b37b17a2e5bd2a9a1c23539995a43f5754c8a007b, test APK a28f88d3423fa9f8a31c7a0a2835a51353175b4dfb92b4dd519d65cfbebdbdb2. Исходные данные SHA256bda024078bd820ea7e94ae957ca9fe45bc45bd0ebad59b944483917ca449e022.",
+        "",
+        "Полные phase JSON, PNG, independently checked summary и cleanup receipts: Q:/Codex/Scratch/perf01-working-phone-20261116-01a1d9ac/evidence/working-baseline-01; завершающая уборка — evidence/cleanup-reconnected-result.json. Контекст неизвестных/dynamic consumers сохраняется в source_context и журнале сессии; эти ссылки не являются разрешением писать на сервер.",
+        "",
+        "Открыты сценарии записи/1%/10%/удаления/фото/обрыва, более тяжёлые реальные сцены, плотные подписи, точные фазы HTTP/SQLite/тайлов и энергия. Для записи нужен другой подготовленный набор и явное разрешение. Общая PERF-01 остаётся открытой, Full/общая регрессия и планшет — только финальный этап перед публикацией.",
+        ""
+      ]
+    },
+    "scenario-closure": {
+      "role": "reviewed_readonly_benchmark_dependencies_and_limits",
+      "value": {
+        "producers": [
+          "maplib/src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java",
+          "maplib/src/main/java/com/nextgis/maplib/map/MapDrawable.java",
+          "maplib/src/main/java/com/nextgis/maplib/util/DatabaseContext.java",
+          "tools/run_mobile_tests.py",
+          "app/src/androidTest/java/com/nextgis/mobile/rendering/Perf01MapBenchmarkTest.java"
+        ],
+        "consumers": [
+          "app/src/androidTest/java/com/nextgis/mobile/rendering/Perf01WorkingProjectBenchmarkTest.java",
+          "tools/perf01_working_project_benchmark.py",
+          "tools/mobile-test-plan.json",
+          "tools/tests/test_perf01_working_project_benchmark.py"
+        ],
+        "protected": [
+          "Incoming-only private copy; no source project writes",
+          "Normal isolated account, explicit project482/resource400 and primary-phone nonce",
+          "Original schema/filter/style provenance and independent bbox/FID oracle",
+          "Default Full guard-only; general tests and field/energy matrix remain separate"
+        ],
+        "unknowns": [
+          "Whole-account/outgoing sync and concurrent edits",
+          "Exact HTTP counts, SQLite locking/tile distributions, energy",
+          "Independent labels and signed registration UI",
+          "Moving foreign/dynamic source observations remain provisional"
+        ]
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:map-performance-perf01-phone-baseline-20261116"
+    ]
+  }
+}
