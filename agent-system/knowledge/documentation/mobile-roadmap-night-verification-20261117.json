@@ -1,0 +1,62 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:mobile-roadmap-night-verification-20261117",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain dated tested inputs and negative receipts; this checkpoint does not certify the whole roadmap or publication."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## Ночной этап 17 ноября 2026",
+        "",
+        "- AUTH-01: безопасная диагностика входа реализована; по 9 native-сценариев смартфона и CPU-эмулятора PASS, обычный экспорт проверен.",
+        "- SCRIPT-UI-01: обычный шрифт и прокрутка реализованы; по 4 native-сценария смартфона/планшета/CPU PASS, 24 локальных профиля окна. Ручной TalkBack NOT_RUN.",
+        "- MVT-01: исправлены удержание полного списка/поздняя classic-публикация и отсутствие инвалидации committed delete. Реальные insert/update/delete и одинаковые ID разных проектов проверены на смартфоне/планшете/CPU. 10 прежних SQLite native-сценариев финального CPU-прогона PASS; промежуточный content/style timeout остаётся неразобранной нестабильностью.",
+        "- PERF-01: 92 адресных Java unit и 49 unit инструментов PASS; 80 принятых writable-sync наблюдений для 1/10 объектов. Серия100 FAILED на реальных upstream500; тяжёлые10k/50k карты единично проверены, длинные серии и memory-soak не завершены.",
+        "",
+        "Исходный рабочий код: App105214ce, Core44643da7, UIa2de7723 плюс незакоммиченные изменения собственной общей ветки. Последний native-кандидат `dc42ccf331f39a89fd1ac81c9e53e63c38446ee6efc3313d8ed8a2ec85d9b234`; app APK SHA256 `1551972938e8d8eae29a4f4774e3d343a6917240b4489d81c6fbed57387e64f4`, test APK `e3435b07545c85b96c08fdad8714389d70a1787dfaba3a9c810f384de8422d45`. У каждой серии сохранён свой source/APK basis; поздняя правка дорожной карты не выдаётся за новый native-прогон. Фактический verification package сообщил3.1.2.23/build218; имя APK3.1.2.33 не считается версией установленного приложения.",
+        "",
+        "Квитанции, отрицательные прогоны и источники: `Q:/Codex/Scratch/mobile-night-20261117-01a1e5ee/retained`. На момент завершения ночных проверок изменения ещё не были закоммичены, отправлены, слиты или опубликованы; последующая доставка учитывается отдельно. Общие AGENTS, Desktop, production-приложение и общие службы не изменялись.",
+        "",
+        "Временные ресурсы NGW1548–1551, отдельные серверные база/роль и остановленный relay удалены с проверкой отсутствия. Планшет потерял Wi-Fi на14-м fresh открытии: собственный синтетический проект проверочного приложения удержан до восстановления связи; точный run/путь и порядок восстановления прежнего проекта/настроек сохранены в pending-cleanup. Смартфон отключён владельцем после завершённых проверок; отклонённый новый запуск не состоялся.",
+        "",
+        "Связь собственного PostGIS с внешним NextGIS не проверена: автоматическая проверка отклонила сохранение нового временного пароля в NextGIS, ответа на отдельный запрос не было. Вместо неё выполнены 180 локальных серверных read/update/delete транзакционных измерений с ROLLBACK и сверкой1000 строк; это не Android/NGW/PostGIS end-to-end.",
+        "",
+        "Доставка по отдельному поручению владельца 17.11.2026: собственные ветки `codex/session-karniilp-01a1e5c4` в Desktop, App, Core и UI. Слияние и выпуск не входят в это поручение. [Ветка App](https://github.com/GeonicalSys/nextgis-mobile-custom/tree/codex/session-karniilp-01a1e5c4). Незавершённые native/полевые условия выше сохраняются.",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:mobile-roadmap-night-verification-20261117"
+    ]
+  }
+}

@@ -41,11 +41,16 @@ public class Perf01MapBenchmarkTest {
         GISApplication app=(GISApplication)InstrumentationRegistry.getInstrumentation().getTargetContext().getApplicationContext();
         VerificationEnvironment.requireIsolated(app);
         assertEquals(VerificationEnvironment.PACKAGE,app.getPackageName());
-        assertTrue("PERF-01 fixtures require an emulator",VerificationEnvironment.isEmulator());
+        assertTrue("Physical synthetic fixtures require explicit opt-in",VerificationEnvironment.isEmulator()
+                || "true".equals(arg("perfPhysicalOptIn","false")));
         return app;
     }
     @Test public void ordinaryTechnicalMap() throws Exception { run("ordinary",20); }
-    @Test public void heavyTechnicalMap() throws Exception { run("heavy",80); }
+    @Test public void heavyTechnicalMap() throws Exception {
+        int side=Integer.parseInt(arg("perfExtendedSide","80"));
+        assertTrue(side==80||side==100||side==224);
+        run(side==80?"heavy":"heavy"+side,side);
+    }
     String arg(String key,String fallback) { return InstrumentationRegistry.getArguments().getString(key,fallback); }
     static long now() { return SystemClock.elapsedRealtimeNanos(); }
     static double ms(long ns) { return ns/1_000_000.0; }
@@ -157,9 +162,10 @@ public class Perf01MapBenchmarkTest {
     static class Frames implements AutoCloseable {
         final org.maplibre.android.maps.MapView view;
         final LinkedBlockingQueue<Long> frames=new LinkedBlockingQueue<>(4);
-        final AtomicLong first=new AtomicLong();
+        final AtomicLong first=new AtomicLong(),allEvents=new AtomicLong(),fullEvents=new AtomicLong(),lastEvent=new AtomicLong();
         final org.maplibre.android.maps.MapView.OnDidFinishRenderingFrameListener listener=(fully,encoding,rendering)->{
-            if(fully){long n=now();first.compareAndSet(0,n);if(!frames.offer(n)){frames.poll();frames.offer(n);}}
+            long n=now();allEvents.incrementAndGet();lastEvent.set(n);
+            if(fully){fullEvents.incrementAndGet();first.compareAndSet(0,n);if(!frames.offer(n)){frames.poll();frames.offer(n);}}
         };
         Frames(org.maplibre.android.maps.MapView view){this.view=view;view.addOnDidFinishRenderingFrameListener(listener);}
         public void close(){view.removeOnDidFinishRenderingFrameListener(listener);}
@@ -282,7 +288,25 @@ public class Perf01MapBenchmarkTest {
             if(ready!=null)break;
             Thread.sleep(250);frames.frames.clear();ui(screen,a->((MapDrawable)app.getMap()).getMaplibreMap().triggerRepaint());
         }
-        if(ready==null)try {saveScene(app);}catch(Exception|AssertionError diagnosticFailure){android.util.Log.w("Perf01Evidence","Failure screenshot unavailable",diagnosticFailure);}
+        if(ready==null) {
+            JSONObject witness=new JSONObject().put("run",state.getString("run")).put("cohort",state.getString("cohort"))
+                .put("mode",mode).put("index",index).put("status","failed").put("deadline_seconds",timeout)
+                .put("all_frame_events",frames.allEvents.get()).put("full_frame_events",frames.fullEvents.get())
+                .put("last_frame_age_ms",frames.lastEvent.get()==0?JSONObject.NULL:ms(now()-frames.lastEvent.get()));
+            try { ui(screen,a->{
+                MapDrawable current=(MapDrawable)app.getMap();org.maplibre.android.maps.MapView currentView=current.getMaplibreMapView();
+                witness.put("observer_view_current",frames.view==currentView).put("observer_view_attached",frames.view.isAttachedToWindow())
+                    .put("observer_view_shown",frames.view.isShown()).put("observer_view_focused",frames.view.hasWindowFocus())
+                    .put("current_view_attached",currentView!=null&&currentView.isAttachedToWindow())
+                    .put("current_activity_view",currentView==a.findViewById(com.nextgis.mobile.R.id.mapViewMaplibre))
+                    .put("orientation",a.getResources().getConfiguration().orientation)
+                    .put("runtime",new JSONObject(MapRuntimeDiagnostics.forEvent(System.currentTimeMillis())));
+                try {witness.put("independent_quality_after_failed_frame_gate",quality(current,state,side));}
+                catch(AssertionError|Exception invalid){witness.put("quality_failure_type",invalid.getClass().getSimpleName());}
+            }); }catch(Exception|AssertionError unavailable){witness.put("diagnostic_failure_type",unavailable.getClass().getSimpleName());}
+            write(new File(app.getFilesDir(),"perf01-failed-frame.json"),witness);
+            try {saveScene(app);}catch(Exception|AssertionError diagnosticFailure){android.util.Log.w("Perf01Evidence","Failure screenshot unavailable",diagnosticFailure);}
+        }
         assertNotNull("No validated frame within"+timeout+"s; last="+last,ready);long ended=now(),cpu=android.os.Process.getElapsedCpuTime()-cpuBegan;
         JSONObject sample=new JSONObject().put("index",index).put("mode",mode).put("process",processIdentity()).put("quality",ready)
             .put("validated_ready_upper_ms",ms(ended-began)).put("validated_sdk_frame_candidate_ms",ms(frameAt-began))
@@ -305,14 +329,18 @@ public class Perf01MapBenchmarkTest {
         String mode=smoke?"smoke":arg("perfMode","fresh");assertTrue(Arrays.asList("smoke","fresh","warm").contains(mode));
         if(mode.equals("fresh"))assertNotEquals(state.getString("seed_process"),processIdentity());
         int count=Integer.parseInt(arg("perfSamples","1"));assertTrue(count>=1&&count<=20);if(!mode.equals("warm"))assertEquals(1,count);
-        preferences(app);long cleared=mode.equals("fresh")?clearDerivedCache(app):0;
+        preferences(app);long cleared=mode.equals("fresh")&&"true".equals(arg("perfClearDerivedCache","true"))?clearDerivedCache(app):0;
         JSONObject output=new JSONObject().put("schema",1).put("fixture",state).put("cohort",cohort).put("mode",mode)
             .put("phase_index",Integer.parseInt(arg("perfSample","0")))
             .put("status","running").put("cleared_derived_cache_bytes",cleared).put("timing_scope","ActivityScenario launch or live camera return; instrumentation/validation included; OS/font cache uncontrolled");
         JSONArray samples=new JSONArray();output.put("samples",samples);File out=new File(app.getFilesDir(),OUTPUT);
         write(out,output);
         AtomicReference<Frames> observed=new AtomicReference<>();
-        try(RssSampler sampler=new RssSampler()) {
+        boolean profile="true".equals(arg("perfTileProfile","false"));
+        android.content.pm.PackageInfo identity=app.getPackageManager().getPackageInfo(app.getPackageName(),0);
+        try(Perf01TileObservation tiles=profile?new Perf01TileObservation(app.getFilesDir(),identity.versionName,
+                    identity.versionCode,arg("perfRevision","unknown")):null;
+            RssSampler sampler=new RssSampler()) {
             sampler.reset();long began=now(),cpuBegan=android.os.Process.getElapsedCpuTime();
             try(ActivityScenario<MainActivity> screen=ActivityScenario.launch(MainActivity.class)) {
             try {
@@ -338,10 +366,22 @@ public class Perf01MapBenchmarkTest {
                     JSONObject sample=measure(screen,app,state,side,frames,sampler,start.get(),cpu.get(),start.get(),index,mode);
                     for(int i=0;i<2;i++)assertSame("Warm scene must keep the live provider",providers[i],map.getSqliteVectorProvider(state.getJSONArray("ids").getInt(i)));
                     sample.put("same_live_providers",true);samples.put(sample);write(out,output);
+                    int pause=Integer.parseInt(arg("perfPostFrameIdleMs","0"));assertTrue(pause>=0&&pause<=20000);
+                    if(pause>0) {
+                        long idleCpu=android.os.Process.getElapsedCpuTime(),idleStarted=now();Thread.sleep(pause);
+                        sample.put("post_frame_idle_ms",ms(now()-idleStarted)).put("post_frame_idle_cpu_ms",android.os.Process.getElapsedCpuTime()-idleCpu)
+                            .put("post_frame_idle_memory",memory(sampler));write(out,output);
+                    }
                 }
                 output.put("unmeasured_warmup",initial);
             }
             inputsUnchanged(app,state,side);output.put("input_hashes_verified_after_measurement",true);
+            if(tiles!=null) {
+                JSONObject observedTiles=tiles.finish("validated_frames_complete");
+                output.put("tile_profile_file",tiles.filename())
+                    .put("tile_profile_session",observedTiles.getString("session"))
+                    .put("tile_profile_scope","Whole observation window including initial warmup, adjacent tiles and validation; frame times remain separate");
+            }
             if("true".equals(arg("perfScreenshot","false")))saveScene(app);
             output.put("status","passed");write(out,output);
             } finally { if(observed.get()!=null)ui(screen,a->observed.get().close()); }
