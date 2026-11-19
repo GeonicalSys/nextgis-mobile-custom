@@ -713,7 +713,10 @@ public class NativeSqliteVectorRenderingTest {
 
     /** Three real isolated SQLite rows per case; no classic bind or global feature-list producer. */
     private static void runGeometrySmoke(int type, boolean rules, boolean custom, boolean pattern) throws Exception {
-        Bitmap icon = custom ? Bitmap.createBitmap(16, 16, Bitmap.Config.ARGB_8888) : null;
+        // Match the authored canvas size of MarkerIconRegistry's built-in images. A16px
+        // bitmap at420dpi/iconSize4 left only2x2 solid cyan pixels per component, making
+        // the unchanged five-pixel placement oracle depend on subpixel raster phase.
+        Bitmap icon = custom ? Bitmap.createBitmap(64, 64, Bitmap.Config.ARGB_8888) : null;
         String iconName = "sqlite-qa-cyan-" + java.util.UUID.randomUUID().toString();
         try (VectorStyleRenderingTest.Fixture f = new VectorStyleRenderingTest.Fixture()) {
             VectorLayerUI layer = f.add(type);
