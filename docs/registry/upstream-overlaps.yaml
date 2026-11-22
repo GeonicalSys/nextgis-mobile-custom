@@ -12,6 +12,8 @@ hotspots:
     - maplib/src/main/java/com/nextgis/maplib/display/ConfigurablePolygonPatternRegistry.java
     - maplibui/src/main/java/com/nextgis/maplibui/fragment/StyleFragment.java
     - maplibui/src/main/java/com/nextgis/maplibui/util/StylePreviewView.java
+    - app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleRenderingTest.java
+    - app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleEditorTest.java
     default_decision: ours
     reason: Official maplib 014247e and maplibui 6420930 still have the simple polygon model/editor with no pattern_options,
       outline_options or native live symbol preview in those entry points, verified 2026-10-24. Preserve the optional fork
@@ -31,6 +33,8 @@ hotspots:
     - maplib/src/main/java/com/nextgis/maplib/display/SimpleMarkerStyle.java
     - maplib/src/main/java/com/nextgis/maplib/display/FireflyMarkerRegistry.java
     - maplibui/src/main/java/com/nextgis/maplibui/fragment/StyleFragment.java
+    - app/src/androidTest/java/com/nextgis/mobile/rendering/FireflyStyleEditorTest.java
+    - app/src/androidTest/java/com/nextgis/mobile/rendering/VectorStyleRenderingTest.java
     default_decision: ours
     reason: Preserve separate type 9 for a crisp core and outward-only glow; official master still exposes marker types 1–8
       and has no equivalent editor choice as checked on 2026-10-24.
@@ -49,6 +53,8 @@ hotspots:
     - maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java
     - maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java
     - maplibui/src/main/java/com/nextgis/maplibui/service/WalkEditService.java
+    - app/src/androidTest/java/com/nextgis/mobile/reliability/TrackRecordingModesTest.java
+    - app/src/androidTest/java/com/nextgis/mobile/reliability/SyncOfflineAndWalkGpsTest.java
     default_decision: ours
     reason: Preserve shared acquisition, current display expiry, GNSS-only filtered recording and persistent gaps; official
       HEAD still keeps independent recorder subscriptions and an unbounded location cache.

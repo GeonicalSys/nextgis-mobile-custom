@@ -7,8 +7,49 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/registry/dependencies.yaml",
+          "settings.gradle"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "build.gradle",
+          "src/main/java/com/nextgis/maplib/api/IGISApplication.java",
+          "src/main/java/com/nextgis/maplib/datasource/Field.java",
+          "src/main/java/com/nextgis/maplib/datasource/ngw/ResourceGroup.java",
+          "src/main/java/com/nextgis/maplib/display/ConfigurablePolygonPatternRegistry.java",
+          "src/main/java/com/nextgis/maplib/display/FireflyMarkerRegistry.java",
+          "src/main/java/com/nextgis/maplib/display/PolygonOutlineOptions.java",
+          "src/main/java/com/nextgis/maplib/display/PolygonPatternOptions.java",
+          "src/main/java/com/nextgis/maplib/display/SimpleMarkerStyle.java",
+          "src/main/java/com/nextgis/maplib/display/SimplePolygonStyle.java",
+          "src/main/java/com/nextgis/maplib/location/GpsEventSource.java",
+          "src/main/java/com/nextgis/maplib/map/MapDrawable.java",
+          "src/main/java/com/nextgis/maplib/map/TrackLayer.java",
+          "src/main/java/com/nextgis/maplib/map/TrackMapStyle.java",
+          "src/main/java/com/nextgis/maplib/map/mpl/PolygonOutlineLayerFactory.java",
+          "src/main/java/com/nextgis/maplib/util/FeatureChanges.java",
+          "src/main/java/com/nextgis/maplib/util/LocalLogInitializer.java",
+          "src/main/java/com/nextgis/maplib/util/NGWResourceUrl.java",
+          "src/main/java/com/nextgis/maplib/util/ProjectSyncState.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "build.gradle"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

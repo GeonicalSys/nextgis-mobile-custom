@@ -7,8 +7,30 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "src/main/java/com/nextgis/maplib/util/LayerDatabaseTransaction.java",
+          "src/main/java/com/nextgis/maplib/util/FeatureSaveJournal.java",
+          "src/main/java/com/nextgis/maplib/util/PendingTrackPoints.java",
+          "src/main/java/com/nextgis/maplib/util/FeatureChanges.java",
+          "src/main/java/com/nextgis/maplib/map/VectorLayer.java",
+          "src/main/java/com/nextgis/maplib/map/TrackLayer.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/java/com/nextgis/maplibui/activity/ModifyAttributesActivity.java",
+          "src/main/java/com/nextgis/maplibui/service/TrackerService.java",
+          "src/main/java/com/nextgis/maplibui/formcontrol/Sign.java"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

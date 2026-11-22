@@ -7,8 +7,34 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/androidTest/java/com/nextgis/mobile/reliability/SyncOfflineAndWalkGpsTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/reliability/TrackRecordingModesTest.java",
+          "docs/registry/upstream-overlaps.yaml",
+          "tools/mobile-test-plan.json"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "src/main/java/com/nextgis/maplib/location/GpsEventSource.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/java/com/nextgis/maplibui/service/TrackerService.java",
+          "src/main/java/com/nextgis/maplibui/service/WalkEditService.java"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
@@ -38,7 +64,9 @@
         "paths": [
           "maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java",
           "maplibui/src/main/java/com/nextgis/maplibui/service/TrackerService.java",
-          "maplibui/src/main/java/com/nextgis/maplibui/service/WalkEditService.java"
+          "maplibui/src/main/java/com/nextgis/maplibui/service/WalkEditService.java",
+          "app/src/androidTest/java/com/nextgis/mobile/reliability/TrackRecordingModesTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/reliability/SyncOfflineAndWalkGpsTest.java"
         ],
         "default_decision": "ours",
         "reason": "Preserve shared acquisition, current display expiry, GNSS-only filtered recording and persistent gaps; official HEAD still keeps independent recorder subscriptions and an unbounded location cache.",

@@ -7,8 +7,34 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/architecture/map-performance.md",
+          "docs/architecture/map-rendering.md",
+          "docs/registry/dependencies.yaml",
+          "docs/registry/invariants.yaml"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "docs/README.md",
+          "docs/manifest.yaml",
+          "src/main/java/com/nextgis/maplib/map/SqliteVectorFeatureReader.java",
+          "src/main/java/com/nextgis/maplib/map/SqliteVectorTileProvider.java",
+          "src/main/java/com/nextgis/maplib/map/VectorLayer.java",
+          "src/main/java/com/nextgis/maplib/util/MapRuntimeDiagnostics.java",
+          "src/test/java/com/nextgis/maplib/map/SqliteVectorFeatureReaderTest.java",
+          "src/test/java/com/nextgis/maplib/map/SqliteVectorTileProviderTest.java",
+          "src/test/java/com/nextgis/maplib/util/MapRuntimeDiagnosticsTest.java"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

@@ -7,8 +7,59 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/androidTest/java/com/nextgis/mobile/reliability/LegacyTrackColorsNativeTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/reliability/SharedTracksTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/rendering/TrackStopConfirmationTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/rendering/VectorStyleRenderingTest.java",
+          "docs/architecture/crash-recovery.md",
+          "docs/architecture/location-pipeline.md",
+          "docs/registry/invariants.yaml"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "src/main/java/com/nextgis/maplib/display/FieldStyleRule.java",
+          "src/main/java/com/nextgis/maplib/display/LabelAttributes.java",
+          "src/main/java/com/nextgis/maplib/display/MarkerIconRegistry.java",
+          "src/main/java/com/nextgis/maplib/display/MplStyleMapper.java",
+          "src/main/java/com/nextgis/maplib/display/Style.java",
+          "src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java",
+          "src/main/java/com/nextgis/maplib/map/RuleGeometryLayouts.java",
+          "src/main/java/com/nextgis/maplib/map/RuleLabelLayouts.java",
+          "src/main/java/com/nextgis/maplib/map/SharedTrackStore.java",
+          "src/main/java/com/nextgis/maplib/map/TrackLayer.java",
+          "src/main/java/com/nextgis/maplib/map/VectorLayer.java",
+          "src/main/java/com/nextgis/maplib/map/mpl/LineLayerFactory.java",
+          "src/main/java/com/nextgis/maplib/map/mpl/MplLayerBuildContext.java",
+          "src/main/java/com/nextgis/maplib/map/mpl/PointLayerFactory.java",
+          "src/main/java/com/nextgis/maplib/map/mpl/PolygonLayerFactory.java",
+          "src/main/java/com/nextgis/maplib/util/FeatureChanges.java",
+          "src/main/java/com/nextgis/maplib/util/FeatureSaveJournal.java",
+          "src/main/java/com/nextgis/maplib/util/LayerDatabaseTransaction.java",
+          "src/main/java/com/nextgis/maplib/util/PendingTrackPoints.java",
+          "src/test/java/com/nextgis/maplib/map/LegacyTrackColorsTest.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/java/com/nextgis/maplibui/activity/ModifyAttributesActivity.java",
+          "src/main/java/com/nextgis/maplibui/activity/TrackStopConfirmationActivity.java",
+          "src/main/java/com/nextgis/maplibui/formcontrol/Sign.java",
+          "src/main/java/com/nextgis/maplibui/service/TrackerService.java",
+          "src/main/java/com/nextgis/maplibui/util/SharedTrackProjects.java"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

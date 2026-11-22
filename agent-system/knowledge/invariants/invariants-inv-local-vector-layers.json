@@ -7,8 +7,45 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/docs/README.md",
+          "app/src/main/java/com/nextgis/mobile/MainApplication.java",
+          "app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt",
+          "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+          "docs/reference/official-differences.md",
+          "docs/registry/invariants.yaml"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "docs/README.md",
+          "src/main/java/com/nextgis/maplib/map/VectorLayer.java",
+          "src/main/java/com/nextgis/maplib/util/CoordinatePointLayerImporter.java",
+          "src/main/java/com/nextgis/maplib/util/CoordinatePointParser.java",
+          "src/main/java/com/nextgis/maplib/util/DatabaseContext.java",
+          "src/main/java/com/nextgis/maplib/util/GeoJSONUtil.java",
+          "src/test/java/com/nextgis/maplib/util/CoordinatePointParserTest.java",
+          "src/test/java/com/nextgis/maplib/util/GeoJSONUtilCrsTest.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "docs/README.md",
+          "src/main/java/com/nextgis/maplibui/dialog/CreateLocalLayerDialog.java",
+          "src/main/java/com/nextgis/maplibui/mapui/LayerFactoryUI.java",
+          "src/main/java/com/nextgis/maplibui/service/LayerFillService.java"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

@@ -7,9 +7,46 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
-    "scope_refs": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/build.gradle",
+          "app/docs/manifest.yaml",
+          "docs/registry/smoke-tests.yaml",
+          "tools/mobile-test-plan.json",
+          "tools/run_mobile_tests.py",
+          "tools/verify-mobile-tests.ps1"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "build.gradle",
+          "docs/manifest.yaml"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "build.gradle",
+          "docs/manifest.yaml"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [
+      "lisa:mobile:contract:change-impact-feature-copy-transform",
+      "lisa:mobile:contract:change-impact-native-geojson-payload",
+      "lisa:mobile:contract:change-impact-sqlite-native-vectors",
+      "lisa:mobile:contract:invariants-inv-feature-copy",
+      "lisa:mobile:contract:invariants-inv-native-geojson-payload",
+      "lisa:mobile:contract:invariants-inv-sqlite-native-vectors",
+      "lisa:mobile:contract:invariants-inv-whole-object-transform"
+    ],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
   },

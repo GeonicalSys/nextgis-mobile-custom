@@ -7,8 +7,32 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/build.gradle",
+          "app/src/belka",
+          "app/src/lisa",
+          "build.gradle",
+          "docs/reference/build-matrix.md",
+          "docs/reference/flavors-and-versioning.md",
+          "docs/registry/invariants.yaml",
+          "docs/runbooks/release-apk.md",
+          "gradle/wrapper/gradle-wrapper.properties",
+          "tools/verify-apk-version-matrix.ps1"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "build.gradle"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

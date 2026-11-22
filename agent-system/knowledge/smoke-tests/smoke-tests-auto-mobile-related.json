@@ -7,9 +7,51 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
-    "scope_refs": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/build.gradle",
+          "app/docs/manifest.yaml",
+          "docs/registry/smoke-tests.yaml",
+          "tools/mobile-test-plan.json",
+          "tools/run_mobile_tests.py",
+          "tools/verify-mobile-tests.ps1"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "build.gradle",
+          "docs/manifest.yaml"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [
+      "lisa:mobile:contract:change-impact-layer-chooser-and-mobile-acceptance",
+      "lisa:mobile:contract:change-impact-local-tile-cache-and-io-admission",
+      "lisa:mobile:contract:change-impact-local-vector-tile-labels",
+      "lisa:mobile:contract:change-impact-local-vector-tile-offline-transport",
+      "lisa:mobile:contract:change-impact-maintenance-reminders",
+      "lisa:mobile:contract:change-impact-mixed-map-candidates-and-field-lines",
+      "lisa:mobile:contract:change-impact-shared-tracks-and-classic-styles",
+      "lisa:mobile:contract:change-impact-sqlite-native-vectors",
+      "lisa:mobile:contract:change-impact-track-controls",
+      "lisa:mobile:contract:change-impact-track-stop-and-legacy-colors",
+      "lisa:mobile:contract:change-impact-visible-line-labels",
+      "lisa:mobile:contract:invariants-inv-classic-rule-labels",
+      "lisa:mobile:contract:invariants-inv-field-line-display-priority",
+      "lisa:mobile:contract:invariants-inv-local-vector-tile-labels",
+      "lisa:mobile:contract:invariants-inv-maintenance-reminders",
+      "lisa:mobile:contract:invariants-inv-mixed-map-candidates",
+      "lisa:mobile:contract:invariants-inv-scrolling-dialog-viewport",
+      "lisa:mobile:contract:invariants-inv-shared-tracks",
+      "lisa:mobile:contract:invariants-inv-updater-background",
+      "lisa:mobile:contract:invariants-inv-visible-line-labels"
+    ],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
   },

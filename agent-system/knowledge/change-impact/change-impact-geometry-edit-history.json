@@ -7,8 +7,19 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/java/com/nextgis/maplibui/overlay/UndoRedoOverlay.java",
+          "src/main/java/com/nextgis/maplibui/overlay/RulerOverlay.java",
+          "src/test/java/com/nextgis/maplibui/overlay/UndoRedoOverlayTest.java",
+          "src/main/res/menu/ruler_measurement.xml"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

@@ -7,8 +7,47 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/main/res/values-ru",
+          "app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt",
+          "app/src/main/res/menu",
+          "app/src/main/res/values/large_interface.xml",
+          "app/src/main/res/values-h320dp",
+          "app/src/main/res/layout",
+          "app/src/main/res/layout-land",
+          "app/src/main/res/values/styles.xml",
+          "app/src/main/java/com/nextgis/mobile/view",
+          "app/src/androidTest/java/com/nextgis/mobile/reliability/LargeTextLayoutTest.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/res/values-ru",
+          "src/main/res/menu",
+          "src/main/java/com/nextgis/maplibui/view/WrappingLabel.java",
+          "src/main/java/com/nextgis/maplibui/view/ReflowingGuidanceHeader.java",
+          "src/main/java/com/nextgis/maplibui/util/FittedDialogs.java",
+          "src/main/res/layout",
+          "src/main/res/layout-land",
+          "src/main/res/values/styles.xml",
+          "src/main/res/values/readable_buttons.xml",
+          "src/main/java/com/nextgis/maplibui/view/FittedPanelLayout.java",
+          "src/main/java/com/nextgis/maplibui/view/WrappingRow.java",
+          "src/main/java/com/nextgis/maplibui/view/WalkRecordingPanel.java",
+          "src/main/java/com/nextgis/maplibui/util/ToolbarTextFit.java",
+          "src/main/java/com/nextgis/maplibui/activity/NGActivity.java",
+          "src/main/java/com/nextgis/maplibui/activity/NGPreferenceActivity.java",
+          "src/main/java/com/nextgis/maplibui/fragment/NGPreferenceFragment.java"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
@@ -28,23 +67,23 @@
       "value": {
         "id": "UI-LARGE-TEXT",
         "paths": [
-          "app/src/main/res/values-ru",
-          "maplibui/src/main/res/values-ru",
+          "app/src/main/res/values-ru/**",
+          "maplibui/src/main/res/values-ru/**",
           "app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt",
-          "app/src/main/res/menu",
+          "app/src/main/res/menu/**",
           "app/src/main/res/values/large_interface.xml",
-          "app/src/main/res/values-h320dp",
-          "maplibui/src/main/res/menu",
+          "app/src/main/res/values-h320dp/**",
+          "maplibui/src/main/res/menu/**",
           "maplibui/src/main/java/com/nextgis/maplibui/view/WrappingLabel.java",
           "maplibui/src/main/java/com/nextgis/maplibui/view/ReflowingGuidanceHeader.java",
           "maplibui/src/main/java/com/nextgis/maplibui/util/FittedDialogs.java",
-          "app/src/main/res/layout",
-          "app/src/main/res/layout-land",
+          "app/src/main/res/layout/**",
+          "app/src/main/res/layout-land/**",
           "app/src/main/res/values/styles.xml",
-          "app/src/main/java/com/nextgis/mobile/view",
+          "app/src/main/java/com/nextgis/mobile/view/**",
           "app/src/androidTest/java/com/nextgis/mobile/reliability/LargeTextLayoutTest.java",
-          "maplibui/src/main/res/layout",
-          "maplibui/src/main/res/layout-land",
+          "maplibui/src/main/res/layout/**",
+          "maplibui/src/main/res/layout-land/**",
           "maplibui/src/main/res/values/styles.xml",
           "maplibui/src/main/res/values/readable_buttons.xml",
           "maplibui/src/main/java/com/nextgis/maplibui/view/FittedPanelLayout.java",

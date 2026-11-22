@@ -7,9 +7,23 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
-    "scope_refs": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/registry/smoke-tests.yaml",
+          "tools/mobile-test-plan.json",
+          "tools/run_mobile_tests.py",
+          "tools/verify-mobile-tests.ps1"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [
+      "lisa:mobile:contract:change-impact-maintenance-reminders",
+      "lisa:mobile:contract:invariants-inv-maintenance-reminders"
+    ],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
   },

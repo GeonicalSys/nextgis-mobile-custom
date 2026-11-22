@@ -7,8 +7,34 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/java/com/nextgis/maplibui/util/FittedDialogs.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/androidTest/java/com/nextgis/mobile/util/VerificationTestRunner.java",
+          "app/src/androidTest/java/com/nextgis/mobile/util/VerificationTestApplication.java",
+          "app/src/androidTest/java/com/nextgis/mobile/util/VerificationEnvironment.java",
+          "app/src/androidTest/java/com/nextgis/mobile/reliability/LayerSelectionDialogTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/reliability/ProjectLayerSelectionTest.java",
+          "tools/run_mobile_tests.py",
+          "tools/mobile_build_identity.py",
+          "tools/mobile_test_support.py",
+          "tools/mobile_test_project.py",
+          "tools/mobile-test-plan.json",
+          "tools/verify-mobile-tests.ps1",
+          "tools/tests"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
@@ -40,7 +66,7 @@
           "tools/mobile_test_project.py",
           "tools/mobile-test-plan.json",
           "tools/verify-mobile-tests.ps1",
-          "tools/tests"
+          "tools/tests/**"
         ],
         "owners": [
           "app",

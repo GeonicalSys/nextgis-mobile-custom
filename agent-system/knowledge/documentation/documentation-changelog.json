@@ -41,7 +41,7 @@
       "value": [
         "title: История документационной системы",
         "type: changelog",
-        "last_verified: 2026-11-16",
+        "last_verified: 2026-11-22",
         "related_code:",
         "  - docs"
       ]
@@ -105,6 +105,16 @@
     {
       "type": "contains",
       "target": "lisa:mobile:resource:documentation-changelog-authoring",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-22-ui-source-scope",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-22-android-path-triggers",
       "status": "source_backed"
     },
     {

@@ -470,10 +470,11 @@ build_inputs:
       DSN; normal APK configuration is unchanged.
   ciReliabilityChecks:
     owner: app
-    source: app/build.gradle
+    source: tools/run_mobile_tests.py
     optional: true
-    purpose: Gradle test-suite enablement only. Does not waive mandatory Release client, statistics, Sentry or diagnostic
-      archive inputs.
+    purpose: Legacy optional argument still passed by the local test runner and recorded in build identity. The current Gradle
+      scripts have no reader for this property. Release client, statistics, Sentry and diagnostic archive prerequisites apply
+      independently.
   sentry.properties:
     owner: app
     source: sentry.properties

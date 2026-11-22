@@ -10,7 +10,7 @@
         "docs/scripts/keyed_registry_knowledge.py": "11c5b3647e72bdfcaeb12b5dd7662b304cc0492787a4660bb90e6deaf74d85dc",
         "docs/scripts/structured_view_proof.py": "bae9d5c0273dbe26bfa4c4467c2c7210cbc75c1677cc25a9a6a4cf347b6bb54c"
       },
-      "ordered_records_sha256": "41e059e2a3d8aa3ba420db23ebab81873ddfbc76102cbae32038f65f26991633",
+      "ordered_records_sha256": "5f3b9e8e72fc787a64c511ffc78c07ae2c2ed741e10837a09f58530f79c904ca",
       "ordered_count": 5
     },
     "docs/registry/modules.yaml": {
@@ -21,7 +21,7 @@
         "docs/scripts/keyed_registry_knowledge.py": "11c5b3647e72bdfcaeb12b5dd7662b304cc0492787a4660bb90e6deaf74d85dc",
         "docs/scripts/structured_view_proof.py": "bae9d5c0273dbe26bfa4c4467c2c7210cbc75c1677cc25a9a6a4cf347b6bb54c"
       },
-      "ordered_records_sha256": "434ffc40fb3367ce12a68066d16407e5e77cb5a72d79340bc60e21f5b00baedd",
+      "ordered_records_sha256": "61acfe15cbe41d61c53c726f5968bf62c560111da0145d9e3b2cc754108c5890",
       "ordered_count": 6
     },
     "docs/registry/invariants.yaml": {
@@ -32,40 +32,40 @@
         "docs/scripts/keyed_registry_knowledge.py": "11c5b3647e72bdfcaeb12b5dd7662b304cc0492787a4660bb90e6deaf74d85dc",
         "docs/scripts/structured_view_proof.py": "bae9d5c0273dbe26bfa4c4467c2c7210cbc75c1677cc25a9a6a4cf347b6bb54c"
       },
-      "ordered_records_sha256": "c2d769ccfb54a7f0b11ad546214a09454c410a2f32124e100f33cd6b0338d92f",
+      "ordered_records_sha256": "ce9f4bcf557d922fa6ff7f3b2a82ced5974bb24908168fa649db0df6068d5cea",
       "ordered_count": 93
     },
     "docs/registry/upstream-overlaps.yaml": {
       "layout_id": "lisa:mobile:metadata:upstream-overlaps-registry",
-      "sha256_utf8_lf": "608a790ef40cb8f76145671a258d45b8ee0c5355ba3c5ec533ac77ede779f318",
+      "sha256_utf8_lf": "b2e6d5af31a7131130d4179236d88e24cbe12189bf0402ad917bd63c107c186b",
       "source_fingerprints": {
         "agent-system/provenance/keyed-docs-registries.json": "19ab1241499dc790d3d759a492b82bcce80ef30944309c0ef0d714d4660260fa",
         "docs/scripts/keyed_registry_knowledge.py": "11c5b3647e72bdfcaeb12b5dd7662b304cc0492787a4660bb90e6deaf74d85dc",
         "docs/scripts/structured_view_proof.py": "bae9d5c0273dbe26bfa4c4467c2c7210cbc75c1677cc25a9a6a4cf347b6bb54c"
       },
-      "ordered_records_sha256": "be502ed5433a9fcb734e313ec9b29b5d0bbc49e238d989a34cfaecdd7d2109d0",
+      "ordered_records_sha256": "7ca204aa163487f0286892fb87eca1658a5c8aab3d869ba1f8ae25c2269a85cc",
       "ordered_count": 13
     },
     "docs/registry/smoke-tests.yaml": {
       "layout_id": "lisa:mobile:metadata:smoke-tests-registry",
-      "sha256_utf8_lf": "0039ad18a44417770e01162a4d2d350d1006eb67d74f7a58834af8dee2adf2e3",
+      "sha256_utf8_lf": "fe1dc6da2ce43332d469b668a0e22a0bdffed21cb9e77c1b01a78f81d23c3b72",
       "source_fingerprints": {
         "agent-system/provenance/keyed-docs-registries.json": "19ab1241499dc790d3d759a492b82bcce80ef30944309c0ef0d714d4660260fa",
         "docs/scripts/keyed_registry_knowledge.py": "11c5b3647e72bdfcaeb12b5dd7662b304cc0492787a4660bb90e6deaf74d85dc",
         "docs/scripts/structured_view_proof.py": "bae9d5c0273dbe26bfa4c4467c2c7210cbc75c1677cc25a9a6a4cf347b6bb54c"
       },
-      "ordered_records_sha256": "c8a8931c15ad30523a5424542a48d7c954aeca2e92abdb984368d5565749a665",
+      "ordered_records_sha256": "15a6bf14882289fb2bb8fe7f3a2ecebf960c136b8f8bbbfb22ae559f701241f3",
       "ordered_count": 121
     },
     "docs/registry/config-keys.yaml": {
       "layout_id": "lisa:mobile:metadata:config-keys-registry",
-      "sha256_utf8_lf": "c5a8b5ed0c4e010c444710937c4198d48f6c4a0511a62b35d03d058d7a624e5c",
+      "sha256_utf8_lf": "c455c9d2fef2ce3232f4af918752e56ca5356153a79e48ef8fa678867e119b2f",
       "source_fingerprints": {
         "agent-system/provenance/sectioned-docs-registries.json": "1cae6c05e81c279fff124b0723959efe0ebac368e90baf7a5ab2d0bb3e2f0f35",
         "docs/scripts/keyed_registry_knowledge.py": "11c5b3647e72bdfcaeb12b5dd7662b304cc0492787a4660bb90e6deaf74d85dc",
         "docs/scripts/structured_view_proof.py": "bae9d5c0273dbe26bfa4c4467c2c7210cbc75c1677cc25a9a6a4cf347b6bb54c"
       },
-      "ordered_records_sha256": "c9fb7ee81f38c083e6d2e1704b5194ca40fffe25b24600319cee00194f8c4a5b",
+      "ordered_records_sha256": "47f3cd696e0ea0afc4e622d970e489f7af3310b2df403b94337d2cfaebc2ba03",
       "ordered_count": 115
     },
     "docs/registry/dependencies.yaml": {
@@ -76,7 +76,7 @@
         "docs/scripts/keyed_registry_knowledge.py": "11c5b3647e72bdfcaeb12b5dd7662b304cc0492787a4660bb90e6deaf74d85dc",
         "docs/scripts/structured_view_proof.py": "bae9d5c0273dbe26bfa4c4467c2c7210cbc75c1677cc25a9a6a4cf347b6bb54c"
       },
-      "ordered_records_sha256": "1c9e58d23942bc1e00e5cef3665adca09258c070d8a789944e83320e3bea58a6",
+      "ordered_records_sha256": "a31baaad76bb8d7c39f0a60d656a116dc50ebe4ee517f5caf99d81710ebf8ea9",
       "ordered_count": 37
     },
     "docs/registry/ecosystem.yaml": {
@@ -92,13 +92,13 @@
     },
     "docs/registry/change-impact.yaml": {
       "layout_id": "lisa:mobile:metadata:change-impact-registry",
-      "sha256_utf8_lf": "d6343942fc3048e73139cb9d9b5306f752939c6f107e52affc266683c504d57b",
+      "sha256_utf8_lf": "3f49f8bbf51d9d692ff092bbf7f94f69cd2540bcd6f745587aeb234c7490e9ed",
       "source_fingerprints": {
         "agent-system/provenance/change-impact.json": "469b25b9ae32e16d5581764528052a3f6abc076450f1a9624121fafd8da8baf1",
         "docs/scripts/change_impact_knowledge.py": "e704490ef51b887a56890d8c1a55dbcc1396231c9075e2f01c7ce49c79360899",
         "docs/scripts/structured_view_proof.py": "bae9d5c0273dbe26bfa4c4467c2c7210cbc75c1677cc25a9a6a4cf347b6bb54c"
       },
-      "ordered_records_sha256": "bc1937089c42124b7f023373b32ccc910fa12091a90b13ebefb26022961684c2",
+      "ordered_records_sha256": "2aa779da572dba56d26cb63ab4ffd5ef2aa16390d8d00e38a6f2babc7d83847c",
       "ordered_count": 86
     },
     "app/docs/manifest.yaml": {
@@ -120,7 +120,7 @@
         "docs/scripts/ui_catalogue_knowledge.py": "123673e3984832ec94154f4ad354b47b396782de67fdd544be9edab098ba33f9",
         "docs/scripts/structured_view_proof.py": "bae9d5c0273dbe26bfa4c4467c2c7210cbc75c1677cc25a9a6a4cf347b6bb54c"
       },
-      "ordered_records_sha256": "9ef4b5d41f94d3752facb5364a725abce98a158a69f4a9c1b93497c977e331dd",
+      "ordered_records_sha256": "acb1d4149dd42fed21a1598076295485f4b4a2148de5198b3d9ac097c3aaf976",
       "ordered_count": 510
     }
   }

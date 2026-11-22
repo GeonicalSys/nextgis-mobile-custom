@@ -7,8 +7,18 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/build.gradle",
+          "tools/run_mobile_tests.py",
+          "tools/mobile_build_identity.py"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
@@ -35,9 +45,9 @@
       "role": "complete_registry_definition",
       "value": {
         "owner": "app",
-        "source": "app/build.gradle",
+        "source": "tools/run_mobile_tests.py",
         "optional": true,
-        "purpose": "Gradle test-suite enablement only. Does not waive mandatory Release client, statistics, Sentry or diagnostic archive inputs."
+        "purpose": "Legacy optional argument still passed by the local test runner and recorded in build identity. The current Gradle scripts have no reader for this property. Release client, statistics, Sentry and diagnostic archive prerequisites apply independently."
       }
     }
   },

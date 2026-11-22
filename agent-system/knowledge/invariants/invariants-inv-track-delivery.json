@@ -7,8 +7,37 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/androidTest/java/com/nextgis/mobile/reliability/TrackUploadTest.java",
+          "app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java",
+          "docs/architecture/ngw-sync-and-storage.md",
+          "docs/guides/project-synchronization-user-guide.md",
+          "docs/reference/settings-and-config.md",
+          "docs/registry/invariants.yaml"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "src/main/java/com/nextgis/maplib/util/TrackSendSettings.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/java/com/nextgis/maplibui/mapui/TrackRegistrationState.java",
+          "src/main/java/com/nextgis/maplibui/mapui/TrackUploader.java",
+          "src/main/java/com/nextgis/maplibui/mapui/TrackWorker.java"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

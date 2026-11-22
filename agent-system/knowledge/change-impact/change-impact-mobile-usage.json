@@ -7,8 +7,18 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/main/java/com/nextgis/mobile/usage",
+          "app/src/test/java/com/nextgis/mobile/usage",
+          "app/src/androidTest/java/com/nextgis/mobile/usage"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
@@ -28,9 +38,9 @@
       "value": {
         "id": "MOBILE-USAGE",
         "paths": [
-          "app/src/main/java/com/nextgis/mobile/usage",
-          "app/src/test/java/com/nextgis/mobile/usage",
-          "app/src/androidTest/java/com/nextgis/mobile/usage"
+          "app/src/main/java/com/nextgis/mobile/usage/**",
+          "app/src/test/java/com/nextgis/mobile/usage/**",
+          "app/src/androidTest/java/com/nextgis/mobile/usage/**"
         ],
         "owners": [
           "app"

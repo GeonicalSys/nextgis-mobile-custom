@@ -7,8 +7,26 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/registry/ui-contracts.json"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/java/com/nextgis/maplibui/activity/FormBuilderModifyAttributesActivity.java",
+          "src/main/java/com/nextgis/maplibui/formcontrol/TextEdit.java",
+          "src/main/java/com/nextgis/maplibui/util/ConstantsUI.java",
+          "src/main/res/layout/formtemplate_edittext.xml"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

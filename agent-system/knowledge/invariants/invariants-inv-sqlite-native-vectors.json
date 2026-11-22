@@ -7,8 +7,80 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/build.gradle",
+          "app/docs/manifest.yaml",
+          "app/src/androidTest/java/com/nextgis/mobile/rendering/DirectVectorTilesTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/rendering/NativeSqliteVectorRenderingTest.java",
+          "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+          "app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java",
+          "app/src/main/java/com/nextgis/mobile/util/PrivateRenderResourceProfiler.java",
+          "docs/architecture/map-performance.md",
+          "docs/architecture/map-rendering.md",
+          "docs/registry/invariants.yaml",
+          "docs/runbooks/automated-tests.md",
+          "tools/profile_render_resources.py"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "docs/README.md",
+          "docs/manifest.yaml",
+          "src/main/java/com/nextgis/maplib/datasource/GeometryRTree.java",
+          "src/main/java/com/nextgis/maplib/map/LayerDisplayPriority.java",
+          "src/main/java/com/nextgis/maplib/map/LocalVectorTileDiskCache.java",
+          "src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java",
+          "src/main/java/com/nextgis/maplib/map/MapDrawable.java",
+          "src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java",
+          "src/main/java/com/nextgis/maplib/map/NativeVectorTileClipper.java",
+          "src/main/java/com/nextgis/maplib/map/NativeVectorTileEncoder.java",
+          "src/main/java/com/nextgis/maplib/map/NativeVectorTilePropertyCodec.java",
+          "src/main/java/com/nextgis/maplib/map/SqliteVectorFeatureReader.java",
+          "src/main/java/com/nextgis/maplib/map/SqliteVectorLayerController.java",
+          "src/main/java/com/nextgis/maplib/map/SqliteVectorSourceBridge.kt",
+          "src/main/java/com/nextgis/maplib/map/SqliteVectorTileBackend.java",
+          "src/main/java/com/nextgis/maplib/map/SqliteVectorTileProvider.java",
+          "src/main/java/com/nextgis/maplib/map/SqliteVectorTileRequest.java",
+          "src/main/java/com/nextgis/maplib/map/VectorLayer.java",
+          "src/main/java/com/nextgis/maplib/map/VisibleLineLabelController.java",
+          "src/main/java/com/nextgis/maplib/map/VisibleLineLabelQuery.java",
+          "src/main/java/com/nextgis/maplib/util/CoordinatePointLayerImporter.java",
+          "src/main/java/com/nextgis/maplib/util/GeoJSONUtil.java",
+          "src/main/java/com/nextgis/maplib/util/MapRuntimeDiagnostics.java",
+          "src/main/java/com/nextgis/maplib/util/RenderResourceProfiler.java",
+          "src/test/java/com/nextgis/maplib/datasource/GeometryRTreeRecoveryTest.java",
+          "src/test/java/com/nextgis/maplib/map/LayerDisplayPriorityTest.java",
+          "src/test/java/com/nextgis/maplib/map/LocalVectorBulkCacheReadinessTest.java",
+          "src/test/java/com/nextgis/maplib/map/LocalVectorTileDiskCacheTest.java",
+          "src/test/java/com/nextgis/maplib/map/NativeVectorTileBufferParityTest.java",
+          "src/test/java/com/nextgis/maplib/map/SqliteVectorFeatureReaderTest.java",
+          "src/test/java/com/nextgis/maplib/map/SqliteVectorSourceBridgeTest.kt",
+          "src/test/java/com/nextgis/maplib/map/SqliteVectorTileAdmissionTest.kt",
+          "src/test/java/com/nextgis/maplib/map/SqliteVectorTileProviderTest.java",
+          "src/test/java/com/nextgis/maplib/map/VectorLayerVisibilityEpochTest.java",
+          "src/test/java/com/nextgis/maplib/util/MapRuntimeDiagnosticsTest.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "docs/README.md",
+          "docs/manifest.yaml",
+          "src/main/java/com/nextgis/maplibui/GISApplication.java",
+          "src/main/java/com/nextgis/maplibui/activity/VectorLayerSettingsActivity.java",
+          "src/main/java/com/nextgis/maplibui/service/LayerFillService.java",
+          "src/main/java/com/nextgis/maplibui/service/RebuildCacheService.java"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

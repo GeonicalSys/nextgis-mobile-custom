@@ -7,8 +7,27 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java",
+          "app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/upload_mobile",
+        "include": [
+          "apk_version_system.md",
+          "lisa_publish_apk_server.py",
+          "publish_apk_client.py",
+          "site"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

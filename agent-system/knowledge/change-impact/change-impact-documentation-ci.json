@@ -7,8 +7,25 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          ".github/workflows/docs-validate.yml",
+          "tools/docs-check.ps1",
+          "docs/scripts/check_change_impact.py",
+          "docs/scripts/module_manifest_knowledge.py",
+          "docs/scripts/prose_knowledge.py",
+          "docs/scripts/validate_docs.py",
+          "docs/tests/test_change_impact_ci.py",
+          "docs/tests/test_prose_knowledge.py",
+          "docs/scripts/structured_view_proof.py",
+          "agent-system/provenance/structured-views.json"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

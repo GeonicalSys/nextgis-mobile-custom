@@ -7,8 +7,47 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/build.gradle",
+          "app/src/androidTest/java/com/nextgis/mobile/util/AppUpdateNativeTest.java",
+          "app/src/belka",
+          "app/src/lisa",
+          "app/src/main/AndroidManifest.xml",
+          "app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt",
+          "app/src/main/java/com/nextgis/mobile/activity/SettingsActivity.java",
+          "app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java",
+          "app/src/main/java/com/nextgis/mobile/util/AppUpdateDownload.java",
+          "app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java",
+          "app/src/main/java/com/nextgis/mobile/util/AppUpdateWorker.java",
+          "app/src/main/java/com/nextgis/mobile/util/StartupUpdateCheckScheduler.java",
+          "app/src/main/res/xml/provider_paths.xml",
+          "app/src/test/java/com/nextgis/mobile/util/AppUpdateDownloadTest.java",
+          "app/src/test/java/com/nextgis/mobile/util/AppUpdateNetworkGuardTest.java",
+          "app/src/test/java/com/nextgis/mobile/util/AppUpdateNetworkStateTest.java",
+          "app/src/test/java/com/nextgis/mobile/util/AppUpdatePendingInstallationTest.java",
+          "app/src/test/java/com/nextgis/mobile/util/AppUpdateReadyStateTest.java",
+          "app/src/test/java/com/nextgis/mobile/util/StartupUpdateCheckSchedulerTest.java",
+          "build.gradle",
+          "docs/reference/flavors-and-versioning.md",
+          "docs/registry/invariants.yaml",
+          "docs/runbooks/release-apk.md",
+          "gradle/wrapper/gradle-wrapper.properties",
+          "tools/verify-apk-version-matrix.ps1"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "build.gradle"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

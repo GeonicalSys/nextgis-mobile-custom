@@ -954,8 +954,9 @@ def validate_module_packs(
 
 
 def pattern_matches(path_value: str, pattern: str) -> bool:
-    path = PurePosixPath(path_value)
-    return path.match(pattern) or (
+    # Changed paths and trigger patterns are relative to the repository root.
+    path = PurePosixPath("/", path_value)
+    return path.match("/" + pattern) or (
         pattern.endswith("/**") and path_value.startswith(pattern[:-3].rstrip("/") + "/")
     )
 

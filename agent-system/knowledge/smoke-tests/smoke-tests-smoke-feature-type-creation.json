@@ -7,9 +7,23 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
-    "scope_refs": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/androidTest/java/com/nextgis/mobile/reliability/CascadingFormsTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/reliability/MapEditingToolsTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/reliability/StandardFeatureTypesTest.java",
+          "docs/registry/smoke-tests.yaml"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [
+      "lisa:mobile:contract:change-impact-feature-type-creation",
+      "lisa:mobile:contract:invariants-inv-feature-type-creation"
+    ],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
   },

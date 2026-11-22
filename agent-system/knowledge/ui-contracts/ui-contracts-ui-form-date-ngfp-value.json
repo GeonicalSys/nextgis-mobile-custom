@@ -7,8 +7,38 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/registry/ui-contracts.json"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "src/main/java/com/nextgis/maplib/util/LayerUtil.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/java/com/nextgis/maplibui/activity/FormBuilderModifyAttributesActivity.java",
+          "src/main/java/com/nextgis/maplibui/activity/ModifyAttributesActivity.java",
+          "src/main/java/com/nextgis/maplibui/control/DateTime.java",
+          "src/main/java/com/nextgis/maplibui/formcontrol/DateTime.java",
+          "src/main/java/com/nextgis/maplibui/util/ControlHelper.java",
+          "src/main/java/com/nextgis/maplibui/util/FeatureCopyDefaults.java",
+          "src/main/java/com/nextgis/maplibui/util/ProjectScriptFormController.java",
+          "src/main/res/layout/formtemplate_datetime.xml",
+          "src/main/res/layout/template_datetime.xml"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

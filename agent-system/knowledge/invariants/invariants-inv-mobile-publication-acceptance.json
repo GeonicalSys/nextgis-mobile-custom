@@ -7,8 +7,42 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/build.gradle",
+          "app/src/androidTest/java/com/nextgis/mobile/reliability/LayerSelectionDialogTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/reliability/ProjectLayerSelectionTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/rendering/DirectVectorTilesOfflineTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/util/VerificationEnvironment.java",
+          "app/src/androidTest/java/com/nextgis/mobile/util/VerificationTestApplication.java",
+          "app/src/androidTest/java/com/nextgis/mobile/util/VerificationTestRunner.java",
+          "docs/registry/invariants.yaml",
+          "docs/runbooks/automated-tests.md",
+          "docs/runbooks/release-apk.md",
+          "tools/mobile-test-plan.json",
+          "tools/mobile_build_identity.py",
+          "tools/mobile_render_acceptance.py",
+          "tools/mobile_test_project.py",
+          "tools/mobile_test_support.py",
+          "tools/run_mobile_tests.py",
+          "tools/tests",
+          "tools/tests/test_mobile_build_identity.py",
+          "tools/tests/test_mobile_render_acceptance.py",
+          "tools/verify-mobile-tests.ps1"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/java/com/nextgis/maplibui/util/FittedDialogs.java"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

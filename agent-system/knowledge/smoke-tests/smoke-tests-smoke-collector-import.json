@@ -7,9 +7,50 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
-    "scope_refs": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/build.gradle",
+          "app/docs/manifest.yaml",
+          "docs/registry/smoke-tests.yaml"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "build.gradle",
+          "docs/manifest.yaml"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "build.gradle",
+          "docs/manifest.yaml"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [
+      "lisa:mobile:contract:change-impact-collector",
+      "lisa:mobile:contract:change-impact-layer-fill-and-reorder",
+      "lisa:mobile:contract:change-impact-lisa-ecosystem-contract",
+      "lisa:mobile:contract:change-impact-map-base-layers",
+      "lisa:mobile:contract:invariants-inv-collector-editability",
+      "lisa:mobile:contract:invariants-inv-collector-isolation",
+      "lisa:mobile:contract:invariants-inv-collector-raster-styles",
+      "lisa:mobile:contract:invariants-inv-collector-resource",
+      "lisa:mobile:contract:invariants-inv-collector-resumable",
+      "lisa:mobile:contract:invariants-inv-default-osm-bottom",
+      "lisa:mobile:contract:invariants-inv-ecosystem-server-boundary",
+      "lisa:mobile:contract:invariants-inv-track-layer-top",
+      "lisa:mobile:contract:upstream-overlaps-collector-resource",
+      "lisa:mobile:contract:upstream-overlaps-layer-fill"
+    ],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
   },

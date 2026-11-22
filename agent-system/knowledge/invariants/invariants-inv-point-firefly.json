@@ -7,8 +7,40 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/androidTest/java/com/nextgis/mobile/rendering/DirectVectorTilesTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/rendering/FireflyStyleEditorTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/rendering/VectorStyleRenderingTest.java",
+          "docs/architecture/classic-style-verification.md",
+          "docs/architecture/point-firefly.md",
+          "docs/registry/invariants.yaml"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "src/main/java/com/nextgis/maplib/display/FireflyMarkerRegistry.java",
+          "src/main/java/com/nextgis/maplib/display/SimpleMarkerStyle.java",
+          "src/main/java/com/nextgis/maplib/map/mpl/FireflyLayerFactory.java",
+          "src/test/java/com/nextgis/maplib/display/FireflyMarkerTest.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/java/com/nextgis/maplibui/fragment/StyleFragment.java",
+          "src/main/res/values-ru/firefly_strings.xml",
+          "src/main/res/values/firefly_strings.xml"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
