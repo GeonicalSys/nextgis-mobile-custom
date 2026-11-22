@@ -7,9 +7,53 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
-    "scope_refs": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/build.gradle",
+          "app/docs/manifest.yaml",
+          "docs/registry/smoke-tests.yaml",
+          "gradlew.bat",
+          "settings.gradle"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "build.gradle",
+          "docs/manifest.yaml"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [
+      "lisa:mobile:contract:change-impact-background-location-warning",
+      "lisa:mobile:contract:change-impact-compass-optional-vibration",
+      "lisa:mobile:contract:change-impact-compass-sector-setting",
+      "lisa:mobile:contract:change-impact-error-reporting",
+      "lisa:mobile:contract:change-impact-feature-copy-transform",
+      "lisa:mobile:contract:change-impact-gps-cache-witness",
+      "lisa:mobile:contract:change-impact-local-vector-layers",
+      "lisa:mobile:contract:change-impact-map-runtime-diagnostics",
+      "lisa:mobile:contract:change-impact-ngw-resource-selection-lifecycle",
+      "lisa:mobile:contract:change-impact-reliability-ci",
+      "lisa:mobile:contract:change-impact-sqlite-bounded-original-reads",
+      "lisa:mobile:contract:change-impact-sqlite-phase-diagnostics",
+      "lisa:mobile:contract:change-impact-stakeout-guidance",
+      "lisa:mobile:contract:change-impact-sync-journal-cancellation",
+      "lisa:mobile:contract:change-impact-sync-network-feedback",
+      "lisa:mobile:contract:change-impact-ui-large-text",
+      "lisa:mobile:contract:invariants-inv-debug-companion",
+      "lisa:mobile:contract:invariants-inv-diagnostic-delivery",
+      "lisa:mobile:contract:invariants-inv-gps-cache-witness",
+      "lisa:mobile:contract:invariants-inv-sqlite-bounded-original-reads",
+      "lisa:mobile:contract:invariants-inv-sqlite-phase-diagnostics",
+      "lisa:mobile:contract:invariants-inv-stakeout-guidance",
+      "lisa:mobile:contract:invariants-inv-ui-visible-bounds"
+    ],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
   },

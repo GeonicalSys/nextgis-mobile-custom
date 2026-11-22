@@ -7,8 +7,46 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "agent-system/knowledge/ui-contracts/**",
+          "app/src/main/java/com/nextgis/mobile/MainApplication.java",
+          "app/src/main/java/com/nextgis/mobile/adapter/**",
+          "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+          "app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java",
+          "app/src/main/java/com/nextgis/mobile/util/SelectMapPathPreference.java",
+          "app/src/main/res/layout/**",
+          "app/src/main/res/menu/**",
+          "app/src/main/res/values-ru/strings.xml",
+          "app/src/main/res/values/strings.xml",
+          "app/src/main/res/xml/preferences_general.xml",
+          "app/src/main/res/xml/preferences_map.xml",
+          "app/src/test/java/com/nextgis/mobile/fragment/SettingsWorkspaceMoveTest.java",
+          "docs/registry/change-impact.yaml",
+          "docs/registry/ui-contracts.json",
+          "docs/scripts/check_ui_contracts.py",
+          "docs/scripts/ui_catalogue_knowledge.py"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "src/main/java/com/nextgis/maplib/display/**"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/java/com/nextgis/maplibui/**"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

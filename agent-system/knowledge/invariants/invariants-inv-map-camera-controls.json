@@ -7,9 +7,37 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
-    "scope_refs": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt",
+          "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+          "app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java",
+          "app/src/main/java/com/nextgis/mobile/view/MapControlRail.java",
+          "app/src/main/res/layout/layout_map_content.xml",
+          "app/src/main/res/menu/main.xml",
+          "docs/architecture/map-rendering.md",
+          "docs/reference/official-differences.md",
+          "docs/reference/settings-and-config.md",
+          "docs/registry/invariants.yaml"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "src/main/java/com/nextgis/maplib/util/CameraZoom.java",
+          "src/main/java/com/nextgis/maplib/util/GeoConstants.java"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [
+      "lisa:mobile:contract:change-impact-map-control-layout",
+      "lisa:mobile:contract:change-impact-maplibre-rendering"
+    ],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
   },

@@ -7,8 +7,22 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/androidTest/java/com/nextgis/mobile/util/Diagnostics*.java",
+          "app/src/main/java/com/nextgis/mobile/MainApplication.java",
+          "app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java",
+          "app/src/main/java/com/nextgis/mobile/util/CustomLogMessageFormat.java",
+          "app/src/main/java/com/nextgis/mobile/util/Diagnostics*.java",
+          "docs/registry/change-impact.yaml",
+          "tools/verify-diagnostic-delivery.ps1"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

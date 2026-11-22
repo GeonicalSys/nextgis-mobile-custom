@@ -7,9 +7,25 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
-    "scope_refs": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/androidTest/java/com/nextgis/mobile/usage/UsageDeliveryTest.java",
+          "app/src/main/java/com/nextgis/mobile/MainApplication.java",
+          "app/src/main/java/com/nextgis/mobile/usage",
+          "docs/architecture/mobile-usage.md",
+          "docs/registry/invariants.yaml",
+          "tools/mobile-test-plan.json",
+          "tools/verify-mobile-tests.ps1"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [
+      "lisa:mobile:contract:change-impact-mobile-usage"
+    ],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
   },

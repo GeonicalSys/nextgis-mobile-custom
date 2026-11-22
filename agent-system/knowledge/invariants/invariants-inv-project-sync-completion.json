@@ -7,9 +7,45 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
-    "scope_refs": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java",
+          "app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java",
+          "app/src/test/java/com/nextgis/mobile/util/SyncJournalCommitTest.java",
+          "app/src/test/java/com/nextgis/mobile/util/SyncRecoveryJournalConfirmationTest.java",
+          "app/src/test/java/com/nextgis/mobile/util/SyncRecoveryJournalTest.java",
+          "docs/architecture/ngw-sync-and-storage.md",
+          "docs/guides/project-synchronization-user-guide.md",
+          "docs/registry/invariants.yaml",
+          "gradlew.bat"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "src/main/java/com/nextgis/maplib/util/FeatureChanges.java",
+          "src/main/java/com/nextgis/maplib/util/ProjectSyncState.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/java/com/nextgis/maplibui/mapui/LocalChangesWorker.java"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [
+      "lisa:mobile:contract:change-impact-local-delivery-project-clock",
+      "lisa:mobile:contract:change-impact-ngw-full-snapshot-admission",
+      "lisa:mobile:contract:change-impact-ngw-user-messages",
+      "lisa:mobile:contract:change-impact-sync-journal-cancellation"
+    ],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
   },

@@ -7,9 +7,41 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
-    "scope_refs": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/architecture/map-rendering.md",
+          "docs/architecture/ngw-sync-and-storage.md",
+          "docs/reference/official-differences.md",
+          "docs/registry/invariants.yaml",
+          "gradlew.bat"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "docs/README.md",
+          "src/main/java/com/nextgis/maplib/datasource/GeoEnvelope.java",
+          "src/main/java/com/nextgis/maplib/datasource/GeometryRTree.java",
+          "src/main/java/com/nextgis/maplib/map/MapContentProviderHelper.java",
+          "src/main/java/com/nextgis/maplib/map/MapDrawable.java",
+          "src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java",
+          "src/main/java/com/nextgis/maplib/map/VectorLayer.java"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [
+      "lisa:mobile:contract:change-impact-account-sync-scheduling",
+      "lisa:mobile:contract:change-impact-maplibre-rendering",
+      "lisa:mobile:contract:change-impact-spatial-cache-consistency",
+      "lisa:mobile:contract:change-impact-sqlite-bounded-original-reads",
+      "lisa:mobile:contract:change-impact-sqlite-native-vectors",
+      "lisa:mobile:contract:change-impact-vector-spatial-cache-recovery"
+    ],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
   },

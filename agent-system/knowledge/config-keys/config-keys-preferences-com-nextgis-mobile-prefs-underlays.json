@@ -7,8 +7,19 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/main/java/com/nextgis/mobile/activity/SettingsActivity.java",
+          "app/src/main/java/com/nextgis/mobile/util/AppConstants.java",
+          "app/src/main/res/xml/preference_headers.xml",
+          "docs/registry/config-keys.yaml"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

@@ -7,9 +7,23 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
-    "scope_refs": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/build.gradle",
+          "app/docs/manifest.yaml",
+          "docs/registry/smoke-tests.yaml",
+          "tools/verify-diagnostic-delivery.ps1"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [
+      "lisa:mobile:contract:change-impact-error-reporting",
+      "lisa:mobile:contract:invariants-inv-diagnostic-delivery"
+    ],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
   },

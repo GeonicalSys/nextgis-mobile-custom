@@ -7,8 +7,20 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/main/java/com/nextgis/mobile/view/MapControl*.java",
+          "app/src/main/res/layout-land/fragment_map.xml",
+          "app/src/main/res/layout/fragment_map*.xml",
+          "app/src/main/res/layout/layout_map_content.xml",
+          "docs/registry/change-impact.yaml"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

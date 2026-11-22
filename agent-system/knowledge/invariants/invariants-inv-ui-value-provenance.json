@@ -7,9 +7,24 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
-    "scope_refs": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+          "docs/architecture/ui-contracts.md",
+          "docs/registry/invariants.yaml",
+          "docs/registry/ui-contracts.json",
+          "docs/scripts/check_ui_contracts.py"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [
+      "lisa:mobile:contract:change-impact-ngw-user-messages",
+      "lisa:mobile:contract:change-impact-ui-value-provenance"
+    ],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
   },

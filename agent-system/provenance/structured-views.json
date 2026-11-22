@@ -32,7 +32,7 @@
         "docs/scripts/keyed_registry_knowledge.py": "11c5b3647e72bdfcaeb12b5dd7662b304cc0492787a4660bb90e6deaf74d85dc",
         "docs/scripts/structured_view_proof.py": "bae9d5c0273dbe26bfa4c4467c2c7210cbc75c1677cc25a9a6a4cf347b6bb54c"
       },
-      "ordered_records_sha256": "ce9f4bcf557d922fa6ff7f3b2a82ced5974bb24908168fa649db0df6068d5cea",
+      "ordered_records_sha256": "7a78804fd049dc93397c2191a22debfcbd4be613fcea7e75b11f2f6576e5145e",
       "ordered_count": 93
     },
     "docs/registry/upstream-overlaps.yaml": {
@@ -54,18 +54,18 @@
         "docs/scripts/keyed_registry_knowledge.py": "11c5b3647e72bdfcaeb12b5dd7662b304cc0492787a4660bb90e6deaf74d85dc",
         "docs/scripts/structured_view_proof.py": "bae9d5c0273dbe26bfa4c4467c2c7210cbc75c1677cc25a9a6a4cf347b6bb54c"
       },
-      "ordered_records_sha256": "15a6bf14882289fb2bb8fe7f3a2ecebf960c136b8f8bbbfb22ae559f701241f3",
+      "ordered_records_sha256": "44773971b725a465b5da42e1825244badcdbcef487542eae787a1849768d52fa",
       "ordered_count": 121
     },
     "docs/registry/config-keys.yaml": {
       "layout_id": "lisa:mobile:metadata:config-keys-registry",
-      "sha256_utf8_lf": "c455c9d2fef2ce3232f4af918752e56ca5356153a79e48ef8fa678867e119b2f",
+      "sha256_utf8_lf": "16cf5524e5d80a5645c519978f0823f5f0cdd6e89c08cfcc9dbf5ce09d28c5c1",
       "source_fingerprints": {
         "agent-system/provenance/sectioned-docs-registries.json": "1cae6c05e81c279fff124b0723959efe0ebac368e90baf7a5ab2d0bb3e2f0f35",
         "docs/scripts/keyed_registry_knowledge.py": "11c5b3647e72bdfcaeb12b5dd7662b304cc0492787a4660bb90e6deaf74d85dc",
         "docs/scripts/structured_view_proof.py": "bae9d5c0273dbe26bfa4c4467c2c7210cbc75c1677cc25a9a6a4cf347b6bb54c"
       },
-      "ordered_records_sha256": "47f3cd696e0ea0afc4e622d970e489f7af3310b2df403b94337d2cfaebc2ba03",
+      "ordered_records_sha256": "804056bca8c694d9f29cdb6409c68bff1e6d24db1c56963eec81534e41b0a510",
       "ordered_count": 115
     },
     "docs/registry/dependencies.yaml": {
@@ -76,7 +76,7 @@
         "docs/scripts/keyed_registry_knowledge.py": "11c5b3647e72bdfcaeb12b5dd7662b304cc0492787a4660bb90e6deaf74d85dc",
         "docs/scripts/structured_view_proof.py": "bae9d5c0273dbe26bfa4c4467c2c7210cbc75c1677cc25a9a6a4cf347b6bb54c"
       },
-      "ordered_records_sha256": "a31baaad76bb8d7c39f0a60d656a116dc50ebe4ee517f5caf99d81710ebf8ea9",
+      "ordered_records_sha256": "ab41f2d5d9213449a863f870f74ba871584865db299ffc3ad568a8c6b5322fe5",
       "ordered_count": 37
     },
     "docs/registry/ecosystem.yaml": {
@@ -87,7 +87,7 @@
         "docs/scripts/keyed_registry_knowledge.py": "11c5b3647e72bdfcaeb12b5dd7662b304cc0492787a4660bb90e6deaf74d85dc",
         "docs/scripts/structured_view_proof.py": "bae9d5c0273dbe26bfa4c4467c2c7210cbc75c1677cc25a9a6a4cf347b6bb54c"
       },
-      "ordered_records_sha256": "c954d707c21d34c20a02f5f6719554700299767c58ec2898d364e47d78bec111",
+      "ordered_records_sha256": "04471bd83312a74836c2632b874cca1dab91df806b2973b7731ac2a7f1008859",
       "ordered_count": 15
     },
     "docs/registry/change-impact.yaml": {
@@ -98,7 +98,7 @@
         "docs/scripts/change_impact_knowledge.py": "e704490ef51b887a56890d8c1a55dbcc1396231c9075e2f01c7ce49c79360899",
         "docs/scripts/structured_view_proof.py": "bae9d5c0273dbe26bfa4c4467c2c7210cbc75c1677cc25a9a6a4cf347b6bb54c"
       },
-      "ordered_records_sha256": "2aa779da572dba56d26cb63ab4ffd5ef2aa16390d8d00e38a6f2babc7d83847c",
+      "ordered_records_sha256": "a3e6609dc8acc902881e2aa5ae95869d057cf013b90033d1405ba5c4d657a492",
       "ordered_count": 86
     },
     "app/docs/manifest.yaml": {

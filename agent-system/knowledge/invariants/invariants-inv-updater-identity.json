@@ -7,9 +7,27 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
-    "scope_refs": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/main/AndroidManifest.xml",
+          "app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java",
+          "app/src/main/java/com/nextgis/mobile/util/AppUpdateManager.java",
+          "app/src/main/java/com/nextgis/mobile/util/AppUpdatePackageInfoPolicy.java",
+          "app/src/test/java/com/nextgis/mobile/util/AppUpdatePackageInfoPolicyTest.java",
+          "docs/reference/flavors-and-versioning.md",
+          "docs/registry/invariants.yaml",
+          "docs/runbooks/release-apk.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [
+      "lisa:mobile:contract:change-impact-debug-companion-installer",
+      "lisa:mobile:contract:change-impact-self-hosted-updater"
+    ],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
   },
