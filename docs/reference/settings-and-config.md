@@ -316,8 +316,9 @@ durable checkpoint до запуска Activity. Точные имена клю�
 операции. Sign snapshot хранит размеры холста и штрихи. `pending-track-points`
 и `feature-save-journal` — локальные storage contracts, не пользовательские
 настройки и не server schema. Их повреждение нельзя лечить автоматическим
-удалением. `ciReliabilityChecks` — opt-in Gradle property для проверки без
-private Sentry DSN; в обычной сборке требования config остаются прежними.
+удалением. Аргумент `-PciReliabilityChecks=true` сохранён в локальном
+test runner и идентичности сборки. Текущий Gradle его не читает.
+Требования к приватным входам Release действуют независимо.
 
 ## Отправка трека
 

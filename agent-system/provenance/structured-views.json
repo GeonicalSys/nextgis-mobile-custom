@@ -59,13 +59,13 @@
     },
     "docs/registry/config-keys.yaml": {
       "layout_id": "lisa:mobile:metadata:config-keys-registry",
-      "sha256_utf8_lf": "c5a8b5ed0c4e010c444710937c4198d48f6c4a0511a62b35d03d058d7a624e5c",
+      "sha256_utf8_lf": "c455c9d2fef2ce3232f4af918752e56ca5356153a79e48ef8fa678867e119b2f",
       "source_fingerprints": {
         "agent-system/provenance/sectioned-docs-registries.json": "1cae6c05e81c279fff124b0723959efe0ebac368e90baf7a5ab2d0bb3e2f0f35",
         "docs/scripts/keyed_registry_knowledge.py": "11c5b3647e72bdfcaeb12b5dd7662b304cc0492787a4660bb90e6deaf74d85dc",
         "docs/scripts/structured_view_proof.py": "bae9d5c0273dbe26bfa4c4467c2c7210cbc75c1677cc25a9a6a4cf347b6bb54c"
       },
-      "ordered_records_sha256": "c9fb7ee81f38c083e6d2e1704b5194ca40fffe25b24600319cee00194f8c4a5b",
+      "ordered_records_sha256": "68cb23c5f9f17ae40463d0b6b721bb9d86290298828ab5e805f30ee42cf52ab9",
       "ordered_count": 115
     },
     "docs/registry/dependencies.yaml": {

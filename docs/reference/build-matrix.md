@@ -338,12 +338,12 @@ Guava33.4.8-jre: он добавлен после сверки с опублик
 `.github/workflows/android-reliability.yml` запускает unit suites трёх owners,
 maplibui/debug APK, обе release source sets и native API36 suite. Скрипт
 эмулятора выполняет каждую строку отдельно, поэтому проверки крупного
-интерфейса — отдельные команды для portrait/landscape и native/compat/settings,
-а не shell-цикл. CI использует
-`-PciReliabilityChecks=true` включает тестовые suites и не отключает обязательные
-приватные входы Release. Debug и field verification содержат пустые production
-параметры; обе Release source sets требуют утверждённую конфигурацию. SDK setup явно запрашивает platform-tools, не удалённый
-legacy tools package. PR запускает regression один раз, push — только на
+интерфейса — отдельные команды для portrait/landscape и native/compat/settings. Отдельного цикла shell нет.
+Наборы тестов выбирают задачи Gradle и фильтры runner. Workflow по-прежнему
+передаёт `-PciReliabilityChecks=true`. У текущего Gradle нет чтения этого ключа.
+Debug и field verification содержат пустые production параметры. Обе Release
+source sets требуют утверждённую конфигурацию. SDK setup запрашивает platform-tools.
+Устаревший пакет SDK tools исключён. PR запускает regression один раз, push — только на
 my-maplibre. Удалён устаревший MaxPermSize JVM flag, мешавший чистому JDK21
 запустить Gradle daemon; local user properties ранее скрывали эту ошибку.
 Workflow не собирает/не публикует release APK.
