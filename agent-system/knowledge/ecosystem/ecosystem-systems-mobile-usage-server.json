@@ -7,8 +7,28 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": ".",
+        "include": [
+          "server/mobile_usage",
+          "server/mobile_usage/README.md",
+          "server/mobile_usage/app.py",
+          "server/mobile_usage/protocol.md"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/main/java/com/nextgis/mobile/usage/UsageStore.java",
+          "docs/registry/ecosystem.yaml",
+          "docs/scripts/validate_docs.py"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

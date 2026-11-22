@@ -7,8 +7,32 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          ".gitignore",
+          "app/build.gradle",
+          "docs/registry/config-keys.yaml"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "build.gradle"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/upload_mobile",
+        "include": [
+          "publish_apk_client.py"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

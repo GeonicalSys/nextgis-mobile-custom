@@ -7,8 +7,43 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": ".",
+        "include": [
+          "plugins/qtiles_geonical/mbtiles_raster.py",
+          "plugins/stand_project/ngw_collector_projects.py",
+          "standart_profiles/launch_core.bat"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "agent-system/knowledge/smoke-tests/smoke-tests-auto-docs-validate.json",
+          "app/src/main/java/com/nextgis/mobile/provider/LegacyUnderlayProvider.java",
+          "docs/architecture/lisa-ecosystem.md",
+          "docs/registry/ecosystem.yaml",
+          "docs/scripts/validate_docs.py"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/java/com/nextgis/maplibui/service/LayerFillService.java"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

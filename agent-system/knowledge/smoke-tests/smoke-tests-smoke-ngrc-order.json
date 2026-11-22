@@ -7,9 +7,40 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
-    "scope_refs": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/registry/smoke-tests.yaml"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "build.gradle",
+          "docs/manifest.yaml"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "build.gradle",
+          "docs/manifest.yaml"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [
+      "lisa:mobile:contract:change-impact-layer-fill-and-reorder",
+      "lisa:mobile:contract:change-impact-ngrc-local-underlay",
+      "lisa:mobile:contract:invariants-inv-layer-order",
+      "lisa:mobile:contract:invariants-inv-ngrc-preserve",
+      "lisa:mobile:contract:upstream-overlaps-layer-fill",
+      "lisa:mobile:contract:upstream-overlaps-raster-anchor"
+    ],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
   },

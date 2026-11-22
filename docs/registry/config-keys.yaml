@@ -171,7 +171,8 @@ preferences:
     owner: app
     type: boolean
     source: app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
-    purpose: Show current location on the map
+    purpose: Legacy Boolean key declared by AppSettingsConstants. The current Android application has no registered preference
+      widget or Java/Kotlin production consumer for this key.
   map_show_compass:
     owner: app
     type: boolean
@@ -277,9 +278,9 @@ preferences:
       until the user changes or resets it to 0; the widget declination line shows D+C
   check_updates:
     owner: app
-    type: boolean
+    type: preference_action
     source: app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
-    purpose: Enable application update checks
+    purpose: Start an explicit update check from Settings and display the installed version.
   layer_backup_max_gb:
     owner: app
     type: string
@@ -291,7 +292,8 @@ preferences:
     owner: app
     type: boolean
     source: app/src/main/java/com/nextgis/mobile/util/AppSettingsConstants.java
-    purpose: Tracking foreground-service preference
+    purpose: Legacy Boolean key declared by AppSettingsConstants. The current Android application has no registered preference
+      widget or Java/Kotlin production consumer for this key.
   track_recording_session:
     owner: maplibui
     type: string

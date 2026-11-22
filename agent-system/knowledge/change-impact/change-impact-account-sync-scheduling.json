@@ -7,8 +7,50 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java",
+          "app/src/main/java/com/nextgis/mobile/datasource/SyncService.java",
+          "app/src/main/java/com/nextgis/mobile/fragment/LayersFragment.java",
+          "app/src/main/java/com/nextgis/mobile/util/OfflineSyncIntentService.java",
+          "app/src/main/java/com/nextgis/mobile/util/ProjectSyncRunner.java",
+          "app/src/main/java/com/nextgis/mobile/util/SyncRecoveryJournal.java",
+          "docs/registry/change-impact.yaml"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "src/main/java/com/nextgis/maplib/datasource/Feature.java",
+          "src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java",
+          "src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java",
+          "src/main/java/com/nextgis/maplib/service/NGWSyncService.java",
+          "src/main/java/com/nextgis/maplib/util/CoalescingRefresh.java",
+          "src/main/java/com/nextgis/maplib/util/NetworkUtil.java",
+          "src/main/java/com/nextgis/maplib/util/NgwSnapshotCheckpoint.java",
+          "src/main/java/com/nextgis/maplib/util/NgwSync*.java",
+          "src/main/java/com/nextgis/maplib/util/SyncWorkspaceSession.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/java/com/nextgis/maplibui/GISApplication.java",
+          "src/main/java/com/nextgis/maplibui/activity/VectorLayerSettingsActivity.java",
+          "src/main/java/com/nextgis/maplibui/fragment/NGWSettingsFragment.java",
+          "src/main/java/com/nextgis/maplibui/mapui/SyncAccountWorker.java",
+          "src/main/java/com/nextgis/maplibui/util/NgwResourceSelectionState.java",
+          "src/main/java/com/nextgis/maplibui/util/ProjectOperationCoordinator.java",
+          "src/main/java/com/nextgis/maplibui/util/SchemaRebuildRetryGuard.java"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

@@ -7,8 +7,34 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": ".",
+        "include": [
+          "plugins/geonical-docs/guides/scenario-dependencies.md",
+          "plugins/geonical-docs/registry/dependency-observations.json",
+          "tools/ecosystem_tests/dependency_discovery.py",
+          "tools/ecosystem_tests/selection.py"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "AGENTS.md",
+          "agent-system/knowledge/policy/application.required-entry.json",
+          "agent-system/knowledge/smoke-tests/smoke-tests-auto-docs-validate.json",
+          "docs/architecture/lisa-ecosystem.md",
+          "docs/architecture/ngw-sync-and-storage.md",
+          "docs/guides/change-checklist.md",
+          "docs/registry/ecosystem.yaml",
+          "docs/roadmap/mobile.md",
+          "docs/scripts/validate_docs.py"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

@@ -7,9 +7,31 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
-    "scope_refs": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/registry/smoke-tests.yaml"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [
+      "lisa:mobile:contract:change-impact-local-delivery-project-clock",
+      "lisa:mobile:contract:change-impact-ngw-resource-checkbox-selection",
+      "lisa:mobile:contract:change-impact-ngw-resource-row-text-fit",
+      "lisa:mobile:contract:change-impact-ngw-user-messages",
+      "lisa:mobile:contract:change-impact-stakeout-guidance",
+      "lisa:mobile:contract:change-impact-track-selected-gpx-share",
+      "lisa:mobile:contract:change-impact-ui-value-provenance",
+      "lisa:mobile:contract:change-impact-vector-spatial-cache-recovery",
+      "lisa:mobile:contract:invariants-inv-ngw-resource-checkbox-selection",
+      "lisa:mobile:contract:invariants-inv-ngw-resource-row-text-fit",
+      "lisa:mobile:contract:invariants-inv-ngw-user-messages",
+      "lisa:mobile:contract:invariants-inv-track-selected-gpx-share",
+      "lisa:mobile:contract:invariants-inv-ui-value-provenance"
+    ],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
   },

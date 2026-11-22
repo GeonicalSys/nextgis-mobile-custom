@@ -7,8 +7,58 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": ".",
+        "include": [
+          "plugins/geonical-docs/architecture/mobile-client.md",
+          "plugins/geonical-docs/guides/scenario-dependencies.md",
+          "plugins/geonical-docs/registry/layer-resource-audit.json",
+          "tools/agent_system/scoped.py",
+          "tools/ecosystem_tests/selection.py"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "agent-system/knowledge/smoke-tests/smoke-tests-auto-docs-validate.json",
+          "docs/architecture/lisa-ecosystem.md",
+          "docs/registry/ecosystem.yaml",
+          "docs/scripts/validate_docs.py"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/java/com/nextgis/maplibui/service/LayerFillService.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/upload_mobile",
+        "include": [
+          "publish_apk_client.py"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "lisa-web",
+        "include": [
+          "lisa_web/forms.py"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

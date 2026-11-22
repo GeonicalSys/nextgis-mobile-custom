@@ -7,8 +7,21 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          ".",
+          "app/build.gradle",
+          "docs/START-HERE.md",
+          "docs/registry/ecosystem.yaml",
+          "docs/scripts/validate_docs.py",
+          "settings.gradle"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

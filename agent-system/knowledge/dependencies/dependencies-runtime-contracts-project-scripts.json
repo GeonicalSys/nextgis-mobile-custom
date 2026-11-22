@@ -7,8 +7,45 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": ".",
+        "include": [
+          "plugins/stand_project/mobile_script_package.py"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+          "docs/registry/dependencies.yaml"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "src/main/java/com/nextgis/maplib/scripts/ProjectScriptHost.java",
+          "src/main/java/com/nextgis/maplib/scripts/ScriptPackage.java",
+          "src/main/java/com/nextgis/maplib/scripts/ScriptPackageStore.java",
+          "src/main/java/com/nextgis/maplib/scripts/ScriptRunResult.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/AndroidManifest.xml",
+          "src/main/java/com/nextgis/maplibui/activity/ModifyAttributesActivity.java",
+          "src/main/java/com/nextgis/maplibui/mapui/VectorLayerUI.java",
+          "src/main/java/com/nextgis/maplibui/util/LayerUtil.java",
+          "src/main/java/com/nextgis/maplibui/util/ProjectScriptFormController.java"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

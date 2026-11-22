@@ -7,8 +7,36 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+          "docs/registry/dependencies.yaml"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "src/main/java/com/nextgis/maplib/forms/ConditionalRequiredRules.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/AndroidManifest.xml",
+          "src/main/java/com/nextgis/maplibui/activity/FormBuilderModifyAttributesActivity.java",
+          "src/main/java/com/nextgis/maplibui/mapui/VectorLayerUI.java",
+          "src/main/java/com/nextgis/maplibui/util/ConditionalRequiredController.java",
+          "src/main/java/com/nextgis/maplibui/util/FormFieldLayout.java",
+          "src/main/java/com/nextgis/maplibui/util/LayerUtil.java"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

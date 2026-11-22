@@ -7,9 +7,50 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
-    "scope_refs": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/registry/smoke-tests.yaml",
+          "gradlew.bat",
+          "settings.gradle"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "build.gradle",
+          "docs/manifest.yaml"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [
+      "lisa:mobile:contract:change-impact-background-gps-recovery",
+      "lisa:mobile:contract:change-impact-feature-copy-transform",
+      "lisa:mobile:contract:change-impact-feature-type-creation",
+      "lisa:mobile:contract:change-impact-geometry-edit-history",
+      "lisa:mobile:contract:change-impact-gps-recording",
+      "lisa:mobile:contract:change-impact-legacy-underlay-migration",
+      "lisa:mobile:contract:change-impact-local-delivery-project-clock",
+      "lisa:mobile:contract:change-impact-local-vector-tile-offline-transport",
+      "lisa:mobile:contract:change-impact-local-write-and-track-reliability",
+      "lisa:mobile:contract:change-impact-ngid-login-normalization",
+      "lisa:mobile:contract:change-impact-reliability-ci",
+      "lisa:mobile:contract:change-impact-required-fields",
+      "lisa:mobile:contract:change-impact-shared-tracks-and-classic-styles",
+      "lisa:mobile:contract:change-impact-shared-underlay-catalog",
+      "lisa:mobile:contract:change-impact-track-delivery",
+      "lisa:mobile:contract:invariants-inv-geometry-sketch-workflow",
+      "lisa:mobile:contract:invariants-inv-gps-track-filter",
+      "lisa:mobile:contract:invariants-inv-ngid-login",
+      "lisa:mobile:contract:invariants-inv-required-fields",
+      "lisa:mobile:contract:upstream-overlaps-geometry-edit-history",
+      "lisa:mobile:contract:upstream-overlaps-gps-pipeline",
+      "lisa:mobile:contract:upstream-overlaps-layer-fill"
+    ],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
   },

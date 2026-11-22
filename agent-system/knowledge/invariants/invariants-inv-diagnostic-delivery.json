@@ -7,9 +7,47 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
-    "scope_refs": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/main/java/com/nextgis/mobile/MainApplication.java",
+          "app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java",
+          "app/src/main/java/com/nextgis/mobile/util/DiagnosticsHttpPolicy.java",
+          "app/src/main/java/com/nextgis/mobile/util/DiagnosticsNativeTrace.java",
+          "app/src/main/java/com/nextgis/mobile/util/DiagnosticsPayloadLimiter.java",
+          "app/src/main/java/com/nextgis/mobile/util/DiagnosticsPolicy.java",
+          "app/src/main/java/com/nextgis/mobile/util/DiagnosticsProcessExitReporter.java",
+          "app/src/main/java/com/nextgis/mobile/util/DiagnosticsRetryWorker.java",
+          "app/src/main/java/com/nextgis/mobile/util/DiagnosticsTracePolicy.java",
+          "app/src/main/java/com/nextgis/mobile/util/DiagnosticsTransport.java",
+          "docs/architecture/error-reporting.md",
+          "docs/guides/bug-reports-user-guide.md",
+          "docs/registry/invariants.yaml",
+          "gradlew.bat",
+          "tools/verify-diagnostic-delivery.ps1"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "src/main/java/com/nextgis/maplib/util/MapRuntimeDiagnostics.java"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [
+      "lisa:mobile:contract:change-impact-background-gps-recovery",
+      "lisa:mobile:contract:change-impact-compass-optional-vibration",
+      "lisa:mobile:contract:change-impact-error-reporting",
+      "lisa:mobile:contract:change-impact-gps-cache-witness",
+      "lisa:mobile:contract:change-impact-local-log-startup",
+      "lisa:mobile:contract:change-impact-map-runtime-diagnostics",
+      "lisa:mobile:contract:change-impact-render-memory-acceptance",
+      "lisa:mobile:contract:change-impact-sync-journal-cancellation"
+    ],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
   },

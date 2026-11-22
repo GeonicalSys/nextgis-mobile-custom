@@ -7,9 +7,69 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
-    "scope_refs": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/registry/smoke-tests.yaml",
+          "gradlew.bat",
+          "settings.gradle"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/easypicker",
+        "include": [
+          "docs/manifest.yaml",
+          "easypicker/build.gradle"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "build.gradle",
+          "docs/manifest.yaml"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [
+      "lisa:mobile:contract:change-impact-account-sync-scheduling",
+      "lisa:mobile:contract:change-impact-cascading-form-lists",
+      "lisa:mobile:contract:change-impact-collector",
+      "lisa:mobile:contract:change-impact-conditional-form-rules",
+      "lisa:mobile:contract:change-impact-feature-copy-transform",
+      "lisa:mobile:contract:change-impact-feature-type-creation",
+      "lisa:mobile:contract:change-impact-geometry-edit-history",
+      "lisa:mobile:contract:change-impact-geometry-sketch-workflow",
+      "lisa:mobile:contract:change-impact-gps-recording",
+      "lisa:mobile:contract:change-impact-layer-pending-indicator",
+      "lisa:mobile:contract:change-impact-local-log-startup",
+      "lisa:mobile:contract:change-impact-maplibre-backend",
+      "lisa:mobile:contract:change-impact-ngrc-local-underlay",
+      "lisa:mobile:contract:change-impact-ngw-account-identity",
+      "lisa:mobile:contract:change-impact-ngw-resource-selection-lifecycle",
+      "lisa:mobile:contract:change-impact-ngw-url-import",
+      "lisa:mobile:contract:change-impact-point-firefly",
+      "lisa:mobile:contract:change-impact-polygon-style-controls",
+      "lisa:mobile:contract:change-impact-project-scripts",
+      "lisa:mobile:contract:change-impact-shared-map-api",
+      "lisa:mobile:contract:change-impact-track-controls",
+      "lisa:mobile:contract:change-impact-track-stop-and-legacy-colors",
+      "lisa:mobile:contract:change-impact-ui-large-text",
+      "lisa:mobile:contract:invariants-inv-geometry-sketch-workflow",
+      "lisa:mobile:contract:invariants-inv-local-log-startup",
+      "lisa:mobile:contract:invariants-inv-maplibre-backend-compatibility",
+      "lisa:mobile:contract:invariants-inv-ngw-resource-dialog-lifecycle",
+      "lisa:mobile:contract:invariants-inv-point-firefly",
+      "lisa:mobile:contract:invariants-inv-polygon-style-controls",
+      "lisa:mobile:contract:invariants-inv-ui-visible-bounds",
+      "lisa:mobile:contract:upstream-overlaps-maplibre-backend",
+      "lisa:mobile:contract:upstream-overlaps-point-firefly",
+      "lisa:mobile:contract:upstream-overlaps-polygon-style-controls"
+    ],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
   },

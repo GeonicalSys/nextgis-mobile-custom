@@ -7,8 +7,50 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": ".",
+        "include": [
+          "plugins/geonical-docs/architecture/mobile-client.md",
+          "plugins/stand_project/customize_webgis.py"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "agent-system/knowledge/smoke-tests/smoke-tests-smoke-conditional-required.json",
+          "agent-system/knowledge/smoke-tests/smoke-tests-smoke-required-fields.json",
+          "docs/architecture/conditional-form-rules.md",
+          "docs/guides/form-behavior-user-guide.md",
+          "docs/registry/ecosystem.yaml",
+          "docs/scripts/validate_docs.py"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "src/main/java/com/nextgis/maplib/forms/ConditionalRequiredRules.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/java/com/nextgis/maplibui/util/ConditionalRequiredController.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "lisa-web",
+        "include": [
+          "lisa_web/forms.py"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
