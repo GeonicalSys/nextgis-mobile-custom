@@ -1,7 +1,7 @@
 ---
 title: Матрица сборки и версий
 type: reference
-last_verified: 2026-11-11
+last_verified: 2026-11-22
 related_code:
   - build.gradle
   - gradle/wrapper/gradle-wrapper.properties
@@ -13,6 +13,7 @@ related_code:
   - .github/workflows/android-reliability.yml
   - .github/workflows/docs-validate.yml
   - docs/scripts/check_change_impact.py
+  - docs/scripts/validate_docs.py
   - docs/scripts/change_impact_knowledge.py
   - docs/scripts/module_manifest_knowledge.py
   - docs/scripts/prose_knowledge.py
@@ -59,6 +60,11 @@ README модуля App собирается из его тематически�
 `agent-system/knowledge/change-impact/` и проверяет актуальность производного
 `docs/registry/change-impact.yaml`. Поставка документации без `agent-system/`
 использует YAML. Порядок триггеров и условия strict review общие для обоих входов.
+
+Пути триггеров отсчитываются от корня репозитория. Точный путь файла
+или указателя сабмодуля совпадает сам с собой. Для всех файлов внутри
+каталога используется суффикс `/**`. Похожий путь внутри другого
+репозитория не запускает правило исходного владельца.
 
 `Validate documentation` передаёт в strict change-impact проверку итоговые
 изменения всего PR, а не только последнего push. Поэтому документация,

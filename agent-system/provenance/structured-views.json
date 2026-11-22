@@ -48,13 +48,13 @@
     },
     "docs/registry/smoke-tests.yaml": {
       "layout_id": "lisa:mobile:metadata:smoke-tests-registry",
-      "sha256_utf8_lf": "0039ad18a44417770e01162a4d2d350d1006eb67d74f7a58834af8dee2adf2e3",
+      "sha256_utf8_lf": "fe1dc6da2ce43332d469b668a0e22a0bdffed21cb9e77c1b01a78f81d23c3b72",
       "source_fingerprints": {
         "agent-system/provenance/keyed-docs-registries.json": "19ab1241499dc790d3d759a492b82bcce80ef30944309c0ef0d714d4660260fa",
         "docs/scripts/keyed_registry_knowledge.py": "11c5b3647e72bdfcaeb12b5dd7662b304cc0492787a4660bb90e6deaf74d85dc",
         "docs/scripts/structured_view_proof.py": "bae9d5c0273dbe26bfa4c4467c2c7210cbc75c1677cc25a9a6a4cf347b6bb54c"
       },
-      "ordered_records_sha256": "c8a8931c15ad30523a5424542a48d7c954aeca2e92abdb984368d5565749a665",
+      "ordered_records_sha256": "59e7582b49856bdd9789cfc9965582f5f9fbafdf176d25991a3dd3469d9d2c55",
       "ordered_count": 121
     },
     "docs/registry/config-keys.yaml": {
@@ -92,13 +92,13 @@
     },
     "docs/registry/change-impact.yaml": {
       "layout_id": "lisa:mobile:metadata:change-impact-registry",
-      "sha256_utf8_lf": "d6343942fc3048e73139cb9d9b5306f752939c6f107e52affc266683c504d57b",
+      "sha256_utf8_lf": "3f49f8bbf51d9d692ff092bbf7f94f69cd2540bcd6f745587aeb234c7490e9ed",
       "source_fingerprints": {
         "agent-system/provenance/change-impact.json": "469b25b9ae32e16d5581764528052a3f6abc076450f1a9624121fafd8da8baf1",
         "docs/scripts/change_impact_knowledge.py": "e704490ef51b887a56890d8c1a55dbcc1396231c9075e2f01c7ce49c79360899",
         "docs/scripts/structured_view_proof.py": "bae9d5c0273dbe26bfa4c4467c2c7210cbc75c1677cc25a9a6a4cf347b6bb54c"
       },
-      "ordered_records_sha256": "bc1937089c42124b7f023373b32ccc910fa12091a90b13ebefb26022961684c2",
+      "ordered_records_sha256": "b0ec1eb07163cf09d3f3a61b589bab2322005c528654cddf309dd22dc4d48ba1",
       "ordered_count": 86
     },
     "app/docs/manifest.yaml": {

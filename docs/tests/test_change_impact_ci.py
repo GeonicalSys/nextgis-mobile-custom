@@ -38,6 +38,36 @@ REPOSITORY = "example/mobile"
 
 
 class ChangeImpactOwnerTest(unittest.TestCase):
+    def test_trigger_does_not_match_the_same_suffix_in_another_repo(self):
+        trigger = next(item for item in TRIGGERS if item["id"] == "GEOMETRY-SKETCH-WORKFLOW")
+        path = "app/src/main/res/values/strings.xml"
+
+        parent = validator.Validation()
+        validator.report_changed_files([trigger], [path], True, parent)
+        self.assertEqual(len(parent.errors), 1)
+
+        child = validator.Validation()
+        validator.report_changed_files([trigger], ["easypicker/" + path], True, child)
+        self.assertEqual(child.errors, [])
+
+    def test_usage_directory_trigger_checks_changed_source_and_tests(self):
+        trigger = next(item for item in TRIGGERS if item["id"] == "MOBILE-USAGE")
+        paths = (
+            "app/src/main/java/com/nextgis/mobile/usage/UsageAnalytics.java",
+            "app/src/test/java/com/nextgis/mobile/usage/UsageOpenPolicyTest.java",
+            "app/src/androidTest/java/com/nextgis/mobile/usage/UsageDeliveryTest.java",
+        )
+        for path in paths:
+            with self.subTest(path=path):
+                missing_docs = validator.Validation()
+                validator.report_changed_files([trigger], [path], True, missing_docs)
+                self.assertEqual(len(missing_docs.errors), 1)
+
+                with_docs = validator.Validation()
+                changed = [path, "docs/architecture/mobile-usage.md"]
+                validator.report_changed_files([trigger], changed, True, with_docs)
+                self.assertEqual(with_docs.errors, [])
+
     def test_prose_edit_does_not_require_build_matrix_change(self):
         validation = validator.Validation()
         validator.report_changed_files(TRIGGERS, [

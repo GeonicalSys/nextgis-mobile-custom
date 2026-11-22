@@ -109,6 +109,11 @@
     },
     {
       "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-22-android-path-triggers",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
       "target": "lisa:mobile:evidence:documentation-changelog-2026-11-15-rel03-resource-safety",
       "status": "source_backed"
     },

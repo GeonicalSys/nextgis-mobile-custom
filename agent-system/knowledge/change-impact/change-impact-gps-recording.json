@@ -7,8 +7,70 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "src/main/java/com/nextgis/maplib/map/WalkPreviewGeometry.java",
+          "src/test/java/com/nextgis/maplib/util/LocationDepartureTest.java",
+          "src/test/resources/location",
+          "src/main/java/com/nextgis/maplib/location/GpsEventSource.java",
+          "src/main/java/com/nextgis/maplib/location/LocationSubscriptionController.java",
+          "src/main/java/com/nextgis/maplib/location/SensorMotionMonitor.java",
+          "src/main/java/com/nextgis/maplib/util/DeviceMotionEvidence.java",
+          "src/main/java/com/nextgis/maplib/util/LocationRecordingSamplerCore.java",
+          "src/main/java/com/nextgis/maplib/util/LocationMotionFilter.java",
+          "src/main/java/com/nextgis/maplib/util/RecordingSamplingPolicy.java",
+          "src/main/java/com/nextgis/maplib/util/AdaptiveLocationFilterCore.java",
+          "src/main/java/com/nextgis/maplib/util/LocationFixPolicy.java",
+          "src/main/java/com/nextgis/maplib/util/ExternalGnssFixPolicy.java",
+          "src/main/java/com/nextgis/maplib/gnss/NmeaParser.java",
+          "src/main/java/com/nextgis/maplib/gnss/NmeaLineBuffer.java",
+          "src/main/java/com/nextgis/maplib/gnss/CnbFrameBuffer.java",
+          "src/main/java/com/nextgis/maplib/gnss/CnbBestPos.java",
+          "src/main/java/com/nextgis/maplib/gnss/ComNavAsciiCommands.java",
+          "src/main/java/com/nextgis/maplib/gnss/BluetoothLeTransport.java",
+          "src/main/java/com/nextgis/maplib/gnss/ExternalGnssSession.java",
+          "src/main/java/com/nextgis/maplib/location/AccurateLocationTaker.java",
+          "src/main/java/com/nextgis/maplib/util/LocationRecordingSampler.java",
+          "src/main/java/com/nextgis/maplib/map/TrackLayer.java",
+          "src/main/java/com/nextgis/maplib/util/LocationTrackFilter.java",
+          "src/main/java/com/nextgis/maplib/util/LocationTrackFilterCore.java",
+          "src/main/java/com/nextgis/maplib/util/LocationProviderArbiter.java",
+          "src/main/java/com/nextgis/maplib/util/LocationProviderArbiterCore.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/java/com/nextgis/maplibui/util/WalkSessionStore.java",
+          "src/main/java/com/nextgis/maplibui/util/WalkSessionPolicy.java",
+          "src/main/java/com/nextgis/maplibui/service/WalkGeometrySnapshot.java",
+          "src/main/java/com/nextgis/maplibui/view/WalkRecordingPanel.java",
+          "src/main/java/com/nextgis/maplibui/service/WalkGeometryInsertion.java",
+          "src/main/java/com/nextgis/maplibui/util/ExportGPXTask.java",
+          "src/main/java/com/nextgis/maplibui/util/GpxSharePublisher.java",
+          "src/main/java/com/nextgis/maplibui/service/TrackerService.java",
+          "src/main/java/com/nextgis/maplibui/service/WalkEditService.java",
+          "src/main/java/com/nextgis/maplibui/util/BackgroundRecordingSoundMonitor.java",
+          "src/main/java/com/nextgis/maplibui/util/BackgroundRecordingSoundPolicy.java",
+          "src/main/AndroidManifest.xml"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/main/java/com/nextgis/mobile/provider/ExportFileProvider.java",
+          "app/src/main/java/com/nextgis/mobile/activity/ExternalGnssActivity.java",
+          "app/src/main/res/layout/fragment_map.xml",
+          "app/src/main/res/xml/preferences_tracks.xml"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
@@ -35,7 +97,7 @@
           "maplibui/src/main/java/com/nextgis/maplibui/view/WalkRecordingPanel.java",
           "app/src/main/java/com/nextgis/mobile/provider/ExportFileProvider.java",
           "maplib/src/test/java/com/nextgis/maplib/util/LocationDepartureTest.java",
-          "maplib/src/test/resources/location/",
+          "maplib/src/test/resources/location/**",
           "maplib/src/main/java/com/nextgis/maplib/location/GpsEventSource.java",
           "maplib/src/main/java/com/nextgis/maplib/location/LocationSubscriptionController.java",
           "maplib/src/main/java/com/nextgis/maplib/location/SensorMotionMonitor.java",
