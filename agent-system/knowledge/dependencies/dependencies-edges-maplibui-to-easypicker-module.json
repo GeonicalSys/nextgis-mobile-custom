@@ -7,8 +7,31 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/registry/dependencies.yaml",
+          "settings.gradle"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/easypicker",
+        "include": [
+          "easypicker/build.gradle"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "build.gradle"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

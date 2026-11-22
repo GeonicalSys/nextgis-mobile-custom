@@ -7,8 +7,74 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/androidTest/java/com/nextgis/mobile/reliability/SharedTracksTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/rendering/DirectVectorTilesTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/rendering/FireflyStyleEditorTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/rendering/NativeStyleTouch.java",
+          "app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleEditorTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleRenderingTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/rendering/VectorStyleRenderingTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/rendering/VisibleLineLabelsTest.java",
+          "docs/architecture/classic-style-verification.md",
+          "docs/architecture/map-rendering.md",
+          "docs/registry/invariants.yaml"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "src/main/java/com/nextgis/maplib/display/ConfigurablePolygonPatternRegistry.java",
+          "src/main/java/com/nextgis/maplib/display/FieldStyleRule.java",
+          "src/main/java/com/nextgis/maplib/display/FireflyMarkerRegistry.java",
+          "src/main/java/com/nextgis/maplib/display/LabelAttributes.java",
+          "src/main/java/com/nextgis/maplib/display/MarkerIconRegistry.java",
+          "src/main/java/com/nextgis/maplib/display/MplStyleMapper.java",
+          "src/main/java/com/nextgis/maplib/display/PolygonOutlineOptions.java",
+          "src/main/java/com/nextgis/maplib/display/PolygonPatternOptions.java",
+          "src/main/java/com/nextgis/maplib/display/SimpleMarkerStyle.java",
+          "src/main/java/com/nextgis/maplib/display/SimplePolygonStyle.java",
+          "src/main/java/com/nextgis/maplib/display/Style.java",
+          "src/main/java/com/nextgis/maplib/map/MLP",
+          "src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java",
+          "src/main/java/com/nextgis/maplib/map/MapDrawable.java",
+          "src/main/java/com/nextgis/maplib/map/NativeFeaturePayload.java",
+          "src/main/java/com/nextgis/maplib/map/RuleGeometryLayouts.java",
+          "src/main/java/com/nextgis/maplib/map/RuleLabelLayouts.java",
+          "src/main/java/com/nextgis/maplib/map/SharedTrackStore.java",
+          "src/main/java/com/nextgis/maplib/map/VisibleLineLabelController.java",
+          "src/main/java/com/nextgis/maplib/map/VisibleLineLabelLayout.java",
+          "src/main/java/com/nextgis/maplib/map/mpl/FireflyLayerFactory.java",
+          "src/main/java/com/nextgis/maplib/map/mpl/LineLayerFactory.java",
+          "src/main/java/com/nextgis/maplib/map/mpl/MplLayerBuildContext.java",
+          "src/main/java/com/nextgis/maplib/map/mpl/PointLayerFactory.java",
+          "src/main/java/com/nextgis/maplib/map/mpl/PolygonLayerFactory.java",
+          "src/main/java/com/nextgis/maplib/map/mpl/PolygonOutlineLayerFactory.java",
+          "src/test/java/com/nextgis/maplib/display/FireflyMarkerTest.java",
+          "src/test/java/com/nextgis/maplib/map/NativeFeaturePayloadTest.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/java/com/nextgis/maplibui/display/RuleFeatureRendererUI.java",
+          "src/main/java/com/nextgis/maplibui/fragment/StyleFragment.java",
+          "src/main/java/com/nextgis/maplibui/util/PolygonStyleControls.java",
+          "src/main/java/com/nextgis/maplibui/util/SharedTrackProjects.java",
+          "src/main/java/com/nextgis/maplibui/util/StylePreviewView.java",
+          "src/main/res/layout/style_polygon_options.xml",
+          "src/main/res/values-ru/firefly_strings.xml",
+          "src/main/res/values/firefly_strings.xml"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

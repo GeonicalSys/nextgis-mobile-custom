@@ -7,8 +7,36 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/registry/ui-contracts.json"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "src/main/java/com/nextgis/maplib/datasource/ngw/Connection.java",
+          "src/main/java/com/nextgis/maplib/datasource/ngw/ResourceGroup.java",
+          "src/main/java/com/nextgis/maplib/util/NetworkUtil.java",
+          "src/main/res/values-ru/strings.xml",
+          "src/main/res/values/strings.xml"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/java/com/nextgis/maplibui/dialog/NGWResourcesListAdapter.java",
+          "src/main/res/values-ru/resource_list_error_strings.xml",
+          "src/main/res/values/resource_list_error_strings.xml"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

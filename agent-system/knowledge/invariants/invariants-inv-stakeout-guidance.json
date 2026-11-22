@@ -7,8 +7,56 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/docs/README.md",
+          "app/docs/manifest.yaml",
+          "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+          "app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java",
+          "app/src/main/java/com/nextgis/mobile/stakeout",
+          "app/src/main/java/com/nextgis/mobile/stakeout/MagneticAzimuthCalculator.kt",
+          "app/src/main/java/com/nextgis/mobile/stakeout/StakeoutAudioCue.kt",
+          "app/src/main/java/com/nextgis/mobile/stakeout/StakeoutController.kt",
+          "app/src/main/java/com/nextgis/mobile/stakeout/StakeoutForegroundService.kt",
+          "app/src/main/java/com/nextgis/mobile/stakeout/StakeoutHeadingProvider.kt",
+          "app/src/main/java/com/nextgis/mobile/stakeout/WorldMagneticModel2025.java",
+          "app/src/main/res/xml/preferences_location.xml",
+          "docs/architecture/stakeout.md",
+          "docs/reference/official-differences.md",
+          "docs/reference/settings-and-config.md",
+          "docs/registry/invariants.yaml"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "docs/README.md",
+          "docs/manifest.yaml",
+          "src/main/java/com/nextgis/maplib/datasource/GeoGeometry.java",
+          "src/main/java/com/nextgis/maplib/datasource/GeoGeometryFactory.java",
+          "src/main/java/com/nextgis/maplib/location/GpsEventSource.java",
+          "src/main/java/com/nextgis/maplib/map/MapDrawable.java",
+          "src/main/java/com/nextgis/maplib/map/VectorLayer.java",
+          "src/main/java/com/nextgis/maplib/util/StakeoutGeometryTarget.java",
+          "src/main/java/com/nextgis/maplib/util/StakeoutGuidancePolicy.java",
+          "src/test/java/com/nextgis/maplib/util/StakeoutGeometryTargetTest.java",
+          "src/test/java/com/nextgis/maplib/util/StakeoutGuidancePolicyTest.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/java/com/nextgis/maplibui/fragment/LayersListAdapter.java",
+          "src/main/java/com/nextgis/maplibui/overlay/EditLayerOverlay.java"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

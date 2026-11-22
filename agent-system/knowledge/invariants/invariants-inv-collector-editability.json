@@ -7,8 +7,69 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt",
+          "app/src/main/java/com/nextgis/mobile/activity/ProjectChooserDialog.kt",
+          "app/src/main/java/com/nextgis/mobile/activity/ProjectSettingsActivity.kt",
+          "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+          "app/src/main/res/menu/add_layer.xml",
+          "docs/architecture/collector-projects.md",
+          "docs/reference/official-differences.md",
+          "docs/registry/invariants.yaml",
+          "docs/runbooks/collector-project-setup.md"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "src/main/java/com/nextgis/maplib/datasource/LayerContentProvider.java",
+          "src/main/java/com/nextgis/maplib/datasource/ngw/CollectorProjectCompositionSync.java",
+          "src/main/java/com/nextgis/maplib/datasource/ngw/CollectorProjectItem.java",
+          "src/main/java/com/nextgis/maplib/datasource/ngw/CollectorResource.java",
+          "src/main/java/com/nextgis/maplib/map/CollectorProjectMetadata.java",
+          "src/main/java/com/nextgis/maplib/map/MapContentProviderHelper.java",
+          "src/main/java/com/nextgis/maplib/map/NGWRasterLayer.java",
+          "src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java",
+          "src/main/java/com/nextgis/maplib/map/VectorLayer.java",
+          "src/main/java/com/nextgis/maplib/util/DatabaseContext.java",
+          "src/main/java/com/nextgis/maplib/util/DistrictFilterUtil.java",
+          "src/main/java/com/nextgis/maplib/util/LayerFormHashUtil.java",
+          "src/main/java/com/nextgis/maplib/util/LisaCatalog.java",
+          "src/main/java/com/nextgis/maplib/util/LisaCatalogLookup.java",
+          "src/main/java/com/nextgis/maplib/util/NGWUtil.java",
+          "src/main/java/com/nextgis/maplib/util/NgwFeatureCountParser.java",
+          "src/main/java/com/nextgis/maplib/util/NgwFeatureGeometryValidator.java",
+          "src/main/java/com/nextgis/maplib/util/NgwSyncNoneReloadDecision.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/java/com/nextgis/maplibui/GISApplication.java",
+          "src/main/java/com/nextgis/maplibui/activity/SelectNGWResourceActivity.java",
+          "src/main/java/com/nextgis/maplibui/activity/VectorLayerSettingsActivity.java",
+          "src/main/java/com/nextgis/maplibui/dialog/SelectNGWResourceDialog.java",
+          "src/main/java/com/nextgis/maplibui/service/LayerFillService.java",
+          "src/main/java/com/nextgis/maplibui/service/TrackerService.java",
+          "src/main/java/com/nextgis/maplibui/util/CollectorFormFileTransaction.java",
+          "src/main/java/com/nextgis/maplibui/util/CollectorImportJournal.java",
+          "src/main/java/com/nextgis/maplibui/util/CollectorProjectImportHelper.java",
+          "src/main/java/com/nextgis/maplibui/util/CollectorProjectRegistry.java",
+          "src/main/java/com/nextgis/maplibui/util/CollectorRasterLayerHelper.java",
+          "src/main/java/com/nextgis/maplibui/util/LayerFillStaging.java",
+          "src/main/java/com/nextgis/maplibui/util/LoadLisaCollectorProject.java",
+          "src/main/java/com/nextgis/maplibui/util/ProjectOperationCoordinator.java",
+          "src/main/java/com/nextgis/maplibui/util/SchemaRebuildRetryGuard.java"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

@@ -10,7 +10,7 @@
         "docs/scripts/keyed_registry_knowledge.py": "11c5b3647e72bdfcaeb12b5dd7662b304cc0492787a4660bb90e6deaf74d85dc",
         "docs/scripts/structured_view_proof.py": "bae9d5c0273dbe26bfa4c4467c2c7210cbc75c1677cc25a9a6a4cf347b6bb54c"
       },
-      "ordered_records_sha256": "41e059e2a3d8aa3ba420db23ebab81873ddfbc76102cbae32038f65f26991633",
+      "ordered_records_sha256": "5f3b9e8e72fc787a64c511ffc78c07ae2c2ed741e10837a09f58530f79c904ca",
       "ordered_count": 5
     },
     "docs/registry/modules.yaml": {
@@ -21,7 +21,7 @@
         "docs/scripts/keyed_registry_knowledge.py": "11c5b3647e72bdfcaeb12b5dd7662b304cc0492787a4660bb90e6deaf74d85dc",
         "docs/scripts/structured_view_proof.py": "bae9d5c0273dbe26bfa4c4467c2c7210cbc75c1677cc25a9a6a4cf347b6bb54c"
       },
-      "ordered_records_sha256": "434ffc40fb3367ce12a68066d16407e5e77cb5a72d79340bc60e21f5b00baedd",
+      "ordered_records_sha256": "61acfe15cbe41d61c53c726f5968bf62c560111da0145d9e3b2cc754108c5890",
       "ordered_count": 6
     },
     "docs/registry/invariants.yaml": {
@@ -32,7 +32,7 @@
         "docs/scripts/keyed_registry_knowledge.py": "11c5b3647e72bdfcaeb12b5dd7662b304cc0492787a4660bb90e6deaf74d85dc",
         "docs/scripts/structured_view_proof.py": "bae9d5c0273dbe26bfa4c4467c2c7210cbc75c1677cc25a9a6a4cf347b6bb54c"
       },
-      "ordered_records_sha256": "c2d769ccfb54a7f0b11ad546214a09454c410a2f32124e100f33cd6b0338d92f",
+      "ordered_records_sha256": "c713c7f829d03fd2795762161d742f89aaab969ed36bdf3b612441ad1c35f8a6",
       "ordered_count": 93
     },
     "docs/registry/upstream-overlaps.yaml": {
@@ -43,7 +43,7 @@
         "docs/scripts/keyed_registry_knowledge.py": "11c5b3647e72bdfcaeb12b5dd7662b304cc0492787a4660bb90e6deaf74d85dc",
         "docs/scripts/structured_view_proof.py": "bae9d5c0273dbe26bfa4c4467c2c7210cbc75c1677cc25a9a6a4cf347b6bb54c"
       },
-      "ordered_records_sha256": "be502ed5433a9fcb734e313ec9b29b5d0bbc49e238d989a34cfaecdd7d2109d0",
+      "ordered_records_sha256": "1a31b40ad2f555dfa73c84c0f23146113f331b0dc93434064424a68dc1d6b83e",
       "ordered_count": 13
     },
     "docs/registry/smoke-tests.yaml": {
@@ -76,7 +76,7 @@
         "docs/scripts/keyed_registry_knowledge.py": "11c5b3647e72bdfcaeb12b5dd7662b304cc0492787a4660bb90e6deaf74d85dc",
         "docs/scripts/structured_view_proof.py": "bae9d5c0273dbe26bfa4c4467c2c7210cbc75c1677cc25a9a6a4cf347b6bb54c"
       },
-      "ordered_records_sha256": "1c9e58d23942bc1e00e5cef3665adca09258c070d8a789944e83320e3bea58a6",
+      "ordered_records_sha256": "ea6a22952969379727cb1ea67770385684ce0eda57c8ea8029a8b1414ec54892",
       "ordered_count": 37
     },
     "docs/registry/ecosystem.yaml": {
@@ -120,7 +120,7 @@
         "docs/scripts/ui_catalogue_knowledge.py": "123673e3984832ec94154f4ad354b47b396782de67fdd544be9edab098ba33f9",
         "docs/scripts/structured_view_proof.py": "bae9d5c0273dbe26bfa4c4467c2c7210cbc75c1677cc25a9a6a4cf347b6bb54c"
       },
-      "ordered_records_sha256": "9ef4b5d41f94d3752facb5364a725abce98a158a69f4a9c1b93497c977e331dd",
+      "ordered_records_sha256": "acb1d4149dd42fed21a1598076295485f4b4a2148de5198b3d9ac097c3aaf976",
       "ordered_count": 510
     }
   }

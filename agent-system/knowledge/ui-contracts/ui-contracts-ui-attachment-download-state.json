@@ -7,8 +7,26 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/registry/ui-contracts.json"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/easypicker",
+        "include": [
+          "easypicker/src/main/java/com/keenfin/easypicker/DownloadPhotoIntentService.java",
+          "easypicker/src/main/java/com/keenfin/easypicker/PhotoPicker.java",
+          "easypicker/src/main/java/com/keenfin/easypicker/PhotoViewHolder.java",
+          "easypicker/src/main/res/layout/photo_item.xml"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

@@ -1,7 +1,7 @@
 ---
 title: Контракты значений и действий мобильного интерфейса
 type: architecture
-last_verified: 2026-11-09
+last_verified: 2026-11-22
 related_code:
   - app/src/test/java/com/nextgis/mobile/fragment/SettingsWorkspaceMoveTest.java
   - app/src/main/java/com/nextgis/mobile/util/SelectMapPathPreference.java
@@ -49,6 +49,14 @@ file hashes после сравнения diff; UI method/resource expectations 
 После подтверждённой правки записей выполни
 `python -B docs/scripts/ui_catalogue_knowledge.py --write`. Проверка App
 сверяет JSON с записями. Автономная копия и явный `--registry` читают JSON.
+
+В общем реестре LISA область записи охватывает исходники методов, привязки
+виджетов и подтверждённые файлы из `non_method_evidence`. Например,
+изменение `app/src/main/res/xml/preferences_map.xml` затрагивает
+`UI-MAP-SCALE-RULER` и `UI-MAP-ZOOM` вместе с их реализацией. Проверка
+этих привязок опирается на исходники. Наблюдения на устройстве
+фиксируются в результатах соответствующих проверок.
+
 Repository IDs совпадают с существующим `registry/repositories.yaml`:
 `root` означает корень Android checkout (модуль app находится в `app/`),
 `maplib` и `maplibui` — отдельные закреплённые репозитории библиотек.

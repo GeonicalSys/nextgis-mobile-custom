@@ -7,8 +7,38 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/test/java/com/nextgis/maplibui/dialog/ResourceSelectionCheckboxTest.java",
+          "app/src/test/java/com/nextgis/maplibui/dialog/ResourceSelectionRowLayoutTest.java",
+          "app/src/test/java/com/nextgis/maplibui/util/NgwResourceSelectionDedupTest.java",
+          "docs/architecture/ngw-sync-and-storage.md",
+          "docs/architecture/ui-contracts.md",
+          "docs/registry/invariants.yaml",
+          "docs/registry/ui-contracts.json"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/java/com/nextgis/maplibui/activity/SelectNGWResourceActivity.java",
+          "src/main/java/com/nextgis/maplibui/dialog/NGWResourcesListAdapter.java",
+          "src/main/java/com/nextgis/maplibui/dialog/SelectNGWResourceDialog.java",
+          "src/main/java/com/nextgis/maplibui/util/CheckState.java",
+          "src/main/java/com/nextgis/maplibui/util/NgwResourceSelectionState.java",
+          "src/main/java/com/nextgis/maplibui/view/NgwResourceRowLayout.java",
+          "src/main/res/layout/activity_resources.xml",
+          "src/main/res/layout/layout_resources.xml",
+          "src/main/res/layout/row_ngwlayer_check.xml",
+          "src/main/res/layout/row_ngwlayer_doublecheck.xml"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

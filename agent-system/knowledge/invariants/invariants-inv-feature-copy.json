@@ -7,8 +7,39 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+          "app/src/main/res/values-ru/feature_copy_strings.xml",
+          "app/src/main/res/values/feature_copy_strings.xml",
+          "docs/architecture/feature-copy-transform.md",
+          "docs/architecture/feature-type-creation.md",
+          "docs/registry/invariants.yaml"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "src/main/java/com/nextgis/maplib/map/GeometryTransformGesture.java",
+          "src/main/java/com/nextgis/maplib/util/FeatureCopyPolicy.java",
+          "src/main/java/com/nextgis/maplib/util/GeometryTransform.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/java/com/nextgis/maplibui/fragment/BottomToolbar.java",
+          "src/main/java/com/nextgis/maplibui/util/FeatureCopyDefaults.java",
+          "src/main/res/menu/edit_transform.xml"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

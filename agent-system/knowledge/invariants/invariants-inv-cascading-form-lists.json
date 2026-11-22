@@ -7,8 +7,46 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/androidTest/java/com/nextgis/mobile/reliability/CascadingFormsTest.java",
+          "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+          "docs/architecture/cascading-form-lists.md",
+          "docs/guides/cascading-form-lists-user-guide.md",
+          "docs/registry/invariants.yaml"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "src/main/java/com/nextgis/maplib/forms",
+          "src/main/java/com/nextgis/maplib/forms/CascadingLists.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/java/com/nextgis/maplibui/activity/FormBuilderModifyAttributesActivity.java",
+          "src/main/java/com/nextgis/maplibui/dialog/ChooseFeatureTypeDialog.java",
+          "src/main/java/com/nextgis/maplibui/formcontrol/Combobox.java",
+          "src/main/java/com/nextgis/maplibui/formcontrol/DoubleCombobox.java",
+          "src/main/java/com/nextgis/maplibui/formcontrol/Tabs.java",
+          "src/main/java/com/nextgis/maplibui/util/CascadingFormController.java",
+          "src/main/java/com/nextgis/maplibui/util/CascadingFormElements.java",
+          "src/main/java/com/nextgis/maplibui/util/FeatureTypeDefaults.java",
+          "src/main/java/com/nextgis/maplibui/util/FeatureTypePreview.java",
+          "src/main/java/com/nextgis/maplibui/util/FormFieldLayout.java",
+          "src/main/java/com/nextgis/maplibui/util/WalkSessionStore.java",
+          "src/main/res/layout/row_feature_type.xml"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

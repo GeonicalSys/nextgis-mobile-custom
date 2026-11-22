@@ -7,8 +7,43 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/androidTest/java/com/nextgis/mobile/reliability/ConditionalRequiredFieldsTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/reliability/FormAppearanceTest.java",
+          "app/src/test/java/com/nextgis/mobile/util/NgfpLookupPrefetchTest.java",
+          "docs/architecture/conditional-form-rules.md",
+          "docs/guides/form-behavior-user-guide.md",
+          "docs/registry/invariants.yaml"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "src/main/java/com/nextgis/maplib/forms/ConditionalRequiredRules.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/java/com/nextgis/maplibui/GISApplication.java",
+          "src/main/java/com/nextgis/maplibui/control/FormScrollView.java",
+          "src/main/java/com/nextgis/maplibui/service/LayerFillService.java",
+          "src/main/java/com/nextgis/maplibui/util/ConditionalRequiredController.java",
+          "src/main/java/com/nextgis/maplibui/util/FormChoiceAdapter.java",
+          "src/main/java/com/nextgis/maplibui/util/FormFieldLayout.java",
+          "src/main/java/com/nextgis/maplibui/util/FormMetadataSnapshot.java",
+          "src/main/java/com/nextgis/maplibui/util/LayerUtil.java",
+          "src/main/res/layout/activity_standard_attributes.xml"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

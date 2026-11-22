@@ -7,8 +7,57 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/androidTest/java/com/nextgis/mobile/reliability/CascadingFormsTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/reliability/ConditionalRequiredFieldsTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/reliability/FormAppearanceTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/reliability/RequiredFieldsTest.java",
+          "docs/architecture/conditional-form-rules.md",
+          "docs/architecture/crash-recovery.md",
+          "docs/architecture/ngw-sync-and-storage.md",
+          "docs/architecture/ui-contracts.md",
+          "docs/registry/invariants.yaml"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "src/main/java/com/nextgis/maplib/datasource/Field.java",
+          "src/main/java/com/nextgis/maplib/forms",
+          "src/main/java/com/nextgis/maplib/forms/ConditionalRequiredRules.java",
+          "src/main/java/com/nextgis/maplib/util/NGWLayerSchemaCompat.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/java/com/nextgis/maplibui/activity/FormBuilderModifyAttributesActivity.java",
+          "src/main/java/com/nextgis/maplibui/activity/ModifyAttributesActivity.java",
+          "src/main/java/com/nextgis/maplibui/control/FormScrollView.java",
+          "src/main/java/com/nextgis/maplibui/formcontrol/Combobox.java",
+          "src/main/java/com/nextgis/maplibui/formcontrol/DoubleCombobox.java",
+          "src/main/java/com/nextgis/maplibui/formcontrol/Tabs.java",
+          "src/main/java/com/nextgis/maplibui/formcontrol/TextEdit.java",
+          "src/main/java/com/nextgis/maplibui/util/CascadingFormController.java",
+          "src/main/java/com/nextgis/maplibui/util/CascadingFormElements.java",
+          "src/main/java/com/nextgis/maplibui/util/ConditionalRequiredController.java",
+          "src/main/java/com/nextgis/maplibui/util/FormChoiceAdapter.java",
+          "src/main/java/com/nextgis/maplibui/util/FormFieldLayout.java",
+          "src/main/java/com/nextgis/maplibui/util/FormMetadataSnapshot.java",
+          "src/main/java/com/nextgis/maplibui/util/LayerUtil.java",
+          "src/main/java/com/nextgis/maplibui/util/RequiredFieldUi.java",
+          "src/main/java/com/nextgis/maplibui/util/RequiredFieldValidation.java",
+          "src/main/res/layout/activity_standard_attributes.xml"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

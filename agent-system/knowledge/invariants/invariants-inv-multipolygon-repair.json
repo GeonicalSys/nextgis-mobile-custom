@@ -7,8 +7,63 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/docs/README.md",
+          "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+          "app/src/main/res/menu/select_action.xml",
+          "app/src/main/res/values-ru/strings.xml",
+          "app/src/main/res/values/strings.xml",
+          "docs/architecture/map-rendering.md",
+          "docs/reference/official-differences.md",
+          "docs/registry/invariants.yaml"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "docs/README.md",
+          "src/main/java/com/nextgis/maplib/datasource/GeoGeometryFactory.java",
+          "src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java",
+          "src/main/java/com/nextgis/maplib/datasource/GeoPolygon.java",
+          "src/main/java/com/nextgis/maplib/map/MLP",
+          "src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java",
+          "src/main/java/com/nextgis/maplib/map/MapDrawable.java",
+          "src/main/java/com/nextgis/maplib/util/LocationUtil.java",
+          "src/main/java/com/nextgis/maplib/util/MultiPolygonGeometryRepair.java",
+          "src/test/java/com/nextgis/maplib/datasource/GeoMultiPolygonWktTest.java",
+          "src/test/java/com/nextgis/maplib/map/MLP",
+          "src/test/java/com/nextgis/maplib/map/MPLFeaturesUtilsPolygonTest.java",
+          "src/test/java/com/nextgis/maplib/util/LocationUtilAreaTest.java",
+          "src/test/java/com/nextgis/maplib/util/MultiPolygonGeometryRepairTest.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/java/com/nextgis/maplibui/overlay/EditLayerOverlay.java",
+          "src/main/java/com/nextgis/maplibui/overlay/RulerOverlay.java",
+          "src/main/java/com/nextgis/maplibui/service/WalkEditService.java",
+          "src/main/java/com/nextgis/maplibui/service/WalkGeometryInsertion.java",
+          "src/main/java/com/nextgis/maplibui/service/WalkGeometrySnapshot.java",
+          "src/main/java/com/nextgis/maplibui/util/ControlHelper.java",
+          "src/main/java/com/nextgis/maplibui/util/GeometryEditDraftStore.java",
+          "src/main/java/com/nextgis/maplibui/view/WalkRecordingPanel.java",
+          "src/main/res/menu/edit_line.xml",
+          "src/main/res/menu/edit_multiline.xml",
+          "src/main/res/menu/edit_multipolygon.xml",
+          "src/main/res/menu/edit_polygon.xml",
+          "src/main/res/menu/ruler_measurement.xml",
+          "src/main/res/values/geometry_edit_ids.xml"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

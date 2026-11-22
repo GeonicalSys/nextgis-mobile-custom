@@ -7,8 +7,31 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+          "docs/architecture/feature-type-creation.md",
+          "docs/guides/form-behavior-user-guide.md",
+          "docs/registry/invariants.yaml"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/java/com/nextgis/maplibui/dialog/ChooseFeatureTypeDialog.java",
+          "src/main/java/com/nextgis/maplibui/util/FeatureTypeDefaults.java",
+          "src/main/java/com/nextgis/maplibui/util/FeatureTypePreview.java",
+          "src/main/java/com/nextgis/maplibui/util/LayerUtil.java",
+          "src/main/java/com/nextgis/maplibui/util/WalkSessionStore.java",
+          "src/main/res/layout/row_feature_type.xml"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

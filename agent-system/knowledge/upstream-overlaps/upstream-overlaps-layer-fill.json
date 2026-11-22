@@ -7,8 +7,37 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          ".gitmodules",
+          "docs/registry/upstream-overlaps.yaml"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "src/main/java/com/nextgis/maplib/map/MapContentProviderHelper.java",
+          "src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java",
+          "src/main/java/com/nextgis/maplib/map/VectorLayer.java",
+          "src/main/java/com/nextgis/maplib/util/DatabaseContext.java",
+          "src/main/java/com/nextgis/maplib/util/NgwFeatureGeometryValidator.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/java/com/nextgis/maplibui/GISApplication.java",
+          "src/main/java/com/nextgis/maplibui/service/LayerFillService.java",
+          "src/main/java/com/nextgis/maplibui/util/LayerFillStaging.java"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

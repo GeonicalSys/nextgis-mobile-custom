@@ -7,8 +7,23 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app",
+          "app/build.gradle",
+          "app/docs/manifest.yaml",
+          "app/src/main/java/com/nextgis/mobile/MainApplication.java",
+          "app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt",
+          "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+          "docs/registry/modules.yaml",
+          "settings.gradle"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
