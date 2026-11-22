@@ -10,6 +10,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
 from unittest import mock
 from urllib.error import URLError
 from urllib.parse import parse_qs, urlparse
@@ -373,8 +374,13 @@ class ChangeImpactHistoryTest(unittest.TestCase):
         self.assertNotIn("--changed-file", captured["args"])
 
 
+def github_environment(values):
+    # Patch only the module under test so Git fixtures inherit the real process environment.
+    return mock.patch.object(impact, "os", SimpleNamespace(environ=values))
+
+
 class PullRequestLookupTest(unittest.TestCase):
-    @mock.patch.dict(os.environ, {"GITHUB_TOKEN": "unit-test-placeholder"})
+    @github_environment({"GITHUB_TOKEN": "unit-test-placeholder"})
     @mock.patch.object(impact, "urlopen")
     def test_pagination_and_exact_head_repository_filter(self, urlopen):
         first = [pull(n, "a" * 40, repository="example/another-repository") for n in range(100)]
@@ -389,7 +395,7 @@ class PullRequestLookupTest(unittest.TestCase):
             self.assertEqual(query["head"], ["example:feature/docs"])
             self.assertEqual(query["state"], ["open"])
 
-    @mock.patch.dict(os.environ, {"GITHUB_TOKEN": "unit-test-placeholder"})
+    @github_environment({"GITHUB_TOKEN": "unit-test-placeholder"})
     @mock.patch.object(impact, "urlopen", side_effect=URLError("unavailable"))
     def test_api_failure_stops_instead_of_falling_back_to_last_push(self, urlopen):
         with self.assertRaisesRegex(RuntimeError, "impact check stopped"):
@@ -406,7 +412,7 @@ class ChangeImpactCommandTest(unittest.TestCase):
             environment = {"GITHUB_EVENT_NAME": "push", "GITHUB_EVENT_PATH": str(event_path),
                            "GITHUB_REF": "refs/heads/feature/docs", "GITHUB_SHA": "b" * 40,
                            "GITHUB_TOKEN": "unit-test-placeholder"}
-            with mock.patch.dict(os.environ, environment), \
+            with github_environment(environment), \
                     mock.patch.object(sys, "argv", ["check_change_impact.py"]), \
                     mock.patch.object(impact, "urlopen", side_effect=URLError("unavailable")), \
                     mock.patch.object(impact.subprocess, "run") as run_validator, \
@@ -424,7 +430,7 @@ class ChangeImpactCommandTest(unittest.TestCase):
             environment = {"GITHUB_EVENT_NAME": "pull_request", "GITHUB_EVENT_PATH": str(event_path),
                            "GITHUB_REF": "refs/pull/77/merge", "GITHUB_SHA": "c" * 40}
             paths = ["maplib", "notes/новый файл.txt"] + [f"notes/{n:04d}-{'scope-' * 20}.txt" for n in range(270)]
-            with mock.patch.dict(os.environ, environment), \
+            with github_environment(environment), \
                     mock.patch.object(sys, "argv", ["check_change_impact.py"]), \
                     mock.patch.object(impact, "changed_files", return_value=paths), \
                     mock.patch("sys.stdout", new_callable=io.StringIO):
