@@ -7,8 +7,32 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "src/main/java/com/nextgis/maplib/map/VectorLayer.java",
+          "src/main/java/com/nextgis/maplib/datasource/GeometryRTree.java",
+          "src/test/java/com/nextgis/maplib/map/LocalVectorBulkCacheReadinessTest.java",
+          "src/test/java/com/nextgis/maplib/datasource/GeometryRTreeRecoveryTest.java",
+          "src/main/java/com/nextgis/maplib/util/CoordinatePointLayerImporter.java",
+          "src/main/java/com/nextgis/maplib/util/GeoJSONUtil.java",
+          "src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java",
+          "src/main/java/com/nextgis/maplib/map/SqliteVectorTileProvider.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/java/com/nextgis/maplibui/service/LayerFillService.java",
+          "src/main/java/com/nextgis/maplibui/activity/VectorLayerSettingsActivity.java",
+          "src/main/java/com/nextgis/maplibui/service/RebuildCacheService.java"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

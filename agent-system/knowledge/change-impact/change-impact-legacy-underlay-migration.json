@@ -7,8 +7,36 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/main/java/com/nextgis/mobile/activity/LegacyUnderlayExportActivity.java",
+          "app/src/main/java/com/nextgis/mobile/activity/UnderlayCatalogActivity.kt",
+          "app/src/main/java/com/nextgis/mobile/MainApplication.java",
+          "app/src/main/java/com/nextgis/mobile/provider/LegacyUnderlayProvider.java",
+          "app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayImporter.java",
+          "app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayMigrationContract.java",
+          "app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayTransferPolicy.java",
+          "app/src/main/java/com/nextgis/mobile/util/LegacyUnderlayProgressText.java",
+          "app/src/main/res/layout/activity_underlay_catalog.xml",
+          "app/src/main/res/values/underlays.xml",
+          "app/src/main/res/values-ru/underlays.xml",
+          "app/src/test/java/com/nextgis/mobile/util/LegacyUnderlayTransferSessionTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/util/LegacyUnderlayProgressNativeTest.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "src/main/java/com/nextgis/maplib/util/MbTilesInfo.java",
+          "src/main/java/com/nextgis/maplib/util/LegacyTileMbtilesMath.java"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

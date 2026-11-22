@@ -7,8 +7,20 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/main/java/com/nextgis/mobile/util/MaintenanceReminders.java",
+          "app/src/test/java/com/nextgis/mobile/util/MaintenanceRemindersTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/util/MaintenanceRemindersNativeTest.java",
+          "app/src/main/res/values/maintenance_strings.xml",
+          "app/src/main/res/values-ru/maintenance_strings.xml"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

@@ -7,8 +7,43 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "src/main/java/com/nextgis/maplib/map/SqliteVectorLayerController.java",
+          "src/main/java/com/nextgis/maplib/map/SqliteVectorSourceBridge.kt",
+          "src/main/java/com/nextgis/maplib/map/SqliteVectorTileBackend.java",
+          "src/main/java/com/nextgis/maplib/map/SqliteVectorTileProvider.java",
+          "src/main/java/com/nextgis/maplib/map/SqliteVectorTileRequest.java",
+          "src/main/java/com/nextgis/maplib/map/NativeVectorTileEncoder.java",
+          "src/main/java/com/nextgis/maplib/map/NativeVectorTileClipper.java",
+          "src/main/java/com/nextgis/maplib/map/NativeVectorTilePropertyCodec.java",
+          "src/main/java/com/nextgis/maplib/map/MapDrawable.java",
+          "src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java",
+          "src/main/java/com/nextgis/maplib/map/VectorLayer.java",
+          "src/main/java/com/nextgis/maplib/map/VisibleLineLabelController.java",
+          "src/main/java/com/nextgis/maplib/map/VisibleLineLabelQuery.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/java/com/nextgis/maplibui/GISApplication.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/main/java/com/nextgis/mobile/fragment/MapFragment.kt",
+          "app/src/androidTest/java/com/nextgis/mobile/rendering/NativeSqliteVectorRenderingTest.java"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

@@ -7,8 +7,28 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/build.gradle",
+          "app/src/main/java/com/nextgis/mobile/MainApplication.java",
+          "app/src/main/res/xml/syncadapter.xml"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/res/xml/authenticator.xml",
+          "src/main/java/com/nextgis/maplibui/GISApplication.java",
+          "src/main/java/com/nextgis/maplibui/activity/NGWLoginActivity.java",
+          "src/main/java/com/nextgis/maplibui/fragment/NGWLoginFragment.java"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

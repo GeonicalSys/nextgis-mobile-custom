@@ -7,8 +7,27 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/main/java/com/nextgis/mobile/location/BackgroundLocationController.kt",
+          "app/src/main/java/com/nextgis/mobile/location/BackgroundLocationPolicy.java",
+          "app/src/main/java/com/nextgis/mobile/location/BackgroundLocationService.kt",
+          "app/src/androidTest/java/com/nextgis/mobile/reliability/BackgroundGpsNativeTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/reliability/GpsRecoveryNativeTest.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "src/main/java/com/nextgis/maplib/location/GpsRecoveryPolicy.java"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

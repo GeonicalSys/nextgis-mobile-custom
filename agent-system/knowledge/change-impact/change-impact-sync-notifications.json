@@ -7,8 +7,24 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/main/java/com/nextgis/mobile/util/SyncNotifications.java",
+          "app/src/main/java/com/nextgis/mobile/util/OfflineSyncIntentService.java",
+          "app/src/main/java/com/nextgis/mobile/datasource/SyncService.java",
+          "app/src/main/java/com/nextgis/mobile/datasource/SyncAdapter.java",
+          "app/src/main/res/xml/preferences_general.xml",
+          "app/src/main/res/values/sync_recovery_strings.xml",
+          "app/src/main/res/values-ru/sync_recovery_strings.xml",
+          "app/src/test/java/com/nextgis/mobile/util/SyncNotificationsTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/reliability/SyncNotificationsTest.java"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
