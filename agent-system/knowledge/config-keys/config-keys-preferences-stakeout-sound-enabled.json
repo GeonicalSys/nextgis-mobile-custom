@@ -7,8 +7,22 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/androidTest/java/com/nextgis/mobile/reliability/StakeoutForegroundServiceTest.kt",
+          "app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt",
+          "app/src/main/java/com/nextgis/mobile/fragment/SettingsFragment.java",
+          "app/src/main/java/com/nextgis/mobile/stakeout/StakeoutController.kt",
+          "app/src/main/java/com/nextgis/mobile/stakeout/StakeoutSettings.java",
+          "app/src/main/res/xml/preferences_location.xml",
+          "docs/registry/config-keys.yaml"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

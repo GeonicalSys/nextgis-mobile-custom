@@ -7,8 +7,68 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "docs/registry/dependencies.yaml"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "src/main/java/com/nextgis/maplib/datasource/Field.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/java/com/nextgis/maplibui/activity/AttributesActivity.java",
+          "src/main/java/com/nextgis/maplibui/activity/FormBuilderModifyAttributesActivity.java",
+          "src/main/java/com/nextgis/maplibui/activity/ModifyAttributesActivity.java",
+          "src/main/java/com/nextgis/maplibui/activity/VectorLayerSettingsActivity.java",
+          "src/main/java/com/nextgis/maplibui/api/IFormControl.java",
+          "src/main/java/com/nextgis/maplibui/api/ISimpleControl.java",
+          "src/main/java/com/nextgis/maplibui/control/DateTime.java",
+          "src/main/java/com/nextgis/maplibui/control/PhotoGallery.java",
+          "src/main/java/com/nextgis/maplibui/control/TextEdit.java",
+          "src/main/java/com/nextgis/maplibui/control/TextLabel.java",
+          "src/main/java/com/nextgis/maplibui/display/RuleFeatureRendererUI.java",
+          "src/main/java/com/nextgis/maplibui/formcontrol/AutoTextEdit.java",
+          "src/main/java/com/nextgis/maplibui/formcontrol/Averaging.java",
+          "src/main/java/com/nextgis/maplibui/formcontrol/Checkbox.java",
+          "src/main/java/com/nextgis/maplibui/formcontrol/Combobox.java",
+          "src/main/java/com/nextgis/maplibui/formcontrol/Coordinates.java",
+          "src/main/java/com/nextgis/maplibui/formcontrol/Counter.java",
+          "src/main/java/com/nextgis/maplibui/formcontrol/DateTime.java",
+          "src/main/java/com/nextgis/maplibui/formcontrol/Distance.java",
+          "src/main/java/com/nextgis/maplibui/formcontrol/DoubleCombobox.java",
+          "src/main/java/com/nextgis/maplibui/formcontrol/RadioGroup.java",
+          "src/main/java/com/nextgis/maplibui/formcontrol/Sign.java",
+          "src/main/java/com/nextgis/maplibui/formcontrol/Space.java",
+          "src/main/java/com/nextgis/maplibui/formcontrol/SplitCombobox.java",
+          "src/main/java/com/nextgis/maplibui/formcontrol/Tabs.java",
+          "src/main/java/com/nextgis/maplibui/formcontrol/TextEdit.java",
+          "src/main/java/com/nextgis/maplibui/formcontrol/TextLabel.java",
+          "src/main/java/com/nextgis/maplibui/fragment/StyleFragment.java",
+          "src/main/java/com/nextgis/maplibui/service/LayerFillService.java",
+          "src/main/java/com/nextgis/maplibui/util/CascadingFormController.java",
+          "src/main/java/com/nextgis/maplibui/util/CascadingFormElements.java",
+          "src/main/java/com/nextgis/maplibui/util/ConditionalRequiredController.java",
+          "src/main/java/com/nextgis/maplibui/util/ControlHelper.java",
+          "src/main/java/com/nextgis/maplibui/util/ExportGeoJSONTask.java",
+          "src/main/java/com/nextgis/maplibui/util/FeatureCopyDefaults.java",
+          "src/main/java/com/nextgis/maplibui/util/FeatureTypeDefaults.java",
+          "src/main/java/com/nextgis/maplibui/util/FormFieldLayout.java",
+          "src/main/java/com/nextgis/maplibui/util/ProjectScriptFormController.java",
+          "src/main/java/com/nextgis/maplibui/util/RequiredFieldUi.java"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"

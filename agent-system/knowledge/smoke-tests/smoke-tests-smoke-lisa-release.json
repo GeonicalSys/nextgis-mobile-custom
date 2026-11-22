@@ -7,9 +7,26 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
-    "scope_refs": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/build.gradle",
+          "app/docs/manifest.yaml",
+          "docs/registry/smoke-tests.yaml"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [
+      "lisa:mobile:contract:change-impact-build-and-flavors",
+      "lisa:mobile:contract:change-impact-self-hosted-updater",
+      "lisa:mobile:contract:invariants-inv-flavors",
+      "lisa:mobile:contract:invariants-inv-ngw-account-identity",
+      "lisa:mobile:contract:invariants-inv-version-coupling",
+      "lisa:mobile:contract:upstream-overlaps-app-flavors"
+    ],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
   },

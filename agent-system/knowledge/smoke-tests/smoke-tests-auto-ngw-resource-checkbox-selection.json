@@ -7,9 +7,35 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
-    "scope_refs": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/build.gradle",
+          "app/docs/manifest.yaml",
+          "app/src/test/java/com/nextgis/maplib/datasource/ngw/ResourceChildrenMessagesTest.java",
+          "app/src/test/java/com/nextgis/maplibui/dialog/ResourceSelectionCheckboxTest.java",
+          "app/src/test/java/com/nextgis/maplibui/util/NgwResourceSelectionDedupTest.java",
+          "docs/registry/smoke-tests.yaml",
+          "gradlew.bat",
+          "settings.gradle"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "build.gradle",
+          "docs/manifest.yaml"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [
+      "lisa:mobile:contract:change-impact-ngw-resource-checkbox-selection",
+      "lisa:mobile:contract:invariants-inv-ngw-resource-checkbox-selection"
+    ],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
   },

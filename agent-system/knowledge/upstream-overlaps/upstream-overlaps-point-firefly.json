@@ -7,8 +7,34 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/androidTest/java/com/nextgis/mobile/rendering/FireflyStyleEditorTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/rendering/VectorStyleRenderingTest.java",
+          "docs/registry/upstream-overlaps.yaml",
+          "tools/mobile-test-plan.json"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "src/main/java/com/nextgis/maplib/display/FireflyMarkerRegistry.java",
+          "src/main/java/com/nextgis/maplib/display/SimpleMarkerStyle.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/java/com/nextgis/maplibui/fragment/StyleFragment.java"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
@@ -38,7 +64,9 @@
         "paths": [
           "maplib/src/main/java/com/nextgis/maplib/display/SimpleMarkerStyle.java",
           "maplib/src/main/java/com/nextgis/maplib/display/FireflyMarkerRegistry.java",
-          "maplibui/src/main/java/com/nextgis/maplibui/fragment/StyleFragment.java"
+          "maplibui/src/main/java/com/nextgis/maplibui/fragment/StyleFragment.java",
+          "app/src/androidTest/java/com/nextgis/mobile/rendering/FireflyStyleEditorTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/rendering/VectorStyleRenderingTest.java"
         ],
         "default_decision": "ours",
         "reason": "Preserve separate type 9 for a crisp core and outward-only glow; official master still exposes marker types 1–8 and has no equivalent editor choice as checked on 2026-10-24.",

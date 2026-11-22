@@ -7,8 +7,35 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleEditorTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleRenderingTest.java",
+          "docs/registry/upstream-overlaps.yaml",
+          "tools/mobile-test-plan.json"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplib",
+        "include": [
+          "src/main/java/com/nextgis/maplib/display/ConfigurablePolygonPatternRegistry.java",
+          "src/main/java/com/nextgis/maplib/display/SimplePolygonStyle.java"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "src/main/java/com/nextgis/maplibui/fragment/StyleFragment.java",
+          "src/main/java/com/nextgis/maplibui/util/StylePreviewView.java"
+        ],
+        "exclude": []
+      }
+    ],
     "scope_refs": [],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
@@ -39,7 +66,9 @@
           "maplib/src/main/java/com/nextgis/maplib/display/SimplePolygonStyle.java",
           "maplib/src/main/java/com/nextgis/maplib/display/ConfigurablePolygonPatternRegistry.java",
           "maplibui/src/main/java/com/nextgis/maplibui/fragment/StyleFragment.java",
-          "maplibui/src/main/java/com/nextgis/maplibui/util/StylePreviewView.java"
+          "maplibui/src/main/java/com/nextgis/maplibui/util/StylePreviewView.java",
+          "app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleRenderingTest.java",
+          "app/src/androidTest/java/com/nextgis/mobile/rendering/PolygonStyleEditorTest.java"
         ],
         "default_decision": "ours",
         "reason": "Official maplib 014247e and maplibui 6420930 still have the simple polygon model/editor with no pattern_options, outline_options or native live symbol preview in those entry points, verified 2026-10-24. Preserve the optional fork JSON and shared native factories when reconciling upstream.",

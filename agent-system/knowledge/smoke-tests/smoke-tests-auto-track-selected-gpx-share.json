@@ -7,9 +7,35 @@
   "status": "active",
   "execution_permission": false,
   "applicability": {
-    "review_status": "unknown",
-    "paths": [],
-    "scope_refs": [],
+    "review_status": "reviewed",
+    "paths": [
+      {
+        "repository": "android_projects/android_gisapp",
+        "include": [
+          "app/build.gradle",
+          "app/docs/manifest.yaml",
+          "app/src/test/java/com/nextgis/maplibui/util/TrackGpxNameExportTest.java",
+          "app/src/test/java/com/nextgis/maplibui/view/TrackSelectionPanelTest.java",
+          "app/src/test/java/com/nextgis/mobile/fragment/SelectedTrackShareBindingTest.java",
+          "docs/registry/smoke-tests.yaml",
+          "gradlew.bat",
+          "settings.gradle"
+        ],
+        "exclude": []
+      },
+      {
+        "repository": "android_projects/android_gisapp/maplibui",
+        "include": [
+          "build.gradle",
+          "docs/manifest.yaml"
+        ],
+        "exclude": []
+      }
+    ],
+    "scope_refs": [
+      "lisa:mobile:contract:change-impact-track-selected-gpx-share",
+      "lisa:mobile:contract:invariants-inv-track-selected-gpx-share"
+    ],
     "conditions": [],
     "unknown_behavior": "include_with_unknown_reason"
   },
