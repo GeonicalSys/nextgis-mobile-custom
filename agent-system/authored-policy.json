@@ -37,9 +37,9 @@
     },
     {
       "id": "lisa:mobile:instruction:workspace.local-checks-and-cloud-boundary",
-      "review": "Owner explicitly requested the lightweight documentation route on 2026-11-12. Reviewed the narrow prose/plan exception, preservation of deferred state, direct record/projection checks and unchanged Git hooks, branch/security/runtime gates; no compiler or product change.",
+      "review": "Owner explicitly requested the lightweight documentation route on 2026-11-12. Reviewed the narrow prose/plan exception, preservation of deferred state, direct record/projection checks and unchanged Git hooks, branch/security/runtime gates; no compiler or product change. Owner clarified on 2026-11-23 that ordinary work and PR use applicable Related and targeted checks, and mandatory Full runs at publication of a new APK version. Reviewed unchanged release receipt, native isolation, editable documentation route and branch-protection requirements.",
       "base_revision": "cb51e6dc1b23d584381df6816e5d1c55eb0f130d",
-      "record_sha256": "f82fc04096b9d5a06e338104bb53eb282c4b5f89038021019f31dc467abf154c",
+      "record_sha256": "19bb4a2abac5347ba40b1be9bf813b928d75d2249e9880d339aba82c9c9c1659",
       "base_proof": {
         "record_sha256": "6a500e6921bcf5e9c987f381b628c7c1017a204e466510d3644f119b0e8a1660",
         "body_sha256": "9ac55492f3a3a38103d9a16bfb89d2c92363b13e02994401bc10237131cdd076",
