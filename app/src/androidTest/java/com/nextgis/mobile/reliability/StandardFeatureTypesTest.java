@@ -1,6 +1,9 @@
 package com.nextgis.mobile.reliability;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -9,6 +12,7 @@ import com.nextgis.maplib.datasource.Field;
 import com.nextgis.maplib.datasource.GeoPoint;
 import com.nextgis.maplib.display.FieldStyleRule;
 import com.nextgis.maplib.display.RuleFeatureRenderer;
+import com.nextgis.maplib.display.SimpleMarkerStyle;
 import com.nextgis.maplib.map.MapContentProviderHelper;
 import com.nextgis.maplib.util.Constants;
 import com.nextgis.maplib.util.GeoConstants;
@@ -26,6 +30,7 @@ import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import java.io.File;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -55,6 +60,7 @@ public class StandardFeatureTypesTest {
         int total = 0;
         for (int i = 0; i < fixtures.length(); i++) {
             JSONObject fixture = fixtures.getJSONObject(i);
+            String layerName = fixture.getString("name");
             VectorLayerUI layer = new VectorLayerUI(app,new File(map.getPath(),"standard_types_"+UUID.randomUUID().toString().replace("-","")));
             map.addLayer(layer);
             try {
@@ -82,22 +88,57 @@ public class StandardFeatureTypesTest {
                 }
                 FieldStyleRule rule = (FieldStyleRule)((RuleFeatureRenderer)layer.getRenderer()).getStyleRule();
                 List<FeatureTypeDefaults.Choice> choices = FeatureTypeDefaults.choices(layer);
-                assertEquals(fixture.getString("name"),rule.getStyleRules().size(),choices.size());
+                assertEquals(layerName,rule.getStyleRules().size(),choices.size());
+                Bundle pgsPointState = null;
                 for (FeatureTypeDefaults.Choice choice : choices) {
                     assertNotNull(choice.label,choice.state);
                     String type = choice.state.getString(ControlHelper.getSavedStateKey("typeobj"));
                     assertTrue(type,expectedParents.containsKey(type));
                     assertEquals(expectedParents.get(type),choice.state.getString(ControlHelper.getSavedStateKey("classobj")));
-                    assertNotNull(FeatureTypePreview.render(app,choice.style));
+                    Bitmap preview = FeatureTypePreview.render(app,choice.style);
+                    assertNotNull(preview);
+                    if ("field_points".equals(layerName) && "ПГС".equals(type)) {
+                        assertEquals("ПГС — транспорт", choice.label);
+                        assertEquals("транспорт", choice.state.getString(ControlHelper.getSavedStateKey("classobj")));
+                        assertTrue(choice.style instanceof SimpleMarkerStyle);
+                        SimpleMarkerStyle marker = (SimpleMarkerStyle) choice.style;
+                        assertEquals(SimpleMarkerStyle.MarkerStyleCircle, marker.getType());
+                        assertEquals(Color.WHITE, marker.getColor());
+                        assertEquals(0xFF001EFF, marker.getOutColor());
+                        assertEquals(255, marker.getAlpha());
+                        assertEquals(255, marker.getOutAlpha());
+                        assertEquals("pgs", marker.getIconImage());
+                        assertEquals(10f, marker.getIconSize(), 0f);
+                        checkPgsArtwork(app, preview);
+                        pgsPointState = choice.state;
+                    }
                 }
                 total += choices.size();
-                if (i == 0) checkPointForm(app,layer,form,meta,choices.get(0).state);
+                if ("field_points".equals(layerName)) {
+                    assertNotNull("ПГС must be selectable for field points", pgsPointState);
+                    checkPointForm(app, layer, form, meta, pgsPointState);
+                }
                 assertEquals("Inspecting categories must not create objects",0,layer.getCount());
             } finally {
                 FeatureFormDraftStore.clear(app); assertTrue(layer.delete(false)); map.save();
             }
         }
-        assertEquals(40,total);
+        assertEquals(41,total);
+    }
+
+    private static void checkPgsArtwork(GISApplication app, Bitmap preview) throws Exception {
+        try (InputStream stream = app.getAssets().open("marker_icons/pgs.png")) {
+            Bitmap artwork = BitmapFactory.decodeStream(stream);
+            assertNotNull("The ПГС icon must decode from the installed APK", artwork);
+            assertEquals(64, artwork.getWidth());
+            assertEquals(64, artwork.getHeight());
+            assertEquals(0, Color.alpha(artwork.getPixel(0, 0)));
+        }
+
+        int center = preview.getPixel(preview.getWidth() / 2, preview.getHeight() / 2);
+        assertTrue("The category preview must draw the yellow truck artwork",
+                Color.alpha(center) > 0 && Color.red(center) > Color.blue(center)
+                        && Color.green(center) > Color.blue(center));
     }
 
     private static void checkPointForm(GISApplication app,VectorLayerUI layer,File form,File meta,Bundle initial) {

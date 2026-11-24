@@ -33,7 +33,7 @@
   "facets": {
     "body": {
       "role": "permanent_rule",
-      "value": "- Перед publisher dry-run проверить\n  `tools\\verify-mobile-tests.ps1 -Scope Check-Publication`. Ошибка, неполный\n  прогон, отсутствие телефона, пропущенный сценарий или изменение проверенного\n  содержимого блокируют публикацию. Related и обычный CI не заменяют Full.\n"
+      "value": "- Перед publisher dry-run проверить\n  `tools\\verify-mobile-tests.ps1 -Scope Check-Publication`. Ошибка, неполный\n  прогон, отсутствие эмулятора или выбранного физического устройства,\n  пропущенный сценарий или изменение проверенного содержимого блокируют\n  публикацию. Квитанция включает результаты на обоих устройствах и текущую\n  нагрузочную проверку выбранного смартфона или планшета. Related и обычный\n  CI не заменяют Full.\n"
     },
     "classification": {
       "role": "reviewed_knowledge_class",

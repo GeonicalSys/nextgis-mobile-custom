@@ -118,7 +118,8 @@ def source_fingerprint(root: Path) -> str:
 
 
 def check_publication_receipt(receipt: dict, fingerprint: str, required: set[str], *,
-                              required_phone: frozenset[str] = frozenset()) -> None:
+                              required_phone: frozenset[str] = frozenset(),
+                              required_emulator: frozenset[str] = frozenset()) -> None:
     if receipt.get('scope') != 'full' or receipt.get('status') != 'passed':
         raise ValueError('Publication requires a successful full run, not a related/CI run')
     if receipt.get('source_fingerprint') != fingerprint:
@@ -132,17 +133,28 @@ def check_publication_receipt(receipt: dict, fingerprint: str, required: set[str
     if not all(receipt.get('checks', {}).get(key) for key in ('units', 'docs', 'versions', 'ui_matrix', 'real_window_matrix', 'test_project')):
         raise ValueError('Unit/docs/version/UI acceptance is incomplete')
     devices = receipt.get('devices', {})
-    if not devices.get('phone') or not devices.get('emulator'):
-        raise ValueError('Both the physical phone and emulator results are required')
+    physical_device = devices.get('phone')
+    if not physical_device or not devices.get('emulator'):
+        raise ValueError('The emulator and selected physical device results are required')
     if required_phone:
-        phone = devices['phone']
-        serial, hardware = phone.get('serial'), phone.get('hardware')
+        serial = physical_device.get('serial')
+        hardware = physical_device.get('hardware')
         if not serial or not hardware or hardware in ('ranchu', 'goldfish'):
-            raise ValueError('Publication requires a real verification phone identity')
+            raise ValueError('Publication requires a real verification physical device identity')
         physical_cases = {case for row in receipt.get('runs', []) if row.get('device') == serial
                           for case in row.get('passed', [])}
         if not required_phone <= physical_cases:
-            raise ValueError('The selected physical phone did not complete every assigned case')
+            raise ValueError('The selected physical device did not complete every assigned case')
+    if required_emulator:
+        emulator = devices['emulator']
+        emulator_serial = emulator.get('serial')
+        if (not emulator_serial or emulator.get('hardware') not in ('ranchu', 'goldfish')
+                or emulator_serial == physical_device.get('serial')):
+            raise ValueError('Publication requires a distinct verification emulator identity')
+        emulator_cases = {case for row in receipt.get('runs', []) if row.get('device') == emulator_serial
+                          for case in row.get('passed', [])}
+        if not required_emulator <= emulator_cases:
+            raise ValueError('The selected emulator did not complete every assigned case')
     from mobile_render_acceptance import STRESS_CASE, check_stress_matrix
     if STRESS_CASE in required:
-        check_stress_matrix(receipt.get('checks', {}).get('render_stress'), fingerprint)
+        check_stress_matrix(receipt.get('checks', {}).get('render_stress'), fingerprint, physical_device)

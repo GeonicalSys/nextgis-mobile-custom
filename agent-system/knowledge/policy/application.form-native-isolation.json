@@ -33,7 +33,7 @@
   "facets": {
     "body": {
       "role": "permanent_rule",
-      "value": "NGFP-формы: читать `../docs/architecture/conditional-form-rules.md`. Native\nregression-тесты `CascadingFormsTest` и `ConditionalRequiredFieldsTest` запускаются\nна изолированном эмуляторе или в отдельном verification APK смартфона;\nproduction и обычный Debug смартфона не используются.\n"
+      "value": "NGFP-формы: читать `../docs/architecture/conditional-form-rules.md`. Native\nregression-тесты `CascadingFormsTest` и `ConditionalRequiredFieldsTest` запускаются\nна изолированном эмуляторе или в отдельном verification APK смартфона или\nпланшета. Production и обычный Debug физического устройства не используются.\n"
     },
     "classification": {
       "role": "reviewed_knowledge_class",

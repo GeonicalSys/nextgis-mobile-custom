@@ -568,13 +568,14 @@ invariants:
       code/version before publication. Every native case, unit/docs/version gate, 36 chooser profiles and 6 real-window profiles
       at density620/font200% must pass for the current content, including real_window_matrix. Cloud workflows are manual-only
       by separate user request. Full preserves every failed attempt; a successful repeat cannot hide it. Setup/transport/locked-device
-      failures abort. Only the separate verification APK is reset on a phone. Missing permitted project requires asking the
-      user. The chosen physical phone must pass all cases assigned to it, including native graphics. Current render stress
-      evidence requires a physical phone and a different physical tablet. The offline tile case uses the isolated app on the
-      USB phone with operator-set airplane mode and Wi-Fi disabled. The tablet keeps its Wi-Fi connection for its assigned
-      tests. Lisa/Belka release assembly requires a valid local.properties client.id. Before any stable upload the Publisher
-      validates the trusted NextGIS ID client digest against both the constant and the password grant in the exact signed
-      APK. The checked APK hash must equal the upload hash. This artifact gate is independent of verification APK results.
+      failures abort. Only the separate verification APK is reset on the chosen physical device. Missing permitted project
+      requires asking the user. Full requires an emulator and one selected physical smartphone or tablet. That physical device
+      must pass the complete physical roster, including native graphics and render stress. Check-Publication binds the stress
+      result to the same device identity, source fingerprint and APKs as Full. The offline tile case uses the isolated app
+      on that USB device with operator-set airplane mode and Wi-Fi disabled. Lisa/Belka release assembly requires a valid
+      local.properties client.id. Before any stable upload the Publisher validates the trusted NextGIS ID client digest against
+      both the constant and the password grant in the exact signed APK. The checked APK hash must equal the upload hash. This
+      artifact gate is independent of verification APK results.
     build_identity: A successful known verification assemble must bind the unchanged source fingerprint to the exact app/test
       APK hashes and fixed recipe. Related SkipBuild only reuses that basis and fails before device access for missing, stale
       or mixed binaries. Recheck the pair around installs and completion; Full/publication receipts require the basis. This

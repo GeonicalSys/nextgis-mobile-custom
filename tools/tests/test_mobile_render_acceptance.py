@@ -36,25 +36,31 @@ class RenderAcceptanceTest(unittest.TestCase):
             for kind, serial, evidence in [('phone', 'phone-usb', phone), ('tablet', 'tablet-wifi', tablet)]
         ]}
 
-    def test_distinct_current_physical_devices_are_accepted(self):
-        check_stress_matrix(self.matrix(), 'abc')
+    def test_one_selected_phone_or_tablet_is_sufficient(self):
+        for row in self.matrix()['entries']:
+            with self.subTest(role=row['kind']):
+                check_stress_matrix({'schema_version': 1, 'entries': [row]}, 'abc', row['device'])
 
-    def test_absent_physical_device_cannot_be_replaced_by_an_emulator(self):
-        for remove in range(2):
-            matrix = self.matrix()
-            row = matrix['entries'].pop(remove)
-            row['device'].update(hardware='ranchu', serial='emulator-5554')
-            with self.subTest(role=row['kind']), self.assertRaisesRegex(ValueError, 'hardware'):
-                check_stress_matrix(dict(matrix, entries=matrix['entries'] + [row]), 'abc')
-            row['kind'] = 'emulator'
-            with self.assertRaisesRegex(ValueError, 'physical phone and a different physical tablet'):
-                check_stress_matrix(dict(matrix, entries=matrix['entries'] + [row]), 'abc')
-
-    def test_same_serial_cannot_fill_both_physical_roles(self):
+    def test_absent_selected_physical_device_cannot_be_replaced_by_an_emulator(self):
         matrix = self.matrix()
-        matrix['entries'][1]['device']['serial'] = matrix['entries'][0]['device']['serial']
-        with self.assertRaisesRegex(ValueError, 'different physical tablet'):
-            check_stress_matrix(matrix, 'abc')
+        row = matrix['entries'].pop(1)
+        selected = row['device'].copy()
+        row['device'].update(hardware='ranchu', serial='emulator-5554')
+        matrix['entries'].append(row)
+        with self.assertRaisesRegex(ValueError, 'hardware'):
+            check_stress_matrix(matrix, 'abc', selected)
+        row['kind'] = 'emulator'
+        with self.assertRaisesRegex(ValueError, 'selected physical device'):
+            check_stress_matrix(matrix, 'abc', selected)
+
+    def test_selected_device_must_match_serial_hardware_and_android_build(self):
+        matrix = self.matrix()
+        selected = matrix['entries'][1]['device']
+        for key, value in (('serial', 'other-serial'), ('hardware', 'other-hardware'),
+                           ('fingerprint', 'Android/other')):
+            with self.subTest(key=key), self.assertRaisesRegex(ValueError, 'selected physical device'):
+                check_stress_matrix(matrix, 'abc', {**selected, key: value})
+
     def test_short_empty_or_unknown_gpu_workloads_are_rejected(self):
         for field,value in [('elapsed_ms',89999),('gestures',0),('frames',0),('visible_features',0),
                             ('mvt_layers',1),('gpu','null / null'),('model',''),('recreations',1),('features',8),
@@ -63,9 +69,15 @@ class RenderAcceptanceTest(unittest.TestCase):
             evidence=self.evidence();evidence[field]=value
             with self.subTest(field=field),self.assertRaises(ValueError):validate_stress(evidence)
     def test_changed_sources_or_missing_os_identity_are_rejected(self):
-        with self.assertRaises(ValueError):check_stress_matrix(self.matrix(),'new')
-        matrix=self.matrix();matrix['entries'][0]['device']={}
-        with self.assertRaises(ValueError):check_stress_matrix(matrix,'abc')
+        matrix = self.matrix()
+        selected = matrix['entries'][0]['device'].copy()
+        with self.assertRaises(ValueError):
+            check_stress_matrix(matrix, 'new', selected)
+        matrix['entries'][0]['device'] = {}
+        with self.assertRaises(ValueError):
+            check_stress_matrix(matrix, 'abc', selected)
+        with self.assertRaisesRegex(ValueError, 'selected physical Android device identity'):
+            check_stress_matrix(self.matrix(), 'abc', {**selected, 'fingerprint': ''})
     def test_legacy_counter_cached_global_features_and_warm_process_cannot_pass(self):
         for field,value in [('schema_version',1),('render_backend','legacy_http'),('sqlite_layers',0),
                             ('source_checks',59),('global_feature_count',1),('global_feature_count',False),
@@ -100,13 +112,27 @@ class RenderAcceptanceTest(unittest.TestCase):
             record_stress(path,self.evidence(),physical,'old')
             result=record_stress(path,self.evidence('AVD'),dict(hardware='ranchu',fingerprint='AVD'),'new')
             self.assertEqual(1,len(result['entries']));self.assertEqual('emulator',result['entries'][0]['kind'])
-    def test_otherwise_green_full_cannot_skip_hardware_stress(self):
-        receipt=dict(scope='full',status='passed',source_fingerprint='abc',passed_cases=[STRESS_CASE],
-                     build_basis=valid_build_basis(),
-                     checks=dict.fromkeys(('units','docs','versions','ui_matrix','real_window_matrix','test_project'),True),
-                     devices={'phone':{'sdk':36},'emulator':{'sdk':36}})
-        with self.assertRaises(ValueError):check_publication_receipt(receipt,'abc',{STRESS_CASE})
-        receipt['checks']['render_stress']=self.matrix()
-        check_publication_receipt(receipt,'abc',{STRESS_CASE})
+    def test_otherwise_green_full_requires_stress_from_the_selected_device(self):
+        matrix = self.matrix()
+        for physical in matrix['entries']:
+            with self.subTest(role=physical['kind']):
+                device = physical['device']
+                receipt = dict(
+                    scope='full', status='passed', source_fingerprint='abc', passed_cases=[STRESS_CASE],
+                    build_basis=valid_build_basis(),
+                    checks=dict.fromkeys(
+                        ('units', 'docs', 'versions', 'ui_matrix', 'real_window_matrix', 'test_project'),
+                        True),
+                    devices={'phone': device, 'emulator': {'sdk': 36}},
+                    runs=[{'device': device['serial'], 'passed': [STRESS_CASE]}])
+                required = frozenset({STRESS_CASE})
+                with self.assertRaisesRegex(ValueError, 'current hardware render stress'):
+                    check_publication_receipt(receipt, 'abc', required, required_phone=required)
+                other = [row for row in matrix['entries'] if row is not physical]
+                receipt['checks']['render_stress'] = {'schema_version': 1, 'entries': other}
+                with self.assertRaisesRegex(ValueError, 'selected physical device'):
+                    check_publication_receipt(receipt, 'abc', required, required_phone=required)
+                receipt['checks']['render_stress']['entries'] = [physical]
+                check_publication_receipt(receipt, 'abc', required, required_phone=required)
 
 if __name__=='__main__':unittest.main()

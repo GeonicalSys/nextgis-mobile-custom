@@ -41,7 +41,7 @@
       "role": "module_manifest_ordered_value",
       "value": {
         "path": "app/src/androidTest/java/com/nextgis/mobile/reliability/StandardFeatureTypesTest.java",
-        "responsibility": "Verify all 40 standard point, line and polygon style categories, symbols and canonical class/type defaults, including the actual mixed point form; isolated emulator only."
+        "responsibility": "Verify all 41 standard point, line and polygon style categories, symbols and canonical class/type defaults, including the actual mixed point form; isolated emulator only."
       }
     }
   },

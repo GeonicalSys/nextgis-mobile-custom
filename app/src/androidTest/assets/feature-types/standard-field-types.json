@@ -555,6 +555,29 @@
               "text_font": "Open Sans Bold Italic",
               "label_min_zoom": 14
             }
+          },
+          {
+            "value": "ПГС",
+            "style": {
+              "width": 2,
+              "color": -1,
+              "out_color": -16769281,
+              "alpha": 255,
+              "out_alpha": 255,
+              "scale_size_with_zoom": true,
+              "name": "SimpleMarkerStyle",
+              "type": 2,
+              "size": 30,
+              "text_size": 1,
+              "text_alignment": 4,
+              "text_color": -16777216,
+              "value": "label",
+              "marker_icon_image": "pgs",
+              "marker_icon_size": 10,
+              "text_halo_color": -2234128,
+              "text_scale_with_zoom": true,
+              "text_font": "Open Sans Bold Italic"
+            }
           }
         ],
         "other_style": {
@@ -667,6 +690,11 @@
                   "name": "подбор",
                   "alias": "подбор",
                   "default": false
+                },
+                {
+                  "name": "ПГС",
+                  "alias": "ПГС",
+                  "default": false
                 }
               ]
             },
@@ -767,8 +795,8 @@
       }
     ],
     "source_sha256": {
-      "form": "bf2ca6e03170c2c84ba7974762c3d35fe97b3ce3110c9fce1f8e627ef2fa1850",
-      "config": "fe6182f15a12bea5ff67cc42b8c0986e5b79d1dec72780b758f9c39d3e5d8675"
+      "form": "0db06a57e0542ce111a7197bf9e791faffadd76f5786ba17d9500bac68553906",
+      "config": "89b779369ce826a3339792c585e77a45d9933638bba3fba384d018d9120f9c9e"
     }
   },
   {

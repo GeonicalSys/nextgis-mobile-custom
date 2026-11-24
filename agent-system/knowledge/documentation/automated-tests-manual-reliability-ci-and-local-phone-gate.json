@@ -34,14 +34,14 @@
       "value": [
         "Emulator-only Android reliability CI запускает связанные map/layers проверки",
         "через этот же runner, вместо наследования map state между методами. Проверка",
-        "разрешённого телефонного проекта остаётся обязательной в local Full и не",
+        "разрешённого проекта на выбранном физическом устройстве остаётся обязательной в local Full и не",
         "подменяется CI.",
         ""
       ]
     },
     "source-scope": {
       "role": "reviewed_source_scope",
-      "value": "The existing CI route can be selected separately. It cannot replace the approved phone-project Full check."
+      "value": "The existing CI route can be selected separately. Publication requires local Full, including the approved project check on the selected physical smartphone or tablet."
     }
   },
   "relations": [],

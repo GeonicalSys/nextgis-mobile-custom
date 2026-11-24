@@ -413,7 +413,7 @@ benchmark на plain release.
 
 Software GuestAngle/Lavapipe Related на эмуляторе проверяет прежние GLES/MapLibre fixtures
 с independent UBO pixel oracle и actual system-library identity. Его receipt не подменяет
-stress на двух физических устройствах, hardware acceptance или benchmark. Условия:
+выпускной stress на выбранном физическом устройстве, hardware acceptance или benchmark. Условия:
 [автотесты](../runbooks/automated-tests.md).
 
 Unit/build результаты не доказывают native экономию или устранение исходного

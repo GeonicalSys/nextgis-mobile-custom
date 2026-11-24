@@ -26,13 +26,13 @@
     },
     "docs/registry/invariants.yaml": {
       "layout_id": "lisa:mobile:metadata:invariants-registry",
-      "sha256_utf8_lf": "11e1270a855d4ad42c532f637ac3c276380e10b93f43cc8365c85e1f25017858",
+      "sha256_utf8_lf": "edd49e1ca93ea1b6e4ab57d0242697397cb9d5696b85df18dccce1f878e73a83",
       "source_fingerprints": {
         "agent-system/provenance/keyed-docs-registries.json": "19ab1241499dc790d3d759a492b82bcce80ef30944309c0ef0d714d4660260fa",
         "docs/scripts/keyed_registry_knowledge.py": "11c5b3647e72bdfcaeb12b5dd7662b304cc0492787a4660bb90e6deaf74d85dc",
         "docs/scripts/structured_view_proof.py": "bae9d5c0273dbe26bfa4c4467c2c7210cbc75c1677cc25a9a6a4cf347b6bb54c"
       },
-      "ordered_records_sha256": "7a78804fd049dc93397c2191a22debfcbd4be613fcea7e75b11f2f6576e5145e",
+      "ordered_records_sha256": "928ff6e3edd5102df7872b425ced6dab2593eda06069fc9810bddc93584c7ef2",
       "ordered_count": 93
     },
     "docs/registry/upstream-overlaps.yaml": {
@@ -48,13 +48,13 @@
     },
     "docs/registry/smoke-tests.yaml": {
       "layout_id": "lisa:mobile:metadata:smoke-tests-registry",
-      "sha256_utf8_lf": "fe1dc6da2ce43332d469b668a0e22a0bdffed21cb9e77c1b01a78f81d23c3b72",
+      "sha256_utf8_lf": "f48dc50aa79555de44687768526d8f71f440779a9d2590dd1573b5349518f37a",
       "source_fingerprints": {
         "agent-system/provenance/keyed-docs-registries.json": "19ab1241499dc790d3d759a492b82bcce80ef30944309c0ef0d714d4660260fa",
         "docs/scripts/keyed_registry_knowledge.py": "11c5b3647e72bdfcaeb12b5dd7662b304cc0492787a4660bb90e6deaf74d85dc",
         "docs/scripts/structured_view_proof.py": "bae9d5c0273dbe26bfa4c4467c2c7210cbc75c1677cc25a9a6a4cf347b6bb54c"
       },
-      "ordered_records_sha256": "44773971b725a465b5da42e1825244badcdbcef487542eae787a1849768d52fa",
+      "ordered_records_sha256": "f6788269110e0bb46bfbee902b945f3908e336a2cb21d7914c7a7cbc58c8fdee",
       "ordered_count": 121
     },
     "docs/registry/config-keys.yaml": {
@@ -103,13 +103,13 @@
     },
     "app/docs/manifest.yaml": {
       "layout_id": "lisa:mobile:metadata:app-module-manifest",
-      "sha256_utf8_lf": "0b374ea1b69345bb56cd752477a6faf36b6b05a06fb866fc1f46ac7ed52be66c",
+      "sha256_utf8_lf": "82af51ea820bb4009d304bc4f86f3d761f212ee33de6c9987401ef90065dc54b",
       "source_fingerprints": {
         "agent-system/provenance/app-module-manifest.json": "b272578296400a9bb749e4242f9c1b4502b9234a54e40089554a97279bc1cbdc",
         "docs/scripts/module_manifest_knowledge.py": "6010dfb9a7cfc2cfe4f1afbfde9d865f9d225f07878bac5cf1e99d3ade68405c",
         "docs/scripts/structured_view_proof.py": "bae9d5c0273dbe26bfa4c4467c2c7210cbc75c1677cc25a9a6a4cf347b6bb54c"
       },
-      "ordered_records_sha256": "893dd6dccd78e7fb31d0be4c452236d4ed7d174aaf4831503928ea90b2f28211",
+      "ordered_records_sha256": "575ebedcfb302d5addef9eee5cd85b519d3afcc7f227bfe5063a2906c768ea10",
       "ordered_count": 214
     },
     "docs/registry/ui-contracts.json": {
