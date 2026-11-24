@@ -356,7 +356,7 @@ key_components:
     real attribute-form SQLite Save; isolated emulator only. Cover read-only point copying and actual multipart MapView transform
     gestures on emulator or explicitly selected stationary verification phone methods.
 - path: app/src/androidTest/java/com/nextgis/mobile/reliability/StandardFeatureTypesTest.java
-  responsibility: Verify all 40 standard point, line and polygon style categories, symbols and canonical class/type defaults,
+  responsibility: Verify all 41 standard point, line and polygon style categories, symbols and canonical class/type defaults,
     including the actual mixed point form; isolated emulator only.
 - path: app/src/main/java/com/nextgis/mobile/util/AppDiagnostics.java
   responsibility: Initialize Sentry after the isolated UID guard, sync native build identity, preserve bounded diagnostic

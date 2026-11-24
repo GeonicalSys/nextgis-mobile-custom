@@ -56,6 +56,11 @@ README модуля App собирается из его тематически�
 `python -B docs/scripts/prose_knowledge.py --write`.
 Оба представления входят в штатную проверку пакета App.
 
+Изменение стандартных полевых точек проверяет
+`tools/verify-mobile-tests.ps1 -Scope Related -Area persistence-catalog`.
+Тест проверяет PNG из проверочного APK, значок в списке типов и значения
+класса и типа в открытой форме.
+
 В репозитории App валидатор читает записи change-impact из
 `agent-system/knowledge/change-impact/` и проверяет актуальность производного
 `docs/registry/change-impact.yaml`. Поставка документации без `agent-system/`

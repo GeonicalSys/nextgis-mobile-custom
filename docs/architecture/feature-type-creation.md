@@ -82,7 +82,7 @@ durable recovery и асинхронного диалога. MapEditingToolsTest
 без черновиков, пересоздание выбора местоположения, прерывание записи обхода
 и освобождение point lock при отмене категории во время фоновой записи.
 StandardFeatureTypesTest использует form/schema/renderer из стандарта
-field_points, field_lines и field_polygons: все 40 категорий имеют символ и
+field_points, field_lines и field_polygons: все 41 категории имеют символ и
 правильную пару classobj/typeobj; стандартная точечная форма получает выбор.
 В fixtures отсутствуют NGW connection metadata и строки объектов.
 Физический телефон требует отдельного smoke; synthetic suite запускается
