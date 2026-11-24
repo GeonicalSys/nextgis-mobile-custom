@@ -40,7 +40,7 @@
       "value": [
         "title: Crash recovery and durable drafts",
         "type: architecture",
-        "last_verified: 2026-10-30",
+        "last_verified: 2026-11-24",
         "related_code:",
         "  - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java",
         "  - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt",

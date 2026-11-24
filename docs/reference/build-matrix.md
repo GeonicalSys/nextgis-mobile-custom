@@ -1,7 +1,7 @@
 ---
 title: Матрица сборки и версий
 type: reference
-last_verified: 2026-11-22
+last_verified: 2026-11-24
 related_code:
   - build.gradle
   - gradle/wrapper/gradle-wrapper.properties
@@ -36,6 +36,10 @@ related_code:
 `python -B docs/scripts/ui_catalogue_knowledge.py --write`. Затем обновить
 квитанцию `python -B docs/scripts/structured_view_proof.py --write` и проверить
 сгенерированный реестр и исходные записи через `tools/docs-check.ps1 -RunTests`.
+
+Для реестра зависимостей сначала выполнить `python -B docs/scripts/keyed_registry_knowledge.py --write`.
+Затем обновить ту же квитанцию structured views. Она подтверждает согласованность
+записей и YAML. Сборка APK и проверки на устройствах подтверждаются отдельно.
 
 Отдельные темы в сравнении с official редактируются в записях
 `official-differences-*.json`. Запись `official-differences.json` хранит

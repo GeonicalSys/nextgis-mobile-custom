@@ -109,6 +109,11 @@
     },
     {
       "type": "contains",
+      "target": "lisa:mobile:evidence:documentation-changelog-2026-11-24-walk-finish-recovery",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
       "target": "lisa:mobile:evidence:documentation-changelog-2026-11-22-ui-source-scope",
       "status": "source_backed"
     },

@@ -32,7 +32,7 @@
     "body": {
       "role": "markdown_body_lines",
       "value": [
-        "| Finish | The disk button confirms finishing and opening attributes. A matching command changes RECORDING to FINISHING; the service queues a worker barrier after all admitted edits, persists full geometry with its sequence and acknowledges FINISHED only after that barrier succeeds before the UI hands geometry to the editor and automatically opens its attribute form. No new point can begin during this transition |"
+        "| Finish | The disk button confirms finishing and opening attributes. A live recorder enters FINISHING and acknowledges FINISHED after its worker commits the full geometry and sequence. When the recorder has stopped, the command attempts the final commit directly. A closing checkpoint writer leaves the stopped draft in RECORDING and the map asks the user to retry. Once the owner has released the journal, the next confirmation hands the full geometry to the editor and opens its attribute form. Point creation stays blocked during live FINISHING |"
       ]
     }
   },

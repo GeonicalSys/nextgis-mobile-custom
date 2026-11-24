@@ -77,7 +77,8 @@
           "limits": "2048 pending records; worker batches128; explicit durable/pending/rejected admission",
           "migration": "existing full-WKT/part-only preferences remain base; owner defaults to existing session UUID and sequence0",
           "preserved": "point lock, other geometry members/holes, typed initial values, scoped ownership",
-          "excluded_with_source": "Desktop/Web/NGW publish formats and save scripts unchanged; this is private Android maplibui storage"
+          "excluded_with_source": "Desktop/Web/NGW publish formats and save scripts unchanged; this is private Android maplibui storage",
+          "detached_finish": "WalkEditService attempts the final commit directly for a stopped recorder. A writer still holding the journal leaves RECORDING retryable; the service reports the rejected save."
         }
       }
     }
