@@ -56,10 +56,10 @@
           "app",
           "maplibui"
         ],
-        "command": "Run layers Related on emulator and Full on the explicitly selected verification phone",
+        "command": "Run layers Related on emulator and Full on the explicitly selected physical verification device",
         "steps": [
           "Run the layers area on the isolated emulator and verify actual selection of point, line, polygon and Cancel in all 36 UI profiles.",
-          "Run Full on the explicitly selected verification phone with permitted project 1403 or ask the user to select a replacement if absent."
+          "Run Full on the explicitly selected physical verification device with permitted project 1403 or ask the user to select a replacement if absent."
         ],
         "expected": "Three eligible geometry rows have a multi-row viewport, every geometry and Cancel receive actual touches; permitted project creation offers every editable layer and excludes read-only layers. Enlarged landscape may scroll but the last row remains reachable."
       }

@@ -38,7 +38,7 @@
     "frontmatter": {
       "role": "markdown_frontmatter_lines",
       "value": [
-        "title: Автоматические проверки на смартфоне и эмуляторе",
+        "title: Автоматические проверки Android на устройстве и эмуляторе",
         "type: runbook",
         "last_verified: 2026-11-16",
         "related_code:",

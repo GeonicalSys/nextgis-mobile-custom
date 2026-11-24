@@ -75,17 +75,34 @@ class FullReceiptTest(unittest.TestCase):
     def test_a_complete_current_full_run_is_accepted(self):
         check_publication_receipt(self.receipt(),'abc',{CASE})
     def test_full_checks_the_physical_route_even_if_the_emulator_passed_the_case(self):
+        for kind in ('phone', 'tablet'):
+            serial = kind + '-usb'
+            with self.subTest(kind=kind):
+                receipt = self.receipt()
+                receipt['devices']['phone'].update(serial=serial, hardware='physical-hardware', characteristics=kind)
+                receipt['runs'] = [{'device': 'emulator-5554', 'passed': [CASE]}]
+                required_phone = frozenset({CASE})
+                with self.assertRaisesRegex(ValueError, 'selected physical device did not complete'):
+                    check_publication_receipt(receipt, 'abc', {CASE}, required_phone=required_phone)
+                receipt['runs'].append({'device': serial, 'passed': [CASE]})
+                check_publication_receipt(receipt, 'abc', {CASE}, required_phone=required_phone)
+                receipt['devices']['phone']['hardware'] = 'ranchu'
+                with self.assertRaisesRegex(ValueError, 'physical device identity'):
+                    check_publication_receipt(receipt, 'abc', {CASE}, required_phone=required_phone)
+
+    def test_full_checks_the_emulator_route_even_if_the_physical_device_passed_the_case(self):
         receipt = self.receipt()
-        receipt['devices']['phone'].update(serial='phone-usb', hardware='phone-hardware')
-        receipt['runs'] = [{'device': 'emulator-5554', 'passed': [CASE]}]
-        required_phone = frozenset({CASE})
-        with self.assertRaisesRegex(ValueError, 'physical phone did not complete'):
-            check_publication_receipt(receipt, 'abc', {CASE}, required_phone=required_phone)
-        receipt['runs'].append({'device': 'phone-usb', 'passed': [CASE]})
-        check_publication_receipt(receipt, 'abc', {CASE}, required_phone=required_phone)
-        receipt['devices']['phone']['hardware'] = 'ranchu'
-        with self.assertRaisesRegex(ValueError, 'real verification phone identity'):
-            check_publication_receipt(receipt, 'abc', {CASE}, required_phone=required_phone)
+        receipt['devices']['phone'].update(serial='tablet-usb', hardware='physical-hardware')
+        receipt['devices']['emulator'].update(serial='emulator-5554', hardware='ranchu')
+        receipt['runs'] = [{'device': 'tablet-usb', 'passed': [CASE]}]
+        required_emulator = frozenset({CASE})
+        with self.assertRaisesRegex(ValueError, 'selected emulator did not complete'):
+            check_publication_receipt(receipt, 'abc', {CASE}, required_emulator=required_emulator)
+        receipt['runs'].append({'device': 'emulator-5554', 'passed': [CASE]})
+        check_publication_receipt(receipt, 'abc', {CASE}, required_emulator=required_emulator)
+        receipt['devices']['emulator']['serial'] = 'tablet-usb'
+        with self.assertRaisesRegex(ValueError, 'distinct verification emulator identity'):
+            check_publication_receipt(receipt, 'abc', {CASE}, required_emulator=required_emulator)
 
     def test_legacy_full_without_build_basis_or_with_another_build_cannot_publish(self):
         for value in (None,valid_build_basis('another-source')):

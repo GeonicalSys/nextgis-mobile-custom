@@ -64,7 +64,7 @@
           "maplib"
         ],
         "command": "tools\\verify-mobile-tests.ps1 -Scope Related -Area render-memory",
-        "expected": "In the isolated verification APK, RenderMemorySafetyTest checks independently expected129SQLitepolygonIDs and65coordinates in both rich and actual compact inputs, complete native IDs and unchanged whole-row hashes. First automatic production notice arrives without a manual host callback, later callbacks/recreation/another layer do not repeat it, and manual status passes eight bounded Russian component profiles. Render stress also requires real pan/pinch camera changes, heading updates and peak counters. Explicit software-only emulator admission or selected stationary verification-phone scope is required; these fixtures do not emulate real low RAM or replace Full/device acceptance."
+        "expected": "In the isolated verification APK, RenderMemorySafetyTest checks independently expected129SQLitepolygonIDs and65coordinates in both rich and actual compact inputs, complete native IDs and unchanged whole-row hashes. First automatic production notice arrives without a manual host callback, later callbacks/recreation/another layer do not repeat it, and manual status passes eight bounded Russian component profiles. Render stress also requires real pan/pinch camera changes, heading updates and peak counters. Explicit software-only emulator admission or selected stationary physical-device verification scope is required; these fixtures do not emulate real low RAM or replace Full/device acceptance."
       }
     }
   },

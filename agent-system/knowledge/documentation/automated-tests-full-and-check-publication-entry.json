@@ -34,12 +34,12 @@
       "value": [
         "## Перед публикацией",
         "",
-        "Подключить смартфон по USB с разрешённой отладкой, разблокировать и оставить для",
-        "UI-тестов. Нужны Python 3, Android SDK/API 36 AVD и JDK сборки; Windows wrapper",
+        "Подключить выбранный смартфон или планшет по USB с разрешённой отладкой,",
+        "разблокировать его и оставить подключённым для UI-тестов. Нужны Python 3, Android SDK/API 36 AVD и JDK сборки; Windows wrapper",
         "использует установленный Python launcher и при необходимости JBR Android Studio.",
         "",
         "```powershell",
-        ".\\tools\\verify-mobile-tests.ps1 -Scope Full",
+        ".\\tools\\verify-mobile-tests.ps1 -Scope Full -PhoneSerial SERIAL -AllowEmulator",
         ".\\tools\\verify-mobile-tests.ps1 -Scope Check-Publication",
         "```",
         ""

@@ -140,7 +140,8 @@ sandbox guard; crash reporting основного приложения сохр�
 без нового product flavor и без Release variants. Отдельные verification
 application/provider/account identities перечислены в [build matrix](build-matrix.md).
 Ни Lisa, ни Belka, ни обычный companion Debug не очищаются/переустанавливаются
-phone suites. Изменение версии после Full делает receipt неактуальным;
+сценарии выбранного физического смартфона или планшета. Изменение версии
+после Full делает receipt неактуальным;
 перед публикацией требуются новый Full и Check-Publication.
 
 Подготовка2ноября: progress/cancel исправлены только в принимающем клиенте

@@ -62,7 +62,7 @@
           "maplib"
         ],
         "command": "tools\\verify-mobile-tests.ps1 -Scope Check-Publication",
-        "expected": "Only a complete local Full receipt matching current content of all four checkouts with real_window_matrix and other required gates is accepted; Related, skips, incomplete/stale results and a chooser-only matrix fail."
+        "expected": "Accept a complete local Full receipt matching current content of all four checkouts, with the emulator roster, the complete roster, render stress and real USB offline tiles on one selected physical smartphone or tablet, real_window_matrix and the other required gates. Related, required skips, incomplete or stale results and a chooser-only matrix fail."
       }
     }
   },

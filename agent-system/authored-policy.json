@@ -37,13 +37,79 @@
     },
     {
       "id": "lisa:mobile:instruction:workspace.local-checks-and-cloud-boundary",
-      "review": "Owner explicitly requested the lightweight documentation route on 2026-11-12. Reviewed the narrow prose/plan exception, preservation of deferred state, direct record/projection checks and unchanged Git hooks, branch/security/runtime gates; no compiler or product change. Owner clarified on 2026-11-23 that ordinary work and PR use applicable Related and targeted checks, and mandatory Full runs at publication of a new APK version. Reviewed unchanged release receipt, native isolation, editable documentation route and branch-protection requirements.",
+      "review": "Owner explicitly requested the lightweight documentation route on 2026-11-12. Reviewed the narrow prose/plan exception, preservation of deferred state, direct record/projection checks and unchanged Git hooks, branch/security/runtime gates; no compiler or product change. Owner clarified on 2026-11-23 that ordinary work and PR use applicable Related and targeted checks, and mandatory Full runs at publication of a new APK version. Reviewed unchanged release receipt, native isolation, editable documentation route and branch-protection requirements. On 2026-11-24 the owner specified Full on the emulator and one selected physical phone or tablet. The selected device executes the physical roster including actual USB offline and render workload. Preserve verification-only package isolation, assigned tests, source and APK identity, and Check-Publication.",
       "base_revision": "cb51e6dc1b23d584381df6816e5d1c55eb0f130d",
-      "record_sha256": "19bb4a2abac5347ba40b1be9bf813b928d75d2249e9880d339aba82c9c9c1659",
+      "record_sha256": "947a77690cfb1b94c642c2d1ac7c87047f1aa4d26bb60f913e4d65366031eafe",
       "base_proof": {
         "record_sha256": "6a500e6921bcf5e9c987f381b628c7c1017a204e466510d3644f119b0e8a1660",
         "body_sha256": "9ac55492f3a3a38103d9a16bfb89d2c92363b13e02994401bc10237131cdd076",
         "other_fields_sha256": "5b5ee8ac0aaf4432b76e0a011cf37fe324310feb1fa2aa9fdafe9a7f5b372a72"
+      }
+    },
+    {
+      "id": "lisa:mobile:instruction:workspace.full-before-publication",
+      "review": "On 2026-11-24 the owner specified Full on the emulator and one selected physical phone or tablet. The selected device executes the physical roster including actual USB offline and render workload. Preserve verification-only package isolation, assigned tests, source and APK identity, and Check-Publication.",
+      "base_revision": "5347fb2d2a9f0dd68654df48312732d7a47c2d26",
+      "record_sha256": "58fb38548676b65838a677ccf2831be9d53b867476bae8cd76c2845d6c29fe55",
+      "base_proof": {
+        "record_sha256": "ee0b482b7d32e7d583e31c9304cac3ee7068cfc63618169f7e7ea006d8ad859b",
+        "body_sha256": "73aa569698498d9e540819099162a4f5767563f2892ce9cf5350d26c9102e9b0",
+        "other_fields_sha256": "792eee5345144cbf09fc702d704016f2df8c353c38b01a91f55cd1f52b2f75ea"
+      }
+    },
+    {
+      "id": "lisa:mobile:instruction:workspace.publication-receipt-freshness",
+      "review": "On 2026-11-24 the owner specified Full on the emulator and one selected physical phone or tablet. The selected device executes the physical roster including actual USB offline and render workload. Preserve verification-only package isolation, assigned tests, source and APK identity, and Check-Publication.",
+      "base_revision": "5347fb2d2a9f0dd68654df48312732d7a47c2d26",
+      "record_sha256": "0c2b60366a3f1fbab0435b8b30676ece052e428c7a789ef1ed45fd4496a0878a",
+      "base_proof": {
+        "record_sha256": "72e5e52adb98d549c0a8e70cf539f2ce1edb344180e5bbbaa4c09f7f76c82bc1",
+        "body_sha256": "8ffe0fc4888abb5fa17abc0c8bb29159711c14353b429d90605c84763ef3a2e5",
+        "other_fields_sha256": "20f4ce6fde94595578d721d5d7340f68f4a753381ae9abf5fd47e74ac232751e"
+      }
+    },
+    {
+      "id": "lisa:mobile:instruction:workspace.permitted-test-project",
+      "review": "On 2026-11-24 the owner specified Full on the emulator and one selected physical phone or tablet. The selected device executes the physical roster including actual USB offline and render workload. Preserve verification-only package isolation, assigned tests, source and APK identity, and Check-Publication.",
+      "base_revision": "5347fb2d2a9f0dd68654df48312732d7a47c2d26",
+      "record_sha256": "445b375d6fdcce9e60327a798a6de08aa65d5db90b72329bb24dd4772cefa55f",
+      "base_proof": {
+        "record_sha256": "bd2781f83eea72cf99a7e82fadfb39c8e07aac1c369d1b10aa1c032d03d33d72",
+        "body_sha256": "a5e3beb56edbeaf15764859bea4aeca051ab637ab1f453af540862332f9f2c4d",
+        "other_fields_sha256": "ba877598e3a795bc136c14b25d171db70eb3eda9e9ce7f4709866037e69aee30"
+      }
+    },
+    {
+      "id": "lisa:mobile:instruction:workspace.verification-isolation",
+      "review": "On 2026-11-24 the owner specified Full on the emulator and one selected physical phone or tablet. The selected device executes the physical roster including actual USB offline and render workload. Preserve verification-only package isolation, assigned tests, source and APK identity, and Check-Publication.",
+      "base_revision": "5347fb2d2a9f0dd68654df48312732d7a47c2d26",
+      "record_sha256": "04be32adf2599680a784a7c943febdb3bfc89ae859b02c1075fd4c2712cbbe4f",
+      "base_proof": {
+        "record_sha256": "dfdc12d881d2aca25f563625fab0ec3f8d35f2516410830d197d1991afcd16e6",
+        "body_sha256": "bdad9a2d87cd85180159019d70092c8c78872108c1ac8363265c36e41f753f76",
+        "other_fields_sha256": "89ed39287b47110350fa323a01e7da548cb64b182c3b6c8030d87beb5a6434e4"
+      }
+    },
+    {
+      "id": "lisa:mobile:instruction:application.local-verification-isolation",
+      "review": "On 2026-11-24 the owner specified Full on the emulator and one selected physical phone or tablet. The selected device executes the physical roster including actual USB offline and render workload. Preserve verification-only package isolation, assigned tests, source and APK identity, and Check-Publication.",
+      "base_revision": "5347fb2d2a9f0dd68654df48312732d7a47c2d26",
+      "record_sha256": "bd67effe00dcd39db2de3e7ae16a7c803e907f45e66887910c5d5cb0126f4603",
+      "base_proof": {
+        "record_sha256": "72d2718bf6825163da80bbe99a2533a91cf57bf6e0f073fb99c28d73637dccd8",
+        "body_sha256": "39560624dcd880e024819ef12ea6840c6688a3761a009af2f899fe5297cd2b64",
+        "other_fields_sha256": "dc4c34b87017a302719a20dbdc9716a1602f7617fdd53f7097c4c266067558fa"
+      }
+    },
+    {
+      "id": "lisa:mobile:instruction:application.form-native-isolation",
+      "review": "On 2026-11-24 the owner specified Full on the emulator and one selected physical phone or tablet. The selected device executes the physical roster including actual USB offline and render workload. Preserve verification-only package isolation, assigned tests, source and APK identity, and Check-Publication.",
+      "base_revision": "5347fb2d2a9f0dd68654df48312732d7a47c2d26",
+      "record_sha256": "99ba857dbe1582a2a6f78a8f3911453f11b531ee094a2cf97fc8c4cb09a56a3e",
+      "base_proof": {
+        "record_sha256": "55e4b926c2b424cf12a622760559d3afca2c0e40d928f0f5982a981875a94532",
+        "body_sha256": "8f8efe8844e499624735694d8a9b49ecb1450cf46d8e9291fb07414f0703da50",
+        "other_fields_sha256": "785916129ef70dc22cc418bb3ccf7f480f66ebe4d047d2a32f08f13e98f8a368"
       }
     }
   ]

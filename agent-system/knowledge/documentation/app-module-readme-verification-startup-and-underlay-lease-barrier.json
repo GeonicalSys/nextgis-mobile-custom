@@ -40,7 +40,7 @@
         "ProjectRecoveryGuard до Application.onCreate и создания первой модели карты.",
         "Область recovery-cold-sync проверяет фоновые SQLite/restore/delivery пути",
         "без открытия Activity, на loopback и собственных данных verification APK.",
-        "Класс изолирован по методам и включён в stationary Related и phone Full;",
+        "Класс изолирован по методам и включён в stationary Related и физическую часть Full;",
         "старые emulator-only сценарии и системные настройки устройства не меняются.",
         ""
       ]

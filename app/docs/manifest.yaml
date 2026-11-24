@@ -235,12 +235,12 @@ key_components:
     saved/native fixture cameras through MapDrawable, await the app scene, retain .08m/30-second assertions and report both
     cameras plus sample/cache/source/radius state.
 - path: app/src/androidTest/java/com/nextgis/mobile/util/VerificationTestRunner.java
-  responsibility: Admit only isolated verification APK and explicitly selected phone, then await real delayed startup callbacks
-    and workspace operations before native fixtures; production data and identities remain outside tests. Only explicitly
-    selected ProjectRecoveryColdSyncTest captures ProjectRecoveryGuard before Application.onCreate and the first map model;
-    its per-method stationary loopback/SQLite checks open no Activity. The validated Windows GuestAngle profile uses pinned
-    system ANGLE/CPU Lavapipe, independent loaded-library/pixel proof, WHPX, bounded resources and Job-owned cleanup; physical
-    Full routing remains required.
+  responsibility: Admit only the isolated verification APK and an explicitly selected physical smartphone or tablet, then
+    await real delayed startup callbacks and workspace operations before native fixtures; production data and identities remain
+    outside tests. Only explicitly selected ProjectRecoveryColdSyncTest captures ProjectRecoveryGuard before Application.onCreate
+    and the first map model; its per-method stationary loopback/SQLite checks open no Activity. The validated Windows GuestAngle
+    profile uses pinned system ANGLE/CPU Lavapipe, independent loaded-library/pixel proof, WHPX, bounded resources and Job-owned
+    cleanup; physical Full routing remains required.
 - path: app/src/androidTest/java/com/nextgis/mobile/reliability/LayerSelectionDialogTest.java
   responsibility: Verify multi-row viewport and actual layer/Cancel touches under enlarged UI.
 - path: app/src/androidTest/java/com/nextgis/mobile/reliability/ProjectLayerSelectionTest.java

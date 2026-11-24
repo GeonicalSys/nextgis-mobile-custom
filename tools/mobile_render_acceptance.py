@@ -93,12 +93,19 @@ def record_stress(path: Path, evidence: dict, device: dict, fingerprint: str) ->
     return result
 
 
-def check_stress_matrix(matrix: dict, fingerprint: str) -> None:
+def check_stress_matrix(matrix: dict, fingerprint: str, physical_device: dict) -> None:
     if not isinstance(matrix, dict) or matrix.get('schema_version') != 1:
         raise ValueError('Publication requires current hardware render stress evidence')
-    rows = matrix.get('entries', [])
-    physical = {'phone': set(), 'tablet': set()}
-    for row in rows:
+    serial = physical_device.get('serial')
+    hardware = physical_device.get('hardware')
+    android_fingerprint = physical_device.get('fingerprint')
+    selected_identity = (serial, hardware, android_fingerprint)
+    if (not all(isinstance(part, str) and part.strip() for part in selected_identity)
+            or hardware in ('ranchu', 'goldfish')):
+        raise ValueError('Render stress requires the selected physical Android device identity')
+
+    matched = False
+    for row in matrix.get('entries', []):
         if row.get('source_fingerprint') != fingerprint:
             raise ValueError('Render stress evidence belongs to changed application/test sources')
         evidence, device = row.get('evidence', {}), row.get('device', {})
@@ -108,10 +115,11 @@ def check_stress_matrix(matrix: dict, fingerprint: str) -> None:
         kind = stress_device_kind(device, evidence)
         if row.get('kind') != kind:
             raise ValueError('Render stress device role disagrees with the recorded hardware')
-        if kind in physical:
-            serial = device.get('serial')
-            if not serial:
+        if kind in ('phone', 'tablet'):
+            if not device.get('serial'):
                 raise ValueError('Render stress is missing the physical device serial')
-            physical[kind].add(serial)
-    if not any(phone != tablet for phone in physical['phone'] for tablet in physical['tablet']):
-        raise ValueError('Render stress requires a physical phone and a different physical tablet')
+            identity = (device['serial'], device['hardware'], device['fingerprint'])
+            if identity == selected_identity:
+                matched = True
+    if not matched:
+        raise ValueError('Render stress evidence is missing for the selected physical device')

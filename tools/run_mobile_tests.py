@@ -173,7 +173,7 @@ class Verification:
         if self.args.scope=='full':
             phones=[serial for serial in connected if not serial.startswith('emulator-')]
             if not self.args.phone_serial and len(phones)!=1:
-                raise ValueError('Full acceptance needs one connected phone or an explicit --phone-serial')
+                raise ValueError('Full acceptance needs one connected physical device or an explicit --phone-serial')
             self.phone=self.identity(self.args.phone_serial or phones[0],'phone')
             if OFFLINE_TILE_CLASS in self.plan['phone']:
                 self.require_offline_usb_phone()
@@ -411,8 +411,7 @@ class Verification:
     def require_offline_usb_phone(self):
         usb_serial = self.command([self.adb, '-d', 'get-serialno'], timeout=10, allow_failure=True).strip()
         if usb_serial != self.phone:
-            raise RuntimeError('Connect the selected offline verification phone as the only USB Android device. '
-                               'The tablet can stay connected by Wi-Fi.')
+            raise RuntimeError('Connect the selected offline verification phone or tablet as the only USB Android device.')
 
     def phone_offline_settings(self):
         return tuple(self.command([self.adb, '-s', self.phone, 'shell', 'settings', 'get', 'global', setting],
@@ -426,12 +425,12 @@ class Verification:
         state = self.phone_offline_settings()
         operator_change = state != expected
         if operator_change:
-            print('WAIT: enable airplane mode on the USB phone, turn off Wi-Fi and leave it unlocked.', flush=True)
+            print('WAIT: enable airplane mode on the selected USB device, turn off Wi-Fi and leave it unlocked.', flush=True)
         try:
             deadline = time.monotonic() + 600
             while state != expected:
                 if time.monotonic() >= deadline:
-                    raise RuntimeError('The offline verification phone did not reach airplane mode with Wi-Fi off')
+                    raise RuntimeError('The selected offline verification device did not reach airplane mode with Wi-Fi off')
                 time.sleep(2)
                 state = self.phone_offline_settings()
             self.checks['manual_offline'] = {'serial': self.phone, 'transport': 'usb',
@@ -495,8 +494,13 @@ class Verification:
                 evidence = json.loads(raw)
                 (self.output/(name+'-evidence.json')).write_text(json.dumps(evidence,indent=2),encoding='utf-8')
                 device = next(item for item in self.devices.values() if item['serial'] == serial)
-                self.checks['render_stress'] = record_stress(ROOT/'build/verification/render-stress.json',
-                                                          evidence, device, self.fingerprint)
+                matrix = record_stress(ROOT/'build/verification/render-stress.json',
+                                       evidence, device, self.fingerprint)
+                if self.args.scope == 'full':
+                    current = self.checks.setdefault('render_stress', {'schema_version': 1, 'entries': []})
+                    current['entries'].append(matrix['entries'][-1])
+                else:
+                    self.checks['render_stress'] = matrix
             return {'passed':seed['passed']+workload['passed'], 'skipped':seed['skipped']+workload['skipped'],
                     'expected_crash':False, 'failed':workload.get('failed',False)}
         if len(selectors)==1 and selectors[0] in self.plan.get('isolated_methods', []):
@@ -812,10 +816,12 @@ class Verification:
     def run(self):
         if self.args.scope=='check-publication':
             receipt=json.loads((ROOT/'build/verification/full-passed.json').read_text(encoding='utf-8'))
-            check_publication_receipt(receipt,self.fingerprint,self.required,required_phone=self.required_phone)
+            check_publication_receipt(receipt, self.fingerprint, self.required,
+                                      required_phone=self.required_phone,
+                                      required_emulator=self.required - self.required_phone)
             self.discover_verification_apks()
             verify_pair(receipt['build_basis'],self.fingerprint,build_recipe(ROOT),self.apk_pair())
-            print('PASS: full phone/tablet/emulator acceptance matches the current source',flush=True)
+            print('PASS: Full acceptance on the emulator and selected physical device matches the current source',flush=True)
             return
         if self.args.scope=='list':
             print(json.dumps(self.plan,ensure_ascii=False,indent=2)); return
@@ -841,8 +847,9 @@ class Verification:
                 for test in self.plan['phone']:
                     self.phone_native(test,'phone-'+test.rsplit('.',1)[1])
                 self.require_native_success()
-                check_publication_receipt(self.receipt('passed'),self.fingerprint,self.required,
-                                          required_phone=self.required_phone)
+                check_publication_receipt(self.receipt('passed'), self.fingerprint, self.required,
+                                          required_phone=self.required_phone,
+                                          required_emulator=self.required - self.required_phone)
             else:
                 related_failures=[]
                 selected=set()

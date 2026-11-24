@@ -34,4 +34,15 @@ class PhoneOnlyTest(unittest.TestCase):
         with self.assertRaises(ValueError):runner.select_devices()
 
 
+    def test_usb_offline_admission_binds_the_same_tablet_transport(self):
+        runner = self.runner()
+        runner.phone = 'tablet-usb'
+        runner.command = Mock(return_value='tablet-usb')
+        runner.require_offline_usb_phone()
+        runner.command.assert_called_once_with(['adb', '-d', 'get-serialno'], timeout=10, allow_failure=True)
+        runner.phone = 'tablet-wifi'
+        with self.assertRaisesRegex(RuntimeError, 'selected offline verification phone or tablet'):
+            runner.require_offline_usb_phone()
+
+
 if __name__=='__main__':unittest.main()

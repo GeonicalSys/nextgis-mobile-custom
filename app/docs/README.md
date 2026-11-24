@@ -374,7 +374,7 @@ pending стартовой миграции подложек и активных
 ProjectRecoveryGuard до Application.onCreate и создания первой модели карты.
 Область recovery-cold-sync проверяет фоновые SQLite/restore/delivery пути
 без открытия Activity, на loopback и собственных данных verification APK.
-Класс изолирован по методам и включён в stationary Related и phone Full;
+Класс изолирован по методам и включён в stationary Related и физическую часть Full;
 старые emulator-only сценарии и системные настройки устройства не меняются.
 
 ## Контакты и руководство пользователя
@@ -474,7 +474,7 @@ cache, поэтому actual cached path и durable path нельзя отожд
 CascadingFormsTest переключает вкладку при уже сохранённом FragmentManager state,
 возобновляет экран и проверяет реальную видимость новой страницы и прежний выбор
 подрядчика. Закрытие сразу после выбора вкладки не оставляет транзакцию в очереди.
-Сценарий входит в Related forms и телефонную часть обязательного Full.
+Сценарий входит в Related forms и физическую часть обязательного Full.
 
 Related form-navigation повторяет весь класс в исходном порядке. Физические
 свайпы ждут фокуса, завершения layout и стабильной видимой области; направление,
@@ -1206,8 +1206,8 @@ callback, provider URI и service ticket до фактического заве�
 `tools/verify-mobile-tests.ps1` разделяет Related на эмуляторе и обязательный
 Full перед публикацией. Opt-in `fieldVerificationChecks=true` собирает только
 отдельную Debug identity «ЛИСА автотесты», собственные provider/account/storage
-и VerificationTestRunner. Static suites допустимы на явно выбранном смартфоне;
-GPS/radio/crash сценарии остаются на эмуляторе. Новый тест автоматически входит
+и VerificationTestRunner. Static suites проходят на одном явно выбранном смартфоне или планшете.
+GPS/radio/crash сценарии проходят на эмуляторе. Новый тест автоматически входит
 в required catalog, отсутствие маршрута блокирует runner. Полный receipt
 проверяется Check-Publication по содержимому всех четырёх checkout.
 
@@ -1215,7 +1215,7 @@ GPS/radio/crash сценарии остаются на эмуляторе. Но�
 и SkiaVK на API36 Google APIs revision7. Приложение продолжает использовать OpenGL ES.
 До native workload проверяются actual loaded system library, CPU identities и независимые
 pixel oracles. Windows Job ограничивает собственное дерево SDK; settings/probe восстанавливаются.
-Full graphics/stress остаются на физических устройствах. Профиль, cache и ограничения:
+Full graphics/stress выполняются на выбранном физическом устройстве. Профиль, cache и ограничения:
 [руководство по автотестам](../../docs/runbooks/automated-tests.md).
 
 LayerSelectionDialogTest проверяет три строки/геометрии и настоящие touches,

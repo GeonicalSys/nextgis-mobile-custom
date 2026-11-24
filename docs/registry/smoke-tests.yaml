@@ -123,8 +123,8 @@ tests:
       in both rich and actual compact inputs, complete native IDs and unchanged whole-row hashes. First automatic production
       notice arrives without a manual host callback, later callbacks/recreation/another layer do not repeat it, and manual
       status passes eight bounded Russian component profiles. Render stress also requires real pan/pinch camera changes, heading
-      updates and peak counters. Explicit software-only emulator admission or selected stationary verification-phone scope
-      is required; these fixtures do not emulate real low RAM or replace Full/device acceptance.
+      updates and peak counters. Explicit software-only emulator admission or selected stationary physical-device verification
+      scope is required; these fixtures do not emulate real low RAM or replace Full/device acceptance.
   SMOKE-RENDER-MEMORY-NATIVE:
     type: device
     scope:
@@ -135,8 +135,8 @@ tests:
       across reload, edit, Save and Cancel.
     - Exercise the authorized heavy real project with actual available-memory/process observations, pan/zoom/heading/recreate
       and retained native images; record source fingerprints and device/renderer identity.
-    - Record actual RAM on a physical 2 GiB-class target separately from the required render stress matrix of a physical phone
-      and a different physical tablet. Retain failed or incomplete results.
+    - Record actual RAM on a physical 2 GiB-class target separately from the required render stress on the single physical
+      smartphone or tablet selected for Full. Retain failed or incomplete results.
     - Check automatic notice once per process and independent manual status while cache/work economy is applied, without hiding
       layers or changing authoritative geometry/data.
     expected: Required contents and interactions remain intact; warnings/economy follow actual free headroom, never nominalRAM
@@ -176,7 +176,7 @@ tests:
     command: tools\verify-mobile-tests.ps1 -Scope Related -Area maintenance
     expected: Durable clocks distinguish full success, local projects, unknown-history grace, pending releases and validated
       ready APK without installation; 288 local Russian dialog configurations preserve full text and visible actions, and
-      Full includes the stationary new class on the selected verification phone.
+      Full includes the stationary new class on the selected physical verification device.
   AUTO-POLYGON-STYLE-CONTROLS:
     type: automatic
     scope:
@@ -249,9 +249,10 @@ tests:
     - maplibui
     - maplib
     command: tools\verify-mobile-tests.ps1 -Scope Full
-    expected: Local core/runner units, strict docs/report impact, version matrix, every phone/emulator native case, permitted-project
-      integration, diagnostics recovery, 36 chooser and 6 enlarged real-window profiles pass. Cloud is manual-only. Missing
-      permitted project asks the user; no other project is chosen automatically.
+    expected: Local core/runner units, strict docs/report impact, version matrix, every native case routed to the emulator
+      and one selected physical smartphone or tablet, permitted-project integration, diagnostics recovery, 36 chooser and
+      6 enlarged real-window profiles pass. Cloud is manual-only. Missing permitted project asks the user; no other project
+      is chosen automatically.
   AUTO-MOBILE-PUBLICATION-GATE:
     type: automatic
     scope:
@@ -259,19 +260,20 @@ tests:
     - maplibui
     - maplib
     command: tools\verify-mobile-tests.ps1 -Scope Check-Publication
-    expected: Only a complete local Full receipt matching current content of all four checkouts with real_window_matrix and
-      other required gates is accepted; Related, skips, incomplete/stale results and a chooser-only matrix fail.
+    expected: Accept a complete local Full receipt matching current content of all four checkouts, with the emulator roster,
+      the complete roster, render stress and real USB offline tiles on one selected physical smartphone or tablet, real_window_matrix
+      and the other required gates. Related, required skips, incomplete or stale results and a chooser-only matrix fail.
   SMOKE-LAYER-CHOOSER:
     type: device
     scope:
     - app
     - maplibui
-    command: Run layers Related on emulator and Full on the explicitly selected verification phone
+    command: Run layers Related on emulator and Full on the explicitly selected physical verification device
     steps:
     - Run the layers area on the isolated emulator and verify actual selection of point, line, polygon and Cancel in all 36
       UI profiles.
-    - Run Full on the explicitly selected verification phone with permitted project 1403 or ask the user to select a replacement
-      if absent.
+    - Run Full on the explicitly selected physical verification device with permitted project 1403 or ask the user to select
+      a replacement if absent.
     expected: Three eligible geometry rows have a multi-row viewport, every geometry and Cancel receive actual touches; permitted
       project creation offers every editable layer and excludes read-only layers. Enlarged landscape may scroll but the last
       row remains reachable.

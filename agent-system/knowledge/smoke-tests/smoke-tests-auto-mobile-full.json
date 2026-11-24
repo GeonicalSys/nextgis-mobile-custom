@@ -62,7 +62,7 @@
           "maplib"
         ],
         "command": "tools\\verify-mobile-tests.ps1 -Scope Full",
-        "expected": "Local core/runner units, strict docs/report impact, version matrix, every phone/emulator native case, permitted-project integration, diagnostics recovery, 36 chooser and 6 enlarged real-window profiles pass. Cloud is manual-only. Missing permitted project asks the user; no other project is chosen automatically."
+        "expected": "Local core/runner units, strict docs/report impact, version matrix, every native case routed to the emulator and one selected physical smartphone or tablet, permitted-project integration, diagnostics recovery, 36 chooser and 6 enlarged real-window profiles pass. Cloud is manual-only. Missing permitted project asks the user; no other project is chosen automatically."
       }
     }
   },
