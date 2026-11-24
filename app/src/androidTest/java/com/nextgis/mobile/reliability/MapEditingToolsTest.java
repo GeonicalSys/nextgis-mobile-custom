@@ -19,6 +19,12 @@ import com.nextgis.maplib.util.Constants;
 import com.nextgis.maplib.util.GeoConstants;
 import com.nextgis.maplibui.GISApplication;
 import com.nextgis.maplibui.mapui.VectorLayerUI;
+import com.nextgis.maplibui.service.WalkEditService;
+import com.nextgis.maplibui.util.FeatureFormDraftStore;
+import com.nextgis.maplibui.util.GeometryEditDraftStore;
+import com.nextgis.maplibui.util.WalkCheckpointWriter;
+import com.nextgis.maplibui.util.WalkSessionPolicy;
+import com.nextgis.maplibui.util.WalkSessionStore;
 import com.nextgis.mobile.R;
 import com.nextgis.mobile.activity.MainActivity;
 import com.nextgis.mobile.fragment.MapFragment;
@@ -37,6 +43,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.Assert.*;
@@ -416,6 +424,10 @@ public class MapEditingToolsTest {
     }
 
     private void clickDialogButton(String id) {
+        clickDialogButton(id, null);
+    }
+
+    private void clickDialogButton(String id, CharSequence expectedLabel) {
         android.app.Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
         instrumentation.waitForIdleSync();
         int buttonId = id.endsWith("button2") ? android.R.id.button2 : android.R.id.button1;
@@ -428,6 +440,10 @@ public class MapEditingToolsTest {
                     View root = roots.get(i);
                     View button = root.findViewById(buttonId);
                     if (button != null && button.isShown() && root.isAttachedToWindow()) {
+                        if (expectedLabel != null && (!(button instanceof android.widget.TextView)
+                                || !android.text.TextUtils.equals(expectedLabel, ((android.widget.TextView) button).getText()))) {
+                            continue;
+                        }
                         clicked.set(button.performClick());
                         break;
                     }
@@ -1101,36 +1117,120 @@ public class MapEditingToolsTest {
     @Test public void walkCategorySurvivesRecorderInterruptionAndFinishedGeometryHandoff() throws Exception {
         addStandardCategoryLayer(GeoConstants.GTLineString); supplyCurrentFix(); moveCameraAway();
         clickCreationAction(R.id.add_geometry_by_walk);
-        chooseFirstCategory(false); assertNull(com.nextgis.maplibui.util.WalkSessionStore.load(app));
+        chooseFirstCategory(false); assertNull(WalkSessionStore.load(app));
         clickCreationAction(R.id.add_geometry_by_walk);
         android.os.Bundle expected = chooseFirstCategory(true, true);
         assertCameraAtCreationFix();
-        com.nextgis.maplibui.util.WalkSessionStore.Snapshot walk = com.nextgis.maplibui.util.WalkSessionStore.load(app);
-        assertNotNull(walk); assertCategory(expected, com.nextgis.maplibui.util.FeatureTypeDefaults.decode(walk.initialValues));
+        WalkSessionStore.Snapshot walk = WalkSessionStore.load(app);
+        assertNotNull(walk);
+        assertCategory(expected, com.nextgis.maplibui.util.FeatureTypeDefaults.decode(walk.initialValues));
+
+        AtomicBoolean ready = new AtomicBoolean();
         long deadline = android.os.SystemClock.uptimeMillis() + 10000;
-        while (!com.nextgis.maplibui.service.WalkEditService.isSessionRunning(walk.id)
-                && android.os.SystemClock.uptimeMillis() < deadline) Thread.sleep(40);
-        assertTrue(com.nextgis.maplibui.service.WalkEditService.isSessionRunning(walk.id));
-        app.stopService(new android.content.Intent(app, com.nextgis.maplibui.service.WalkEditService.class));
+        do {
+            scenario.onActivity(activity -> ready.set(WalkEditService.isSessionRunning(walk.id)));
+            if (!ready.get()) Thread.sleep(40);
+        } while (!ready.get() && android.os.SystemClock.uptimeMillis() < deadline);
+        assertTrue("Recorder did not start", ready.get());
+        scenario.onActivity(activity -> assertTrue(app.stopService(new android.content.Intent(app, WalkEditService.class))));
+
+        File workspace = new File(walk.mapPath);
         deadline = android.os.SystemClock.uptimeMillis() + 10000;
-        while (com.nextgis.maplibui.service.WalkEditService.isSessionRunning(walk.id)
-                && android.os.SystemClock.uptimeMillis() < deadline) Thread.sleep(40);
-        assertFalse(com.nextgis.maplibui.service.WalkEditService.isSessionRunning(walk.id));
-        // Simulate a durable recorder snapshot after interruption; keep its real owner and category.
-        com.nextgis.maplib.datasource.GeoLineString line = (com.nextgis.maplib.datasource.GeoLineString) walk.geometry();
+        do {
+            scenario.onActivity(activity -> ready.set(!WalkEditService.isSessionRunning(walk.id)
+                    && !WalkCheckpointWriter.isActive(workspace, walk.checkpointOwner)));
+            if (!ready.get()) Thread.sleep(40);
+        } while (!ready.get() && android.os.SystemClock.uptimeMillis() < deadline);
+        assertTrue("The recorder and its checkpoint writer did not stop", ready.get());
+
+        WalkSessionStore.Snapshot stopped = WalkSessionStore.load(app);
+        assertNotNull(stopped);
+        assertEquals(walk.id, stopped.id);
+        assertEquals(walk.checkpointOwner, stopped.checkpointOwner);
+        GeoLineString line = (GeoLineString) stopped.geometry();
+        assertNotNull(line);
         line.add(new GeoPoint(line.getPoint(0).getX() + 10, line.getPoint(0).getY() + 10));
-        assertTrue(com.nextgis.maplibui.util.WalkSessionStore.updateGeometry(app, walk.id, line, 2, true));
+        int insertion = line.getPointCount();
+        assertTrue(WalkSessionStore.updateGeometry(app, walk.id, line, insertion, true));
         scenario.recreate();
         awaitRecreatedMap();
+
+        String seedWkt = line.toWKT(true);
+        GeoPoint lastPoint = new GeoPoint(line.getPoint(0).getX() + 20, line.getPoint(0).getY() + 30);
+        GeoLineString expectedLine = (GeoLineString) line.copy();
+        expectedLine.add(lastPoint);
+        String expectedWkt = expectedLine.toWKT(true);
+
+        SharedPreferences walkPrefs = WalkSessionStore.preferences(app);
+        long sequence = walkPrefs.getLong(WalkCheckpointWriter.KEY_SEQUENCE, 0);
+        CountDownLatch commitEntered = new CountDownLatch(1);
+        CountDownLatch releaseCommit = new CountDownLatch(1);
+        WalkCheckpointWriter writer = new WalkCheckpointWriter(workspace, walk.checkpointOwner,
+                line, insertion, true, sequence, (part, nextInsertion, paused, nextSequence) -> {
+                    commitEntered.countDown();
+                    try {
+                        return releaseCommit.await(30, TimeUnit.SECONDS)
+                                && WalkSessionStore.updateGeometry(app, walk.id, part, nextInsertion,
+                                        paused, nextSequence, walk.checkpointOwner);
+                    } catch (InterruptedException interrupted) {
+                        Thread.currentThread().interrupt();
+                        return false;
+                    }
+                }, null);
         android.app.Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
         android.app.Instrumentation.ActivityMonitor monitor = instrumentation.addMonitor(
                 com.nextgis.maplibui.activity.FormBuilderModifyAttributesActivity.class.getName(), null, false);
+        VectorLayerUI layer = layers.get(layers.size() - 1);
+        CharSequence finishLabel = app.getText(com.nextgis.maplibui.R.string.walk_complete_object);
         try {
+            assertEquals(WalkCheckpointWriter.Admission.DURABLE,
+                    writer.insert(insertion, lastPoint, insertion + 1, true));
+            assertTrue("The checkpoint sink did not start", commitEntered.await(10, TimeUnit.SECONDS));
+            writer.close();
+            scenario.onActivity(activity -> assertFalse(WalkEditService.isSessionRunning(walk.id)));
             clickWalkButton(com.nextgis.maplibui.R.id.walk_panel_finish);
-            clickDialogButton("android:id/button1");
+            clickDialogButton("android:id/button1", finishLabel);
+
+            assertTrue(WalkCheckpointWriter.isActive(workspace, walk.checkpointOwner));
+            WalkSessionStore.Snapshot pending = WalkSessionStore.load(app);
+            assertNotNull(pending);
+            assertEquals(walk.id, pending.id);
+            assertEquals(walk.checkpointOwner, pending.checkpointOwner);
+            assertEquals("Finish must remain retryable while the checkpoint writer closes",
+                    WalkSessionPolicy.Phase.RECORDING, pending.phase);
+            assertEquals(sequence, walkPrefs.getLong(WalkCheckpointWriter.KEY_SEQUENCE, 0));
+            assertEquals(sequence + 1, pending.checkpointSequence);
+            assertEquals(seedWkt, pending.fullWkt);
+            assertEquals(expectedWkt, pending.geometry().toWKT(true));
+            assertEquals(0, monitor.getHits());
+            assertNull(FeatureFormDraftStore.load(app));
+            assertNull(GeometryEditDraftStore.load(app));
+            assertEquals(0, layer.getCount());
+
+            releaseCommit.countDown();
+            assertTrue("The detached checkpoint writer did not close", writer.awaitClosed(10000));
+            assertEquals(sequence + 1, walkPrefs.getLong(WalkCheckpointWriter.KEY_SEQUENCE, 0));
+            assertEquals(expectedWkt, WalkSessionStore.load(app).fullWkt);
+
+            clickWalkButton(com.nextgis.maplibui.R.id.walk_panel_finish);
+            clickDialogButton("android:id/button1", finishLabel);
             saveCategoryForm(monitor, expected, walk.id);
-            assertNull(com.nextgis.maplibui.util.WalkSessionStore.load(app));
-        } finally { instrumentation.removeMonitor(monitor); }
+            assertNull(WalkSessionStore.load(app));
+            try (android.database.Cursor row = layer.query(null, null, null, null, null)) {
+                assertTrue(row.moveToFirst());
+                long savedId = row.getLong(row.getColumnIndexOrThrow(Constants.FIELD_ID));
+                assertEquals(expectedWkt, layer.getGeometryForId(savedId).toWKT(true));
+            }
+        } finally {
+            releaseCommit.countDown();
+            writer.close();
+            instrumentation.removeMonitor(monitor);
+            assertTrue("The test checkpoint writer did not close", writer.awaitClosed(10000));
+            WalkSessionStore.Snapshot remaining = WalkSessionStore.load(app);
+            if (remaining != null && walk.id.equals(remaining.id) && remaining.phase == WalkSessionPolicy.Phase.FINISHING) {
+                assertTrue(WalkSessionStore.clear(app, walk.id));
+            }
+        }
     }
 
     private void addCopyFixture(int geometryType, boolean editable, boolean visible, String wkt,

@@ -1,7 +1,7 @@
 ---
 title: Crash recovery and durable drafts
 type: architecture
-last_verified: 2026-10-30
+last_verified: 2026-11-24
 related_code:
   - maplib/src/main/java/com/nextgis/maplib/datasource/GeoMultiPolygon.java
   - app/src/main/java/com/nextgis/mobile/activity/MainActivity.kt
@@ -144,7 +144,7 @@ moving above the creation menu only while it is expanded. A second walk cannot s
 | Point start | A durable point UUID is acquired before the layer chooser. Only one Point/MultiPoint creation session may accompany the recording; stage progresses through choose, geometry and form |
 | Complete control lock | From point start until successful point Save or explicit Cancel/Discard, all walk controls and notification/backend Pause/Resume/Finish/Discard are disabled. GPS processing and geometry persistence continue |
 | Lifecycle | Camera, backgrounding, screen off, failed Save and process recreation retain the point lock. GPS loss leaves recording intent and the point lock intact; fresh fixes continue recording automatically |
-| Finish | The disk button confirms finishing and opening attributes. A matching command changes RECORDING to FINISHING; the service queues a worker barrier after all admitted edits, persists full geometry with its sequence and acknowledges FINISHED only after that barrier succeeds before the UI hands geometry to the editor and automatically opens its attribute form. No new point can begin during this transition |
+| Finish | The disk button confirms finishing and opening attributes. A live recorder enters FINISHING and acknowledges FINISHED after its worker commits the full geometry and sequence. When the recorder has stopped, the command attempts the final commit directly. A closing checkpoint writer leaves the stopped draft in RECORDING and the map asks the user to retry. Once the owner has released the journal, the next confirmation hands the full geometry to the editor and opens its attribute form. Point creation stays blocked during live FINISHING |
 | Manual pause | The confirmed Pause command flushes already accepted fixes and persists gps_paused under the same owner. New recording callbacks cannot append while paused. Confirmed Resume resets the sampler and warns that the next point connects to the last recorded point. A stale confirmation still checks UUID, phase and point lock in the service |
 | Panel | One themed 48dp row contains layer name and disk/pause-or-play/cross, all with 48dp touch targets, accessibility names and long-press hints. No ordinary status/accuracy label or overflow. Point lock and persistence errors add a readable notice; final geometry keeps Save/Cancel available and disables Pause |
 | Minimum geometry | After FINISHED, every line requires two distinct vertices and every polygon ring three, excluding WKT closure duplicates. Empty collections or short members/rings close the walk with “Собрано недостаточно точек, выхожу без сохранения”, without a feature row or attribute form; existing features are unchanged |
