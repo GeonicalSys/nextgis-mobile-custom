@@ -8079,11 +8079,11 @@
     {
       "repository": "maplibui",
       "path": "src/main/java/com/nextgis/maplibui/service/LayerFillService.java",
-      "purpose": "Manually reviewed message-local fields, local-only owner/schema boundaries, owned RU/EN copy or all exception-to-display sites beyond the method guards. This is source drift evidence, not Android/window/server acceptance.",
+      "purpose": "Manually reviewed message-local fields, local-only owner/schema boundaries, owned RU/EN copy or all exception-to-display sites beyond the method guards. This is source drift evidence, not Android/window/server acceptance. Reviewed 2026-11-25: pending-edit checks use the owning layer database and prevent staged replacement before acknowledgement; form tasks retain the parent replacement position and callback scope. Existing HTTP classification and exception-to-display rules are preserved.",
       "contract_ids": [
         "UI-LAYER-IMPORT-ERROR-MESSAGES"
       ],
-      "sha256": "3073ba162bd908963a083a134ef81f89ce5d17e113c5a85a2b9b94b476f05e66"
+      "sha256": "5ec8d639e13ffb33d06ecd6cbd31e62285754d110e3a47377bd9cbe2c94fffce"
     },
     {
       "repository": "maplibui",
@@ -8373,20 +8373,20 @@
     {
       "repository": "maplibui",
       "path": "src/main/res/values/strings.xml",
-      "purpose": "Reviewed existing Load project/account/catalog/import presentation and eight neutral mobile-project wording edits. Same keys/order/placeholders; no claim every translation or device surface was audited.",
+      "purpose": "Reviewed existing Load project/account/catalog/import presentation and eight neutral mobile-project wording edits. Same keys/order/placeholders; no claim every translation or device surface was audited. Reviewed 2026-11-25: added the deferred replacement message with a single layer-name placeholder. The project-load strings match their prior review.",
       "contract_ids": [
         "UI-MOBILE-PROJECT-LOAD"
       ],
-      "sha256": "049e720fa043dce5a01625f37713034b604d9b1b8256852b4bd4fd81fc8a37ce"
+      "sha256": "cf5bd14cad5491c640961c6654bf7faa0ba7f1b73985fa385595c0f0b8155bc8"
     },
     {
       "repository": "maplibui",
       "path": "src/main/res/values-ru/strings.xml",
-      "purpose": "Reviewed existing Загрузить проект/account/catalog/import presentation and eight neutral mobile-project wording edits. Same keys/order/placeholders; no claim every translation or device surface was audited.",
+      "purpose": "Reviewed existing Загрузить проект/account/catalog/import presentation and eight neutral mobile-project wording edits. Same keys/order/placeholders; no claim every translation or device surface was audited. Reviewed 2026-11-25: added the Russian deferred replacement message with the same layer-name placeholder and preservation guidance as the English copy. The project-load strings match their prior review.",
       "contract_ids": [
         "UI-MOBILE-PROJECT-LOAD"
       ],
-      "sha256": "38e1b31476818ba6a7b5ca195dbb4cab4d909139ca6c0fe4095200ed8d025444"
+      "sha256": "b11810c2cd4fca7f0cb88de43a9efd571c2ff01c53fd42b2952a35715d351963"
     },
     {
       "repository": "root",

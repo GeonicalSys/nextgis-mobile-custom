@@ -39,11 +39,11 @@
       "value": {
         "repository": "maplibui",
         "path": "src/main/res/values/strings.xml",
-        "purpose": "Reviewed existing Load project/account/catalog/import presentation and eight neutral mobile-project wording edits. Same keys/order/placeholders; no claim every translation or device surface was audited.",
+        "purpose": "Reviewed existing Load project/account/catalog/import presentation and eight neutral mobile-project wording edits. Same keys/order/placeholders; no claim every translation or device surface was audited. Reviewed 2026-11-25: added the deferred replacement message with a single layer-name placeholder. The project-load strings match their prior review.",
         "contract_ids": [
           "UI-MOBILE-PROJECT-LOAD"
         ],
-        "sha256": "049e720fa043dce5a01625f37713034b604d9b1b8256852b4bd4fd81fc8a37ce"
+        "sha256": "cf5bd14cad5491c640961c6654bf7faa0ba7f1b73985fa385595c0f0b8155bc8"
       }
     }
   },

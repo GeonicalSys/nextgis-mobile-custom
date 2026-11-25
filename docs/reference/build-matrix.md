@@ -36,6 +36,9 @@ related_code:
 `python -B docs/scripts/ui_catalogue_knowledge.py --write`. Затем обновить
 квитанцию `python -B docs/scripts/structured_view_proof.py --write` и проверить
 сгенерированный реестр и исходные записи через `tools/docs-check.ps1 -RunTests`.
+При точечной правке UI-свидетельств в квитанции меняются хеши представления
+`docs/registry/ui-contracts.json` и его упорядоченных записей. Остальные
+разделы квитанции сверяются с исходной версией.
 
 Для реестра зависимостей сначала выполнить `python -B docs/scripts/keyed_registry_knowledge.py --write`.
 Затем обновить ту же квитанцию structured views. Она подтверждает согласованность
