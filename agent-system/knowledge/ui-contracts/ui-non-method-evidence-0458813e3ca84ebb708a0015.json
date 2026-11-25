@@ -39,11 +39,11 @@
       "value": {
         "repository": "maplibui",
         "path": "src/main/res/values-ru/strings.xml",
-        "purpose": "Reviewed existing Загрузить проект/account/catalog/import presentation and eight neutral mobile-project wording edits. Same keys/order/placeholders; no claim every translation or device surface was audited.",
+        "purpose": "Reviewed existing Загрузить проект/account/catalog/import presentation and eight neutral mobile-project wording edits. Same keys/order/placeholders; no claim every translation or device surface was audited. Reviewed 2026-11-25: added the Russian deferred replacement message with the same layer-name placeholder and preservation guidance as the English copy. The project-load strings match their prior review.",
         "contract_ids": [
           "UI-MOBILE-PROJECT-LOAD"
         ],
-        "sha256": "38e1b31476818ba6a7b5ca195dbb4cab4d909139ca6c0fe4095200ed8d025444"
+        "sha256": "b11810c2cd4fca7f0cb88de43a9efd571c2ff01c53fd42b2952a35715d351963"
       }
     }
   },

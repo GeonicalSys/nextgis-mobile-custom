@@ -39,11 +39,11 @@
       "value": {
         "repository": "maplibui",
         "path": "src/main/java/com/nextgis/maplibui/service/LayerFillService.java",
-        "purpose": "Manually reviewed message-local fields, local-only owner/schema boundaries, owned RU/EN copy or all exception-to-display sites beyond the method guards. This is source drift evidence, not Android/window/server acceptance.",
+        "purpose": "Manually reviewed message-local fields, local-only owner/schema boundaries, owned RU/EN copy or all exception-to-display sites beyond the method guards. This is source drift evidence, not Android/window/server acceptance. Reviewed 2026-11-25: pending-edit checks use the owning layer database and prevent staged replacement before acknowledgement; form tasks retain the parent replacement position and callback scope. Existing HTTP classification and exception-to-display rules are preserved.",
         "contract_ids": [
           "UI-LAYER-IMPORT-ERROR-MESSAGES"
         ],
-        "sha256": "3073ba162bd908963a083a134ef81f89ce5d17e113c5a85a2b9b94b476f05e66"
+        "sha256": "5ec8d639e13ffb33d06ecd6cbd31e62285754d110e3a47377bd9cbe2c94fffce"
       }
     }
   },

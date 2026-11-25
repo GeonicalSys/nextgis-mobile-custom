@@ -33,9 +33,10 @@
       "role": "markdown_body_lines",
       "value": [
         "Перед feature sync выполняется backup-gated integrity repair именно owning проекта:",
-        "managed layers группируются по account + project_uid + remote_id. Копии без",
-        "локальных правок сначала резервируются и сводятся к одной копии одним map commit;",
-        "edited-дубликаты блокируют проход без удаления.",
+        "managed layers группируются по account + project_uid + remote_id. Если локальные",
+        "правки есть в одной копии, она остаётся в проекте. Остальные копии резервируются,",
+        "повторно проверяются на правки и удаляются одним сохранением карты. Когда правки",
+        "есть в нескольких копиях, все копии остаются в проекте до сверки.",
         "",
         "SyncRecoveryJournal.enqueueOrThrow сохраняет исходный exception как cause и",
         "добавляет этап read_queue/legacy_inventory/merge_pairs/commit, число project/account",

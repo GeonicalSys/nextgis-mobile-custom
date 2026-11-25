@@ -19,9 +19,11 @@ import com.nextgis.maplib.datasource.Field;
 import com.nextgis.maplib.datasource.GeoGeometryFactory;
 import com.nextgis.maplib.datasource.ngw.Connection;
 import com.nextgis.maplib.map.LayerGroup;
+import com.nextgis.maplib.map.LayerOriginMetadata;
 import com.nextgis.maplib.map.MapBase;
 import com.nextgis.maplib.map.MapContentProviderHelper;
 import com.nextgis.maplib.map.MapDrawable;
+import com.nextgis.maplib.map.NGWVectorLayer;
 import com.nextgis.maplib.util.Constants;
 import com.nextgis.maplib.util.FeatureChanges;
 import com.nextgis.maplib.util.GeoConstants;
@@ -33,16 +35,22 @@ import com.nextgis.maplib.util.UnderlayFiles;
 import com.nextgis.maplibui.GISApplication;
 import com.nextgis.maplibui.mapui.LocalChangesWorker;
 import com.nextgis.maplibui.mapui.NGWVectorLayerUI;
+import com.nextgis.maplibui.service.LayerFillService;
 import com.nextgis.maplibui.util.CollectorProjectRegistry;
+import com.nextgis.maplibui.util.LayerBackupManager;
 import com.nextgis.maplibui.util.LocalChangesRepository;
 import com.nextgis.maplibui.util.ProjectArchiveManager;
 import com.nextgis.mobile.util.VerificationEnvironment;
 import java.io.File;
+import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Collections;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -208,6 +216,114 @@ public class ProjectRecoveryColdSyncTest {
     }
     private static long number(SQLiteDatabase db, String sql) {
         try (Cursor cursor = db.rawQuery(sql, null)) { assertTrue(cursor.moveToFirst()); return cursor.getLong(0); }
+    }
+
+    @Test public void formReplacementKeepsTheOldQueueUntilTheEditIsAcknowledged() throws Exception {
+        Method formHandoff = LayerFillService.class.getDeclaredMethod(
+                "copyFormLayerExtras", Bundle.class, Bundle.class);
+        formHandoff.setAccessible(true);
+        Bundle request = new Bundle();
+        request.putInt(LayerFillService.KEY_LAYER_RESTORE_INSERT_INDEX, 0);
+        request.putBoolean(LayerFillService.KEY_DEFER_MAP_RELOAD_UNTIL_QUEUE_EMPTY, true);
+        Bundle fill = new Bundle();
+        formHandoff.invoke(null, request, fill);
+        assertEquals(0, fill.getInt(LayerFillService.KEY_LAYER_RESTORE_INSERT_INDEX, -1));
+        assertTrue(fill.getBoolean(LayerFillService.KEY_DEFER_MAP_RELOAD_UNTIL_QUEUE_EMPTY));
+        Bundle freshImport = new Bundle();
+        formHandoff.invoke(null, new Bundle(), freshImport);
+        assertFalse(freshImport.containsKey(LayerFillService.KEY_LAYER_RESTORE_INSERT_INDEX));
+
+        Method publish = LayerFillService.class.getDeclaredMethod("publishLayerReplacement",
+                LayerGroup.class, NGWVectorLayer.class, List.class, int.class, int.class, long[].class);
+        publish.setAccessible(true);
+        try (LocalChangesUploadTest.Endpoint endpoint = new LocalChangesUploadTest.Endpoint();
+             Fixture f = new Fixture(endpoint);
+             SyncWorkspaceSession session = new SyncWorkspaceSession(f.source);
+             SyncWorkspaceSession.Scope ignored = session.enter()) {
+            int originalIndex = f.source.getChildLayerIndex(f.layer);
+            int originalLayerCount = f.source.getLayerCount();
+            NGWVectorLayerUI stage = new NGWVectorLayerUI(
+                    app, new File(f.source.getPath(), "cold_recovery_replacement"));
+            stage.setParent(f.source);
+            stage.setName("Updated field line");
+            stage.beginBulkImport();
+            stage.create(GeoConstants.GTLineString, Arrays.asList(
+                    new Field(GeoConstants.FTString, "name", "Name"),
+                    new Field(GeoConstants.FTDateTime, "deleted_at", "Deleted at")));
+            stage.endBulkImport();
+            stage.setAccountName(f.account.name);
+            stage.setRemoteId(f.layer.getRemoteId());
+            assertTrue(stage.save());
+
+            assertFalse(publishReplacementOnMain(publish, f, stage, originalIndex));
+            assertEquals(1, f.pending());
+            assertSame(f.layer, f.source.getLayer(originalIndex));
+            assertNotNull(f.layer.getFeature(f.id));
+            assertTrue(endpoint.mutations.isEmpty());
+
+            assertTrue(f.layer.sendLocalChanges(new SyncResult()));
+            assertEquals(0, f.pending());
+            assertEquals(1, endpoint.mutations.size());
+            assertTrue(app.backupEditableLayerData(f.layer, LayerBackupManager.REASON_SCHEMA_REBUILD));
+            assertTrue(publishReplacementOnMain(publish, f, stage, originalIndex));
+            assertSame(stage, f.source.getLayer(originalIndex));
+            assertEquals(originalLayerCount, f.source.getLayerCount());
+            assertEquals(-1, f.source.getChildLayerIndex(f.layer));
+            assertTrue(stage.validateSqliteSchemaAgainstFields().isEmpty());
+            assertEquals(1, endpoint.mutations.size());
+            f.unchangedActive();
+        }
+    }
+
+    @Test public void previousVersionDuplicateIsRepairedWithoutDiscardingTheLocallyEditedCopy() throws Exception {
+        try (LocalChangesUploadTest.Endpoint endpoint = new LocalChangesUploadTest.Endpoint();
+             Fixture f = new Fixture(endpoint);
+             SyncWorkspaceSession session = new SyncWorkspaceSession(f.source);
+             SyncWorkspaceSession.Scope ignored = session.enter()) {
+            int originalIndex = f.source.getChildLayerIndex(f.layer);
+            int originalCount = f.source.getLayerCount();
+            LayerOriginMetadata origin = LayerOriginMetadata.collectorLayer(
+                    f.original.getProjectUid(), originalIndex, 178L);
+            f.layer.setLayerOriginMetadata(origin);
+            assertTrue(f.layer.save());
+
+            NGWVectorLayerUI duplicate = new NGWVectorLayerUI(
+                    app, new File(f.source.getPath(), "cold_recovery_duplicate"));
+            f.source.addLayer(duplicate);
+            duplicate.setName("Copy from the old form loader");
+            duplicate.beginBulkImport();
+            duplicate.create(GeoConstants.GTLineString,
+                    Collections.singletonList(new Field(GeoConstants.FTString, "name", "Name")));
+            duplicate.endBulkImport();
+            duplicate.setAccountName(f.account.name);
+            duplicate.setRemoteId(f.layer.getRemoteId());
+            duplicate.setLayerOriginMetadata(origin);
+            assertTrue(duplicate.save());
+            assertTrue(f.source.save());
+            assertEquals(originalCount + 1, f.source.getLayerCount());
+
+            assertTrue(app.repairProjectIntegrityBeforeSync(f.account.name));
+            assertEquals(originalCount, f.source.getLayerCount());
+            assertSame(f.layer, f.source.getLayer(originalIndex));
+            assertEquals(1, f.pending());
+            assertNotNull(f.layer.getFeature(f.id));
+            assertTrue(endpoint.mutations.isEmpty());
+            f.unchangedActive();
+        }
+    }
+
+    private static boolean publishReplacementOnMain(
+            Method publish, Fixture fixture, NGWVectorLayer stage, int originalIndex) {
+        AtomicBoolean published = new AtomicBoolean();
+        InstrumentationRegistry.getInstrumentation().runOnMainSync(SyncWorkspaceSession.capture(() -> {
+            try {
+                published.set((Boolean) publish.invoke(null, fixture.source, stage,
+                        Collections.singletonList(fixture.layer), originalIndex, -1, null));
+            } catch (ReflectiveOperationException error) {
+                throw new AssertionError("Replacement callback failed", error);
+            }
+        }));
+        return published.get();
     }
 
     @Test public void heldCopyRejectsEverySyncEntryAndPreservesOriginalRowsPhotosAndFormsWithoutAnActivity() throws Exception {
