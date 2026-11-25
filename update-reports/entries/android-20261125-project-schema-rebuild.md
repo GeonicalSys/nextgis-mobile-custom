@@ -18,6 +18,7 @@ covers:
   - docs/reference/build-matrix.md
   - docs/reference/official-differences.md
   - docs/registry/ui-contracts.json
+  - maplibui
   - app/src/androidTest/java/com/nextgis/mobile/reliability/ProjectRecoveryColdSyncTest.java
   - update-reports/entries/android-20261125-project-schema-rebuild.md
 ---
