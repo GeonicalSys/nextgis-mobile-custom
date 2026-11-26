@@ -1,0 +1,72 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:mobile-roadmap-vector-label-line-breaks",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "planned",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "paused",
+    "implementation": "planned",
+    "source_verification": "NOT_RUN",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_RUN",
+    "release": "unpublished",
+    "retention": "Сохранить план на следующий выпуск Android и пример совместимого шаблона для эталона КЛПХ."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## MAP-01 Переносы строк в подписях векторных слоёв",
+        "",
+        "Приоритет P2. Запланировано на следующий выпуск Android по решению от 26.11.2026. Владелец — Maplib. Интеграция в выпуск — Android App.",
+        "",
+        "Сохранять явный перенос при подготовке подписей векторных слоёв. Сейчас `getSpaceCorrectedText` заменяет перенос пробелом в тексте из поля и после подстановки значений в `label_template`. [Код подготовки подписей](../../maplib/src/main/java/com/nextgis/maplib/map/MPLFeaturesUtils.java).",
+        "",
+        "При подготовке эталона КЛПХ задать один шаблон в правилах отображения подписей активных лесосек в проектах «Перевозчики» и «Заготовители». Первая строка содержит вид (`cut`) и год (`year_`) рубки, вторая — учётный номер лесосеки в ФГИС (`externalid`).",
+        "",
+        "```json",
+        "{",
+        "  \"label_template\": \"${cut} - ${year_}\\n${externalid}\"",
+        "}",
+        "```",
+        "",
+        "Текущая обработка выдаёт `спр - 2026 001234` для приведённого шаблона. Проверить первый импорт проекта на рабочей сборке. Если эта сборка отображает шаблон некорректно, при первом подключении задать один пробел и добавить `\\n` после обновления приложения.",
+        "",
+        "При приёмке обновить приложение с уже загруженным проектом и снова открыть карту с существующим кэшем. С тем же шаблоном номер ФГИС начинается со второй строки. Если номер пустой, виден только вид и год рубки. Проверить подпись из поля и шаблона, а также обычные однострочные подписи.",
+        "",
+        ""
+      ]
+    },
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "MAP-01"
+    },
+    "priority": {
+      "role": "priority_at_roadmap_authoring",
+      "value": "P2"
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-vector-label-line-breaks"
+    ]
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:task:mobile-roadmap-collector-global-discovery",
+  "kind": "task",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "planned",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:mobile-roadmap-layout"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "paused",
+    "implementation": "planned",
+    "source_verification": "NOT_RUN",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_RUN",
+    "release": "unpublished",
+    "retention": "Сохранить запрос и проверить общий каталог на нескольких уровнях дерева WebGIS и разных правах доступа."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/roadmap/mobile.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## MAP-02 Все доступные Collector-проекты в «Загрузить проект»",
+        "",
+        "Приоритет P2. Запланировано по запросу от 26.11.2026. Владелец — Android. Сейчас список строится по каталогу с ключом `lisa`. Проекты КЛПХ могут находиться в отдельных папках на том же сервере. [Текущий загрузчик каталога](../../maplib/src/main/java/com/nextgis/maplib/util/LisaCatalogLookup.java).",
+        "",
+        "Показывать все ресурсы `collector_project`, которые доступны выбранной учётной записи в WebGIS, включая проекты в корне и во вложенных папках. Проверить поддержку постраничной выдачи на сервере. Для совпадающих имён показывать путь папки. При импорте использовать текущую привязку к учётной записи и ID проекта.",
+        "",
+        "Приёмка включает проекты в каталоге «ЛИСА», рядом с ним и в нескольких вложенных папках, два одинаковых названия, разные права у двух учётных записей и дерево с несколькими страницами. После переноса проекта в другую папку загрузка по его ID должна открывать существующий локальный проект.",
+        "",
+        ""
+      ]
+    },
+    "legacy-id": {
+      "role": "published_roadmap_alias",
+      "value": "MAP-02"
+    },
+    "priority": {
+      "role": "priority_at_roadmap_authoring",
+      "value": "P2"
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:task:mobile-roadmap-collector-global-discovery"
+    ]
+  }
+}
