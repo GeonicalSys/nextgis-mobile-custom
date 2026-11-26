@@ -1,6 +1,7 @@
 {
   "schema_version": 1,
   "isolated_methods": [
+    "com.nextgis.mobile.reliability.DefaultBasemapStartupTest",
     "com.nextgis.mobile.reliability.NGIDLoginDiagnosticsNativeTest",
     "com.nextgis.mobile.rendering.ScriptNoticeDialogTest",
     "com.nextgis.mobile.rendering.MvtCommittedFreshnessTest",
@@ -73,6 +74,7 @@
     "com.nextgis.mobile.rendering.DirectVectorTilesOfflineTest"
   ],
   "emulator": [
+    "com.nextgis.mobile.reliability.DefaultBasemapStartupTest",
     "com.nextgis.mobile.util.DiagnosticArtifactsNativeTest",
     "com.nextgis.mobile.reliability.ChangesCentreNativeTest",
     "com.nextgis.mobile.reliability.ProjectRecoveryNativeTest",
@@ -142,6 +144,7 @@
     "underlay-migration": ["com.nextgis.mobile.util.LegacyUnderlayProgressNativeTest"]
   },
   "areas": {
+    "startup-basemap": ["com.nextgis.mobile.reliability.DefaultBasemapStartupTest"],
     "night-auth": ["com.nextgis.mobile.reliability.NGIDLoginDiagnosticsNativeTest", "com.nextgis.mobile.reliability.NGIDLoginTest"],
     "night-script": ["com.nextgis.mobile.rendering.ScriptNoticeDialogTest", "com.nextgis.mobile.reliability.ProjectScriptsTest#formSelectionDraftPinAndSaveDecisionUseActualControls"],
     "night-mvt": ["com.nextgis.mobile.rendering.MvtCommittedFreshnessTest"],

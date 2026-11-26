@@ -37,7 +37,9 @@
         "| NGW resource UI и batch import | [collector-project-setup.md](../runbooks/collector-project-setup.md) | `SelectNGWResourceActivity`, `NGWResourcesListAdapter`, `LayerFillProgressDialogFragment` |",
         "| Прямой импорт NGW vector/raster по URL и read-only permissions | [ngw-sync-and-storage.md](../architecture/ngw-sync-and-storage.md) | `NGWResourceUrl`, `ResourceGroup`, `NGWResourceImportHelper`, `MainActivity` |",
         "| Локальные редактируемые vector layers и GeoJSON/KML/GPX WGS 84 | module packs `maplib`/`maplibui`/`app`, `INV-LOCAL-VECTOR-LAYERS` | `VectorLayer`, `GeoJSONUtil`, `CoordinatePointParser`, `LayerFillService` |",
-        "| Config из NGW description и `SYNC_NONE` | [settings-and-config.md](settings-and-config.md), [collector-projects.md](../architecture/collector-projects.md) | `NgwLayerConfigAdapter`, sync classes |"
+        "| Config из NGW description и `SYNC_NONE` | [settings-and-config.md](settings-and-config.md), [collector-projects.md](../architecture/collector-projects.md) | `NgwLayerConfigAdapter`, sync classes |",
+        "| История полевых слоёв ЛИСЫ, guided review прежних созданий и серверные transaction receipts | [ngw-sync-and-storage.md](../architecture/ngw-sync-and-storage.md), [инструкция синхронизации](../guides/project-synchronization-user-guide.md) | NGWVectorLayer, LisaHistoryFields, NgwFeatureData, NgwFeatureTransaction, UploadTransactionJournal, ChangesCentreActivity; только доказанный target, local differences сохранены |",
+        "| Подготовка встроенного OSM без блокировки main при первом запуске | [автотесты](../runbooks/automated-tests.md), module pack app | MainApplication, DefaultBasemapInitializer, DefaultBasemapStartupTest; original-map/layer identity и LAYER_FILL lease |"
       ]
     }
   },

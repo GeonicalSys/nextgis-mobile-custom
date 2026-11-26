@@ -48,7 +48,6 @@ import com.nextgis.maplib.map.VectorLayer;
 import com.nextgis.maplib.util.AccountUtil;
 import com.nextgis.maplib.util.Constants;
 import com.nextgis.maplib.util.GeoConstants;
-import com.nextgis.maplib.util.NGException;
 import com.nextgis.maplib.util.NGWUtil;
 import com.nextgis.maplib.util.NetworkUtil;
 import com.nextgis.maplib.util.SettingsConstants;
@@ -65,6 +64,7 @@ import com.nextgis.mobile.util.LegacyUnderlayMigrationContract;
 import com.nextgis.mobile.util.Logger;
 import com.nextgis.mobile.util.OfflineSyncIntentService;
 import com.nextgis.mobile.util.SyncRecoveryJournal;
+import com.nextgis.mobile.util.DefaultBasemapInitializer;
 
 import java.io.File;
 import java.io.IOException;
@@ -95,6 +95,11 @@ public class MainApplication extends GISApplication
     public static final String LAYER_TRACKS = "tracks";
     private com.nextgis.mobile.location.BackgroundLocationController backgroundLocationController;
     private com.nextgis.mobile.stakeout.SharedStakeoutSession stakeoutSession;
+    private final DefaultBasemapInitializer defaultBasemapInitializer = new DefaultBasemapInitializer();
+
+    public DefaultBasemapInitializer getDefaultBasemapInitializer() {
+        return defaultBasemapInitializer;
+    }
 
     @androidx.annotation.MainThread
     public com.nextgis.mobile.stakeout.SharedStakeoutSession getStakeoutSession() {
@@ -516,16 +521,8 @@ public class MainApplication extends GISApplication
         mMap.addLayer(layer);
         mMap.moveLayer(0, layer);
 
-        new Handler(Looper.getMainLooper()).post(() -> {
-            try {
-                layer.fillFromZip(
-                        Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.mapnik),
-                        null);
-            } catch (IOException | NGException | RuntimeException e) {
-                HyperLog.w(Constants.TAG, "Cannot initialize default OSM layer: "
-                        + e.getMessage(), e);
-            }
-        });
+        defaultBasemapInitializer.initialize(this, mMap, layer,
+                Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.mapnik));
         return true;
     }
 

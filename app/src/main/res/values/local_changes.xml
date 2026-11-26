@@ -69,4 +69,21 @@
     <string name="changes_release_done">Review is complete. Delivery is allowed for this copy.</string>
     <string name="changes_source_paused">Delivery uses another recovered copy. Synchronisation of this project is paused to prevent duplicates. Its data is kept. Continue working in the copy selected for delivery.</string>
     <string name="changes_sibling_acknowledged">The server has already acknowledged this creation in another project copy. Refresh the list and verify it against the server ID before allowing delivery.</string>
+    <string name="changes_reason_legacy">This change was saved by an older app without an upload receipt. Review its server identity before sending it.</string>
+    <string name="changes_legacy_review_message">Your saved point will remain on this device. The old app did not record the result of every upload. Select its existing server copy, or confirm that this point has never been sent. Similar data alone does not establish its identity.</string>
+    <string name="changes_creation_review_message">Your saved point will remain on this device. If the server already received it, select that copy to finish confirmation without creating another point.</string>
+    <string name="changes_candidates_found">These server objects have matching submitted fields and geometry. Select one only after confirming that it is the same point.</string>
+    <string name="changes_candidates_empty">No matching objects were found in the available selection. This does not prove that the point was never sent: an object may have changed or may not be visible to this account.</string>
+    <string name="changes_candidates_unavailable">The server selection could not be checked. You can review the server manually and enter the known object ID. Your point and queue are unchanged.</string>
+    <string name="changes_candidates_truncated">The selection is limited. Other objects may exist; you can enter a known server ID manually.</string>
+    <string name="changes_verify_candidate">Confirm server object</string>
+    <string name="changes_candidate_id">Confirm: this is server object %1$d</string>
+    <string name="changes_manual_id">Enter server ID</string>
+    <string name="changes_confirm_never_sent">This point was never sent</string>
+    <string name="changes_reason_transaction_rejected">The server rejected this attempt. Correct the data, then review the saved change before starting a new attempt.</string>
+    <string name="changes_link_existing">Confirm the point identity</string>
+    <string name="changes_link_existing_message">The saved data does not match the current server copy. Continue only if server object %1$d is this same real point. Your current local fields, geometry and photos will remain; local differences will be queued as an update to the selected object. A new point will not be created. Another local point with this ID will not be overwritten.</string>
+    <string name="changes_link_keep_local">Link and keep my data</string>
+    <string name="changes_linked_keep_local">The point is linked. Your local changes are retained and queued as an update.</string>
+    <string name="changes_server_commit_known">The server has already confirmed creation. Finish confirmation using its object ID; creating another point is disabled.</string>
 </resources>

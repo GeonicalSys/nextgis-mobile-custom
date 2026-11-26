@@ -39,11 +39,22 @@
       "value": {
         "repository": "root",
         "path": "app/src/main/res/values-ru/local_changes.xml",
-        "purpose": "Russian uncertainty/repeat warnings and explicit single-copy choice with source sync pause and data preservation; active work continues.",
+        "purpose": "Russian uncertainty/repeat warnings and explicit single-copy choice with source sync pause and data preservation; active work continues. Release229 review2026-11-26: Russian copy explains legacy226 outcome uncertainty, bounded candidate hints, manual ID and explicit never-sent review; similarity/empty result is not identity/absence proof. Link confirmation explicitly preserves current local fields/geometry/photos as a later update and refuses replacing another local target ID. Positive committed proof copy directs the user to finish the known server creation. Existing captions/recovery/permissions messages remain. Copy review does not certify native rendering or Full acceptance. Prior reviewed pin a9d314e73275d693b48788003de7db82d01c149eef01ef6fee47bf68f1e567be is retained here.",
         "contract_ids": [
           "UI-CHANGES-CENTRE"
         ],
-        "sha256": "a9d314e73275d693b48788003de7db82d01c149eef01ef6fee47bf68f1e567be"
+        "sha256": "6c0a9648b42122a6dd8510d0e096e905486360e378397476257558513bad0565"
+      }
+    },
+    "review-20261126-release229": {
+      "role": "semantic_review_and_preserved_consumers",
+      "value": {
+        "prior_sha256": "a9d314e73275d693b48788003de7db82d01c149eef01ef6fee47bf68f1e567be",
+        "reviewed_sha256": "6c0a9648b42122a6dd8510d0e096e905486360e378397476257558513bad0565",
+        "review": "Release229 review2026-11-26: Russian copy explains legacy226 outcome uncertainty, bounded candidate hints, manual ID and explicit never-sent review; similarity/empty result is not identity/absence proof. Link confirmation explicitly preserves current local fields/geometry/photos as a later update and refuses replacing another local target ID. Positive committed proof copy directs the user to finish the known server creation. Existing captions/recovery/permissions messages remain. Copy review does not certify native rendering or Full acceptance.",
+        "runtime": "NOT_RUN_FOR_THIS_REVIEW",
+        "full": "NOT_RUN",
+        "publication": "pending"
       }
     }
   },

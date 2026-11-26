@@ -51,6 +51,18 @@ related_code:
   - app/src/test/java/com/nextgis/mobile/util/SyncJournalCommitTest.java
   - maplib/src/test/java/com/nextgis/maplib/reliability/SyncWorkspaceIsolationTest.java
   - app/src/main/res/xml/syncadapter.xml
+  - maplib/src/main/java/com/nextgis/maplib/util/LisaHistoryFields.java
+  - maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureData.java
+  - maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureTransaction.java
+  - maplib/src/main/java/com/nextgis/maplib/util/UploadTransactionJournal.java
+  - maplib/src/test/java/com/nextgis/maplib/map/NGWVectorLayerHistoryFieldsTest.java
+  - maplib/src/test/java/com/nextgis/maplib/map/NGWVectorLayerUploadAckTest.java
+  - maplib/src/test/java/com/nextgis/maplib/util/NgwFeatureDataTest.java
+  - maplib/src/test/java/com/nextgis/maplib/util/NgwFeatureTransactionTest.java
+  - maplib/src/test/java/com/nextgis/maplib/util/UploadTransactionJournalTest.java
+  - app/src/main/java/com/nextgis/mobile/activity/ChangesCentreActivity.kt
+  - app/src/androidTest/java/com/nextgis/mobile/reliability/ChangesCentreNativeTest.java
+  - app/src/androidTest/java/com/nextgis/mobile/reliability/LocalChangesUploadTest.java
 ---
 
 # NGW sync, локальное хранение и восстановление
@@ -390,6 +402,16 @@ Account summary сохраняет отдельный legacy account clock по�
 ProjectSyncDisplayNativeTest (реальный drawer в background scope),
 LocalChangesUploadTest (сохранённая линия, offline/503 retry, edit/delete,
 TEMP Save и равные layer paths разных проектов; только isolated emulator/loopback).
+
+Для 229 дополнительно покрываются NGWVectorLayerHistoryFieldsTest и
+NGWVectorLayerUploadAckTest, NgwFeatureDataTest, NgwFeatureTransactionTest,
+UploadTransactionJournalTest. Проверки различают legacy226 без квитанции, old4/7
+schema, frozen Mercator geometry, typed payload, потерянный commit/GET и известный
+FID; проверяют сохранение local differences и отказ при target-ID collision.
+ChangesCentreNativeTest проверяет реальные guided-review controls; LocalChangesUploadTest
+проверяет настоящие HTTP POST/PUT/transaction, restart/ACK и неизменность SQLite.
+Их адресные результаты и предыдущие неуспешные startup попытки хранятся отдельно;
+перечень сценариев сам по себе не доказывает выполненную native или выпускную приёмку.
 
 Перед ручным запуском `LayersFragment` проверяет `NetworkUtil.isNetworkAvailable`.
 При отсутствии активного connected network он показывает «Отсутствует подключение
@@ -969,6 +991,63 @@ Feature CRUD и его outbox используют одну owning-map SQLite т
 `FeatureSaveJournal` — отдельная локальная таблица UUID/id без изменения NGW
 protocol/schema. Form retry использует UUID и карту; перенос server feature id
 переносит соответствующий journal owner.
+
+### Служебная история ЛИСЫ и серверная транзакция создания
+
+Подготовка 3.1.2.35/229: сервер владеет полями created_at/created_by,
+updated_at/updated_by, deleted_at/deleted_by и deletion_operation_id.
+LisaHistoryFields разрешает исключить их из HTTP payload только после свежего
+GET metadata исходного ресурса: точные account/server/resource, cls=postgis_layer,
+schema=dynamic, таблица из ограниченного списка Desktop history migration и
+правильные типы каждого присутствующего служебного поля. Требуется хотя бы одно
+такое поле. Одних локальных имён, description или сохранённого config недостаточно.
+Старая локальная схема с четырьмя полями и новая с семью могут получить proof;
+добавлять отсутствующие столбцы или перезагружать слой перед отправкой не требуется.
+Proof не сохраняется в JSON, сверяется с текущей целью и очищается после прохода.
+Локальная SQLite история остаётся без изменений. Бизнес-атрибуты, NULL и обычные
+числовые нули сохраняют прежние правила сериализации; generic NULL-to-zero не менялся.
+
+До HTTP создания снимок payload, граница очереди и durable transaction opt-in
+сохраняются атомарно. Для явно разрешённого после сверки создания в проверенном
+слое ЛИСЫ на NGW >= 5 NgwFeatureTransaction использует feature transaction API.
+UploadTransactionJournal связывает UUID, слой, исходный target, SHA payload,
+типизацию полей, CRS ресурса, transaction ID, commit_started, результат и FID.
+Этот opt-in не задним числом доказывает исход прежней отправки версии 226.
+Снимок геометрии берётся из SQLite в Web Mercator, независимо от mCRS слоя.
+Подготовка переводит его в CRS ресурса через geom_transform только при различии CRS;
+проверяются конечная 2D геометрия и сохранение структуры. Типизированные DATE/TIME/
+DATETIME переводятся в ISO, BOOLEAN 0/1 — в boolean; неверные значения останавливают
+подготовку. Пустые бизнес-строки не превращаются в NULL или числовой 0.
+
+До отправки commit durable записывается commit_started. После этой границы
+автоматическое продолжение читает результат GET по тому же transaction ID и
+принимает только проверенный результат feature.create sequence 0 с целым FID.
+NotCommitted/404 после попытки commit не доказывают отсутствие записи во внешнем
+PostGIS: создание сохраняет неопределённый исход для явной сверки, commit и обычный
+POST автоматически не повторяются. Положительное сохранённое подтверждение commit
+отключает действие «Эту точку ещё не отправляли» даже при недоступном GET результата.
+Известный transaction FID предлагается прежде поиска похожих объектов, и привязка
+к другому FID запрещена. Подтверждённый ответ продолжает recoverable ACK/remap;
+поздние локальные правки не входят в замороженную границу ACK.
+
+Старое создание без квитанции остаётся для guided review. Ограниченный GET ищет
+до 51 кандидата/2 MiB; до 50 точных совпадений отправленных полей и геометрии служат
+подсказкой, но не доказывают идентичность. Пустая выборка также не означает never-sent.
+Если текущие данные отличаются, только явное подтверждение оператора вызывает
+linkReviewedCreation: HTTP GET выполняется до SQLite transaction; затем повторно
+проверяются receipt, target/account, очередь, тип геометрии и отсутствие локальной
+целевой строки, очереди, вложений и каталога с server ID. Коллизия не сливается.
+ACCEPTED и отдельная свежая CHANGED identity сохраняются до ACK/remap, поэтому
+текущие поля, геометрия, фотографии и поздние изменения остаются для обычного UPDATE.
+Сходство и наличие одноимённого фото не заменяют ручную проверку старого вложения.
+Типизированные причины HTTP/операций, Save/TEMP/NOT_SYNC, workspace/recovery и
+readonly guards сохраняются; подтверждение всего проекта по-прежнему отдельное.
+Выпускная проверка 229 ещё ожидается; описание контракта не является Full PASS.
+
+Слой без привязанной учётной записи остаётся доступен в проекте. Список
+слоёв учётной записи его пропускает. Векторный слой сохраняет локальную
+очередь и пропускает прямой обмен. Условие удалённой записи также исключает
+слой из фоновой отправки, сохраняя его локальные права редактирования.
 
 ZIP format2 хранит owning map_path, features/changes/attachments row dumps и
 локальные attachment files. JSON rows пишутся последовательно из согласованного

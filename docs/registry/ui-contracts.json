@@ -3777,7 +3777,7 @@
         "row.action"
       ],
       "forbids": [],
-      "sha256": "c961baa33cb6c4117f389322912f6f2d0d1043eca9aef8d61e8262d5b82b96b6"
+      "sha256": "71434fa4047741b955fe1eb321e0f0734e73888e8563639133cd71c3a787a7bd"
     },
     {
       "id": "WF-CHANGES-CENTRE-ACTIONS",
@@ -3847,6 +3847,24 @@
       ],
       "forbids": [],
       "sha256": "7875a3757e85b60089748e6305bf31a9bf529aff89925453acf11d02b44706a4"
+    },
+    {
+      "id": "WF-PROJECT-RECOVERY-CONFIRMATION",
+      "repository": "root",
+      "path": "app/src/main/java/com/nextgis/mobile/activity/ProjectRecoveryActivity.kt",
+      "marker": "private fun confirmRestore(file: File)",
+      "requires": [
+        "if (!canChangeProject()) return",
+        "CollectorProjectRegistry.getActiveProject(this)",
+        "restoreConfirmationOpen = true",
+        ".setOnDismissListener",
+        "restoreConfirmationOpen = false",
+        "handler.post",
+        "!isDestroyed && !isFinishing",
+        ".setPositiveButton(android.R.string.ok) { _, _ -> restore(file, project) }"
+      ],
+      "forbids": [],
+      "sha256": "336e411777dc9c2a0fba2f539dbfd19e48108f6bc165a3fdc7e04be38fddb95d"
     }
   ],
   "contracts": [
@@ -6504,7 +6522,8 @@
         "Активные запись трека, обход и вынос продолжаются; создание/восстановление ждёт их завершения.",
         "До регистрации проверяются файлы, хеши, account/server/login, схема, пути и место. Исходник не заменяется.",
         "Копия не активируется автоматически и не обменивается до сверки.",
-        "Скопированное удержание формы снимается только после нового полного Save с точным digest очереди; текущие владельцы остаются защищены."
+        "Скопированное удержание формы снимается только после нового полного Save с точным digest очереди; текущие владельцы остаются защищены.",
+        "Пока открыто подтверждение восстановления, refresh списка откладывается; положительная кнопка входит в прежнюю операцию до отложенного refresh при закрытии окна."
       ],
       "saved_state": "Экспортная identity сохраняется при пересоздании Activity. Копия имеет свой UID, происхождение, HOLD и baseline полных сохранений. Общая история треков и незаконченная глобальная форма не объявляются частью архива проекта.",
       "source_ids": [
@@ -6512,12 +6531,14 @@
         "WF-PROJECT-RECOVERY-RESTORE",
         "WF-RECOVERED-FORM-COMPLETION",
         "WF-FORM-DRAFT-STORE",
-        "WF-FORM-SAVE"
+        "WF-FORM-SAVE",
+        "WF-PROJECT-RECOVERY-CONFIRMATION"
       ],
       "expectations": [
         "Офлайн копия сохраняет объекты, геометрию, фото/файлы; исходник и active UID прежние.",
         "Подмена, повреждение и нехватка места не меняют рабочий проект.",
-        "Частичный Save фото не разрешает очередь; новый полный Save не снимает удержания соседней формы."
+        "Частичный Save фото не разрешает очередь; новый полный Save не снимает удержания соседней формы.",
+        "Фоновое обновление списка во время подтверждения не превращает положительный ответ в отсутствие операции; Cancel не создаёт копию, lifecycle и active-work guards сохраняются."
       ]
     }
   ],
@@ -7900,11 +7921,11 @@
     {
       "repository": "root",
       "path": "app/build.gradle",
-      "purpose": "Effective Lisa/Belka brand declarations and absence of custom sourceSets rerouting for the reviewed shared main UI. Reviewed 2026-11-01: only production version constants change to 3.1.2.31/225; sourceSets, IDs and UI bindings are unchanged. Reviewed 2026-11-10: Release 3.1.2.32/226 and a Release-only client.id check; sourceSets, brand/package/provider identities and UI bindings are unchanged. Review 2026-11-14: mandatory Release private inputs, empty Debug telemetry, isolated Release exclusion and source version 227/3.1.2.33. Brand/application/account/provider IDs and sourceSets retain shared UI bindings. Signed production positive acceptance and publication NOT_RUN.",
+      "purpose": "Effective Lisa/Belka brand declarations and absence of custom sourceSets rerouting for the reviewed shared main UI. Reviewed 2026-11-01: only production version constants change to 3.1.2.31/225; sourceSets, IDs and UI bindings are unchanged. Reviewed 2026-11-10: Release 3.1.2.32/226 and a Release-only client.id check; sourceSets, brand/package/provider identities and UI bindings are unchanged. Review 2026-11-14: mandatory Release private inputs, empty Debug telemetry, isolated Release exclusion and source version 227/3.1.2.33. Brand/application/account/provider IDs and sourceSets retain shared UI bindings. Signed production positive acceptance and publication NOT_RUN. Review 2026-11-26: only production version constants change from227/3.1.2.33 to228/3.1.2.34. Debug218/3.1.2.23, sourceSets, branding, package/account/provider identities and shared UI bindings are unchanged. Prior reviewed source pin d153dd54aff3d7e0c0838e27ebbb8fdbc8b0007fcfc9a13184fb206aa88973b7 is retained here. This is source preservation review, not Full runtime or publication acceptance. Release229 review2026-11-26: only production version constants advance from228/3.1.2.34 to229/3.1.2.35 so the locally distributed228 can update. Debug218/3.1.2.23, sourceSets, Lisa/Belka branding, package/provider/account IDs, production input guards and isolated verification behavior remain unchanged. Current229 native/publication acceptance is pending; this pin proves bounded source review only. Prior reviewed pin c4e376a6c0f72a8bfc7fc48af106c79b1388c7f3ae359bf7548beacc1bd89654 is retained here.",
       "contract_ids": [
         "UI-SETTINGS-MAP-STORAGE-MOVE"
       ],
-      "sha256": "d153dd54aff3d7e0c0838e27ebbb8fdbc8b0007fcfc9a13184fb206aa88973b7"
+      "sha256": "ce565791da25c199739c998c134215d12da9a9b1c43e151760d9cb5f66218205"
     },
     {
       "repository": "root",
@@ -7992,13 +8013,13 @@
     {
       "repository": "maplib",
       "path": "build.gradle",
-      "purpose": "Reviewed declared org.locationtech.jts:jts-core:1.20.0 dependency, whose IndexedFacetDistance contract defines planar target-facet and polygon-boundary selection. Reviewed 2026-11-01: only release diagnostic version changes to 3.1.2.31; JTS dependency and target geometry semantics are unchanged. Declaration is not proof of installed JAR/APK/native acceptance. Reviewed 2026-11-10: only the Release diagnostic version changes to 3.1.2.32; JTS 1.20.0, OpenGL and target geometry are unchanged. Reviewed 2026-11-14: subtracting only the Release diagnostic version 3.1.2.33 reproduces the exact previous reviewed file hash. JTS 1.20.0, OpenGL and target geometry semantics are unchanged. This is source preservation, not native target acceptance.",
+      "purpose": "Reviewed declared org.locationtech.jts:jts-core:1.20.0 dependency, whose IndexedFacetDistance contract defines planar target-facet and polygon-boundary selection. Reviewed 2026-11-01: only release diagnostic version changes to 3.1.2.31; JTS dependency and target geometry semantics are unchanged. Declaration is not proof of installed JAR/APK/native acceptance. Reviewed 2026-11-10: only the Release diagnostic version changes to 3.1.2.32; JTS 1.20.0, OpenGL and target geometry are unchanged. Reviewed 2026-11-14: subtracting only the Release diagnostic version 3.1.2.33 reproduces the exact previous reviewed file hash. JTS 1.20.0, OpenGL and target geometry semantics are unchanged. This is source preservation, not native target acceptance. Review 2026-11-26: only the Release diagnostic version changes from3.1.2.33 to3.1.2.34. Debug3.1.2.23, JTS1.20.0, explicit OpenGL dependency and navigation target geometry semantics remain unchanged. Prior reviewed source pin 844aed1d6a4ecfe42e9802d7d4919f85dc031f3c20ba96ec543b1971ada746fc is retained here. This is source preservation review, not native target or Full publication acceptance. Release229 review2026-11-26: only the Release diagnostic version advances from3.1.2.34 to3.1.2.35. Debug3.1.2.23, JTS1.20.0, OpenGL dependency and navigation target geometry contracts remain unchanged. This is source preservation, not physical/render/native/Full acceptance. Prior reviewed pin 092c5da048f3334ab1c41278d2f01d9fdaf99ac83e9a129e6b55476020d65f45 is retained here.",
       "contract_ids": [
         "UI-NAVIGATION-STAKEOUT-TARGET",
         "UI-NAVIGATION-AZIMUTH-CURRENT",
         "UI-NAVIGATION-AZIMUTH-TWO-POINTS"
       ],
-      "sha256": "844aed1d6a4ecfe42e9802d7d4919f85dc031f3c20ba96ec543b1971ada746fc"
+      "sha256": "ee266c2bf2570b749a9774a8a39b56ce64a4a29c7d243267759f0b930b214701"
     },
     {
       "repository": "maplib",
@@ -8160,12 +8181,12 @@
     {
       "repository": "maplib",
       "path": "src/main/java/com/nextgis/maplib/map/NGWVectorLayer.java",
-      "purpose": "Manually reviewed typed HTTP provenance fields and positively classified PULL/PUSH/lookup/initial-import origin sites. Whole-file drift catches producer changes outside the bounded UI-method guards; it does not claim all layer behavior/native correctness reviewed. Review 2026-11-14: typed HTTP provenance retained. Immutable operation ACK/remap and recovery delivery-owner gates preserve pending data. Push-only is not full sync. Targeted receipts have separate scope, without universal NGW runtime acceptance. REL-03 review 2026-11-15: only full streamed snapshot staging/ID planning/backup/apply budgets and bounded64KiB error body changed. Existing HttpErrorDetails origin/status assignment, explicit206 early refusal, SyncResult classification and edit-policy method remain unchanged. LimitException is non-transient; IO failures preserve queue and original SQLite transaction. The bounded body may omit diagnostics beyond64KiB; no payload is logged. Prior whole-file pin d9216da0a2dc7685f1b7e98aa606eaccfcecab8decd089e0fccbdea993fc0e5b retained here; new pin scopes reviewed drift only, not universal runtime correctness.",
+      "purpose": "Manually reviewed typed HTTP provenance fields and positively classified PULL/PUSH/lookup/initial-import origin sites. Whole-file drift catches producer changes outside the bounded UI-method guards; it does not claim all layer behavior/native correctness reviewed. Review 2026-11-14: typed HTTP provenance retained. Immutable operation ACK/remap and recovery delivery-owner gates preserve pending data. Push-only is not full sync. Targeted receipts have separate scope, without universal NGW runtime acceptance. REL-03 review 2026-11-15: only full streamed snapshot staging/ID planning/backup/apply budgets and bounded64KiB error body changed. Existing HttpErrorDetails origin/status assignment, explicit206 early refusal, SyncResult classification and edit-policy method remain unchanged. LimitException is non-transient; IO failures preserve queue and original SQLite transaction. The bounded body may omit diagnostics beyond64KiB; no payload is logged. Prior whole-file pin d9216da0a2dc7685f1b7e98aa606eaccfcecab8decd089e0fccbdea993fc0e5b retained here; new pin scopes reviewed drift only, not universal runtime correctness. Review 2026-11-26: fresh authoritative metadata GET proves the target-bound LISA PostGIS source before omitting only server-owned history fields; compatible legacy four-field and seven-field local schemas are eligible. The proof is transient, invalidated by account/resource changes and JSON reload, preserved only with authoritative config identity, and cleared after each send pass. Generic numeric SQL NULL-to-zero conversion is unchanged. Typed HTTP origin/status/operation classification, queue/error guards and unknown503 holds remain; unknown outcomes are not automatically resubmitted. Reconciliation ignores only verified history on copies while retaining frozen receipt bytes, business attributes and geometry. Prior reviewed source pin ef02b25d528b97396a47a25c3f8178e8b5aeeada084756474bdef3f454fcd576 is retained here. This review is bounded source preservation; targeted evidence is separate and does not claim Full runtime or publication PASS. Release229 review2026-11-26: fresh metadata proves exact account/server/resource/dynamic PostGIS table and every present typed history field before omission; legacy compatible local fields only permit that GET. Existing generic numeric NULL-to-zero rules and frozen receipts remain unchanged. New reviewed creations may reserve a target/payload-bound NGW>=5 transaction; SQLite snapshot geometry is explicitly Mercator, transformed to resource CRS only in preparation with structure/type checks. Durable commit_started permits automatic GET result recovery only, never automatic repeated commit/feature POST after the external PostGIS uncertainty window. A known transaction FID is offered first and forbids rebinding to another FID; positive committed proof disables never-sent even if result lookup is unavailable. Candidate equality/absence never proves identity. Explicit GET-reviewed link rechecks current target/receipt/geometry/queue, refuses destination row/queue/files/attachment collisions and durably adds a fresh CHANGED identity before recoverable ACK/remap, preserving local fields/geometry/photos/late edits. Existing HTTP origin/status/operation reporting, Save/TEMP/NOT_SYNC and recovery/workspace guards remain; this source review is not universal runtime or publication PASS. Prior reviewed pin e31a9a3f7c044a872fcbf027945bd9749a22d38fa231200f3c0e42b2ff2f451c is retained here. Review 2026-11-26: an unbound layer remains visible and retains local editing policy and queued edits. Only remote admission changes: account traversal omits the layer, a direct sync or upload stops before account lookup, and the read-only remote destination predicate excludes it from background upload. The earlier typed HTTP and transaction proof applies to layers with assigned accounts. Prior pin 0a2eb807127774a1f9b8e24539e6e749cccd9a7fafd4db9c06f9b4a6d1f73a94 retained.",
       "contract_ids": [
         "UI-SYNC-FAILURE-MESSAGES",
         "UI-LAYER-IMPORT-ERROR-MESSAGES"
       ],
-      "sha256": "ef02b25d528b97396a47a25c3f8178e8b5aeeada084756474bdef3f454fcd576"
+      "sha256": "5cf5a5d9a8005887b5e75a5f66e703a2142cdd92a5c31825db0b38e1df38a7ea"
     },
     {
       "repository": "maplib",
@@ -8536,11 +8557,11 @@
     {
       "repository": "root",
       "path": "app/src/main/res/values-ru/local_changes.xml",
-      "purpose": "Russian uncertainty/repeat warnings and explicit single-copy choice with source sync pause and data preservation; active work continues.",
+      "purpose": "Russian uncertainty/repeat warnings and explicit single-copy choice with source sync pause and data preservation; active work continues. Release229 review2026-11-26: Russian copy explains legacy226 outcome uncertainty, bounded candidate hints, manual ID and explicit never-sent review; similarity/empty result is not identity/absence proof. Link confirmation explicitly preserves current local fields/geometry/photos as a later update and refuses replacing another local target ID. Positive committed proof copy directs the user to finish the known server creation. Existing captions/recovery/permissions messages remain. Copy review does not certify native rendering or Full acceptance. Prior reviewed pin a9d314e73275d693b48788003de7db82d01c149eef01ef6fee47bf68f1e567be is retained here.",
       "contract_ids": [
         "UI-CHANGES-CENTRE"
       ],
-      "sha256": "a9d314e73275d693b48788003de7db82d01c149eef01ef6fee47bf68f1e567be"
+      "sha256": "6c0a9648b42122a6dd8510d0e096e905486360e378397476257558513bad0565"
     },
     {
       "repository": "root",

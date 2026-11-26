@@ -21,6 +21,9 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.*;
 import org.json.JSONObject;
@@ -268,7 +271,30 @@ public class ProjectRecoveryNativeTest {
                     }
                     assertTrue("The created archive must offer restoration",clicked);
                 });
-                confirmDialog();deadline=SystemClock.uptimeMillis()+30000;CollectorProjectRegistry.ProjectInfo copy=null;
+                CountDownLatch readerEntered=new CountDownLatch(1),releaseReader=new CountDownLatch(1);
+                try {
+                    scenario.onActivity(activity->{
+                        try {
+                            java.lang.reflect.Field field=ProjectRecoveryActivity.class.getDeclaredField("executor");
+                            field.setAccessible(true);
+                            ((ExecutorService)field.get(activity)).execute(()->{
+                                readerEntered.countDown();
+                                try {releaseReader.await();}
+                                catch(InterruptedException interrupted) {Thread.currentThread().interrupt();}
+                            });
+                        }catch(ReflectiveOperationException error) {throw new AssertionError(error);}
+                    });
+                    assertTrue("The real recovery reader must be held before relisting",readerEntered.await(5,TimeUnit.SECONDS));
+                    // A real relist cannot finish before the user confirms the open restore dialog.
+                    scenario.onActivity(activity->{
+                        try {
+                            java.lang.reflect.Method refresh=ProjectRecoveryActivity.class.getDeclaredMethod("refresh");
+                            refresh.setAccessible(true);refresh.invoke(activity);
+                        }catch(ReflectiveOperationException error) {throw new AssertionError(error);}
+                    });
+                    confirmDialog();
+                }finally {releaseReader.countDown();}
+                deadline=SystemClock.uptimeMillis()+30000;CollectorProjectRegistry.ProjectInfo copy=null;
                 while(copy==null&&SystemClock.uptimeMillis()<deadline) {
                     for(CollectorProjectRegistry.ProjectInfo info:CollectorProjectRegistry.listProjects(app))if(!projects.contains(info.getProjectUid()))copy=info;
                     if(copy==null)Thread.sleep(50);

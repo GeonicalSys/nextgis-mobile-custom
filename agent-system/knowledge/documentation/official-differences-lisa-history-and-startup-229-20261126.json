@@ -1,0 +1,80 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:official-differences-lisa-history-and-startup-229-20261126",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:documentation-official-differences"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Retain the dated comparison or verification at its original source span."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "docs/reference/official-differences.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## История полевых слоёв и первый запуск — подготовка 3.1.2.35/229",
+        "",
+        "26.11.2026 в форке ЛИСА/Белка подготовлены изменения отправки полевых правок.",
+        "LisaHistoryFields проверяет свежую metadata исходного PostGIS ресурса ЛИСЫ и",
+        "исключает только подтверждённые служебные поля истории из отправляемых данных.",
+        "Совместимы прежний локальный набор из четырёх полей и новый из семи; SQLite",
+        "история, бизнес-значения и обычные numeric NULL-to-zero правила сохраняются.",
+        "",
+        "Создания прежней версии 226 без квитанции остаются для явной сверки. Ограниченный",
+        "поиск совпадений помогает выбрать существующий серверный объект, но сходство",
+        "или отсутствие совпадений не определяет идентичность автоматически.",
+        "При явной привязке к проверенному объекту локальные поля, геометрия и фотографии",
+        "сохраняются, отдельная CHANGED identity удерживает их для UPDATE; локальная",
+        "коллизия server ID останавливает привязку без автоматического объединения.",
+        "",
+        "Для явно разрешённого после сверки создания в подтверждённом слое ЛИСЫ NGW >= 5",
+        "новый UploadTransactionJournal сохраняет серверную transaction identity до commit.",
+        "Снимок SQLite геометрии явно Mercator, подготовка учитывает CRS ресурса и типы полей.",
+        "После durable commit_started автоматическое восстановление только читает результат",
+        "этой же операции. NotCommitted после внешней записи PostGIS не доказывает её отсутствие.",
+        "Положительное сохранённое commit-подтверждение запрещает новое создание;",
+        "известный FID используется прежде поиска кандидатов. Прежние неизвестные фото",
+        "проверяются отдельно; гарантии автоматической миграции старых исходов не заявляются.",
+        "",
+        "MainApplication передаёт реальный встроенный ZIP с 1436 entries в background worker.",
+        "DefaultBasemapInitializer публикует результат только в исходные map/layer при",
+        "LAYER_FILL lease, сохраняя скрытый нижний OSM, URL и имеющиеся tiles.",
+        "Native cold-start oracle проверяет настоящий ресурс и heartbeat main без preseed.",
+        "",
+        "Это ограниченное описание исходников подготовленного 229, а не результат живого",
+        "NGW, телефона, Full или публикации. Текущая 229 emulator-only приёмка ещё ожидается;",
+        "прошлые неуспешные попытки сохраняются. Подробные границы находятся в",
+        "[архитектуре синхронизации](../architecture/ngw-sync-and-storage.md) и",
+        "[пользовательской инструкции](../guides/project-synchronization-user-guide.md).",
+        ""
+      ]
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:official-differences-lisa-history-and-startup-229-20261126"
+    ]
+  }
+}

@@ -46,7 +46,18 @@
           "row.action"
         ],
         "forbids": [],
-        "sha256": "c961baa33cb6c4117f389322912f6f2d0d1043eca9aef8d61e8262d5b82b96b6"
+        "sha256": "71434fa4047741b955fe1eb321e0f0734e73888e8563639133cd71c3a787a7bd"
+      }
+    },
+    "review-20261126-release229": {
+      "role": "semantic_review_and_preserved_consumers",
+      "value": {
+        "prior_sha256": "c961baa33cb6c4117f389322912f6f2d0d1043eca9aef8d61e8262d5b82b96b6",
+        "reviewed_sha256": "71434fa4047741b955fe1eb321e0f0734e73888e8563639133cd71c3a787a7bd",
+        "review": "Release229 review2026-11-26: render preserves project/full-clock/delivery-blocked state, rows/attachment captions and action routing; adds the existing explicit review action for a create row with transaction_rejected and SEND. Review producer offers known transaction FID first, distinguishes candidate hints from identity and hides never-sent after positive committed proof. Manual link requires a separate identity decision; known FID, local-difference UPDATE and no-target-collision guards remain in the producer. Existing required fragments and all prior evidence/lifecycle values are retained. Current229 native acceptance remains pending.",
+        "runtime": "NOT_RUN_FOR_THIS_REVIEW",
+        "full": "NOT_RUN",
+        "publication": "pending"
       }
     }
   },

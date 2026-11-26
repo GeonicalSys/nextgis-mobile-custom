@@ -41,6 +41,7 @@ class ProjectRecoveryActivity : AppCompatActivity() {
     @Volatile private var cancelRequested = false
     private var busy = false
     private var loading = false
+    private var restoreConfirmationOpen = false
     private var hasProject = false
     private var observedBusy = false
     private var exportKind: String? = null
@@ -139,7 +140,7 @@ class ProjectRecoveryActivity : AppCompatActivity() {
     }
 
     private fun refresh() {
-        if (busy || loading || isDestroyed) return
+        if (busy || loading || restoreConfirmationOpen || isDestroyed) return
         loading = true
         updateEnabled()
         executor.execute {
@@ -254,9 +255,15 @@ class ProjectRecoveryActivity : AppCompatActivity() {
     private fun confirmRestore(file: File) {
         if (!canChangeProject()) return
         val project = CollectorProjectRegistry.getActiveProject(this) ?: return
+        restoreConfirmationOpen = true
         FittedDialogs.compatBuilder(this).setTitle(R.string.recovery_restore)
             .setMessage(R.string.recovery_restore_confirmation)
             .setNegativeButton(android.R.string.cancel, null)
+            .setOnDismissListener {
+                restoreConfirmationOpen = false
+                // The positive callback must enter the operation before a read-only refresh.
+                handler.post { if (!isDestroyed && !isFinishing) refresh() }
+            }
             .setPositiveButton(android.R.string.ok) { _, _ -> restore(file, project) }.show()
     }
 

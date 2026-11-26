@@ -39,8 +39,8 @@ sentry {
 //apply plugin: 'kotlin-android-extensions'
 //apply plugin: 'kotlin-kapt'
 
-def productionVersionCode = 227
-def productionVersionName = '3.1.2.33'
+def productionVersionCode = 229
+def productionVersionName = '3.1.2.35'
 def debugVersionCode = 218
 def debugVersionName = '3.1.2.23'
 def fieldVerificationChecks = providers.gradleProperty('fieldVerificationChecks')

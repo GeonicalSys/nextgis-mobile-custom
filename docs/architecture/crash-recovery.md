@@ -69,6 +69,16 @@ owning-project очередь даёт подтверждённое время.
 
 Диалоги сохранения, повторной попытки и восстановления используют общие builders `FittedDialogs`. Компоновка сохраняет текст и доступность действий при крупном интерфейсе с закрытой клавиатурой; journal/save/retry callbacks привязаны к прежним кнопкам. Отложенный запрос фонового GPS проверяет состояние Fragment/Activity перед показом окна, а `TrackerService` отменяет запрос у уничтоженного host. Проверка описана в [контракте UI](ui-accessibility.md).
 
+Подготовка 229: открытое подтверждение восстановления удерживает только обновление
+списка архивов. Положительная кнопка напрямую вызывает прежний restore; dismiss
+снимает временный modal flag и ставит refresh в очередь главного потока после
+callback кнопки. Busy/loading, active track/walk/stakeout и project-operation
+проверки сохраняются. Исходник не заменяется, а открытие новой копии остаётся
+отдельным подтверждённым действием. Уничтоженный/закрывающийся host не обновляется.
+Регрессия удерживает executor, вызывает refresh при открытом окне и проверяет
+фактический запуск восстановления после положительного ответа. Новая native
+приёмка ожидается; прежний неуспешный native02 screen result сохранён отдельно.
+
 Explicit [feature type defaults](feature-type-creation.md) survive in the optional
 typed initial_values payload of the geometry v1 journal. Geometry-to-form launch
 checkpoints these fields and stable cascade keys before starting the Activity;

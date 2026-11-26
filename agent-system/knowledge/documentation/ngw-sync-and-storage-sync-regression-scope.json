@@ -36,6 +36,16 @@
         "ProjectSyncDisplayNativeTest (реальный drawer в background scope),",
         "LocalChangesUploadTest (сохранённая линия, offline/503 retry, edit/delete,",
         "TEMP Save и равные layer paths разных проектов; только isolated emulator/loopback).",
+        "",
+        "Для 229 дополнительно покрываются NGWVectorLayerHistoryFieldsTest и",
+        "NGWVectorLayerUploadAckTest, NgwFeatureDataTest, NgwFeatureTransactionTest,",
+        "UploadTransactionJournalTest. Проверки различают legacy226 без квитанции, old4/7",
+        "schema, frozen Mercator geometry, typed payload, потерянный commit/GET и известный",
+        "FID; проверяют сохранение local differences и отказ при target-ID collision.",
+        "ChangesCentreNativeTest проверяет реальные guided-review controls; LocalChangesUploadTest",
+        "проверяет настоящие HTTP POST/PUT/transaction, restart/ACK и неизменность SQLite.",
+        "Их адресные результаты и предыдущие неуспешные startup попытки хранятся отдельно;",
+        "перечень сценариев сам по себе не доказывает выполненную native или выпускную приёмку.",
         ""
       ]
     }
