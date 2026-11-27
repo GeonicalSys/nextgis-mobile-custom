@@ -377,6 +377,26 @@ ProjectRecoveryGuard до Application.onCreate и создания первой 
 Класс изолирован по методам и включён в stationary Related и физическую часть Full;
 старые emulator-only сценарии и системные настройки устройства не меняются.
 
+DefaultBasemapInitializer распаковывает настоящий mapnik.zip с 1436 записями
+на отдельном worker в принадлежащий ему временный каталог. Главный поток
+повторно проверяет исходные map/layer/path/URL/TMS identity, переносит готовые
+верхние каталоги и сохраняет config; распаковка и cleanup остаются на worker.
+ProjectOperationCoordinator LAYER_FILL lease удерживается до cleanup/finally.
+Смена владельца отменяет публикацию; существующий OSM и уже загруженные tiles
+не заменяются. Скрытый нижний OSM, URL и диапазон масштабов сохраняются.
+Readiness ожидается вне main в остатке прежнего startup deadline 30 секунд.
+DefaultBasemapInitializerTest проверяет worker/main, отказ/замену владельца и lease;
+DefaultBasemapStartupTest проверяет реальный холодный ZIP, heartbeat main, tile hash
+и завершённый cleanup, без preseed или обхода production initialization.
+
+Для отдельного DefaultBasemapStartupTest runner после реальных startup callbacks
+запускает наблюдение ещё работающего bootstrap, сохраняя начальную карту и lease.
+Счётчик archiveProgressRevision меняется на callback IProgressor.setValue;
+значение setValue является суммой compressed bytes, а revision не считается числом entry.
+Cold case повторно проверяет dispatch main, монотонный прогресс и завершение
+настоящего ZIP: не более 30 секунд без прогресса и 120 секунд на весь cold test.
+Общий startup barrier 30 секунд для остальных fixtures и host budgets не меняются.
+
 ## Контакты и руководство пользователя
 
 Вкладка «Помощь» в ЛИСА и БЕЛКА показывает geonical.system@yandex.ru,
@@ -810,6 +830,14 @@ BESTPOSB без предварительного запуска PiMock. HUD сб
   восстановленные LineString/MultiLineString показываются без polygon fill;
   явный Discard после восстановления согласует форму/геометрию с редактором и lock именно её слоя; operation identity защищает новый сеанс от старого callback; карандаш строки ведёт к её владельцу либо снимает доказанно осиротевший lock;
   REL-03 сохраняет короткий журнал координат и пишет полный checkpoint на одном worker; Finish ждёт его барьер. Предпросмотр учитывает принятую последовательность сразу, а ошибка чтения журнала оставляет видимый owner без небезопасного завершения.
+
+  ProjectRecoveryActivity откладывает refresh списка пока открыто подтверждение
+  восстановления. Callback положительной кнопки входит в прежний restore, а
+  dismiss асинхронно запрашивает обновление после callback. Это сохраняет
+  active-work, workspace, busy/loading и host-lifecycle guards; форматы архива,
+  исходник и отдельная активация копии не меняются. Детерминированный native case
+  удерживает executor и вызывает refresh во время подтверждения; результат
+  обновлённой приёмки ещё ожидается.
 
 - редактирование геометрии: выход крестиком на нижней панели (`cancelEdits`),
   причём для нового объекта сначала требуется подтвердить удаление скетча; после

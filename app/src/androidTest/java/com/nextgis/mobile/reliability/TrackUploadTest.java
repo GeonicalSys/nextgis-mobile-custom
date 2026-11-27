@@ -21,6 +21,7 @@ import com.nextgis.maplibui.mapui.TrackWorker;
 import com.nextgis.maplibui.mapui.TrackRegistrationState;
 import com.nextgis.maplibui.util.CollectorProjectRegistry;
 import com.nextgis.maplibui.util.ProjectOperationCoordinator;
+import com.nextgis.maplibui.util.SharedUnderlayProjects;
 import com.nextgis.mobile.R;
 import com.nextgis.mobile.activity.MainActivity;
 import com.nextgis.mobile.util.AppSettingsConstants;
@@ -123,12 +124,17 @@ public class TrackUploadTest {
                     .remove(TrackRegistrationState.PREF_REGISTERED_DEVICE).commit();
             scenario = ActivityScenario.launch(MainActivity.class);
             long deadline = android.os.SystemClock.uptimeMillis() + 30000;
-            while (app.getMap() == null && android.os.SystemClock.uptimeMillis() < deadline) Thread.sleep(50);
+            while (!workspaceReady() && android.os.SystemClock.uptimeMillis() < deadline) Thread.sleep(50);
+            assertTrue("The isolated workspace must be ready before seeding tracks", workspaceReady());
             map = (MapContentProviderHelper) app.getMap();
             layer = (TrackLayer) MapContentProviderHelper.getVectorLayerByPath(map, TrackLayer.TABLE_TRACKS);
             assertNotNull(layer);
             assertFalse("Fixture requires no existing unsent tracks", TrackUploader.hasPending(app, layer));
             trackId = insert(layer, count, app);
+        }
+        private boolean workspaceReady() {
+            return app.getMap() != null && !SharedUnderlayProjects.isMigrationPending()
+                    && !ProjectOperationCoordinator.isBusy();
         }
         static long insert(TrackLayer layer, int count, GISApplication app) {
             Uri tracks = Uri.parse("content://" + app.getAuthority() + "/tracks");
@@ -307,7 +313,10 @@ public class TrackUploadTest {
     @Test public void registrationRevocationHidesPendingButTemporaryServerFailureKeepsTheBadge() throws Exception {
         try (Fixture f = new Fixture(2); Endpoint hub = new Endpoint(404, 200)) {
             f.hub(hub);
-            assertFalse(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath())); f.badge(true);
+            assertFalse(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath()));
+            assertTrue("The rejected packet must follow positive registration: " + hub.state(f.app),
+                    TrackRegistrationState.canShowPending(f.app));
+            f.badge(true);
             f.scenario.recreate(); f.badge(true);
             hub.registrationCode = 503;
             assertFalse(TrackWorker.uploadProject(f.app, f.map.getPath().getCanonicalPath()));

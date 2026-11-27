@@ -65,6 +65,62 @@ public class ChangesCentreNativeTest {
                 activity.findViewById(R.id.changes_progress).getVisibility()!=View.VISIBLE
                         &&activity.findViewById(R.id.changes_send).isEnabled()));return ready.get();});
     }
+    private boolean clickDialog(String text) {
+        AtomicBoolean clicked = new AtomicBoolean();
+        InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
+            for (View root : android.view.inspector.WindowInspector.getGlobalWindowViews()) {
+                Button action = button(root, text);
+                if (action != null && action.isShown() && root.hasWindowFocus()) {
+                    assertTrue(action.performClick()); clicked.set(true); break;
+                }
+            }
+        });
+        return clicked.get();
+    }
+
+    @Test public void real226QueueCanBeReviewedAndSentFromTheScreenWithoutDeletingItsPoint() throws Exception {
+        try (LocalChangesUploadTest.Endpoint endpoint = new LocalChangesUploadTest.Endpoint();
+             LocalChangesUploadTest.Fixture f = new LocalChangesUploadTest.Fixture(endpoint, true, true)) {
+            endpoint.resourceMetadata = LocalChangesUploadTest.lisaResourceMetadata(false).toString();
+            endpoint.serveFeatures = true;
+            long local = f.raw226Line("saved in version 226"); f.reopenLayerFromSaved226Config();
+            SQLiteDatabase db = DatabaseContext.getDatabaseForLayer(f.layer, false);
+            assertFalse(FeatureChanges.hasOperationIdentity(db, f.layer.getChangeTableName()));
+            byte[] before;
+            try (Cursor row = db.query(f.layer.getPath().getName(), new String[]{Constants.FIELD_GEOM},
+                    Constants.FIELD_ID + "=?", new String[]{Long.toString(local)}, null, null, null)) {
+                assertTrue(row.moveToFirst()); before = row.getBlob(0);
+            }
+            String uid = CollectorProjectRegistry.getActiveProject(app).getProjectUid();
+            try (ActivityScenario<ChangesCentreActivity> scenario = ActivityScenario.launch(new Intent(app, ChangesCentreActivity.class)
+                    .putExtra(ChangesCentreActivity.EXTRA_PROJECT_UID, uid))) {
+                ready(scenario);
+                assertTrue("Viewing an old queue must not send or migrate it", endpoint.mutations.isEmpty());
+                assertFalse(FeatureChanges.hasOperationIdentity(db, f.layer.getChangeTableName()));
+                scenario.onActivity(activity -> {
+                    assertTrue(hasText(activity.findViewById(R.id.changes_rows), activity.getString(R.string.changes_reason_legacy)));
+                    Button review = button(activity.findViewById(R.id.changes_rows), activity.getString(R.string.changes_action_review));
+                    assertNotNull(review); assertTrue(review.performClick());
+                });
+                await(() -> clickDialog(app.getString(R.string.changes_confirm_never_sent)));
+                assertTrue("Candidate lookup and opening confirmation must never POST a point", endpoint.mutations.isEmpty());
+                try (Cursor retained = db.rawQuery("SELECT " + Constants.FIELD_GEOM + " FROM "
+                        + f.layer.getPath().getName() + " WHERE " + Constants.FIELD_ID + "=?",
+                        new String[]{Long.toString(local)})) {
+                    assertTrue("The original saved point must still exist", retained.moveToFirst());
+                    assertArrayEquals(before, retained.getBlob(0));
+                }
+                await(() -> clickDialog(app.getString(R.string.changes_allow_repeat)));
+                await(() -> f.pending(f.layer) == 0);
+            }
+            assertEquals(1, endpoint.mutations.size());
+            try (Cursor row = db.query(f.layer.getPath().getName(), null, Constants.FIELD_ID + "=42", null, null, null, null)) {
+                assertTrue(row.moveToFirst()); assertEquals("saved in version 226", row.getString(row.getColumnIndexOrThrow("name")));
+                assertArrayEquals(before, row.getBlob(row.getColumnIndexOrThrow(Constants.FIELD_GEOM)));
+                assertEquals(-1, row.getColumnIndex("deletion_operation_id"));
+            }
+        }
+    }
     @Test public void readOnlyPagesThenActualSendShowServerAcknowledgementWithoutFullSyncTimeOrMapSwitch() throws Exception {
         try(LocalChangesUploadTest.Endpoint endpoint=new LocalChangesUploadTest.Endpoint();
             LocalChangesUploadTest.Fixture f=new LocalChangesUploadTest.Fixture(endpoint)) {
@@ -87,6 +143,61 @@ public class ChangesCentreNativeTest {
             assertNotNull(f.layer.getFeature(42));assertEquals(fullBefore,ProjectSyncState.lastComplete(app,f.path));assertSame(f.map,MapBase.getActiveInstance());
         }
     }
+    @Test public void old226PointEditedAfterItsOldUploadCanBeLinkedFromTheScreenAndUpdatedWithoutPost() throws Exception {
+        try (LocalChangesUploadTest.Endpoint endpoint = new LocalChangesUploadTest.Endpoint();
+             LocalChangesUploadTest.Fixture f = new LocalChangesUploadTest.Fixture(endpoint, true, true)) {
+            endpoint.resourceMetadata = LocalChangesUploadTest.lisaResourceMetadata(false).toString();
+            endpoint.serveFeatures = true;
+            endpoint.remoteFeatures.put(42, LocalChangesUploadTest.accepted226Line(42, "old server values"));
+            long local = f.raw226Line("newest local values"); f.reopenLayerFromSaved226Config();
+            String uid = CollectorProjectRegistry.getActiveProject(app).getProjectUid();
+            try (ActivityScenario<ChangesCentreActivity> scenario = ActivityScenario.launch(new Intent(app, ChangesCentreActivity.class)
+                    .putExtra(ChangesCentreActivity.EXTRA_PROJECT_UID, uid))) {
+                ready(scenario);
+                scenario.onActivity(activity -> {
+                    Button review = button(activity.findViewById(R.id.changes_rows), activity.getString(R.string.changes_action_review));
+                    assertNotNull(review); assertTrue(review.performClick());
+                });
+                await(() -> clickDialog(app.getString(R.string.changes_manual_id)));
+                await(() -> {
+                    AtomicBoolean submitted = new AtomicBoolean();
+                    InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
+                        for (View root : android.view.inspector.WindowInspector.getGlobalWindowViews()) {
+                            EditText id = input(root); View verify = root.findViewById(android.R.id.button1);
+                            if (id != null && verify != null && verify.isShown() && root.hasWindowFocus()) {
+                                id.setText("42"); assertTrue(verify.performClick()); submitted.set(true); break;
+                            }
+                        }
+                    });
+                    return submitted.get();
+                });
+                await(() -> {
+                    AtomicBoolean shown = new AtomicBoolean();
+                    InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
+                        for (View root : android.view.inspector.WindowInspector.getGlobalWindowViews()) {
+                            Button link = button(root, app.getString(R.string.changes_link_keep_local));
+                            if (link != null && link.isShown() && root.hasWindowFocus()) shown.set(true);
+                        }
+                    });
+                    return shown.get();
+                });
+                assertEquals("Looking up and comparing an existing point must never mutate the server", 0, endpoint.mutations.size());
+                try (Cursor retained = DatabaseContext.getDatabaseForLayer(f.layer, false).rawQuery(
+                        "SELECT name FROM " + f.layer.getPath().getName() + " WHERE " + Constants.FIELD_ID + "=?",
+                        new String[]{Long.toString(local)})) {
+                    assertTrue(retained.moveToFirst()); assertEquals("newest local values", retained.getString(0));
+                }
+                await(() -> clickDialog(app.getString(R.string.changes_link_keep_local)));
+                await(() -> f.pending(f.layer) == 0);
+            }
+            assertEquals(1, endpoint.mutations.size()); assertTrue(endpoint.mutations.get(0).startsWith("PUT "));
+            assertEquals("newest local values", new org.json.JSONObject(endpoint.remoteFeatures.get(42)).getJSONObject("fields").getString("name"));
+            try (Cursor retained = DatabaseContext.getDatabaseForLayer(f.layer, false).rawQuery(
+                    "SELECT name FROM " + f.layer.getPath().getName() + " WHERE " + Constants.FIELD_ID + "=42", null)) {
+                assertTrue(retained.moveToFirst()); assertEquals("newest local values", retained.getString(0));
+            }
+        }
+    }
     @Test public void lostResponseIsVisibleAndServerReadFinishesWithoutASecondCreation() throws Exception {
         try(LocalChangesUploadTest.Endpoint endpoint=new LocalChangesUploadTest.Endpoint();
             LocalChangesUploadTest.Fixture f=new LocalChangesUploadTest.Fixture(endpoint)) {
@@ -104,10 +215,16 @@ public class ChangesCentreNativeTest {
                     AtomicBoolean clicked=new AtomicBoolean();
                     InstrumentationRegistry.getInstrumentation().runOnMainSync(()->{
                         for(View root:android.view.inspector.WindowInspector.getGlobalWindowViews()) {
+                            Button candidate=button(root,app.getString(R.string.changes_candidate_id,42L));
+                            if(candidate!=null&&candidate.isShown()&&root.hasWindowFocus()) {
+                                assertTrue(candidate.performClick());clicked.set(true);break;
+                            }
                             View confirm=root.findViewById(android.R.id.button1);EditText id=input(root);
                             if(id!=null&&confirm!=null&&confirm.isShown()&&root.hasWindowFocus()) {
                                 id.setText("42");assertTrue(confirm.performClick());clicked.set(true);break;
                             }
+                            Button manual=button(root,app.getString(R.string.changes_manual_id));
+                            if(manual!=null&&manual.isShown()&&root.hasWindowFocus()) {manual.performClick();break;}
                         }
                     });
                     return clicked.get();
@@ -146,7 +263,7 @@ public class ChangesCentreNativeTest {
                 LocalChangesRepository.Page paused=LocalChangesRepository.load(app,original.getProjectUid(),50,0);
                 assertTrue(paused.deliveryBlocked);assertFalse(LocalChangesRepository.request(app,original.getProjectUid()));
                 try(SQLiteDatabase db=SQLiteDatabase.openDatabase(new File(copy.getMapPath(),"layers.db").getPath(),null,SQLiteDatabase.OPEN_READONLY);
-                    Cursor c=db.rawQuery("SELECT name FROM local_delivery_line WHERE _id=42",null)) {assertTrue(c.moveToFirst());assertEquals("field-line",c.getString(0));}
+                    Cursor c=db.rawQuery("SELECT name FROM \""+f.layer.getPath().getName()+"\" WHERE _id=42",null)) {assertTrue(c.moveToFirst());assertEquals("field-line",c.getString(0));}
             }finally {
                 if(copy!=null)UnderlayFiles.deleteChildTree(new File(copy.getMapPath()).getParentFile(),new File(copy.getMapPath()));
                 if(archive!=null)assertTrue(archive.delete());

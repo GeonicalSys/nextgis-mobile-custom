@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.nextgis.maplib.util.NetworkUtil
 import com.nextgis.maplib.util.ProjectRecoveryGuard
 import com.nextgis.maplib.util.UploadOperationJournal
+import com.nextgis.maplib.map.NGWVectorLayer
 import com.nextgis.maplibui.service.TrackerService
 import com.nextgis.maplibui.util.*
 import com.nextgis.mobile.MainApplication
@@ -154,6 +155,8 @@ class ChangesCentreActivity : AppCompatActivity() {
                 LocalChangesRepository.Action.FORM -> button(block, R.string.changes_action_form, false) { continueForm(row) }
                 else -> Unit
             }
+            if (row.operation == "create" && row.reason == "transaction_rejected" && row.action == LocalChangesRepository.Action.SEND)
+                button(block, R.string.changes_action_review, true) { prepareReview(row) }
         }
         findViewById<TextView>(R.id.changes_page).text = getString(R.string.changes_page,
             if (data.rows.isEmpty()) 0L else data.offset + 1, data.offset + data.rows.size, data.total)
@@ -182,6 +185,8 @@ class ChangesCentreActivity : AppCompatActivity() {
         row.reason == "retired_operation" -> getString(R.string.changes_reason_retired)
         row.reason == "request_in_progress" -> getString(R.string.changes_reason_inflight)
         row.reason == "review_approved" -> getString(R.string.changes_reason_approved)
+        row.reason == "legacy_creation_outcome_unknown" -> getString(R.string.changes_reason_legacy)
+        row.reason == "transaction_rejected" -> getString(R.string.changes_reason_transaction_rejected)
         row.state == LocalChangesRepository.State.READ_ERROR -> getString(R.string.changes_reason_read)
         row.remoteId >= 0 && row.state == LocalChangesRepository.State.REVIEW -> getString(R.string.changes_reason_accepted)
         row.state == LocalChangesRepository.State.REVIEW -> getString(R.string.changes_reason_uncertain)
@@ -223,9 +228,50 @@ class ChangesCentreActivity : AppCompatActivity() {
     private fun prepareReview(row: LocalChangesRepository.Row) {
         reviewWork({ LocalChangesRepository.withLayer(this, row.projectUid, row.layerPath) { layer ->
             layer.prepareChangeReview(row.changeId, row.identity, row.featureId, row.attachmentId, row.operation)
-        } }, false) { identity -> showReview(row, identity) }
+        } }, false) { identity ->
+            if (row.operation == "create") findCreationCandidates(row, identity) else showReview(row, identity)
+        }
     }
-    private fun showReview(row: LocalChangesRepository.Row, identity: String) {
+    private fun findCreationCandidates(row: LocalChangesRepository.Row, identity: String) {
+        reviewWork({ runCatching {
+            LocalChangesRepository.withLayer(this, row.projectUid, row.layerPath) { layer ->
+                layer.findCreationCandidates(identity)
+            }
+        } }, false) { result -> showCreationReview(row, identity, result.getOrNull()) }
+    }
+    private fun showCreationReview(row: LocalChangesRepository.Row, identity: String,
+                                   candidates: NGWVectorLayer.CreationReviewCandidates?) {
+        val content = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(dp(20), 0, dp(20), 0) }
+        text(content, getString(if (row.reason == "legacy_creation_outcome_unknown")
+            R.string.changes_legacy_review_message else R.string.changes_creation_review_message))
+        text(content, row.layerName + " · " + getString(R.string.changes_object, row.featureId) +
+                if (row.label.isNotEmpty()) " · ${row.label}" else "")
+        var dialog: androidx.appcompat.app.AlertDialog? = null
+        if (candidates == null) text(content, getString(R.string.changes_candidates_unavailable))
+        else {
+            if (candidates.creationConfirmed) text(content, getString(R.string.changes_server_commit_known))
+            else text(content, getString(if (candidates.serverIds.isEmpty()) R.string.changes_candidates_empty
+                else R.string.changes_candidates_found))
+            if (candidates.lookupUnavailable) text(content, getString(R.string.changes_candidates_unavailable))
+            candidates.serverIds.forEach { id ->
+                button(content, R.string.changes_verify_candidate, true) {
+                    if (canReview()) { dialog?.dismiss(); verify(row, identity, id) }
+                }
+                (content.getChildAt(content.childCount - 1) as Button).text =
+                    getString(R.string.changes_candidate_id, id)
+            }
+            if (candidates.truncated) text(content, getString(R.string.changes_candidates_truncated))
+        }
+        val scroll = ScrollView(this).apply { addView(content) }
+        val builder = FittedDialogs.compatBuilder(this).setTitle(R.string.changes_action_review).setView(scroll)
+            .setNegativeButton(android.R.string.cancel) { _, _ -> refresh() }
+            .setNeutralButton(R.string.changes_manual_id) { _, _ -> showReview(row, identity, candidates?.creationConfirmed == true) }
+        if (candidates?.creationConfirmed != true)
+            builder.setPositiveButton(R.string.changes_confirm_never_sent) { _, _ -> allowRepeat(row, identity) }
+        dialog = builder.create()
+        dialog?.show()
+    }
+    private fun showReview(row: LocalChangesRepository.Row, identity: String, creationConfirmed: Boolean = false) {
         val input = EditText(this).apply {
             inputType = InputType.TYPE_CLASS_NUMBER; hint = getString(R.string.changes_id_hint)
             val candidate = if (row.remoteId >= 0) row.remoteId else if (row.operation.endsWith("create")) -1
@@ -235,11 +281,12 @@ class ChangesCentreActivity : AppCompatActivity() {
         val content = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(dp(20), 0, dp(20), 0) }
         text(content, getString(R.string.changes_review_message)); content.addView(input, LinearLayout.LayoutParams(-1, -2))
         var actionSelected = false
-        val dialog = FittedDialogs.compatBuilder(this).setTitle(R.string.changes_action_review).setView(content)
+        val builder = FittedDialogs.compatBuilder(this).setTitle(R.string.changes_action_review).setView(content)
             .setNegativeButton(android.R.string.cancel, null).setPositiveButton(R.string.changes_verify, null)
-            .setNeutralButton(if (row.operation.endsWith("create")) R.string.changes_not_found else R.string.changes_review_retry) { _, _ ->
+        if (!creationConfirmed) builder.setNeutralButton(if (row.operation.endsWith("create")) R.string.changes_not_found else R.string.changes_review_retry) { _, _ ->
                 actionSelected = true; allowRepeat(row, identity)
-            }.create()
+            }
+        val dialog = builder.create()
         dialog.setOnShowListener {
             dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                 val id = input.text.toString().trim().toLongOrNull()
@@ -253,7 +300,25 @@ class ChangesCentreActivity : AppCompatActivity() {
         if (identity == null) { prepareReview(row); return }
         reviewWork({ LocalChangesRepository.withLayer(this, row.projectUid, row.layerPath) { layer ->
             layer.reconcileUpload(identity, id)
-        } }) { matched -> status.setText(if (matched) R.string.changes_verified else R.string.changes_review_changed) }
+        } }, false) { matched ->
+            status.setText(if (matched) R.string.changes_verified else R.string.changes_review_changed)
+            if (matched) refresh()
+            else if (row.operation == "create") confirmExistingIdentity(row, identity, id)
+            else refresh()
+        }
+    }
+    private fun confirmExistingIdentity(row: LocalChangesRepository.Row, identity: String, id: Long) {
+        FittedDialogs.compatBuilder(this).setTitle(R.string.changes_link_existing)
+            .setMessage(getString(R.string.changes_link_existing_message, id))
+            .setNegativeButton(android.R.string.cancel) { _, _ -> refresh() }
+            .setPositiveButton(R.string.changes_link_keep_local) { _, _ ->
+                reviewWork({ LocalChangesRepository.withLayer(this, row.projectUid, row.layerPath) { layer ->
+                    layer.linkReviewedCreation(identity, id)
+                } }) { linked ->
+                    status.setText(if (linked) R.string.changes_linked_keep_local else R.string.changes_review_changed)
+                    if (linked && page?.recoveryHeld != true) LocalChangesRepository.request(this, row.projectUid)
+                }
+            }.show()
     }
     private fun allowRepeat(row: LocalChangesRepository.Row, identity: String) {
         val creation = row.operation.endsWith("create")

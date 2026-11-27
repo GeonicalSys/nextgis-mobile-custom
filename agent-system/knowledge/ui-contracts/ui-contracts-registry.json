@@ -32,7 +32,7 @@
       "value": {
         "sources": {
           "shape": "list",
-          "entries": 274
+          "entries": 275
         },
         "contracts": {
           "shape": "list",
@@ -1422,6 +1422,11 @@
     {
       "type": "contains",
       "target": "lisa:mobile:evidence:ui-sources-wf-recovered-form-completion",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:evidence:ui-sources-wf-project-recovery-confirmation",
       "status": "source_backed"
     },
     {

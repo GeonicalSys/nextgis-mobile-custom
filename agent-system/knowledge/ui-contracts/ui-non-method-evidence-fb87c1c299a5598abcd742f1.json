@@ -39,16 +39,31 @@
       "value": {
         "repository": "root",
         "path": "app/build.gradle",
-        "purpose": "Effective Lisa/Belka brand declarations and absence of custom sourceSets rerouting for the reviewed shared main UI. Reviewed 2026-11-01: only production version constants change to 3.1.2.31/225; sourceSets, IDs and UI bindings are unchanged. Reviewed 2026-11-10: Release 3.1.2.32/226 and a Release-only client.id check; sourceSets, brand/package/provider identities and UI bindings are unchanged. Review 2026-11-14: mandatory Release private inputs, empty Debug telemetry, isolated Release exclusion and source version 227/3.1.2.33. Brand/application/account/provider IDs and sourceSets retain shared UI bindings. Signed production positive acceptance and publication NOT_RUN.",
+        "purpose": "Effective Lisa/Belka brand declarations and absence of custom sourceSets rerouting for the reviewed shared main UI. Reviewed 2026-11-01: only production version constants change to 3.1.2.31/225; sourceSets, IDs and UI bindings are unchanged. Reviewed 2026-11-10: Release 3.1.2.32/226 and a Release-only client.id check; sourceSets, brand/package/provider identities and UI bindings are unchanged. Review 2026-11-14: mandatory Release private inputs, empty Debug telemetry, isolated Release exclusion and source version 227/3.1.2.33. Brand/application/account/provider IDs and sourceSets retain shared UI bindings. Signed production positive acceptance and publication NOT_RUN. Review 2026-11-26: only production version constants change from227/3.1.2.33 to228/3.1.2.34. Debug218/3.1.2.23, sourceSets, branding, package/account/provider identities and shared UI bindings are unchanged. Prior reviewed source pin d153dd54aff3d7e0c0838e27ebbb8fdbc8b0007fcfc9a13184fb206aa88973b7 is retained here. This is source preservation review, not Full runtime or publication acceptance. Release229 review2026-11-26: only production version constants advance from228/3.1.2.34 to229/3.1.2.35 so the locally distributed228 can update. Debug218/3.1.2.23, sourceSets, Lisa/Belka branding, package/provider/account IDs, production input guards and isolated verification behavior remain unchanged. Current229 native/publication acceptance is pending; this pin proves bounded source review only. Prior reviewed pin c4e376a6c0f72a8bfc7fc48af106c79b1388c7f3ae359bf7548beacc1bd89654 is retained here.",
         "contract_ids": [
           "UI-SETTINGS-MAP-STORAGE-MOVE"
         ],
-        "sha256": "d153dd54aff3d7e0c0838e27ebbb8fdbc8b0007fcfc9a13184fb206aa88973b7"
+        "sha256": "ce565791da25c199739c998c134215d12da9a9b1c43e151760d9cb5f66218205"
       }
     },
     "review-20261114": {
       "role": "semantic_review_and_preserved_consumers",
       "value": "Review 2026-11-14: mandatory Release private inputs, empty Debug telemetry, isolated Release exclusion and source version 227/3.1.2.33. Brand/application/account/provider IDs and sourceSets retain shared UI bindings. Signed production positive acceptance and publication NOT_RUN."
+    },
+    "review-20261126": {
+      "role": "semantic_review_and_preserved_consumers",
+      "value": "Review 2026-11-26: only production version constants change from227/3.1.2.33 to228/3.1.2.34. Debug218/3.1.2.23, sourceSets, branding, package/account/provider identities and shared UI bindings are unchanged. Prior reviewed source pin d153dd54aff3d7e0c0838e27ebbb8fdbc8b0007fcfc9a13184fb206aa88973b7 is retained here. This is source preservation review, not Full runtime or publication acceptance."
+    },
+    "review-20261126-release229": {
+      "role": "semantic_review_and_preserved_consumers",
+      "value": {
+        "prior_sha256": "c4e376a6c0f72a8bfc7fc48af106c79b1388c7f3ae359bf7548beacc1bd89654",
+        "reviewed_sha256": "ce565791da25c199739c998c134215d12da9a9b1c43e151760d9cb5f66218205",
+        "review": "Release229 review2026-11-26: only production version constants advance from228/3.1.2.34 to229/3.1.2.35 so the locally distributed228 can update. Debug218/3.1.2.23, sourceSets, Lisa/Belka branding, package/provider/account IDs, production input guards and isolated verification behavior remain unchanged. Current229 native/publication acceptance is pending; this pin proves bounded source review only.",
+        "runtime": "NOT_RUN_FOR_THIS_REVIEW",
+        "full": "NOT_RUN",
+        "publication": "pending"
+      }
     }
   },
   "relations": [

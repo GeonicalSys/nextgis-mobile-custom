@@ -1,0 +1,67 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:release-note-3.1.2.35",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "documentation",
+  "status": "historical",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "reviewed",
+    "paths": [],
+    "scope_refs": [
+      "lisa:mobile:resource:release-notes"
+    ],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "not_applicable",
+    "implementation": "not_applicable",
+    "source_verification": "NOT_APPLICABLE",
+    "merge": "not_applicable",
+    "runtime_verification": "NOT_APPLICABLE",
+    "release": "not_applicable",
+    "retention": "Keep the reviewed version text and its placement in the release notes."
+  },
+  "facets": {
+    "view-path": {
+      "role": "published_markdown_path",
+      "value": "WHATS_NEW.md"
+    },
+    "body": {
+      "role": "markdown_body_lines",
+      "value": [
+        "## 3.1.2.35 — 2026-11-26",
+        "",
+        "- В разделе «Изменения и синхронизация» видны ожидающие правки и вложения. Если ответ сервера потерялся, изменения можно сверить перед повторной отправкой.",
+        "- Проект можно сохранить в архив и восстановить отдельной копией. Улучшено восстановление полевых черновиков и обхода после прерывания.",
+        "- Обычный фоновый GPS можно временно отключить из уведомления. Очистку журнала и резервных копий слоёв перенесли в «Настройки → Общие → Обслуживание».",
+        "- Исправлено обновление видимой карты после добавления, изменения и удаления объектов.",
+        "- Длинные сообщения правил проекта теперь прокручиваются. В журнале подробнее видны причины ошибок входа в NextGIS ID.",
+        "- Добавлен значок ПГС для полевых точек. Он используется в проектах с обновлённой настройкой слоя.",
+        "- Исправлена отправка полевых данных из слоёв с прежним составом технических полей, в том числе до обновления структуры на устройстве.",
+        "- После обновления с прежних версий можно сверить ожидающие изменения с сервером и связать запись с найденным объектом. Локальные отличия сохраняются для последующей отправки.",
+        "- Для новых отправок в поддерживаемые слои ЛИСЫ добавлено восстановление подтверждённого результата серверной операции после прерывания.",
+        "- Подготовка встроенной базовой карты при первом запуске выполняется в фоне и не задерживает интерфейс.",
+        ""
+      ]
+    },
+    "release": {
+      "role": "prepared_release_version",
+      "value": {
+        "version": "3.1.2.35",
+        "version_code": 229,
+        "date": "2026-11-26",
+        "published": false
+      }
+    }
+  },
+  "relations": [],
+  "provenance": {
+    "manifest": "agent-system/provenance/documentation.json",
+    "scopes": [
+      "lisa:mobile:evidence:release-note-3.1.2.35"
+    ]
+  }
+}

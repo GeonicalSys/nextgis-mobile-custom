@@ -127,6 +127,16 @@
     },
     {
       "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-vector-label-line-breaks",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
+      "target": "lisa:mobile:task:mobile-roadmap-collector-global-discovery",
+      "status": "source_backed"
+    },
+    {
+      "type": "contains",
       "target": "lisa:mobile:resource:mobile-roadmap-measurement-reliability-heading",
       "status": "source_backed"
     },

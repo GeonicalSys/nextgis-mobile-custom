@@ -1,0 +1,73 @@
+{
+  "schema_version": 2,
+  "id": "lisa:mobile:evidence:ui-sources-wf-project-recovery-confirmation",
+  "kind": "evidence",
+  "owner": "android_projects/android_gisapp",
+  "topic": "ui-contracts",
+  "status": "active",
+  "execution_permission": false,
+  "applicability": {
+    "review_status": "unknown",
+    "paths": [],
+    "scope_refs": [],
+    "conditions": [],
+    "unknown_behavior": "include_with_unknown_reason"
+  },
+  "lifecycle": {
+    "goal": "unknown",
+    "implementation": "unknown",
+    "source_verification": "UNKNOWN",
+    "merge": "unknown",
+    "runtime_verification": "NOT_RUN",
+    "release": "unknown",
+    "retention": "Retain source versions and projections until whole-migration acceptance and lifecycle review."
+  },
+  "facets": {
+    "registry-section": {
+      "role": "incumbent_ui_catalogue_section",
+      "value": "sources"
+    },
+    "registry-key": {
+      "role": "incumbent_ui_evidence_key",
+      "value": "WF-PROJECT-RECOVERY-CONFIRMATION"
+    },
+    "definition": {
+      "role": "complete_ui_catalogue_definition",
+      "value": {
+        "id": "WF-PROJECT-RECOVERY-CONFIRMATION",
+        "repository": "root",
+        "path": "app/src/main/java/com/nextgis/mobile/activity/ProjectRecoveryActivity.kt",
+        "marker": "private fun confirmRestore(file: File)",
+        "requires": [
+          "if (!canChangeProject()) return",
+          "CollectorProjectRegistry.getActiveProject(this)",
+          "restoreConfirmationOpen = true",
+          ".setOnDismissListener",
+          "restoreConfirmationOpen = false",
+          "handler.post",
+          "!isDestroyed && !isFinishing",
+          ".setPositiveButton(android.R.string.ok) { _, _ -> restore(file, project) }"
+        ],
+        "forbids": [],
+        "sha256": "336e411777dc9c2a0fba2f539dbfd19e48108f6bc165a3fdc7e04be38fddb95d"
+      }
+    },
+    "review-20261126-confirmation": {
+      "role": "semantic_review_and_preserved_consumers",
+      "value": "Bounded source review: a transient main-thread modal flag suppresses refresh while restore confirmation is open. The positive button directly calls the existing restore path; dismiss clears the flag and posts refresh after the click callback, guarded against a destroyed/finishing Activity. refresh independently retains busy/loading/modal/destroyed guards. Existing restore/create/archive validation, active-work/project-operation checks, cancellation and separate-copy activation remain unchanged. New native regression with a held executor is pending; no generic UI/runtime/Full or publication PASS is claimed."
+    }
+  },
+  "relations": [
+    {
+      "type": "consumed_by",
+      "target": "lisa:mobile:contract:ui-contracts-ui-project-recovery",
+      "status": "source_backed"
+    }
+  ],
+  "provenance": {
+    "manifest": "agent-system/provenance/ui-contracts.json",
+    "scopes": [
+      "lisa:mobile:evidence:ui-sources-wf-project-recovery-confirmation"
+    ]
+  }
+}

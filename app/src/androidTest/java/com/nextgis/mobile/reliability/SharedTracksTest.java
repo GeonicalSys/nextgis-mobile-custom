@@ -23,7 +23,9 @@ import com.nextgis.maplib.util.SettingsConstants;
 import com.nextgis.maplibui.GISApplication;
 import com.nextgis.maplibui.service.TrackerService;
 import com.nextgis.maplibui.util.CollectorProjectRegistry;
+import com.nextgis.maplibui.util.ProjectOperationCoordinator;
 import com.nextgis.maplibui.util.SharedTrackProjects;
+import com.nextgis.maplibui.util.SharedUnderlayProjects;
 import com.nextgis.mobile.activity.MainActivity;
 import com.nextgis.mobile.util.AppSettingsConstants;
 import com.nextgis.mobile.util.VerificationEnvironment;
@@ -68,9 +70,7 @@ public class SharedTracksTest {
             prefs.edit().putBoolean(SettingsConstants.KEY_PREF_TRACK_SEND, false)
                     .putBoolean(AppSettingsConstants.KEY_PREF_INTRO, true).commit();
             screen = ActivityScenario.launch(MainActivity.class);
-            await(() -> app.getMap() != null);
-            await(() -> !com.nextgis.maplibui.util.SharedUnderlayProjects.isMigrationPending()
-                    && !com.nextgis.maplibui.util.ProjectOperationCoordinator.isBusy());
+            awaitWorkspaceReady();
             original = CollectorProjectRegistry.getActiveProject(app); assertNotNull(original);
             registry = new File(app.getExternalFilesDir(SettingsConstants.KEY_PREF_MAP), "collector_projects/collector_projects_registry.json");
             registryBefore = Files.readAllBytes(registry.toPath());
@@ -79,10 +79,16 @@ public class SharedTracksTest {
         }
         TrackLayer layer() { return (TrackLayer) MapContentProviderHelper.getVectorLayerByPath(app.getMap(), TABLE_TRACKS); }
         Uri uri() { return Uri.parse("content://" + app.getAuthority() + "/tracks"); }
+        void awaitWorkspaceReady() throws Exception {
+            await(() -> app.getMap() != null && !SharedUnderlayProjects.isMigrationPending()
+                    && !ProjectOperationCoordinator.isBusy());
+        }
         void switchTo(CollectorProjectRegistry.ProjectInfo project) throws Exception {
+            awaitWorkspaceReady();
             screen.onActivity(activity -> assertTrue(CollectorProjectRegistry.activateProject(activity, project.getProjectUid())));
             screen.recreate();
             await(() -> project.isActive(app));
+            awaitWorkspaceReady();
             List<ILayer> layers = new ArrayList<>(); LayerGroup.getLayersByType(app.getMap(), Constants.LAYERTYPE_TRACKS, layers);
             assertEquals(1, layers.size());
         }
@@ -137,6 +143,7 @@ public class SharedTracksTest {
                 screen.onActivity(TrackerService::start_stop_tracking_GetIconWithTitle);
                 await(() -> TrackerService.getRecordingState(app)==TrackerService.RecordingState.STOPPED);
             }
+            awaitWorkspaceReady();
             screen.onActivity(activity -> assertTrue(CollectorProjectRegistry.activateProject(activity, original.getProjectUid())));
             for (long id:added) app.getContentResolver().delete(uri(),FIELD_ID+"=?",new String[]{Long.toString(id)});
             layer().setVisible(oldVisible); screen.close();

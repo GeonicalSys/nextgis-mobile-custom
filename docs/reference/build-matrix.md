@@ -453,3 +453,30 @@ proof штатными генераторами. Границы проверок
 строки слоёв повторены четыре recovery-сценария, PASS. Это локальные проверки;
 телефон, Full и допуск к публикации остаются отдельной стадией. Генераторы,
 проверяющие программы и обязательные правила не менялись.
+
+## Подготовка выпуска 3.1.2.35 / 229 — 26 ноября 2026
+
+Обычные Lisa/Belka Release используют versionCode 229 и versionName 3.1.2.35;
+Lisa Debug остаётся 218/3.1.2.23, диагностическая версия maplib зависит от variant.
+Независимый oracle tools/verify-apk-version-matrix.ps1 проверяет обе Release
+и Debug metadata. Обычные подписанные APK отдельно проверяются по пакету,
+бренду, production signer, стабильному NextGIS ID и активным telemetry DEX paths.
+
+DefaultBasemapStartupTest добавлен в emulator roster и isolated_methods;
+он проверяет настоящий холодный mapnik.zip, работу main во время распаковки
+и завершение worker/cleanup. VerificationTestRunner ждёт readiness в остатке
+прежнего startup deadline. Backend MapLibre 13.7.1/OpenGL и admitted
+Emulator 37.2.13/API36r7 GuestAngle/Lavapipe этим исправлением не меняются.
+Семантический review 5 UI tripwires сохраняет прежние условия, происхождение
+значений и неподтверждённые runtime области; обновлены их проекция и proof.
+
+Исходники 229 подготовлены, публикация и итоговая emulator-only приёмка ожидаются.
+Текущее поручение пользователя разрешает только для 229 отсутствие физического
+устройства, USB-офлайна и физической нагрузки: WAIVED. Стандартный Full остаётся
+NOT_RUN; его shared gate и требования последующих выпусков не изменяются.
+
+Cold basemap case начинает наблюдать реальную фоновую подготовку до её завершения:
+он проверяет повторные main heartbeats и монотонный archive callback progress.
+Watchdog 30 секунд без прогресса и общий cold-test bound 120 секунд отличают
+работающий background I/O от зависания. Для остальных fixtures readiness 30 секунд
+и прежние host budgets сохраняются; завершение настоящего ZIP с 1436 entry ZIP обязательно.

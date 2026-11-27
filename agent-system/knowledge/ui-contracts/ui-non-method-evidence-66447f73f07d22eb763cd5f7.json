@@ -39,13 +39,28 @@
       "value": {
         "repository": "maplib",
         "path": "build.gradle",
-        "purpose": "Reviewed declared org.locationtech.jts:jts-core:1.20.0 dependency, whose IndexedFacetDistance contract defines planar target-facet and polygon-boundary selection. Reviewed 2026-11-01: only release diagnostic version changes to 3.1.2.31; JTS dependency and target geometry semantics are unchanged. Declaration is not proof of installed JAR/APK/native acceptance. Reviewed 2026-11-10: only the Release diagnostic version changes to 3.1.2.32; JTS 1.20.0, OpenGL and target geometry are unchanged. Reviewed 2026-11-14: subtracting only the Release diagnostic version 3.1.2.33 reproduces the exact previous reviewed file hash. JTS 1.20.0, OpenGL and target geometry semantics are unchanged. This is source preservation, not native target acceptance.",
+        "purpose": "Reviewed declared org.locationtech.jts:jts-core:1.20.0 dependency, whose IndexedFacetDistance contract defines planar target-facet and polygon-boundary selection. Reviewed 2026-11-01: only release diagnostic version changes to 3.1.2.31; JTS dependency and target geometry semantics are unchanged. Declaration is not proof of installed JAR/APK/native acceptance. Reviewed 2026-11-10: only the Release diagnostic version changes to 3.1.2.32; JTS 1.20.0, OpenGL and target geometry are unchanged. Reviewed 2026-11-14: subtracting only the Release diagnostic version 3.1.2.33 reproduces the exact previous reviewed file hash. JTS 1.20.0, OpenGL and target geometry semantics are unchanged. This is source preservation, not native target acceptance. Review 2026-11-26: only the Release diagnostic version changes from3.1.2.33 to3.1.2.34. Debug3.1.2.23, JTS1.20.0, explicit OpenGL dependency and navigation target geometry semantics remain unchanged. Prior reviewed source pin 844aed1d6a4ecfe42e9802d7d4919f85dc031f3c20ba96ec543b1971ada746fc is retained here. This is source preservation review, not native target or Full publication acceptance. Release229 review2026-11-26: only the Release diagnostic version advances from3.1.2.34 to3.1.2.35. Debug3.1.2.23, JTS1.20.0, OpenGL dependency and navigation target geometry contracts remain unchanged. This is source preservation, not physical/render/native/Full acceptance. Prior reviewed pin 092c5da048f3334ab1c41278d2f01d9fdaf99ac83e9a129e6b55476020d65f45 is retained here.",
         "contract_ids": [
           "UI-NAVIGATION-STAKEOUT-TARGET",
           "UI-NAVIGATION-AZIMUTH-CURRENT",
           "UI-NAVIGATION-AZIMUTH-TWO-POINTS"
         ],
-        "sha256": "844aed1d6a4ecfe42e9802d7d4919f85dc031f3c20ba96ec543b1971ada746fc"
+        "sha256": "ee266c2bf2570b749a9774a8a39b56ce64a4a29c7d243267759f0b930b214701"
+      }
+    },
+    "review-20261126": {
+      "role": "semantic_review_and_preserved_consumers",
+      "value": "Review 2026-11-26: only the Release diagnostic version changes from3.1.2.33 to3.1.2.34. Debug3.1.2.23, JTS1.20.0, explicit OpenGL dependency and navigation target geometry semantics remain unchanged. Prior reviewed source pin 844aed1d6a4ecfe42e9802d7d4919f85dc031f3c20ba96ec543b1971ada746fc is retained here. This is source preservation review, not native target or Full publication acceptance."
+    },
+    "review-20261126-release229": {
+      "role": "semantic_review_and_preserved_consumers",
+      "value": {
+        "prior_sha256": "092c5da048f3334ab1c41278d2f01d9fdaf99ac83e9a129e6b55476020d65f45",
+        "reviewed_sha256": "ee266c2bf2570b749a9774a8a39b56ce64a4a29c7d243267759f0b930b214701",
+        "review": "Release229 review2026-11-26: only the Release diagnostic version advances from3.1.2.34 to3.1.2.35. Debug3.1.2.23, JTS1.20.0, OpenGL dependency and navigation target geometry contracts remain unchanged. This is source preservation, not physical/render/native/Full acceptance.",
+        "runtime": "NOT_RUN_FOR_THIS_REVIEW",
+        "full": "NOT_RUN",
+        "publication": "pending"
       }
     }
   },

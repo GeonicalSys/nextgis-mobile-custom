@@ -89,7 +89,19 @@
         "  - maplib/src/test/java/com/nextgis/maplib/util/ProjectSyncStateTest.java",
         "  - app/src/test/java/com/nextgis/mobile/util/SyncJournalCommitTest.java",
         "  - maplib/src/test/java/com/nextgis/maplib/reliability/SyncWorkspaceIsolationTest.java",
-        "  - app/src/main/res/xml/syncadapter.xml"
+        "  - app/src/main/res/xml/syncadapter.xml",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/LisaHistoryFields.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureData.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/NgwFeatureTransaction.java",
+        "  - maplib/src/main/java/com/nextgis/maplib/util/UploadTransactionJournal.java",
+        "  - maplib/src/test/java/com/nextgis/maplib/map/NGWVectorLayerHistoryFieldsTest.java",
+        "  - maplib/src/test/java/com/nextgis/maplib/map/NGWVectorLayerUploadAckTest.java",
+        "  - maplib/src/test/java/com/nextgis/maplib/util/NgwFeatureDataTest.java",
+        "  - maplib/src/test/java/com/nextgis/maplib/util/NgwFeatureTransactionTest.java",
+        "  - maplib/src/test/java/com/nextgis/maplib/util/UploadTransactionJournalTest.java",
+        "  - app/src/main/java/com/nextgis/mobile/activity/ChangesCentreActivity.kt",
+        "  - app/src/androidTest/java/com/nextgis/mobile/reliability/ChangesCentreNativeTest.java",
+        "  - app/src/androidTest/java/com/nextgis/mobile/reliability/LocalChangesUploadTest.java"
       ]
     },
     "body": {
